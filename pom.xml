@@ -17,6 +17,7 @@
     <slf4j.version>1.7.21</slf4j.version>
     <lombok.version>1.16.18</lombok.version>
     <jackson.version>2.9.0</jackson.version>
+    <google.guava.version>23.0</google.guava.version>
   </properties>
 
   <dependencies>
@@ -56,11 +57,19 @@
       <version>${jackson.version}</version>
     </dependency>
 
+    <!-- Core Utils -->
+
     <dependency>
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
       <version>${lombok.version}</version>
       <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>com.google.guava</groupId>
+      <artifactId>guava</artifactId>
+      <version>${google.guava.version}</version>
     </dependency>
 
   </dependencies>
@@ -89,10 +98,13 @@
             </goals>
           </execution>
         </executions>
+
         <configuration>
           <mainClass>ar.edu.utn.frba.proyecto.App</mainClass>
         </configuration>
+
       </plugin>
+
     </plugins>
   </build>
 
