@@ -17,7 +17,10 @@
     <slf4j.version>1.7.21</slf4j.version>
     <lombok.version>1.16.18</lombok.version>
     <jackson.version>2.9.0</jackson.version>
-    <google.guava.version>23.0</google.guava.version>
+    <google.guava.version>16.0.1</google.guava.version>
+    <typesafe.config.version>1.3.1</typesafe.config.version>
+    <typesafeconfig-guice.version>0.0.3</typesafeconfig-guice.version>
+    <commons-lang3.version>3.0</commons-lang3.version>
   </properties>
 
   <dependencies>
@@ -43,34 +46,56 @@
       <version>${slf4j.version}</version>
     </dependency>
 
+    <!-- Configuration -->
+    <dependency>
+      <groupId>com.typesafe</groupId>
+      <artifactId>config</artifactId>
+      <version>${typesafe.config.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.github.racc</groupId>
+      <artifactId>typesafeconfig-guice</artifactId>
+      <version>${typesafeconfig-guice.version}</version>
+    </dependency>
+
     <!-- DI -->
     <dependency>
       <groupId>com.google.inject</groupId>
       <artifactId>guice</artifactId>
       <version>4.1.0</version>
     </dependency>
+    <dependency>
+      <groupId>com.google.inject.extensions</groupId>
+      <artifactId>guice-multibindings</artifactId>
+      <version>4.0</version>
+    </dependency>
 
     <!-- Json -->
     <dependency>
-      <groupId>com.fasterxml.jackson.jaxrs</groupId>
-      <artifactId>jackson-jaxrs-json-provider</artifactId>
-      <version>${jackson.version}</version>
+      <groupId>com.google.code.gson</groupId>
+      <artifactId>gson</artifactId>
+      <version>2.8.1</version>
     </dependency>
 
     <!-- Core Utils -->
-
     <dependency>
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
       <version>${lombok.version}</version>
       <scope>provided</scope>
     </dependency>
-
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-lang3</artifactId>
+      <version>${commons-lang3.version}</version>
+    </dependency>
     <dependency>
       <groupId>com.google.guava</groupId>
       <artifactId>guava</artifactId>
-      <version>${google.guava.version}</version>
+      <version>23.0</version>
     </dependency>
+
+
 
   </dependencies>
 
@@ -100,7 +125,7 @@
         </executions>
 
         <configuration>
-          <mainClass>ar.edu.utn.frba.proyecto.App</mainClass>
+          <mainClass>ar.edu.utn.frba.proyecto.sigo.App</mainClass>
         </configuration>
 
       </plugin>
