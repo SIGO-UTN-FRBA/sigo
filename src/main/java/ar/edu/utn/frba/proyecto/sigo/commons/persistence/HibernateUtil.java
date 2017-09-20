@@ -38,6 +38,7 @@ public class HibernateUtil {
 
         Map<String, Object> settings = new HashMap<>();
         settings.put(Environment.DRIVER, "org.postgresql.Driver");
+        settings.put(Environment.DIALECT, "org.hibernate.spatial.dialect.postgis.PostgisDialect");
         settings.put(Environment.URL, url);
         settings.put(Environment.USER, username);
         settings.put(Environment.PASS, password);
