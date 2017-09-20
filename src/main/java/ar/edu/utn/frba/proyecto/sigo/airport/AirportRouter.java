@@ -2,7 +2,7 @@ package ar.edu.utn.frba.proyecto.sigo.airport;
 
 import ar.edu.utn.frba.proyecto.sigo.spark.JsonTransformer;
 import ar.edu.utn.frba.proyecto.sigo.spark.Router;
-import com.google.common.collect.Lists;
+import lombok.AllArgsConstructor;
 import spark.Request;
 import spark.Response;
 import spark.Route;
@@ -14,19 +14,14 @@ import javax.inject.Singleton;
 import static spark.Spark.get;
 
 @Singleton
+@AllArgsConstructor(onConstructor = @__(@Inject))
 public class AirportRouter implements Router{
 
     private JsonTransformer jsonTransformer;
-
-    @Inject
-    public AirportRouter(
-        JsonTransformer jsonTransformer
-    ){
-        this.jsonTransformer = jsonTransformer;
-    }
+    private AirportService airportService;
 
     private final Route fetchAirports = (Request request, Response response) -> {
-        return Lists.newArrayList();
+        return airportService.findAll();
     };
 
     @Override
