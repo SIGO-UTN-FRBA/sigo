@@ -14,14 +14,25 @@ import javax.inject.Singleton;
 import static spark.Spark.get;
 
 @Singleton
-@AllArgsConstructor(onConstructor = @__(@Inject))
 public class AirportRouter implements Router{
 
     private JsonTransformer jsonTransformer;
     private AirportService airportService;
 
+    @Inject
+    public AirportRouter(
+            JsonTransformer jsonTransformer,
+            AirportService airportService) {
+        this.jsonTransformer = jsonTransformer;
+        this.airportService = airportService;
+    }
+
+    /**
+     * Get a list of airports instances filtered by values of its properties
+     */
     private final Route fetchAirports = (Request request, Response response) -> {
-        return airportService.findAll();
+
+        return airportService.find(request.queryMap());
     };
 
     @Override

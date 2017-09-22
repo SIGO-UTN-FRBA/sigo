@@ -112,6 +112,11 @@
       <artifactId>hibernate-spatial</artifactId>
       <version>${hibernate.version}</version>
     </dependency>
+    <dependency>
+      <groupId>org.hibernate</groupId>
+      <artifactId>hibernate-jpamodelgen</artifactId>
+      <version>${hibernate.version}</version>
+    </dependency>
 
 
     <!-- Core Utils -->
@@ -144,6 +149,10 @@
         <configuration>
           <source>1.8</source>
           <target>1.8</target>
+          <annotationProcessors>
+            <annotationProcessor>lombok.launch.AnnotationProcessorHider$AnnotationProcessor</annotationProcessor>
+            <processor>org.hibernate.jpamodelgen.JPAMetaModelEntityProcessor</processor>
+          </annotationProcessors>
         </configuration>
       </plugin>
 

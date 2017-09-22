@@ -9,8 +9,11 @@ import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Environment;
+import org.hibernate.mapping.MetadataSource;
+
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import javax.persistence.metamodel.EntityType;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -63,7 +66,9 @@ public class HibernateUtil {
         MetadataSources sources = new MetadataSources(registry)
                 .addAnnotatedClass(Airport.class);
         Metadata metadata = sources.getMetadataBuilder().build();
+
         sessionFactory = metadata.getSessionFactoryBuilder().build();
+
     }
 
     public static void shutdown() {
