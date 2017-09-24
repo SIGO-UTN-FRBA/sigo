@@ -1,10 +1,14 @@
-package ar.edu.utn.frba.proyecto.sigo.airport;
+package ar.edu.utn.frba.proyecto.sigo.domain;
 
+import com.google.common.base.MoreObjects;
+import com.google.gson.annotations.Expose;
 import com.vividsolutions.jts.geom.Point;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
+
 import javax.persistence.*;
-import java.io.Serializable;
+
+import static javax.persistence.GenerationType.*;
 
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
@@ -12,11 +16,11 @@ import java.io.Serializable;
 @Data
 @Entity
 @Table(name = "public.tbl_aerodromes")
-public class Airport implements Serializable{
+public class Airport {
 
     @Id
-    @GeneratedValue(generator="increment")
-    @GenericGenerator(name="increment", strategy = "increment")
+    @SequenceGenerator(name = "airportGenerator", sequenceName = "AIRPORT_SEQUENCE")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "airportGenerator")
     @Column(name = "aerodrome_id")
     private Long id;
 
@@ -31,4 +35,12 @@ public class Airport implements Serializable{
 
     @Column(name = "geom")
     private Point geom;
+
+    @Override
+    public String toString(){
+
+        return MoreObjects.toStringHelper(this)
+                .omitNullValues()
+                .toString();
+    }
 }

@@ -1,17 +1,22 @@
 package ar.edu.utn.frba.proyecto.sigo.airport;
 
 import ar.edu.utn.frba.proyecto.sigo.commons.persistence.HibernateUtil;
-import com.google.common.base.Predicates;
+
+import ar.edu.utn.frba.proyecto.sigo.domain.Airport;
+import ar.edu.utn.frba.proyecto.sigo.domain.Airport_;
+import ar.edu.utn.frba.proyecto.sigo.exceptions.ResourceNotFoundException;
+import ar.edu.utn.frba.proyecto.sigo.exceptions.SigoException;
 import com.google.common.collect.Lists;
 import org.hibernate.Session;
 
-import org.hibernate.query.criteria.internal.expression.ParameterExpressionImpl;
-import org.hibernate.query.criteria.internal.predicate.PredicateImplementor;
+import org.hibernate.resource.transaction.spi.TransactionStatus;
 import spark.QueryParamsMap;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import javax.persistence.EntityTransaction;
 import javax.persistence.criteria.*;
+import org.hibernate.Transaction;
 import java.util.List;
 import java.util.Optional;
 
@@ -66,4 +71,90 @@ public class AirportService {
         return results;
     }
 
+    public Airport get(Long id){
+
+        try(Session session = this.hibernateUtil.getSessionFactory().openSession()){
+            return Optional
+                    .ofNullable(session.get(Airport.class, id))
+                    .orElseThrow(()-> new ResourceNotFoundException(String.format("airport_id == %d%n",id)));
+        }
+    }
+
+    public Airport update(Airport instance){
+
+        Airport merged;
+
+        try(Session session = this.hibernateUtil.getSessionFactory().openSession()){
+
+            try{
+                session.getTransaction().begin();
+
+                merged = (Airport) session.merge(instance);
+
+                session.getTransaction().commit();
+
+            } catch (Exception e){
+                if ( session.getTransaction().getStatus() == TransactionStatus.ACTIVE
+                        || session.getTransaction().getStatus() == TransactionStatus.MARKED_ROLLBACK ) {
+                    session.getTransaction().rollback();
+                }
+
+                throw new SigoException(e);
+            }
+        }
+
+        return merged;
+    }
+
+    public void delete (Long id){
+
+        try(Session session = this.hibernateUtil.getSessionFactory().openSession()){
+
+            try{
+                session.getTransaction().begin();
+
+                Airport airport = Optional
+                        .ofNullable(session.get(Airport.class, id))
+                        .orElseThrow(()-> new ResourceNotFoundException(String.format("airport_id == %d%n",id)));
+
+                session.delete(airport);
+
+                session.getTransaction().commit();
+
+            } catch (Exception e){
+                if ( session.getTransaction().getStatus() == TransactionStatus.ACTIVE
+                        || session.getTransaction().getStatus() == TransactionStatus.MARKED_ROLLBACK ) {
+                    session.getTransaction().rollback();
+                }
+                throw new SigoException(e);
+            }
+
+        }
+    }
+
+    public Airport create(Airport airport) {
+
+        try(Session session = this.hibernateUtil.getSessionFactory().openSession()){
+
+            try{
+                session.getTransaction().begin();
+
+                session.save(airport);
+
+                session.getTransaction().commit();
+
+            } catch (Exception e){
+                if ( session.getTransaction().getStatus() == TransactionStatus.ACTIVE
+                        || session.getTransaction().getStatus() == TransactionStatus.MARKED_ROLLBACK ) {
+                    session.getTransaction().rollback();
+                }
+
+                throw new SigoException(e);
+            }
+
+            return airport;
+        }
+
+
+    }
 }

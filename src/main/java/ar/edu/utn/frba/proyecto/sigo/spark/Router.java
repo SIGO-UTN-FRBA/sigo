@@ -2,8 +2,8 @@ package ar.edu.utn.frba.proyecto.sigo.spark;
 
 import spark.RouteGroup;
 
-public interface Router {
+public abstract class Router {
 
-    RouteGroup routes();
-    String path();
+    public abstract RouteGroup routes();
+    public abstract String path();
 }

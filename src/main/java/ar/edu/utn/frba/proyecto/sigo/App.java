@@ -27,10 +27,5 @@ public class App
         log.info("Defining API context...");
 
         context.init();
-
-        log.info("Configuring API routes...");
-
-        context.configureRoutes();
-
     }
 }

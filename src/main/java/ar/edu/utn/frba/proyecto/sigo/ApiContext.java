@@ -1,8 +1,14 @@
 package ar.edu.utn.frba.proyecto.sigo;
 
+import ar.edu.utn.frba.proyecto.sigo.exceptions.ExceptionDTO;
+import ar.edu.utn.frba.proyecto.sigo.exceptions.MissingParameterException;
+import ar.edu.utn.frba.proyecto.sigo.exceptions.ResourceNotFoundException;
+import ar.edu.utn.frba.proyecto.sigo.exceptions.SigoException;
 import ar.edu.utn.frba.proyecto.sigo.spark.Router;
 import com.github.racc.tscg.TypesafeConfig;
+import com.google.gson.Gson;
 import lombok.extern.slf4j.Slf4j;
+import org.eclipse.jetty.http.HttpStatus;
 import spark.Filter;
 
 import javax.inject.Inject;
@@ -10,9 +16,7 @@ import javax.inject.Singleton;
 
 import java.util.Set;
 
-import static spark.Spark.afterAfter;
-import static spark.Spark.path;
-import static spark.Spark.port;
+import static spark.Spark.*;
 
 @Slf4j
 @Singleton
@@ -21,6 +25,7 @@ public class ApiContext {
     private final Integer port;
     private final String basePath;
     private String url;
+    private Gson jsonTransformer;
     private final Set<Router> routers;
 
     @Inject
@@ -28,12 +33,14 @@ public class ApiContext {
             @TypesafeConfig("server.port") Integer port,
             @TypesafeConfig("app.context") String basePath,
             @TypesafeConfig("app.url") String url,
+            Gson jsonTransformer,
             Set<Router> routers
     ){
 
         this.port = port;
         this.basePath = basePath;
         this.url = url;
+        this.jsonTransformer = jsonTransformer;
         this.routers = routers;
         this.url=url;
     }
@@ -43,16 +50,58 @@ public class ApiContext {
 
         port(port);
 
+        this.configureExceptions();
+
+        this.configureRoutes();
+
+        this.configureContentTypes();
+
+    }
+
+    private void configureContentTypes() {
         Filter contentTypeFilter = (req, resp)-> resp.type("application/json");
 
         afterAfter(basePath + "/*", contentTypeFilter);
     }
 
-    void configureRoutes() {
+    private void configureExceptions() {
 
+        exception(SigoException.class, (e, request, response) ->{
+            response.status(HttpStatus.INTERNAL_SERVER_ERROR_500);
+            response.body(jsonTransformer.toJson(
+                    new ExceptionDTO(
+                            SigoException.class.getSimpleName(),
+                            e.getMessage()
+                    )
+                )
+            );
+        });
+
+        exception(MissingParameterException.class, (e, request, response) ->{
+            response.status(HttpStatus.BAD_REQUEST_400);
+            response.body(jsonTransformer.toJson(
+                    new ExceptionDTO(
+                            MissingParameterException.class.getSimpleName(),
+                            e.getMessage()
+                    )
+                )
+            );
+        });
+
+        exception(ResourceNotFoundException.class, (e, request, response) ->{
+            response.status(HttpStatus.NOT_FOUND_404);
+            response.body(jsonTransformer.toJson(
+                    new ExceptionDTO(
+                            ResourceNotFoundException.class.getSimpleName(),
+                            e.getMessage()
+                    )
+                    )
+            );
+        });
+    }
+
+    private void configureRoutes() {
         routers.forEach(this::configureRoute);
-
-
     }
 
     private void configureRoute(Router router) {

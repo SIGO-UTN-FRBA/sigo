@@ -1,6 +1,6 @@
 package ar.edu.utn.frba.proyecto.sigo.commons.persistence;
 
-import ar.edu.utn.frba.proyecto.sigo.airport.Airport;
+import ar.edu.utn.frba.proyecto.sigo.domain.Airport;
 import com.github.racc.tscg.TypesafeConfig;
 import lombok.Getter;
 import org.hibernate.SessionFactory;
@@ -9,11 +9,9 @@ import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Environment;
-import org.hibernate.mapping.MetadataSource;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import javax.persistence.metamodel.EntityType;
 import java.util.HashMap;
 import java.util.Map;
 
