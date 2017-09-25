@@ -1,9 +1,6 @@
 package ar.edu.utn.frba.proyecto.sigo;
 
-import ar.edu.utn.frba.proyecto.sigo.exceptions.ExceptionDTO;
-import ar.edu.utn.frba.proyecto.sigo.exceptions.MissingParameterException;
-import ar.edu.utn.frba.proyecto.sigo.exceptions.ResourceNotFoundException;
-import ar.edu.utn.frba.proyecto.sigo.exceptions.SigoException;
+import ar.edu.utn.frba.proyecto.sigo.exception.*;
 import ar.edu.utn.frba.proyecto.sigo.spark.Router;
 import com.github.racc.tscg.TypesafeConfig;
 import com.google.gson.Gson;
@@ -95,7 +92,18 @@ public class ApiContext {
                             ResourceNotFoundException.class.getSimpleName(),
                             e.getMessage()
                     )
+                )
+            );
+        });
+
+        exception(InvalidParameterException.class, (e, request, response) ->{
+            response.status(HttpStatus.BAD_REQUEST_400);
+            response.body(jsonTransformer.toJson(
+                    new ExceptionDTO(
+                            InvalidParameterException.class.getSimpleName(),
+                            e.getMessage()
                     )
+                )
             );
         });
     }

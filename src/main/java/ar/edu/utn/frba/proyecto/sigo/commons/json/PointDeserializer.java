@@ -1,4 +1,4 @@
-package ar.edu.utn.frba.proyecto.sigo.commons.serialization;
+package ar.edu.utn.frba.proyecto.sigo.commons.json;
 
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;

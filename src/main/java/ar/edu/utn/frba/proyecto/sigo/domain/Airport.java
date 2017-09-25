@@ -1,14 +1,12 @@
 package ar.edu.utn.frba.proyecto.sigo.domain;
 
 import com.google.common.base.MoreObjects;
-import com.google.gson.annotations.Expose;
+import com.google.common.collect.Lists;
 import com.vividsolutions.jts.geom.Point;
 import lombok.*;
-import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
-
-import static javax.persistence.GenerationType.*;
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
@@ -16,7 +14,7 @@ import static javax.persistence.GenerationType.*;
 @Data
 @Entity
 @Table(name = "public.tbl_aerodromes")
-public class Airport {
+public class Airport extends SigoDomain implements Spatial<Point> {
 
     @Id
     @SequenceGenerator(name = "airportGenerator", sequenceName = "AIRPORT_SEQUENCE")
@@ -27,20 +25,29 @@ public class Airport {
     @Column(name = "name_fir", nullable = false)
     private String nameFIR;
 
-    @Column(name = "code_fir", nullable = false, unique = true)
+    @Column(name = "code_fir", nullable = false, unique = true, length = 4)
     private String codeFIR;
 
-    @Column(name = "code_iata")
+    @Column(name = "code_iata", length = 3)
     private String codeIATA;
 
     @Column(name = "geom")
     private Point geom;
 
-    @Override
+    @OneToMany(mappedBy = "airport")
+    private List<Runway> runways;
+
+
     public String toString(){
 
         return MoreObjects.toStringHelper(this)
-                .omitNullValues()
+                .add("id", id)
+                .add("codeFIR", codeFIR)
+                .add("nameFIR", nameFIR)
                 .toString();
+    }
+
+    public void addRunway(Runway runway) {
+        this.runways.add(runway);
     }
 }

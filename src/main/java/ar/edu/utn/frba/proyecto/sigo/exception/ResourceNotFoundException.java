@@ -1,4 +1,4 @@
-package ar.edu.utn.frba.proyecto.sigo.exceptions;
+package ar.edu.utn.frba.proyecto.sigo.exception;
 
 public class ResourceNotFoundException extends SigoException{
 
