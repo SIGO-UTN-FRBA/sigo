@@ -2,6 +2,8 @@ package ar.edu.utn.frba.proyecto.sigo.commons.persistence;
 
 import ar.edu.utn.frba.proyecto.sigo.domain.Airport;
 import ar.edu.utn.frba.proyecto.sigo.domain.Runway;
+import ar.edu.utn.frba.proyecto.sigo.domain.RunwayDirection;
+import ar.edu.utn.frba.proyecto.sigo.domain.RunwaySurface;
 import ar.edu.utn.frba.proyecto.sigo.exception.SigoException;
 import com.github.racc.tscg.TypesafeConfig;
 import lombok.Getter;
@@ -18,6 +20,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -70,7 +73,9 @@ public class HibernateUtil {
         registry = registryBuilder.build();
         MetadataSources sources = new MetadataSources(registry)
                 .addAnnotatedClass(Airport.class)
-                .addAnnotatedClass(Runway.class);
+                .addAnnotatedClass(Runway.class)
+                .addAnnotatedClass(RunwaySurface.class)
+                .addAnnotatedClass(RunwayDirection.class);
 
         Metadata metadata = sources.getMetadataBuilder().build();
 

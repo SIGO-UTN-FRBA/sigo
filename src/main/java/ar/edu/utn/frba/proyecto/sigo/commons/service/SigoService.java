@@ -4,10 +4,8 @@ import ar.edu.utn.frba.proyecto.sigo.commons.persistence.HibernateUtil;
 import ar.edu.utn.frba.proyecto.sigo.domain.SigoDomain;
 import ar.edu.utn.frba.proyecto.sigo.domain.Spatial;
 import ar.edu.utn.frba.proyecto.sigo.exception.ResourceNotFoundException;
-import ar.edu.utn.frba.proyecto.sigo.exception.SigoException;
 import com.vividsolutions.jts.geom.Geometry;
 import org.hibernate.Session;
-import org.hibernate.resource.transaction.spi.TransactionStatus;
 
 import java.util.Optional;
 import java.util.function.Consumer;

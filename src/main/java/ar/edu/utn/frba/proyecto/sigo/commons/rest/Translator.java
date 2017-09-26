@@ -13,6 +13,8 @@ public abstract class Translator<ENTITY, ENTITY_DTO> {
 
     public abstract ENTITY_DTO getAsDTO(ENTITY domain);
 
+    public abstract ENTITY getAsDomain(ENTITY_DTO dto);
+
     public ENTITY_DTO getAsDTO(JsonObject json){
         return objectMapper.fromJson(json, dtoClass);
     }
@@ -20,8 +22,6 @@ public abstract class Translator<ENTITY, ENTITY_DTO> {
     public ENTITY_DTO getAsDTO(String string){
         return objectMapper.fromJson(string, dtoClass);
     }
-
-    public abstract ENTITY getAsDomain(ENTITY_DTO dto);
 
     public ENTITY getAsDomain(JsonObject json){
         return objectMapper.fromJson(json, domainClass);

@@ -1,4 +1,4 @@
-package ar.edu.utn.frba.proyecto.sigo.exception;
+package ar.edu.utn.frba.proyecto.sigo.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

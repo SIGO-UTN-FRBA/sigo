@@ -50,7 +50,7 @@ public class RunwayRouter extends SigoRouter {
 
         Airport airport = airportService.get(getParamAirportId(request));
 
-        return runwayService.getRunwaysByAirport(airport)
+        return airportService.getRunways(airport)
                 .stream()
                 .map(translator::getAsDTO)
                 .collect(toList());

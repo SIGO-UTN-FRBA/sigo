@@ -5,6 +5,7 @@ import com.vividsolutions.jts.geom.MultiLineString;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Optional;
 
 @Entity
@@ -33,6 +34,13 @@ public class Runway extends SigoDomain implements Spatial<MultiLineString>{
     @ManyToOne
     @JoinColumn(name="airport_id", nullable=false, updatable= false)
     private Airport airport;
+
+    @OneToMany(mappedBy = "runway")
+    private List<RunwayDirection> directions;
+
+    @ManyToOne
+    @JoinColumn(name = "surface_id", foreignKey = @ForeignKey(name = "surface_id_fk"))
+    private RunwaySurface surface;
 
 
     public String toString(){

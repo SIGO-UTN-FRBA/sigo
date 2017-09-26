@@ -4,6 +4,7 @@ import ar.edu.utn.frba.proyecto.sigo.commons.persistence.HibernateUtil;
 import ar.edu.utn.frba.proyecto.sigo.commons.rest.Translator;
 import ar.edu.utn.frba.proyecto.sigo.domain.Airport;
 import ar.edu.utn.frba.proyecto.sigo.domain.Runway;
+import ar.edu.utn.frba.proyecto.sigo.domain.RunwaySurface;
 import ar.edu.utn.frba.proyecto.sigo.dto.RunwayDTO;
 import ar.edu.utn.frba.proyecto.sigo.exception.InvalidParameterException;
 import com.google.gson.Gson;
@@ -32,28 +33,45 @@ public class RunwayTranslator extends Translator<Runway, RunwayDTO>{
                 .id(domain.getId())
                 .length(domain.getLength())
                 .width(domain.getWidth())
-                .surfaceCode("")
+                .surfaceId(domain.getSurface().getId())
                 .airportId(domain.getAirport().getId())
                 .build();
     }
 
-    public Runway getAsDomain(RunwayDTO runwayDTO) {
+    public Runway getAsDomain(RunwayDTO dto) {
 
         Runway.RunwayBuilder builder = Runway.builder();
 
+        // basics attributes
+
         builder
-                .id(runwayDTO.getId())
-                .length(runwayDTO.getLength())
-                .width(runwayDTO.getWidth());
+                .id(dto.getId())
+                .length(dto.getLength())
+                .width(dto.getWidth());
+
+        // relation: airport
 
         Airport airport = this.hibernateUtil.doInTransaction(session -> {
-            return session.get(Airport.class, runwayDTO.getAirportId());
+            return session.get(Airport.class, dto.getAirportId());
         });
 
         if(!Optional.ofNullable(airport).isPresent())
-            throw new InvalidParameterException("airport_id == " + runwayDTO.getAirportId());
+            throw new InvalidParameterException("airport_id == " + dto.getAirportId());
 
         builder.airport(airport);
+
+
+        // relation: surface
+
+        RunwaySurface surface = this.hibernateUtil.doInTransaction(session -> {
+            return session.get(RunwaySurface.class, dto.getSurfaceId());
+        });
+
+        if(!Optional.ofNullable(surface).isPresent())
+            throw new InvalidParameterException("surfaceId == " + dto.getSurfaceId());
+
+        builder.surface(surface);
+
 
         return builder.build();
     }

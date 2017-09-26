@@ -3,13 +3,12 @@ package ar.edu.utn.frba.proyecto.sigo.dto;
 import lombok.*;
 
 @AllArgsConstructor
-@Builder
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
+@Builder
 @Data
-public class RunwayDTO {
+public class RunwayDirectionDTO {
     private Long id;
-    private Double width;
-    private Double length;
-    private Long surfaceId;
-    private Long airportId;
+    private Integer code;
+    private Long runwayId;
+    private Boolean available;
 }

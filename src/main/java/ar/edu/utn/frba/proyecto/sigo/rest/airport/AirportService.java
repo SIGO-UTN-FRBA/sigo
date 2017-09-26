@@ -5,6 +5,7 @@ import ar.edu.utn.frba.proyecto.sigo.commons.persistence.HibernateUtil;
 
 import ar.edu.utn.frba.proyecto.sigo.domain.Airport;
 import ar.edu.utn.frba.proyecto.sigo.domain.Airport_;
+import ar.edu.utn.frba.proyecto.sigo.domain.Runway;
 import com.google.common.collect.Lists;
 
 import spark.QueryParamsMap;
@@ -25,6 +26,13 @@ public class AirportService extends SigoService<Airport, Airport>{
         this.hibernateUtil = hibernateUtil;
         this.clazz = Airport.class;
     }
+
+    public List<Runway> getRunways(Airport airport){
+        return hibernateUtil.doInTransaction(session -> {
+            return airport.getRunways();
+
+        });
+    };
 
     protected void preUpdateActions(Airport newInstance, Airport oldInstance){
         newInstance.setGeom(oldInstance.getGeom());
