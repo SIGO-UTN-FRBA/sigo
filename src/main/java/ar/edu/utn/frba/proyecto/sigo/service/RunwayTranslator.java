@@ -1,7 +1,5 @@
-package ar.edu.utn.frba.proyecto.sigo.rest.runway;
+package ar.edu.utn.frba.proyecto.sigo.service;
 
-import ar.edu.utn.frba.proyecto.sigo.commons.persistence.HibernateUtil;
-import ar.edu.utn.frba.proyecto.sigo.commons.rest.Translator;
 import ar.edu.utn.frba.proyecto.sigo.domain.Airport;
 import ar.edu.utn.frba.proyecto.sigo.domain.Runway;
 import ar.edu.utn.frba.proyecto.sigo.domain.RunwaySurface;
@@ -16,12 +14,17 @@ import java.util.Optional;
 @Singleton
 public class RunwayTranslator extends Translator<Runway, RunwayDTO>{
 
+    private AirportService airportService;
+    private RunwaySurfaceService runwaySurfaceService;
+
     @Inject
     public RunwayTranslator(
-        HibernateUtil hibernateUtil,
-        Gson gson
+        Gson gson,
+        AirportService airportService,
+        RunwaySurfaceService runwaySurfaceService
     ){
-        this.hibernateUtil = hibernateUtil;
+        this.airportService = airportService;
+        this.runwaySurfaceService = runwaySurfaceService;
         this.objectMapper = gson;
         this.dtoClass = RunwayDTO.class;
         this.domainClass = Runway.class;
@@ -51,9 +54,7 @@ public class RunwayTranslator extends Translator<Runway, RunwayDTO>{
 
         // relation: airport
 
-        Airport airport = this.hibernateUtil.doInTransaction(session -> {
-            return session.get(Airport.class, dto.getAirportId());
-        });
+        Airport airport = airportService.get(dto.getAirportId());
 
         if(!Optional.ofNullable(airport).isPresent())
             throw new InvalidParameterException("airport_id == " + dto.getAirportId());
@@ -63,9 +64,8 @@ public class RunwayTranslator extends Translator<Runway, RunwayDTO>{
 
         // relation: surface
 
-        RunwaySurface surface = this.hibernateUtil.doInTransaction(session -> {
-            return session.get(RunwaySurface.class, dto.getSurfaceId());
-        });
+        RunwaySurface surface = runwaySurfaceService.get(dto.getSurfaceId());
+
 
         if(!Optional.ofNullable(surface).isPresent())
             throw new InvalidParameterException("surfaceId == " + dto.getSurfaceId());

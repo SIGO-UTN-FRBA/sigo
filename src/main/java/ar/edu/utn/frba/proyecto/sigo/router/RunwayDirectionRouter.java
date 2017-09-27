@@ -1,10 +1,12 @@
-package ar.edu.utn.frba.proyecto.sigo.rest.runway.direction;
+package ar.edu.utn.frba.proyecto.sigo.router;
 
-import ar.edu.utn.frba.proyecto.sigo.commons.rest.SigoRouter;
+import ar.edu.utn.frba.proyecto.sigo.persistence.HibernateUtil;
 import ar.edu.utn.frba.proyecto.sigo.domain.Runway;
 import ar.edu.utn.frba.proyecto.sigo.domain.RunwayDirection;
 import ar.edu.utn.frba.proyecto.sigo.dto.RunwayDirectionDTO;
-import ar.edu.utn.frba.proyecto.sigo.rest.runway.RunwayService;
+import ar.edu.utn.frba.proyecto.sigo.service.RunwayDirectionTranslator;
+import ar.edu.utn.frba.proyecto.sigo.service.RunwayDirectionService;
+import ar.edu.utn.frba.proyecto.sigo.service.RunwayService;
 import ar.edu.utn.frba.proyecto.sigo.spark.JsonTransformer;
 import com.google.gson.Gson;
 import com.vividsolutions.jts.geom.Point;
@@ -31,6 +33,7 @@ public class RunwayDirectionRouter extends SigoRouter{
     @Inject
     public RunwayDirectionRouter(
         Gson objectMapper,
+        HibernateUtil hibernateUtil,
         JsonTransformer jsonTransformer,
         RunwayService runwayService,
         RunwayDirectionService directionService,
@@ -41,9 +44,10 @@ public class RunwayDirectionRouter extends SigoRouter{
         this.directionService = directionService;
         this.translator = translator;
         this.objectMapper = objectMapper;
+        this.hibernateUtil = hibernateUtil;
     }
 
-    private final Route fetchDirections = (Request request, Response response)-> {
+    private final Route fetchDirections = doInTransaction(false, (Request request, Response response)-> {
 
         Runway runway = runwayService.get(getParamRunwayId(request));
 
@@ -51,9 +55,9 @@ public class RunwayDirectionRouter extends SigoRouter{
                 .stream()
                 .map(translator::getAsDTO)
                 .collect(toList());
-    };
+    });
 
-    private final Route createDirection = (Request request, Response response)-> {
+    private final Route createDirection = doInTransaction(true, (Request request, Response response)-> {
 
         RunwayDirectionDTO dto = translator.getAsDTO(request.body());
 
@@ -64,22 +68,22 @@ public class RunwayDirectionRouter extends SigoRouter{
         directionService.create(direction, runway);
 
         return translator.getAsDTO(direction);
-    };
+    });
 
-    private final Route updateDirection = (Request request, Response response)-> {
+    private final Route updateDirection = doInTransaction(true, (request, response) -> {
 
         RunwayDirectionDTO dto = objectMapper.fromJson(request.body(), RunwayDirectionDTO.class);
 
         RunwayDirection direction = translator.getAsDomain(dto);
 
         return translator.getAsDTO(directionService.update(direction));
-    };
+    });
 
 
     /**
      * Create point for a runway
      */
-    private final Route defineGeometry = (Request request, Response response) -> {
+    private final Route defineGeometry = doInTransaction(true, (Request request, Response response) -> {
 
         RunwayDirection direction = directionService.get(getParamDirectionId(request));
 
@@ -88,18 +92,18 @@ public class RunwayDirectionRouter extends SigoRouter{
         directionService.defineGeometry(geometry, direction);
 
         return geometry;
-    };
+    });
 
 
     /**
      * Get point for a runway direction
      */
-    private final Route fetchGeometry = (Request request, Response response) -> {
+    private final Route fetchGeometry = doInTransaction(false, (Request request, Response response) -> {
 
         RunwayDirection direction = directionService.get(getParamDirectionId(request));
 
         return direction.getGeom();
-    };
+    });
 
     @Override
     public RouteGroup routes() {

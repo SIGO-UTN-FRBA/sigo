@@ -1,7 +1,6 @@
-package ar.edu.utn.frba.proyecto.sigo.rest.runway;
+package ar.edu.utn.frba.proyecto.sigo.service;
 
-import ar.edu.utn.frba.proyecto.sigo.commons.persistence.HibernateUtil;
-import ar.edu.utn.frba.proyecto.sigo.commons.service.SigoService;
+import ar.edu.utn.frba.proyecto.sigo.persistence.HibernateUtil;
 import ar.edu.utn.frba.proyecto.sigo.domain.Airport;
 import ar.edu.utn.frba.proyecto.sigo.domain.Runway;
 import ar.edu.utn.frba.proyecto.sigo.domain.RunwayDirection;
@@ -15,11 +14,8 @@ import java.util.List;
 public class RunwayService extends SigoService<Runway, Airport>{
 
     @Inject
-    public RunwayService(
-        HibernateUtil hibernateUtil
-    ){
-        this.hibernateUtil = hibernateUtil;
-        this.clazz = Runway.class;
+    public RunwayService(HibernateUtil hibernateUtil){
+        super(Runway.class, hibernateUtil.getSessionFactory());
     }
 
     protected void preUpdateActions(Runway newInstance, Runway oldInstance){
@@ -32,8 +28,6 @@ public class RunwayService extends SigoService<Runway, Airport>{
     }
 
     public List<RunwayDirection> getDirections(Runway runway) {
-        return hibernateUtil.doInTransaction(session -> {
-            return runway.getDirections();
-        });
+        return runway.getDirections();
     }
 }

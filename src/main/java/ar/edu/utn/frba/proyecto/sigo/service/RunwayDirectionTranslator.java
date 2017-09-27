@@ -1,7 +1,5 @@
-package ar.edu.utn.frba.proyecto.sigo.rest.runway.direction;
+package ar.edu.utn.frba.proyecto.sigo.service;
 
-import ar.edu.utn.frba.proyecto.sigo.commons.persistence.HibernateUtil;
-import ar.edu.utn.frba.proyecto.sigo.commons.rest.Translator;
 import ar.edu.utn.frba.proyecto.sigo.domain.Runway;
 import ar.edu.utn.frba.proyecto.sigo.domain.RunwayDirection;
 import ar.edu.utn.frba.proyecto.sigo.dto.RunwayDirectionDTO;
@@ -13,12 +11,14 @@ import java.util.Optional;
 
 public class RunwayDirectionTranslator extends Translator<RunwayDirection, RunwayDirectionDTO>{
 
+    private RunwayService runwayService;
+
     @Inject
     public RunwayDirectionTranslator(
-            HibernateUtil hibernateUtil,
-            Gson gson
+            Gson gson,
+            RunwayService runwayService
     ){
-        this.hibernateUtil = hibernateUtil;
+        this.runwayService = runwayService;
         this.objectMapper = gson;
         this.dtoClass = RunwayDirectionDTO.class;
         this.domainClass = RunwayDirection.class;
@@ -46,9 +46,7 @@ public class RunwayDirectionTranslator extends Translator<RunwayDirection, Runwa
 
         // relation: runway
 
-        Runway runway = this.hibernateUtil.doInTransaction(session -> {
-            return session.get(Runway.class, dto.getRunwayId());
-        });
+        Runway runway = runwayService.get(dto.getRunwayId());
 
         if(!Optional.ofNullable(runway).isPresent())
             throw new InvalidParameterException("ruwnay_id == " + dto.getRunwayId());

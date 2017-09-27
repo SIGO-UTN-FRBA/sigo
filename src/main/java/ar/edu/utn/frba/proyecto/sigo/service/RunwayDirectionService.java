@@ -1,7 +1,6 @@
-package ar.edu.utn.frba.proyecto.sigo.rest.runway.direction;
+package ar.edu.utn.frba.proyecto.sigo.service;
 
-import ar.edu.utn.frba.proyecto.sigo.commons.persistence.HibernateUtil;
-import ar.edu.utn.frba.proyecto.sigo.commons.service.SigoService;
+import ar.edu.utn.frba.proyecto.sigo.persistence.HibernateUtil;
 import ar.edu.utn.frba.proyecto.sigo.domain.Runway;
 import ar.edu.utn.frba.proyecto.sigo.domain.RunwayDirection;
 
@@ -13,7 +12,6 @@ public class RunwayDirectionService extends SigoService<RunwayDirection, Runway>
     public RunwayDirectionService(
             HibernateUtil hibernateUtil
     ){
-        this.hibernateUtil = hibernateUtil;
-        this.clazz = RunwayDirection.class;
+        super(RunwayDirection.class, hibernateUtil.getSessionFactory());
     }
 }

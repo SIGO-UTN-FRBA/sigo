@@ -1,11 +1,12 @@
-package ar.edu.utn.frba.proyecto.sigo.rest.airport;
+package ar.edu.utn.frba.proyecto.sigo.router;
 
-import ar.edu.utn.frba.proyecto.sigo.commons.rest.SigoRouter;
+import ar.edu.utn.frba.proyecto.sigo.persistence.HibernateUtil;
+import ar.edu.utn.frba.proyecto.sigo.service.AirportTranslator;
+import ar.edu.utn.frba.proyecto.sigo.service.AirportService;
 import ar.edu.utn.frba.proyecto.sigo.domain.Airport;
 import ar.edu.utn.frba.proyecto.sigo.dto.AirportDTO;
 import ar.edu.utn.frba.proyecto.sigo.spark.JsonTransformer;
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import com.vividsolutions.jts.geom.Point;
 import org.eclipse.jetty.http.HttpStatus;
 import spark.Request;
@@ -29,6 +30,7 @@ public class AirportRouter extends SigoRouter {
 
     @Inject
     public AirportRouter(
+            HibernateUtil hibernateUtil,
             Gson objectMapper,
             JsonTransformer jsonTransformer,
             AirportService airportService,
@@ -38,35 +40,36 @@ public class AirportRouter extends SigoRouter {
         this.airportService = airportService;
         this.objectMapper = objectMapper;
         this.translator = translator;
+        this.hibernateUtil = hibernateUtil;
     }
 
     /**
      * Get a list of airports instances filtered by values of its properties
      */
-    private final Route fetchAirports = (Request request, Response response) -> {
+    private final Route fetchAirports = doInTransaction(false, (Request request, Response response) -> {
 
         return airportService.find(request.queryMap())
                 .stream()
                 .map(translator::getAsDTO)
                 .collect(toList());
-    };
+    });
 
     /**
      * Update airport's properties
      */
-    private final Route updateAirport = (Request request, Response response) -> {
+    private final Route updateAirport = doInTransaction(true, (Request request, Response response) -> {
 
         AirportDTO dto = translator.getAsDTO(request.body());
 
         Airport airport = translator.getAsDomain(dto);
 
         return translator.getAsDTO(airportService.update(airport));
-    };
+    });
 
     /**
      * Create an airport
      */
-    private final Route createAirport = (Request request, Response response) -> {
+    private final Route createAirport = doInTransaction(true, (Request request, Response response) -> {
 
         AirportDTO dto = translator.getAsDTO(request.body());
 
@@ -75,12 +78,12 @@ public class AirportRouter extends SigoRouter {
         airportService.create(airport);
 
         return translator.getAsDTO(airport);
-    };
+    });
 
     /**
      * Delete an airport given its identifier
      */
-    private final Route deleteAirport = (Request request, Response response) -> {
+    private final Route deleteAirport = doInTransaction(true, (Request request, Response response) -> {
 
         airportService.delete(getParamAirportId(request));
 
@@ -89,32 +92,32 @@ public class AirportRouter extends SigoRouter {
         response.body("");
 
         return response.body();
-    };
+    });
 
     /**
      * Get an airport given its identifier
      */
-    private final Route fetchAirport = (Request request, Response response) -> {
+    private final Route fetchAirport = doInTransaction(false, (Request request, Response response) -> {
 
         Airport airport = airportService.get(getParamAirportId(request));
 
         return translator.getAsDTO(airport);
-    };
+    });
 
     /**
      * Get point given an airport identifier
      */
-    private final Route fetchGeometry = (Request request, Response response) -> {
+    private final Route fetchGeometry = doInTransaction(false, (Request request, Response response) -> {
 
         Airport airport = airportService.get(getParamAirportId(request));
 
         return airport.getGeom();
-    };
+    });
 
     /**
      * Create point for an airport
      */
-    private final Route defineGeometry = (Request request, Response response) -> {
+    private final Route defineGeometry = doInTransaction(true, (Request request, Response response) -> {
 
         Point point = objectMapper.fromJson(request.body(), Point.class);
 
@@ -123,7 +126,7 @@ public class AirportRouter extends SigoRouter {
         airportService.defineGeometry(point, airport);
 
         return point;
-    };
+    });
 
     @SuppressWarnings("Duplicates")
     @Override

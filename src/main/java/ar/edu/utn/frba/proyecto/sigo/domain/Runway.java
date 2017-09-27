@@ -35,7 +35,7 @@ public class Runway extends SigoDomain implements Spatial<MultiLineString>{
     @JoinColumn(name="airport_id", nullable=false, updatable= false)
     private Airport airport;
 
-    @OneToMany(mappedBy = "runway")
+    @OneToMany(mappedBy = "runway", cascade = CascadeType.REMOVE)
     private List<RunwayDirection> directions;
 
     @ManyToOne

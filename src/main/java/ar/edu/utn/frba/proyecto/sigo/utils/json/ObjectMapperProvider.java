@@ -1,4 +1,4 @@
-package ar.edu.utn.frba.proyecto.sigo.commons.json;
+package ar.edu.utn.frba.proyecto.sigo.utils.json;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;

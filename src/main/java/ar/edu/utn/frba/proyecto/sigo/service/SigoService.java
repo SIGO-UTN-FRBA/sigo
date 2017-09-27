@@ -1,40 +1,41 @@
-package ar.edu.utn.frba.proyecto.sigo.commons.service;
+package ar.edu.utn.frba.proyecto.sigo.service;
 
-import ar.edu.utn.frba.proyecto.sigo.commons.persistence.HibernateUtil;
 import ar.edu.utn.frba.proyecto.sigo.domain.SigoDomain;
 import ar.edu.utn.frba.proyecto.sigo.domain.Spatial;
 import ar.edu.utn.frba.proyecto.sigo.exception.ResourceNotFoundException;
 import com.vividsolutions.jts.geom.Geometry;
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 
 import java.util.Optional;
-import java.util.function.Consumer;
-import java.util.function.Function;
 
 public abstract class SigoService<ENTITY extends SigoDomain, PARENT_ENTITY extends SigoDomain> {
 
     protected Class<ENTITY> clazz;
-    protected HibernateUtil hibernateUtil;
+    protected SessionFactory sessionFactory;
+
+    public SigoService(Class<ENTITY> clazz, SessionFactory sessionFactory) {
+        this.clazz = clazz;
+        this.sessionFactory = sessionFactory;
+    }
 
     public ENTITY get(Long id){
 
-        ENTITY result = hibernateUtil.doInTransaction((Function<Session, ENTITY>) (session) -> session.get(clazz, id));
+        ENTITY result = currentSession().get(clazz, id);
 
         return Optional
                 .ofNullable(result)
-                .orElseThrow(()-> new ResourceNotFoundException(String.format("airport_id == %d%n",id)));
+                .orElseThrow(()-> new ResourceNotFoundException(String.format("%s with id %d%n", clazz.getSimpleName(), id)));
     }
 
     public ENTITY update(ENTITY newInstance) {
 
-        return hibernateUtil.doInTransaction(session -> {
+        ENTITY oldInstance = currentSession().get(clazz,newInstance.getId());
 
-            ENTITY oldInstance = session.get(clazz,newInstance.getId());
+        preUpdateActions(newInstance, oldInstance);
 
-            preUpdateActions(newInstance, oldInstance);
+        return (ENTITY) currentSession().merge(newInstance);
 
-            return (ENTITY) session.merge(newInstance);
-        });
     }
 
     protected void preUpdateActions(ENTITY newInstance, ENTITY oldInstance){
@@ -47,7 +48,7 @@ public abstract class SigoService<ENTITY extends SigoDomain, PARENT_ENTITY exten
 
         preCreateActions(object);
 
-        hibernateUtil.doInTransaction((Consumer<Session>) session -> session.save(object));
+        currentSession().save(object);
 
         return object;
     }
@@ -58,7 +59,7 @@ public abstract class SigoService<ENTITY extends SigoDomain, PARENT_ENTITY exten
 
         preCreateActions(object, parent);
 
-        hibernateUtil.doInTransaction((Consumer<Session>) session -> session.save(object));
+        currentSession().save(object);
 
         return object;
     }
@@ -81,13 +82,15 @@ public abstract class SigoService<ENTITY extends SigoDomain, PARENT_ENTITY exten
 
     public void delete (Long id){
 
-        hibernateUtil.doInTransaction(session -> {
-            ENTITY object = Optional
-                    .ofNullable(session.get(clazz, id))
-                    .orElseThrow(()-> new ResourceNotFoundException(String.format("airport_id == %d%n",id)));
+        ENTITY object = Optional
+                .ofNullable(currentSession().get(clazz, id))
+                .orElseThrow(()-> new ResourceNotFoundException(String.format("%s with id %d%n", clazz.getSimpleName(), id)));
 
-            session.delete(object);
-        });
+        currentSession().delete(object);
+    }
+
+    protected Session currentSession() {
+        return sessionFactory.getCurrentSession();
     }
 
     protected void validateDeletion() {
@@ -95,9 +98,9 @@ public abstract class SigoService<ENTITY extends SigoDomain, PARENT_ENTITY exten
     }
 
     public void defineGeometry(Geometry geom, Spatial domain) {
-        hibernateUtil.doInTransaction(session -> {
-            domain.setGeom(geom);
-            session.update(domain);
-        });
+
+        domain.setGeom(geom);
+
+        currentSession().update(domain);
     }
 }

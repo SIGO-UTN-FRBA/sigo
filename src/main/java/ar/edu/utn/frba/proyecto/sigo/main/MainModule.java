@@ -1,6 +1,6 @@
 package ar.edu.utn.frba.proyecto.sigo.main;
 
-import ar.edu.utn.frba.proyecto.sigo.commons.json.ObjectMapperProvider;
+import ar.edu.utn.frba.proyecto.sigo.utils.json.ObjectMapperProvider;
 import com.google.gson.Gson;
 import com.google.inject.AbstractModule;
 

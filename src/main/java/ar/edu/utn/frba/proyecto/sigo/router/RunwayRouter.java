@@ -1,10 +1,12 @@
-package ar.edu.utn.frba.proyecto.sigo.rest.runway;
+package ar.edu.utn.frba.proyecto.sigo.router;
 
-import ar.edu.utn.frba.proyecto.sigo.commons.rest.SigoRouter;
+import ar.edu.utn.frba.proyecto.sigo.persistence.HibernateUtil;
 import ar.edu.utn.frba.proyecto.sigo.domain.Airport;
 import ar.edu.utn.frba.proyecto.sigo.domain.Runway;
 import ar.edu.utn.frba.proyecto.sigo.dto.RunwayDTO;
-import ar.edu.utn.frba.proyecto.sigo.rest.airport.AirportService;
+import ar.edu.utn.frba.proyecto.sigo.service.RunwayTranslator;
+import ar.edu.utn.frba.proyecto.sigo.service.AirportService;
+import ar.edu.utn.frba.proyecto.sigo.service.RunwayService;
 import ar.edu.utn.frba.proyecto.sigo.spark.JsonTransformer;
 import com.google.gson.Gson;
 import com.vividsolutions.jts.geom.MultiLineString;
@@ -30,6 +32,7 @@ public class RunwayRouter extends SigoRouter {
     @Inject
     public RunwayRouter(
         Gson objectMapper,
+        HibernateUtil hibernateUtil,
         JsonTransformer jsonTransformer,
         RunwayService runwayService,
         AirportService airportService,
@@ -41,12 +44,13 @@ public class RunwayRouter extends SigoRouter {
         this.airportService = airportService;
         this.translator = runwayTranslator;
         this.objectMapper = objectMapper;
+        this.hibernateUtil = hibernateUtil;
     }
 
     /**
      * Get runways releated to an airport
      */
-    private final Route fetchRunways = (Request request, Response response) ->{
+    private final Route fetchRunways = doInTransaction(false, (Request request, Response response) ->{
 
         Airport airport = airportService.get(getParamAirportId(request));
 
@@ -54,22 +58,22 @@ public class RunwayRouter extends SigoRouter {
                 .stream()
                 .map(translator::getAsDTO)
                 .collect(toList());
-    };
+    });
 
     /**
      * Get a runway given its identifier
      */
-    private final Route fetchRunway = (Request request, Response response) -> {
+    private final Route fetchRunway = doInTransaction(false, (Request request, Response response) -> {
 
         Runway runway = runwayService.get(getParamRunwayId(request));
 
         return translator.getAsDTO(runway);
-    };
+    });
 
     /**
      * Create a runway for a given airport
      */
-    private final Route createRunway = (Request request, Response response) -> {
+    private final Route createRunway = doInTransaction(true, (Request request, Response response) -> {
 
         RunwayDTO runwayDTO = translator.getAsDTO(request.body());
 
@@ -80,12 +84,12 @@ public class RunwayRouter extends SigoRouter {
         runwayService.create(runway, airport);
 
         return translator.getAsDTO(runway);
-    };
+    });
 
     /**
      * Create point for a runway
      */
-    private final Route defineGeometry = (Request request, Response response) -> {
+    private final Route defineGeometry = doInTransaction(true, (Request request, Response response) -> {
 
         Runway runway = runwayService.get(getParamRunwayId(request));
 
@@ -94,31 +98,31 @@ public class RunwayRouter extends SigoRouter {
         runwayService.defineGeometry(geometry, runway);
 
         return geometry;
-    };
+    });
 
     /**
      * Get multilinestring for a runway
      */
-    private final Route fetchGeometry = (Request request, Response response) -> {
+    private final Route fetchGeometry = doInTransaction(false, (Request request, Response response) -> {
 
         Runway runway = runwayService.get(getParamRunwayId(request));
 
         return runway.getGeom();
-    };
+    });
 
     /**
      * Update runway's properties
      */
-    private final Route updateRunway = (Request request, Response response) -> {
+    private final Route updateRunway = doInTransaction(true, (Request request, Response response) -> {
 
         RunwayDTO runwayDTO = objectMapper.fromJson(request.body(), RunwayDTO.class);
 
         Runway runway = translator.getAsDomain(runwayDTO);
 
         return translator.getAsDTO(runwayService.update(runway));
-    };
+    });
 
-    private final Route deleteRunway = (Request request, Response response) -> {
+    private final Route deleteRunway = doInTransaction(true, (Request request, Response response) -> {
 
         runwayService.delete(getParamRunwayId(request));
 
@@ -127,7 +131,7 @@ public class RunwayRouter extends SigoRouter {
         response.body("");
 
         return response.body();
-    };
+    });
 
     @SuppressWarnings("Duplicates")
     @Override

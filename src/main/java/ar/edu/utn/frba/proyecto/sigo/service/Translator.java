@@ -1,13 +1,11 @@
-package ar.edu.utn.frba.proyecto.sigo.commons.rest;
+package ar.edu.utn.frba.proyecto.sigo.service;
 
-import ar.edu.utn.frba.proyecto.sigo.commons.persistence.HibernateUtil;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
 public abstract class Translator<ENTITY, ENTITY_DTO> {
 
     protected Gson objectMapper;
-    protected HibernateUtil hibernateUtil;
     protected Class<ENTITY_DTO> dtoClass;
     protected Class<ENTITY> domainClass;
 

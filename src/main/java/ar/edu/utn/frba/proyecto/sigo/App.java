@@ -1,7 +1,7 @@
 package ar.edu.utn.frba.proyecto.sigo;
 
-import ar.edu.utn.frba.proyecto.sigo.rest.RestModule;
-import ar.edu.utn.frba.proyecto.sigo.commons.persistence.PersistenceModule;
+import ar.edu.utn.frba.proyecto.sigo.router.RouterModule;
+import ar.edu.utn.frba.proyecto.sigo.persistence.PersistenceModule;
 import ar.edu.utn.frba.proyecto.sigo.main.MainModule;
 import ar.edu.utn.frba.proyecto.sigo.parameters.ParametersModuleProvider;
 import com.google.inject.Guice;
@@ -19,7 +19,7 @@ public class App
                 ParametersModuleProvider.get(),
                 new MainModule(),
                 new PersistenceModule(),
-                new RestModule()
+                new RouterModule()
         );
 
         ApiContext context = injector.getBinding(ApiContext.class).getProvider().get();

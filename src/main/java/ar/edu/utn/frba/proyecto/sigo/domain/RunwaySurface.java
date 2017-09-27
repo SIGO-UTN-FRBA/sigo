@@ -8,7 +8,7 @@ import javax.persistence.*;
 @Table(name = "public.tbl_runway_surfaces")
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 @Data
-public class RunwaySurface {
+public class RunwaySurface extends SigoDomain {
 
     @Id
     @SequenceGenerator(name = "surfaceGenerator", sequenceName = "RUNWAY_SURFACE_SEQUENCE")

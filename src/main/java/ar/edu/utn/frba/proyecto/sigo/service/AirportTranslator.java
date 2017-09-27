@@ -1,7 +1,5 @@
-package ar.edu.utn.frba.proyecto.sigo.rest.airport;
+package ar.edu.utn.frba.proyecto.sigo.service;
 
-import ar.edu.utn.frba.proyecto.sigo.commons.persistence.HibernateUtil;
-import ar.edu.utn.frba.proyecto.sigo.commons.rest.Translator;
 import ar.edu.utn.frba.proyecto.sigo.domain.Airport;
 import ar.edu.utn.frba.proyecto.sigo.dto.AirportDTO;
 import com.google.gson.Gson;
@@ -12,10 +10,8 @@ public class AirportTranslator extends Translator<Airport, AirportDTO> {
 
     @Inject
     public AirportTranslator(
-            HibernateUtil hibernateUtil,
             Gson gson
     ){
-        this.hibernateUtil = hibernateUtil;
         this.objectMapper = gson;
         this.dtoClass = AirportDTO.class;
         this.domainClass = Airport.class;
