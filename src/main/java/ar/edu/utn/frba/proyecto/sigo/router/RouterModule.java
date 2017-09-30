@@ -26,9 +26,11 @@ public class RouterModule extends AbstractModule {
         bind(RunwayDirectionRouter.class);
         bind(RunwayDirectionService.class);
         bind(RunwayDirectionTranslator.class);
+        bind(CatalogRouter.class);
 
         routerBinder.addBinding().to(AirportRouter.class);
         routerBinder.addBinding().to(RunwayRouter.class);
         routerBinder.addBinding().to(RunwayDirectionRouter.class);
+        routerBinder.addBinding().to(CatalogRouter.class);
     }
 }
