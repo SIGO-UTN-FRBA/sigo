@@ -4,6 +4,7 @@ import ar.edu.utn.frba.proyecto.sigo.persistence.HibernateUtil;
 import ar.edu.utn.frba.proyecto.sigo.domain.Airport;
 import ar.edu.utn.frba.proyecto.sigo.domain.Runway;
 import ar.edu.utn.frba.proyecto.sigo.domain.RunwayDirection;
+import com.google.common.collect.Lists;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -12,6 +13,11 @@ import java.util.List;
 
 @Singleton
 public class RunwayService extends SigoService<Runway, Airport>{
+
+    @Override
+    protected void preCreateActions(Runway instance) {
+        super.preCreateActions(instance);
+    }
 
     @Inject
     public RunwayService(HibernateUtil hibernateUtil){

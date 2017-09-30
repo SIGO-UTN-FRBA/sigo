@@ -15,7 +15,6 @@ public class ObjectMapperProvider implements Provider<Gson>{
     public Gson get() {
         return new GsonBuilder()
                 .serializeSpecialFloatingPointValues()
-                .serializeNulls()
                 .registerTypeAdapter(Point.class, new PointSerializer())
                 .registerTypeAdapter(Point.class, new PointDeserializer())
                 .registerTypeAdapter(MultiLineString.class, new MultiLineStringDeserializer())
