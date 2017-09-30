@@ -4,6 +4,7 @@ import ar.edu.utn.frba.proyecto.sigo.domain.Airport;
 import ar.edu.utn.frba.proyecto.sigo.domain.Runway;
 import ar.edu.utn.frba.proyecto.sigo.domain.RunwayDirection;
 import ar.edu.utn.frba.proyecto.sigo.domain.RunwaySurface;
+import ar.edu.utn.frba.proyecto.sigo.domain.Region;
 import com.github.racc.tscg.TypesafeConfig;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -71,7 +72,8 @@ public class HibernateUtil {
                 .addAnnotatedClass(Airport.class)
                 .addAnnotatedClass(Runway.class)
                 .addAnnotatedClass(RunwaySurface.class)
-                .addAnnotatedClass(RunwayDirection.class);
+                .addAnnotatedClass(RunwayDirection.class)
+                .addAnnotatedClass(Region.class);
 
         Metadata metadata = sources.getMetadataBuilder().build();
 
