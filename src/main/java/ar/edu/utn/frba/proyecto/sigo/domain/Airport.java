@@ -37,6 +37,10 @@ public class Airport extends SigoDomain implements Spatial<Point> {
     @OneToMany(mappedBy = "airport", cascade = CascadeType.REMOVE)
     private List<Runway> runways;
 
+    @ManyToOne
+    @JoinColumn(name="region_id", nullable=false, updatable= false)
+    private Region region;
+
 
     public String toString(){
 
