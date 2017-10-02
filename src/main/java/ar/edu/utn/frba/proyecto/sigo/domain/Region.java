@@ -4,7 +4,7 @@ import javax.persistence.*;
 import java.util.List;
 import lombok.*;
 import com.vividsolutions.jts.geom.Point;
-import com.vividsolutions.jts.geom.Polygon;
+import com.vividsolutions.jts.geom.MultiPolygon;
 
 
 @Entity
@@ -21,26 +21,13 @@ public class Region {
     @Column(name = "name")
     private String name;
 
-   /* @Column(name = "code" , length=3)
-    private String code;*/
-
     @Column(name = "code_fir" , length=4)
     private String code_fir;
 
-  /*  @Column(name = "name_fir")
-    private String name_fir;*/
-/*
-    @ManyToOne
-    @JoinColumn(name = "state_id")
-    private State state;*//*TODO*/
-
     @Column(name = "geom")
-    private Polygon geom;
+    private MultiPolygon geom;
 
     @OneToMany(mappedBy="region", cascade = CascadeType.REMOVE)
     private List<Airport> aiports;
 
-    /*TODO */
-/*    @OneToMany(mappedBy="region", cascade = CascadeType.REMOVE)
-    private List<PlacedObject> placedobjects;*/
 }

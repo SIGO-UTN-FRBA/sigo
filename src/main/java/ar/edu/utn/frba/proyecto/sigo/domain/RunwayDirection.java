@@ -6,7 +6,7 @@ import lombok.*;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "public.tbl_runway_dimensions")
+@Table(name = "public.tbl_runway_directions")
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 @Data
@@ -24,7 +24,6 @@ public class RunwayDirection extends SigoDomain implements Spatial<Point>{
 
     @Column(name = "available")
     private Boolean available;
-
 
     @ManyToOne
     @JoinColumn(name="runway_id", nullable=false, updatable= false)
