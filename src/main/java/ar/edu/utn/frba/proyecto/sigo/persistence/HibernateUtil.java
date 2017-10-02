@@ -9,6 +9,8 @@ import ar.edu.utn.frba.proyecto.sigo.domain.RunwayDistanceType;
 import ar.edu.utn.frba.proyecto.sigo.domain.RunwayDistance;
 import ar.edu.utn.frba.proyecto.sigo.domain.RunwayTypeLetterICAOAnnex14;
 import ar.edu.utn.frba.proyecto.sigo.domain.RunwayTypeNumberICAOAnnex14;
+import ar.edu.utn.frba.proyecto.sigo.domain.RunwayClassificationICAOAnnex14;
+
 
 import com.github.racc.tscg.TypesafeConfig;
 import lombok.Getter;
@@ -81,7 +83,7 @@ public class HibernateUtil {
                 .addAnnotatedClass(RunwayDistance.class)
                 .addAnnotatedClass(RunwayTypeLetterICAOAnnex14.class)
                 .addAnnotatedClass(RunwayTypeNumberICAOAnnex14.class)
-
+                .addAnnotatedClass(RunwayClassificationICAOAnnex14.class)
                 .addAnnotatedClass(Region.class);
 
         Metadata metadata = sources.getMetadataBuilder().build();
