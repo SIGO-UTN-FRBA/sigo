@@ -1,5 +1,6 @@
 package ar.edu.utn.frba.proyecto.sigo.router;
 
+import ar.edu.utn.frba.proyecto.sigo.domain.RunwayDirectionPosition;
 import ar.edu.utn.frba.proyecto.sigo.persistence.HibernateUtil;
 import ar.edu.utn.frba.proyecto.sigo.service.RunwaySurfaceService;
 import ar.edu.utn.frba.proyecto.sigo.spark.JsonTransformer;
@@ -36,10 +37,15 @@ public class CatalogRouter extends SigoRouter {
         return runwaySurfaceService.findAll();
     });
 
+    private final Route fetchRunwayDirectionPosition = doInTransaction(false, (Request request, Response response) -> {
+        return RunwayDirectionPosition.values();
+    });
+
     @Override
     public RouteGroup routes() {
         return () -> {
-            get("/runwaySurfaces", fetchRunwaySurface, jsonTransformer);
+            get("/runways/surfaces", fetchRunwaySurface, jsonTransformer);
+            get("/runways/directions/positions", fetchRunwayDirectionPosition, jsonTransformer);
         };
     }
 
