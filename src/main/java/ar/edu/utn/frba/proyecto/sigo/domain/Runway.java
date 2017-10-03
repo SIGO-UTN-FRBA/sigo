@@ -3,7 +3,6 @@ package ar.edu.utn.frba.proyecto.sigo.domain;
 import com.google.common.base.MoreObjects;
 import com.vividsolutions.jts.geom.LineString;
 import lombok.*;
-
 import javax.persistence.*;
 import java.util.List;
 import java.util.Optional;
@@ -43,7 +42,6 @@ public class Runway extends SigoDomain implements Spatial<LineString>{
     @ManyToOne
     @JoinColumn(name = "surface_id", foreignKey = @ForeignKey(name = "surface_id_fk"))
     private RunwaySurface surface;
-
 
     public String getName(){
 
