@@ -23,14 +23,10 @@ public class Region extends SigoDomain {
     @Column(name = "code_fir" , length=4)
     private String codeFIR;
 
-    /* TODO parent relation
-    @ManyToOne
-    @JoinColumn(name = "state_id")
-    private State state;*/
-
     @Column(name = "geom")
     private MultiPolygon geom;
 
     @OneToMany(mappedBy="region", cascade = CascadeType.REMOVE)
     private List<Airport> airports;
+
 }

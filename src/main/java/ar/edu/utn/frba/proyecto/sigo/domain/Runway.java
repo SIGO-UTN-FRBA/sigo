@@ -1,10 +1,8 @@
 package ar.edu.utn.frba.proyecto.sigo.domain;
 
 import com.google.common.base.MoreObjects;
-import com.google.common.collect.Lists;
-import com.vividsolutions.jts.geom.MultiLineString;
+import com.vividsolutions.jts.geom.LineString;
 import lombok.*;
-import org.apache.commons.lang3.StringUtils;
 
 import javax.persistence.*;
 import java.util.List;
@@ -17,7 +15,7 @@ import java.util.stream.Collectors;
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 @Builder
 @Data
-public class Runway extends SigoDomain implements Spatial<MultiLineString>{
+public class Runway extends SigoDomain implements Spatial<LineString>{
 
     @Id
     @SequenceGenerator(name = "runwayGenerator", sequenceName = "RUNWAY_SEQUENCE")
@@ -32,7 +30,7 @@ public class Runway extends SigoDomain implements Spatial<MultiLineString>{
     private Double length;
 
     @Column(name = "geom")
-    private MultiLineString geom;
+    private LineString geom;
 
     @ManyToOne
     @JoinColumn(name="airport_id", nullable=false, updatable= false)
