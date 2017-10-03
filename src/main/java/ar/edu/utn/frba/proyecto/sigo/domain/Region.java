@@ -18,31 +18,18 @@ public class Region {
     @SequenceGenerator(name = "regionGenerator", sequenceName = "REGION_SEQUENCE")
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "regionGenerator")
     @Column(name = "region_id")
-    private Long region_id;
+    private Long id;
 
     @Column(name = "name")
     private String name;
 
-   /* @Column(name = "code" , length=3)
-    private String code;*/
-
     @Column(name = "code_fir" , length=4)
-    private String code_fir;
-
-  /*  @Column(name = "name_fir")
-    private String name_fir;*/
-/*
-    @ManyToOne
-    @JoinColumn(name = "state_id")
-    private State state;*//*TODO*/
+    private String codeFIR;
 
     @Column(name = "geom")
     private MultiPolygon geom;
 
     @OneToMany(mappedBy="region", cascade = CascadeType.REMOVE)
-    private List<Airport> aiports;
+    private List<Airport> airports;
 
-    /*TODO */
-/*    @OneToMany(mappedBy="region", cascade = CascadeType.REMOVE)
-    private List<PlacedObject> placedobjects;*/
 }

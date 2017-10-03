@@ -4,7 +4,6 @@ import com.google.common.base.MoreObjects;
 import com.vividsolutions.jts.geom.Point;
 import lombok.*;
 import org.apache.commons.lang3.StringUtils;
-
 import javax.persistence.*;
 import java.util.Optional;
 
@@ -35,7 +34,10 @@ public class RunwayDirection extends SigoDomain implements Spatial<Point>{
 
     @Column(name = "geom")
     private Point geom;
-
+  
+    @OneToOne
+    @JoinColumn(name = "relation_id", foreignKey = @ForeignKey(name = "type_direction_fk"))
+    private RunwayTypeImplICAOAnnex14 type;
 
     public String getIdentifier(){
 
@@ -54,4 +56,5 @@ public class RunwayDirection extends SigoDomain implements Spatial<Point>{
                 .add("runway", Optional.ofNullable(runway).map(Runway::getId).orElse(null))
                 .toString();
     }
+
 }
