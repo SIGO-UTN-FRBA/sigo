@@ -5,44 +5,32 @@ import java.util.List;
 
 import com.vividsolutions.jts.geom.MultiPolygon;
 import lombok.*;
-import com.vividsolutions.jts.geom.Point;
-import com.vividsolutions.jts.geom.Polygon;
-
 
 @Entity
 @Table(name = "public.tbl_regions")
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 @Data
-public class Region {
+public class Region extends SigoDomain {
     @Id
     @SequenceGenerator(name = "regionGenerator", sequenceName = "REGION_SEQUENCE")
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "regionGenerator")
     @Column(name = "region_id")
-    private Long region_id;
+    private Long id;
 
     @Column(name = "name")
     private String name;
 
-   /* @Column(name = "code" , length=3)
-    private String code;*/
-
     @Column(name = "code_fir" , length=4)
-    private String code_fir;
+    private String codeFIR;
 
-  /*  @Column(name = "name_fir")
-    private String name_fir;*/
-/*
+    /* TODO parent relation
     @ManyToOne
     @JoinColumn(name = "state_id")
-    private State state;*//*TODO*/
+    private State state;*/
 
     @Column(name = "geom")
     private MultiPolygon geom;
 
     @OneToMany(mappedBy="region", cascade = CascadeType.REMOVE)
-    private List<Airport> aiports;
-
-    /*TODO */
-/*    @OneToMany(mappedBy="region", cascade = CascadeType.REMOVE)
-    private List<PlacedObject> placedobjects;*/
+    private List<Airport> airports;
 }

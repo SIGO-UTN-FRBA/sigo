@@ -1,17 +1,24 @@
 package ar.edu.utn.frba.proyecto.sigo.service;
 
 import ar.edu.utn.frba.proyecto.sigo.domain.Airport;
+import ar.edu.utn.frba.proyecto.sigo.domain.Region;
 import ar.edu.utn.frba.proyecto.sigo.dto.AirportDTO;
+import ar.edu.utn.frba.proyecto.sigo.exception.InvalidParameterException;
 import com.google.gson.Gson;
 
 import javax.inject.Inject;
+import java.util.Optional;
 
 public class AirportTranslator extends Translator<Airport, AirportDTO> {
 
+    private RegionService regionService;
+
     @Inject
     public AirportTranslator(
-            Gson gson
+            Gson gson,
+            RegionService regionService
     ){
+        this.regionService = regionService;
         this.objectMapper = gson;
         this.dtoClass = AirportDTO.class;
         this.domainClass = Airport.class;
@@ -24,16 +31,28 @@ public class AirportTranslator extends Translator<Airport, AirportDTO> {
                 .codeFIR(domain.getCodeFIR())
                 .codeIATA(domain.getCodeIATA())
                 .nameFIR(domain.getNameFIR())
+                .regionId(domain.getRegion().getId())
                 .build();
     }
 
     @Override
     public Airport getAsDomain(AirportDTO dto) {
-        return Airport.builder()
-                .id(dto.getId())
-                .codeFIR(dto.getCodeFIR())
-                .codeIATA(dto.getCodeIATA())
-                .nameFIR(dto.getNameFIR())
-                .build();
+
+        Airport.AirportBuilder builder = Airport.builder();
+
+        // basic properties
+        builder
+            .id(dto.getId())
+            .codeFIR(dto.getCodeFIR())
+            .codeIATA(dto.getCodeIATA())
+            .nameFIR(dto.getNameFIR());
+
+        // relation: region
+        Region region = this.regionService.get(dto.getRegionId());
+        if(!Optional.ofNullable(region).isPresent())
+            throw new InvalidParameterException("region_id == " + dto.getRegionId());
+        builder.region(region);
+
+        return builder.build();
     }
 }
