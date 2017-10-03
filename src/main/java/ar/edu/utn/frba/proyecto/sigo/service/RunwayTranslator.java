@@ -5,6 +5,7 @@ import ar.edu.utn.frba.proyecto.sigo.domain.Runway;
 import ar.edu.utn.frba.proyecto.sigo.domain.RunwaySurface;
 import ar.edu.utn.frba.proyecto.sigo.dto.RunwayDTO;
 import ar.edu.utn.frba.proyecto.sigo.exception.InvalidParameterException;
+import com.google.common.collect.Lists;
 import com.google.gson.Gson;
 
 import javax.inject.Inject;
@@ -34,6 +35,7 @@ public class RunwayTranslator extends Translator<Runway, RunwayDTO>{
 
         return RunwayDTO.builder()
                 .id(domain.getId())
+                .name(domain.getName())
                 .length(domain.getLength())
                 .width(domain.getWidth())
                 .surfaceId(domain.getSurface().getId())
@@ -72,6 +74,10 @@ public class RunwayTranslator extends Translator<Runway, RunwayDTO>{
 
         builder.surface(surface);
 
+
+        // init children
+
+        builder.directions(Lists.newArrayList());
 
         return builder.build();
     }

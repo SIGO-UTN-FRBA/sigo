@@ -7,6 +7,10 @@ import com.vividsolutions.jts.geom.Geometry;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
+import java.util.List;
 import java.util.Optional;
 
 public abstract class SigoService<ENTITY extends SigoDomain, PARENT_ENTITY extends SigoDomain> {
@@ -103,4 +107,14 @@ public abstract class SigoService<ENTITY extends SigoDomain, PARENT_ENTITY exten
 
         currentSession().update(domain);
     }
+
+    public List<ENTITY> findAll(){
+        CriteriaBuilder builder = currentSession().getCriteriaBuilder();
+
+        CriteriaQuery<ENTITY> criteria = builder.createQuery(clazz);
+        Root<ENTITY> root = criteria.from(clazz);
+        criteria.select(root);
+
+        return currentSession().createQuery(criteria).getResultList();
+    };
 }

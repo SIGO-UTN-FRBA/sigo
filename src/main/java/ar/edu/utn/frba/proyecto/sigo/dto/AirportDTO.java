@@ -11,4 +11,5 @@ public class AirportDTO {
     private String nameFIR;
     private String codeFIR;
     private String codeIATA;
+    private Long regionId;
 }

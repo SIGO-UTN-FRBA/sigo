@@ -2,6 +2,7 @@ package ar.edu.utn.frba.proyecto.sigo.service;
 
 import ar.edu.utn.frba.proyecto.sigo.domain.Runway;
 import ar.edu.utn.frba.proyecto.sigo.domain.RunwayDirection;
+import ar.edu.utn.frba.proyecto.sigo.domain.RunwayDirectionPosition;
 import ar.edu.utn.frba.proyecto.sigo.dto.RunwayDirectionDTO;
 import ar.edu.utn.frba.proyecto.sigo.exception.InvalidParameterException;
 import com.google.gson.Gson;
@@ -28,9 +29,9 @@ public class RunwayDirectionTranslator extends Translator<RunwayDirection, Runwa
     public RunwayDirectionDTO getAsDTO(RunwayDirection domain) {
         return RunwayDirectionDTO.builder()
                 .id(domain.getId())
-                .code(domain.getCode())
+                .number(domain.getNumber())
+                .position(domain.getPosition().ordinal())
                 .runwayId(domain.getRunway().getId())
-                .available(domain.getAvailable())
                 .build();
     }
 
@@ -41,8 +42,8 @@ public class RunwayDirectionTranslator extends Translator<RunwayDirection, Runwa
         // basic properties
         builder
                 .id(dto.getId())
-                .code(dto.getCode())
-                .available(dto.getAvailable());
+                .number(dto.getNumber())
+                .position(RunwayDirectionPosition.getEnum(dto.getPosition()));
 
         // relation: runway
 

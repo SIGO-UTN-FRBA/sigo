@@ -8,6 +8,7 @@ import lombok.*;
 @Data
 public class RunwayDTO {
     private Long id;
+    private String name;
     private Double width;
     private Double length;
     private Long surfaceId;

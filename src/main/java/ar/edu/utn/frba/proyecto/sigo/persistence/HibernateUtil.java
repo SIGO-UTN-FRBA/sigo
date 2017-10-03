@@ -4,6 +4,7 @@ import ar.edu.utn.frba.proyecto.sigo.domain.*;
 
 
 import com.github.racc.tscg.TypesafeConfig;
+import lombok.AccessLevel;
 import lombok.Getter;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.Metadata;
@@ -20,7 +21,7 @@ import java.util.Map;
 @Singleton
 public class HibernateUtil {
 
-    @Getter
+    @Getter(AccessLevel.PUBLIC)
     private SessionFactory sessionFactory;
     private static StandardServiceRegistry registry;
 

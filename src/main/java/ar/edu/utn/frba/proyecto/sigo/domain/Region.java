@@ -2,6 +2,8 @@ package ar.edu.utn.frba.proyecto.sigo.domain;
 
 import javax.persistence.*;
 import java.util.List;
+
+import com.vividsolutions.jts.geom.MultiPolygon;
 import lombok.*;
 import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.geom.Polygon;
@@ -25,7 +27,7 @@ public class Region {
     private String codeFIR;
 
     @Column(name = "geom")
-    private Polygon geom;
+    private MultiPolygon geom;
 
     @OneToMany(mappedBy="region", cascade = CascadeType.REMOVE)
     private List<Airport> airports;
