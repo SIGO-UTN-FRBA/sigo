@@ -12,22 +12,16 @@ import com.vividsolutions.jts.geom.MultiPolygon;
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 @Data
 
-public class RunwayTypeNumberICAOAnnex14 {
+public class RunwayTypeNumberICAOAnnex14 extends SigoDomain {
     @Id
     @SequenceGenerator(name = "runwayTypeNumberICAOAnnex14Generator", sequenceName = "RunwayTypeNumberICAOAnnex14_SEQUENCE")
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "runwayTypeNumberICAOAnnex14Generator")
-
     @Column(name = "code_id")
-    private Long code_id;
+    private Long id;
 
     @Column(name = "length_max")
-    private Long length_max;
+    private Long lengthMax;
 
     @Column(name = "length_min")
-    private Long length_min;
-
-/*TODO
-    @OneToMany(mappedBy="runwaytypenumberICAOAnnex14")
-    private Set<RunwayTypeImplICAOAnnex14> runwaytypeimplICAOAnnex14s;
-*/
+    private Long lengthMin;
 }

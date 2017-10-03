@@ -2,7 +2,6 @@ package ar.edu.utn.frba.proyecto.sigo.domain;
 
 import com.vividsolutions.jts.geom.Point;
 import lombok.*;
-
 import javax.persistence.*;
 
 @Entity
@@ -31,4 +30,8 @@ public class RunwayDirection extends SigoDomain implements Spatial<Point>{
 
     @Column(name = "geom")
     private Point geom;
+
+    @OneToOne
+    @JoinColumn(name = "relation_id", foreignKey = @ForeignKey(name = "type_direction_fk"))
+    private RunwayTypeImplICAOAnnex14 type;
 }

@@ -1,15 +1,6 @@
 package ar.edu.utn.frba.proyecto.sigo.persistence;
 
-import ar.edu.utn.frba.proyecto.sigo.domain.Airport;
-import ar.edu.utn.frba.proyecto.sigo.domain.Runway;
-import ar.edu.utn.frba.proyecto.sigo.domain.RunwayDirection;
-import ar.edu.utn.frba.proyecto.sigo.domain.RunwaySurface;
-import ar.edu.utn.frba.proyecto.sigo.domain.Region;
-import ar.edu.utn.frba.proyecto.sigo.domain.RunwayDistanceType;
-import ar.edu.utn.frba.proyecto.sigo.domain.RunwayDistance;
-import ar.edu.utn.frba.proyecto.sigo.domain.RunwayTypeLetterICAOAnnex14;
-import ar.edu.utn.frba.proyecto.sigo.domain.RunwayTypeNumberICAOAnnex14;
-import ar.edu.utn.frba.proyecto.sigo.domain.RunwayClassificationICAOAnnex14;
+import ar.edu.utn.frba.proyecto.sigo.domain.*;
 
 
 import com.github.racc.tscg.TypesafeConfig;
@@ -84,6 +75,7 @@ public class HibernateUtil {
                 .addAnnotatedClass(RunwayTypeLetterICAOAnnex14.class)
                 .addAnnotatedClass(RunwayTypeNumberICAOAnnex14.class)
                 .addAnnotatedClass(RunwayClassificationICAOAnnex14.class)
+                .addAnnotatedClass(RunwayTypeImplICAOAnnex14.class)
                 .addAnnotatedClass(Region.class);
 
         Metadata metadata = sources.getMetadataBuilder().build();

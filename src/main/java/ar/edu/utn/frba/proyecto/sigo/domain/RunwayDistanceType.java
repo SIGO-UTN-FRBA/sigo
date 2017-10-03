@@ -18,7 +18,7 @@ public class RunwayDistanceType {
     @SequenceGenerator(name = "runwayDistanceTypeGenerator", sequenceName = "Runway_Distance_Type_SEQUENCE")
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "runwayDistanceTypeGenerator")
     @Column(name = "type_id")
-    private Long type_id;
+    private Long id;
 
     @Column(name = "name")
     private String name;

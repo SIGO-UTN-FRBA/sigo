@@ -12,29 +12,25 @@ import com.vividsolutions.jts.geom.MultiPolygon;
 @Table(name = "public.tbl_runway_type_letter_ICAOAnnex14")
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 @Data
-public class RunwayTypeLetterICAOAnnex14 {
+public class RunwayTypeLetterICAOAnnex14 extends SigoDomain {
     @Id
     @SequenceGenerator(name = "runwayTypeLetterICAOAnnex14Generator", sequenceName = "RunwayTypeLetterICAOAnnex14_SEQUENCE")
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "runwayTypeLetterICAOAnnex14Generator")
     @Column(name = "code_id")
-    private Long code_id;
+    private Long id;
 
     @Column(name = "value",length = 1)
     private String value;
 
     @Column(name = "wingspan_min")
-    private Double wingspan_min;
+    private Double wingspanMin;
 
     @Column(name = "wingspan_max")
-    private Double wingspan_max;
+    private Double wingspanMax;
 
     @Column(name = "gear_wheel_span_min")
-    private Double gear_wheel_span_min;
+    private Double gearWheelSpanMin;
 
     @Column(name = "gear_wheel_span_max")
-    private Double gear_wheel_span_max;
-
-    /*@OneToMany(mappedBy="runwaytypeletterICAOAnnex14")
-    /*private Set<RunwayTypeImplICAOAnnex14> runwaytypeimplICAOAnnex14s;*/
-
+    private Double gearWheelSpanMax;
 }
