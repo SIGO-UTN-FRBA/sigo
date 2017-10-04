@@ -5,6 +5,7 @@ import com.vividsolutions.jts.geom.Point;
 import lombok.*;
 import org.apache.commons.lang3.StringUtils;
 import javax.persistence.*;
+import java.util.List;
 import java.util.Optional;
 
 @Entity

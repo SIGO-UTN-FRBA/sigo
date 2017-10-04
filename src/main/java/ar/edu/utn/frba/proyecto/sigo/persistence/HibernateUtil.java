@@ -1,8 +1,6 @@
 package ar.edu.utn.frba.proyecto.sigo.persistence;
 
 import ar.edu.utn.frba.proyecto.sigo.domain.*;
-
-
 import com.github.racc.tscg.TypesafeConfig;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -76,7 +74,11 @@ public class HibernateUtil {
                 .addAnnotatedClass(RunwayTypeLetterICAOAnnex14.class)
                 .addAnnotatedClass(RunwayTypeNumberICAOAnnex14.class)
                 .addAnnotatedClass(RunwayClassificationICAOAnnex14.class)
+                .addAnnotatedClass(RunwayClassificationImplICAOAnnex14.class)
+                .addAnnotatedClass(RunwayApproachSection.class)
+                .addAnnotatedClass(RunwayTakeoffSection.class)
                 .addAnnotatedClass(RunwayTypeImplICAOAnnex14.class)
+
                 .addAnnotatedClass(Region.class);
 
         Metadata metadata = sources.getMetadataBuilder().build();
