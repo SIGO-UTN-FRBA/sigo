@@ -66,6 +66,10 @@ public class HibernateUtil {
         registry = registryBuilder.build();
         MetadataSources sources = new MetadataSources(registry)
                 .addAnnotatedClass(Airport.class)
+                .addAnnotatedClass(PoliticalLocation.class)
+                .addAnnotatedClass(PoliticalLocationType.class)
+                .addAnnotatedClass(State.class)
+                .addAnnotatedClass(Regulation.class)
                 .addAnnotatedClass(Runway.class)
                 .addAnnotatedClass(RunwaySurface.class)
                 .addAnnotatedClass(RunwayDirection.class)
@@ -78,7 +82,8 @@ public class HibernateUtil {
                 .addAnnotatedClass(RunwayApproachSection.class)
                 .addAnnotatedClass(RunwayTakeoffSection.class)
                 .addAnnotatedClass(RunwayTypeImplICAOAnnex14.class)
-
+                .addAnnotatedClass(OlsRule.class)
+                .addAnnotatedClass(OlsRulesICAOAnnex14.class)
                 .addAnnotatedClass(Region.class);
 
         Metadata metadata = sources.getMetadataBuilder().build();

@@ -29,4 +29,9 @@ public class Region extends SigoDomain {
     @OneToMany(mappedBy="region", cascade = CascadeType.REMOVE)
     private List<Airport> airports;
 
+    @ManyToOne
+    @JoinColumn(name="state_id", nullable=true, updatable= false)
+    private State state;
+
+
 }
