@@ -10,7 +10,7 @@ import lombok.*;
 @Table(name = "public.tbl_regions")
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 @Data
-public class Region extends SigoDomain {
+public class Region extends SigoDomain implements Spatial<MultiPolygon> {
     @Id
     @SequenceGenerator(name = "regionGenerator", sequenceName = "REGION_SEQUENCE")
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "regionGenerator")

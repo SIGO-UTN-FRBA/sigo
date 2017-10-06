@@ -20,8 +20,8 @@ public class RunwayTypeNumberICAOAnnex14 extends SigoDomain {
     private Long id;
 
     @Column(name = "length_max")
-    private Long lengthMax;
+    private Double lengthMax;
 
     @Column(name = "length_min")
-    private Long lengthMin;
+    private Double lengthMin;
 }

@@ -9,13 +9,13 @@ import lombok.*;
 @Table(name = "public.tbl_states")
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 @Data
-public class State {
+public class State extends SigoDomain{
     @Id
     @SequenceGenerator(name = "stateGenerator", sequenceName = "STATE_SEQUENCE")
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "stateGenerator")
 
     @Column(name = "state_id")
-    private Long state_id;
+    private Long id;
 
     @Column(name = "name")
     private String name;

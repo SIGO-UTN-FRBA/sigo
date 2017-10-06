@@ -9,7 +9,7 @@ import lombok.*;
 @Table(name = "public.tbl_regulations")
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 @Data
-public class Regulation {
+public class Regulation extends SigoDomain {
     @Id
     @SequenceGenerator(name = "regulationGenerator", sequenceName = "REGULATION_SEQUENCE")
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "regulationGenerator")

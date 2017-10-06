@@ -8,7 +8,7 @@ import lombok.*;
 @Table(name = "public.tbl_OLS_rules_ICAOAnnex14")
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 @Data
-public class OlsRulesICAOAnnex14 {
+public class OlsRulesICAOAnnex14 extends SigoDomain {
     @Id
     @SequenceGenerator(name = "ruleGenerator", sequenceName = "RULE_SEQUENCE")
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ruleGenerator")

@@ -12,13 +12,13 @@ import com.vividsolutions.jts.geom.MultiPolygon;
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 @Data
 
-public class RunwayClassificationICAOAnnex14 {
+public class RunwayClassificationICAOAnnex14 extends SigoDomain {
     @Id
     @SequenceGenerator(name = "runwayClassificationICAOAnnex14Generator", sequenceName = "RunwayClassificationICAOAnnex14_SEQUENCE")
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "runwayClassificationICAOAnnex14Generator")
 
-    @Column(name = "classification_id") /*PK*/
-    private Long classification_id;
+    @Column(name = "classification_id")
+    private Long id;
 
     @Column(name = "name")
     private String name;

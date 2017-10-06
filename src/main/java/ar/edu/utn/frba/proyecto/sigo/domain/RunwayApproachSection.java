@@ -15,7 +15,7 @@ import java.util.Optional;
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 @Data
 
-public class RunwayApproachSection  {
+public class RunwayApproachSection extends SigoDomain {
     @Id
     @SequenceGenerator(name = "runwayApproachSectionGenerator", sequenceName = "Runway_Approach_Section_SEQUENCE")
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "runwayApproachSectionGenerator")
@@ -30,9 +30,9 @@ public class RunwayApproachSection  {
     private Boolean enabled;
 
     @Column(name = "threshold_length")
-    private Long thresholdLength;
+    private Double thresholdLength;
 
     @Column(name = "threshold_elevation")
-    private Long thresholdElevation;
+    private Double thresholdElevation;
 
 }

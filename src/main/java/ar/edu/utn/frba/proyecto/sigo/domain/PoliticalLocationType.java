@@ -11,7 +11,7 @@ import java.util.List;
 @Table(name = "public.tbl_political_location_type")
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 @Data
-public class PoliticalLocationType {
+public class PoliticalLocationType extends SigoDomain {
     @Id
     @SequenceGenerator(name = "PoliticalLocationTypeGenerator", sequenceName = "POLITICA_LOCATION_TYPE_SEQUENCE")
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "PoliticalLocationTypeGenerator")
@@ -20,7 +20,7 @@ public class PoliticalLocationType {
 
     @ManyToOne
     @JoinColumn(name = "name")
-    private PoliticalLocation politicalocation;
+    private PoliticalLocation name;
 
     @Column(name = "index")
     private Long index;

@@ -1,7 +1,5 @@
 package ar.edu.utn.frba.proyecto.sigo.domain;
 
-import com.google.common.base.MoreObjects;
-import com.google.common.collect.Lists;
 import com.vividsolutions.jts.geom.MultiPolygon;
 import lombok.*;
 import javax.persistence.*;
@@ -11,7 +9,7 @@ import java.util.List;
 @Table(name = "public.tbl_political_locations")
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 @Data
-public class PoliticalLocation {
+public class PoliticalLocation extends SigoDomain implements Spatial<MultiPolygon> {
     @Id
     @SequenceGenerator(name = "politicalLocationGenerator", sequenceName = "POLITICAL_LOCATION_SEQUENCE")
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "politicalLocationGenerator")
@@ -25,17 +23,18 @@ public class PoliticalLocation {
     private String code;
 
     @ManyToOne
-    @JoinColumn(name = "parten_id")
-    private PoliticalLocation politicallocation;
+    @JoinColumn(name = "parent_id")
+    private PoliticalLocation parent;
 
     @Column(name = "geom")
     private MultiPolygon geom;
 
-    @OneToMany(mappedBy="politicallocation")
-    private List<PoliticalLocation> politicallocations;
+    @OneToMany(mappedBy="parent")
+    private List<PoliticalLocation> children;
 
-    @OneToMany(mappedBy="politicalocation")
-    private List<PoliticalLocationType> politicallocationtypes;
+    @ManyToOne
+    @JoinColumn(name = "type_id")
+    private PoliticalLocationType type;
 
 
 }

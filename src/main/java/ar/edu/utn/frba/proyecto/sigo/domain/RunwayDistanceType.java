@@ -13,7 +13,7 @@ import com.vividsolutions.jts.geom.MultiPolygon;
 @Data
 @Builder
 
-public class RunwayDistanceType {
+public class RunwayDistanceType extends SigoDomain {
     @Id
     @SequenceGenerator(name = "runwayDistanceTypeGenerator", sequenceName = "Runway_Distance_Type_SEQUENCE")
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "runwayDistanceTypeGenerator")
@@ -28,11 +28,4 @@ public class RunwayDistanceType {
 
     @Column(name = "description")
     private String description;
-
- /*   @OneToMany(mappedBy="runwaydistancetype")
-    private Set<RunwayDistance> runwaydistances;
-
-    @OneToMany(mappedBy="runwaydistancetype")
-    private Set<RunwayDirection> runwaydirections;*/
-
 }

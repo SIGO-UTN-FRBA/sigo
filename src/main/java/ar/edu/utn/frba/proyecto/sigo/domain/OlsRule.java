@@ -9,8 +9,7 @@ import lombok.*;
 @Table(name = "public.tbl_ols_rules")
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 @Data
-
-public class OlsRule {
+public class OlsRule extends SigoDomain {
 
     @Id
     @SequenceGenerator(name = "olsGenerator", sequenceName = "OLS_SEQUENCE")

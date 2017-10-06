@@ -15,7 +15,7 @@ import java.util.Optional;
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 @Data
 
-public class RunwayTakeoffSection {
+public class RunwayTakeoffSection extends SigoDomain {
     @Id
     @SequenceGenerator(name = "runwayTakeoffSectionGenerator", sequenceName = "Runway_Takeoff_Section_SEQUENCE")
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "runwayTakeoffSectionGenerator")
@@ -30,12 +30,12 @@ public class RunwayTakeoffSection {
     private Boolean enabled;
 
     @Column(name = "clearway_length")
-    private Long clearwayLength;
+    private Double clearwayLength;
 
     @Column(name = "clearway_width")
-    private Long clearwayWidth;
+    private Double clearwayWidth;
 
     @Column(name = "stopway_length")
-    private Long stopwayLength;
+    private Double stopwayLength;
 
 }

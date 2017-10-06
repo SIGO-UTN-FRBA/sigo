@@ -17,13 +17,13 @@ import java.util.Optional;
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 @Data
 
-public class RunwayDistance {
+public class RunwayDistance extends SigoDomain implements Spatial<Polygon> {
     @Id
     @SequenceGenerator(name = "runwayDistancesGenerator", sequenceName = "Runway_Distance_SEQUENCE")
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "runwayDistancesGenerator")
 
     @Column(name = "distance_id")
-    private Long distance_id;
+    private Long id;
 
     @ManyToOne
     @JoinColumn(name = "type_id", foreignKey = @ForeignKey(name = "type_id_fk"))
