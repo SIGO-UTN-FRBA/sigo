@@ -16,16 +16,16 @@ import java.util.Optional;
 public class RunwayTranslator extends Translator<Runway, RunwayDTO>{
 
     private AirportService airportService;
-    private RunwaySurfaceService runwaySurfaceService;
+    private CatalogService catalogService;
 
     @Inject
     public RunwayTranslator(
         Gson gson,
         AirportService airportService,
-        RunwaySurfaceService runwaySurfaceService
+        CatalogService catalogService
     ){
         this.airportService = airportService;
-        this.runwaySurfaceService = runwaySurfaceService;
+        this.catalogService = catalogService;
         this.objectMapper = gson;
         this.dtoClass = RunwayDTO.class;
         this.domainClass = Runway.class;
@@ -66,11 +66,11 @@ public class RunwayTranslator extends Translator<Runway, RunwayDTO>{
 
         // relation: surface
 
-        RunwaySurface surface = runwaySurfaceService.get(dto.getSurfaceId());
-
-
-        if(!Optional.ofNullable(surface).isPresent())
-            throw new InvalidParameterException("surfaceId == " + dto.getSurfaceId());
+        RunwaySurface surface = catalogService.findAllRunwaySurfaces()
+                .stream()
+                .filter(s -> s.getId().equals(dto.getSurfaceId()))
+                .findAny()
+                .orElseThrow(() -> new InvalidParameterException("surfaceId == " + dto.getSurfaceId()));
 
         builder.surface(surface);
 

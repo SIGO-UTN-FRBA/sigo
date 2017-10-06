@@ -116,5 +116,5 @@ public abstract class SigoService<ENTITY extends SigoDomain, PARENT_ENTITY exten
         criteria.select(root);
 
         return currentSession().createQuery(criteria).getResultList();
-    };
+    }
 }
