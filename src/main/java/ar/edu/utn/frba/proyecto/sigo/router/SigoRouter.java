@@ -23,6 +23,7 @@ public abstract class SigoRouter extends Router {
     protected static String AIRPORT_ID_PARAM = "airport_id";
     protected static String RUNWAY_ID_PARAM = "runway_id";
     protected static String RUNWAY_DIRECTION_ID_PARAM = "direction_id";
+    protected static String REGION_ID_PARAM = "region_id";
 
     protected Gson objectMapper;
 
@@ -37,9 +38,12 @@ public abstract class SigoRouter extends Router {
         return getParam(request, RUNWAY_ID_PARAM);
     }
 
-
     protected Long getParamDirectionId(Request request) {
         return getParam(request, RUNWAY_DIRECTION_ID_PARAM);
+    }
+
+    protected Long getParamRegionId(Request request){
+        return getParam(request, REGION_ID_PARAM);
     }
 
     private Long getParam(Request request, String key) {
