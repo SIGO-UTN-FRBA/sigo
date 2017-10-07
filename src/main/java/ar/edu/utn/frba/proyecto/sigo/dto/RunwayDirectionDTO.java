@@ -8,6 +8,7 @@ import lombok.*;
 @Data
 public class RunwayDirectionDTO {
     private Long id;
+    private String name;
     private Integer number;
     private Integer position;
     private Long runwayId;
