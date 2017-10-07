@@ -9,6 +9,7 @@ import ar.edu.utn.frba.proyecto.sigo.service.AirportService;
 import ar.edu.utn.frba.proyecto.sigo.service.RunwayService;
 import ar.edu.utn.frba.proyecto.sigo.spark.JsonTransformer;
 import com.google.gson.Gson;
+import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.MultiLineString;
 import org.eclipse.jetty.http.HttpStatus;
 import spark.Request;
@@ -87,13 +88,13 @@ public class RunwayRouter extends SigoRouter {
     });
 
     /**
-     * Create point for a runway
+     * Create a line for a runway
      */
     private final Route defineGeometry = doInTransaction(true, (Request request, Response response) -> {
 
         Runway runway = runwayService.get(getParamRunwayId(request));
 
-        MultiLineString geometry = objectMapper.fromJson(request.body(), MultiLineString.class);
+        LineString geometry = objectMapper.fromJson(request.body(), LineString.class);
 
         runwayService.defineGeometry(geometry, runway);
 
@@ -101,7 +102,7 @@ public class RunwayRouter extends SigoRouter {
     });
 
     /**
-     * Get multilinestring for a runway
+     * Get line for a runway
      */
     private final Route fetchGeometry = doInTransaction(false, (Request request, Response response) -> {
 
@@ -122,6 +123,9 @@ public class RunwayRouter extends SigoRouter {
         return translator.getAsDTO(runwayService.update(runway));
     });
 
+    /**
+     * Delete a runway by id
+     */
     private final Route deleteRunway = doInTransaction(true, (Request request, Response response) -> {
 
         runwayService.delete(getParamRunwayId(request));

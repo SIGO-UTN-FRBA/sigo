@@ -32,6 +32,7 @@ public class RunwayDirectionTranslator extends Translator<RunwayDirection, Runwa
                 .number(domain.getNumber())
                 .position(domain.getPosition().ordinal())
                 .runwayId(domain.getRunway().getId())
+                .name(domain.getNumber() + domain.getPosition().position())
                 .build();
     }
 
