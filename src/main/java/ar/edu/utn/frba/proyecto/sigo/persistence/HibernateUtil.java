@@ -88,6 +88,16 @@ public class HibernateUtil {
                 .addAnnotatedClass(RunwayTypeImplICAOAnnex14.class)
                 .addAnnotatedClass(OlsRule.class)
                 .addAnnotatedClass(OlsRulesICAOAnnex14.class)
+                .addAnnotatedClass(AnalysisArea.class)
+                .addAnnotatedClass(AnalysisAreaSurface.class)
+                .addAnnotatedClass(AnalysisCase.class)
+                .addAnnotatedClass(AnalysisCaseStatus.class)
+                .addAnnotatedClass(AnalysisCaseStatusRegistry.class)
+                .addAnnotatedClass(AnalysisException.class)
+                .addAnnotatedClass(ExceptionRuleValueSpec.class)
+                .addAnnotatedClass(ExceptionSurfaceSpec.class)
+                .addAnnotatedClass(ExceptionModificationSpec.class)
+                .addAnnotatedClass(AnalysisObjects.class)
                 .addAnnotatedClass(Region.class);
 
         Metadata metadata = sources.getMetadataBuilder().build();
