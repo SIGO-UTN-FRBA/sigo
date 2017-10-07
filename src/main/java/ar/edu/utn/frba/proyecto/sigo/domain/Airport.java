@@ -45,7 +45,6 @@ public class Airport extends SigoDomain implements Spatial<Point> {
     @JoinColumn(name="regulation_id", nullable = false, updatable = true)
     private Regulation regulation;
 
-
     public String toString(){
 
         return MoreObjects.toStringHelper(this)

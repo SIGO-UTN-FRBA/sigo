@@ -9,8 +9,7 @@ import ar.edu.utn.frba.proyecto.sigo.service.AirportService;
 import ar.edu.utn.frba.proyecto.sigo.service.RunwayService;
 import ar.edu.utn.frba.proyecto.sigo.spark.JsonTransformer;
 import com.google.gson.Gson;
-import com.vividsolutions.jts.geom.LineString;
-import com.vividsolutions.jts.geom.MultiLineString;
+import com.vividsolutions.jts.geom.Polygon;
 import org.eclipse.jetty.http.HttpStatus;
 import spark.Request;
 import spark.Response;
@@ -88,13 +87,13 @@ public class RunwayRouter extends SigoRouter {
     });
 
     /**
-     * Create a line for a runway
+     * Create polygon for a runway
      */
     private final Route defineGeometry = doInTransaction(true, (Request request, Response response) -> {
 
         Runway runway = runwayService.get(getParamRunwayId(request));
 
-        LineString geometry = objectMapper.fromJson(request.body(), LineString.class);
+        Polygon geometry = objectMapper.fromJson(request.body(), Polygon.class);
 
         runwayService.defineGeometry(geometry, runway);
 
@@ -102,7 +101,7 @@ public class RunwayRouter extends SigoRouter {
     });
 
     /**
-     * Get line for a runway
+     * Get polygon for a runway
      */
     private final Route fetchGeometry = doInTransaction(false, (Request request, Response response) -> {
 
