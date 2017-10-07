@@ -122,6 +122,9 @@ public class RunwayRouter extends SigoRouter {
         return translator.getAsDTO(runwayService.update(runway));
     });
 
+    /**
+     * Delete a runway by id
+     */
     private final Route deleteRunway = doInTransaction(true, (Request request, Response response) -> {
 
         runwayService.delete(getParamRunwayId(request));

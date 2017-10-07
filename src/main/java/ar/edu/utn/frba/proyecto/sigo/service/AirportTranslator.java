@@ -2,6 +2,7 @@ package ar.edu.utn.frba.proyecto.sigo.service;
 
 import ar.edu.utn.frba.proyecto.sigo.domain.Airport;
 import ar.edu.utn.frba.proyecto.sigo.domain.Region;
+import ar.edu.utn.frba.proyecto.sigo.domain.Regulation;
 import ar.edu.utn.frba.proyecto.sigo.dto.AirportDTO;
 import ar.edu.utn.frba.proyecto.sigo.exception.InvalidParameterException;
 import com.google.gson.Gson;
@@ -12,16 +13,19 @@ import java.util.Optional;
 public class AirportTranslator extends Translator<Airport, AirportDTO> {
 
     private RegionService regionService;
+    private RegulationService regulationService;
 
     @Inject
     public AirportTranslator(
             Gson gson,
-            RegionService regionService
+            RegionService regionService,
+            RegulationService regulationService
     ){
         this.regionService = regionService;
         this.objectMapper = gson;
         this.dtoClass = AirportDTO.class;
         this.domainClass = Airport.class;
+        this.regulationService = regulationService;
     }
 
     @Override
@@ -32,6 +36,7 @@ public class AirportTranslator extends Translator<Airport, AirportDTO> {
                 .codeIATA(domain.getCodeIATA())
                 .nameFIR(domain.getNameFIR())
                 .regionId(domain.getRegion().getId())
+                .regulationId(domain.getRegulation().getId())
                 .build();
     }
 
@@ -52,6 +57,13 @@ public class AirportTranslator extends Translator<Airport, AirportDTO> {
         if(!Optional.ofNullable(region).isPresent())
             throw new InvalidParameterException("region_id == " + dto.getRegionId());
         builder.region(region);
+
+        // relation: regulation
+        Regulation regulation = this.regulationService.get(dto.getRegulationId());
+        if(!Optional.ofNullable(regulation).isPresent())
+            throw new InvalidParameterException("regulation_id == " + dto.getRegulationId());
+        builder.regulation(regulation);
+
 
         return builder.build();
     }
