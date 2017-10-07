@@ -41,6 +41,9 @@ public class Airport extends SigoDomain implements Spatial<Point> {
     @JoinColumn(name="region_id", nullable=false, updatable= false)
     private Region region;
 
+    @ManyToOne
+    @JoinColumn(name="regulation_id", nullable = false, updatable = true)
+    private Regulation regulation;
 
     public String toString(){
 
