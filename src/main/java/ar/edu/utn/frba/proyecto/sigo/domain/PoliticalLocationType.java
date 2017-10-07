@@ -8,7 +8,7 @@ import javax.persistence.*;
 import java.util.List;
 
 @Entity
-@Table(name = "public.tbl_political_location_type")
+@Table(name = "public.tbl_political_location_types")
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 @Data
 public class PoliticalLocationType extends SigoDomain {
@@ -18,9 +18,8 @@ public class PoliticalLocationType extends SigoDomain {
     @Column(name = "type_id")
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "name")
-    private PoliticalLocation name;
+    @Column(name = "name")
+    private String name;
 
     @Column(name = "index")
     private Long index;

@@ -10,7 +10,6 @@ import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Environment;
-
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.HashMap;
@@ -66,6 +65,11 @@ public class HibernateUtil {
         registry = registryBuilder.build();
         MetadataSources sources = new MetadataSources(registry)
                 .addAnnotatedClass(Airport.class)
+                .addAnnotatedClass(PlacedObject.class)
+                .addAnnotatedClass(PlacedObjectBuildingSpec.class)
+                .addAnnotatedClass(PlacedObjectIndividualSpec.class)
+                .addAnnotatedClass(PlacedObjectOverheadWireSpec.class)
+                .addAnnotatedClass(PlacedObjectOwner.class)
                 .addAnnotatedClass(PoliticalLocation.class)
                 .addAnnotatedClass(PoliticalLocationType.class)
                 .addAnnotatedClass(State.class)
