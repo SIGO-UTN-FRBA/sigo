@@ -1,4 +1,5 @@
 package ar.edu.utn.frba.proyecto.sigo.dto;
+import ar.edu.utn.frba.proyecto.sigo.domain.Regulation;
 import lombok.*;
 
 @AllArgsConstructor
@@ -12,4 +13,5 @@ public class AirportDTO {
     private String codeFIR;
     private String codeIATA;
     private Long regionId;
+    private Long regulationId;
 }
