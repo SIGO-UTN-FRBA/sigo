@@ -1,7 +1,7 @@
 package ar.edu.utn.frba.proyecto.sigo.domain;
 
 import com.google.common.base.MoreObjects;
-import com.vividsolutions.jts.geom.LineString;
+import com.vividsolutions.jts.geom.Polygon;
 import lombok.*;
 import javax.persistence.*;
 import java.util.List;
@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 @Builder
 @Data
-public class Runway extends SigoDomain implements Spatial<LineString>{
+public class Runway extends SigoDomain implements Spatial<Polygon>{
 
     @Id
     @SequenceGenerator(name = "runwayGenerator", sequenceName = "RUNWAY_SEQUENCE")
@@ -29,7 +29,7 @@ public class Runway extends SigoDomain implements Spatial<LineString>{
     private Double length;
 
     @Column(name = "geom")
-    private LineString geom;
+    private Polygon geom;
 
     @ManyToOne
     @JoinColumn(name="airport_id", nullable=false, updatable= false)
