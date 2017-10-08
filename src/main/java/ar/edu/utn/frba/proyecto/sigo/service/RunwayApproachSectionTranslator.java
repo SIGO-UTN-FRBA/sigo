@@ -1,23 +1,26 @@
 package ar.edu.utn.frba.proyecto.sigo.service;
 
 import ar.edu.utn.frba.proyecto.sigo.domain.airport.RunwayApproachSection;
+import ar.edu.utn.frba.proyecto.sigo.domain.airport.RunwayDirection;
 import ar.edu.utn.frba.proyecto.sigo.dto.RunwayApproachSectionDTO;
+import ar.edu.utn.frba.proyecto.sigo.exception.InvalidParameterException;
 import com.google.gson.Gson;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.Optional;
 
 @Singleton
 public class RunwayApproachSectionTranslator extends Translator<RunwayApproachSection,RunwayApproachSectionDTO>{
 
-    private final RunwayApproachSectionService sectionService;
+    private RunwayDirectionService directionService;
 
     @Inject
     public RunwayApproachSectionTranslator(
             Gson gson,
-            RunwayApproachSectionService sectionService
+            RunwayDirectionService directionService
     ){
-        this.sectionService = sectionService;
+        this.directionService = directionService;
         this.objectMapper = gson;
         this.dtoClass = RunwayApproachSectionDTO.class;
         this.domainClass = RunwayApproachSection.class;
@@ -35,7 +38,24 @@ public class RunwayApproachSectionTranslator extends Translator<RunwayApproachSe
     }
 
     @Override
-    public RunwayApproachSection getAsDomain(RunwayApproachSectionDTO runwayApproachSectionDTO) {
-        return null;
+    public RunwayApproachSection getAsDomain(RunwayApproachSectionDTO dto) {
+
+        RunwayApproachSection.RunwayApproachSectionBuilder builder = RunwayApproachSection.builder();
+
+        // basic properties
+        builder
+                .id(dto.getId())
+                .thresholdElevation(dto.getThresholdElevation())
+                .thresholdLength(dto.getThresholdLength())
+                .enabled(dto.getEnabled());
+
+        // relation: direction
+        RunwayDirection direction = directionService.get(dto.getDirectionId());
+        if(!Optional.ofNullable(direction).isPresent())
+            throw new InvalidParameterException("directionId == " + dto.getDirectionId());
+
+        builder.runwayDirection(direction);
+
+        return builder.build();
     }
 }
