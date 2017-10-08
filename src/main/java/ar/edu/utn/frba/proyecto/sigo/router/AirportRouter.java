@@ -3,7 +3,7 @@ package ar.edu.utn.frba.proyecto.sigo.router;
 import ar.edu.utn.frba.proyecto.sigo.persistence.HibernateUtil;
 import ar.edu.utn.frba.proyecto.sigo.service.AirportTranslator;
 import ar.edu.utn.frba.proyecto.sigo.service.AirportService;
-import ar.edu.utn.frba.proyecto.sigo.domain.Airport;
+import ar.edu.utn.frba.proyecto.sigo.domain.airport.Airport;
 import ar.edu.utn.frba.proyecto.sigo.dto.AirportDTO;
 import ar.edu.utn.frba.proyecto.sigo.spark.JsonTransformer;
 import com.google.gson.Gson;

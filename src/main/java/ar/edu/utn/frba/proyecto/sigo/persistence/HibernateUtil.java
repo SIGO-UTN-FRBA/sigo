@@ -1,6 +1,15 @@
 package ar.edu.utn.frba.proyecto.sigo.persistence;
 
-import ar.edu.utn.frba.proyecto.sigo.domain.*;
+import ar.edu.utn.frba.proyecto.sigo.domain.airport.*;
+import ar.edu.utn.frba.proyecto.sigo.domain.analysis.*;
+import ar.edu.utn.frba.proyecto.sigo.domain.location.PoliticalLocation;
+import ar.edu.utn.frba.proyecto.sigo.domain.location.PoliticalLocationType;
+import ar.edu.utn.frba.proyecto.sigo.domain.location.Region;
+import ar.edu.utn.frba.proyecto.sigo.domain.location.State;
+import ar.edu.utn.frba.proyecto.sigo.domain.object.*;
+import ar.edu.utn.frba.proyecto.sigo.domain.regulation.OlsRule;
+import ar.edu.utn.frba.proyecto.sigo.domain.regulation.OlsRulesICAOAnnex14;
+import ar.edu.utn.frba.proyecto.sigo.domain.regulation.Regulation;
 import com.github.racc.tscg.TypesafeConfig;
 import lombok.AccessLevel;
 import lombok.Getter;

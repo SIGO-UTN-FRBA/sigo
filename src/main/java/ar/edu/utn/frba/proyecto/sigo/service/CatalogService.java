@@ -1,9 +1,9 @@
 package ar.edu.utn.frba.proyecto.sigo.service;
 
-import ar.edu.utn.frba.proyecto.sigo.domain.Regulation;
-import ar.edu.utn.frba.proyecto.sigo.domain.RunwaySurface;
-import ar.edu.utn.frba.proyecto.sigo.domain.RunwayTypeLetterICAOAnnex14;
-import ar.edu.utn.frba.proyecto.sigo.domain.RunwayTypeNumberICAOAnnex14;
+import ar.edu.utn.frba.proyecto.sigo.domain.regulation.Regulation;
+import ar.edu.utn.frba.proyecto.sigo.domain.airport.RunwaySurface;
+import ar.edu.utn.frba.proyecto.sigo.domain.airport.RunwayTypeLetterICAOAnnex14;
+import ar.edu.utn.frba.proyecto.sigo.domain.airport.RunwayTypeNumberICAOAnnex14;
 import ar.edu.utn.frba.proyecto.sigo.persistence.HibernateUtil;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;

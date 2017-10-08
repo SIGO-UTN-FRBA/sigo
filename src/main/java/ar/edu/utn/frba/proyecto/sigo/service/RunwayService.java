@@ -1,10 +1,9 @@
 package ar.edu.utn.frba.proyecto.sigo.service;
 
 import ar.edu.utn.frba.proyecto.sigo.persistence.HibernateUtil;
-import ar.edu.utn.frba.proyecto.sigo.domain.Airport;
-import ar.edu.utn.frba.proyecto.sigo.domain.Runway;
-import ar.edu.utn.frba.proyecto.sigo.domain.RunwayDirection;
-import com.google.common.collect.Lists;
+import ar.edu.utn.frba.proyecto.sigo.domain.airport.Airport;
+import ar.edu.utn.frba.proyecto.sigo.domain.airport.Runway;
+import ar.edu.utn.frba.proyecto.sigo.domain.airport.RunwayDirection;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;

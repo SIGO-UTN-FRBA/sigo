@@ -1,8 +1,8 @@
 package ar.edu.utn.frba.proyecto.sigo.router;
 
 import ar.edu.utn.frba.proyecto.sigo.persistence.HibernateUtil;
-import ar.edu.utn.frba.proyecto.sigo.domain.Airport;
-import ar.edu.utn.frba.proyecto.sigo.domain.Runway;
+import ar.edu.utn.frba.proyecto.sigo.domain.airport.Airport;
+import ar.edu.utn.frba.proyecto.sigo.domain.airport.Runway;
 import ar.edu.utn.frba.proyecto.sigo.dto.RunwayDTO;
 import ar.edu.utn.frba.proyecto.sigo.service.RunwayTranslator;
 import ar.edu.utn.frba.proyecto.sigo.service.AirportService;

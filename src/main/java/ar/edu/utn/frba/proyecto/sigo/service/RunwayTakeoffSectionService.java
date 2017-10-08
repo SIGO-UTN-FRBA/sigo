@@ -1,7 +1,7 @@
 package ar.edu.utn.frba.proyecto.sigo.service;
 
-import ar.edu.utn.frba.proyecto.sigo.domain.RunwayDirection;
-import ar.edu.utn.frba.proyecto.sigo.domain.RunwayTakeoffSection;
+import ar.edu.utn.frba.proyecto.sigo.domain.airport.RunwayDirection;
+import ar.edu.utn.frba.proyecto.sigo.domain.airport.RunwayTakeoffSection;
 import ar.edu.utn.frba.proyecto.sigo.persistence.HibernateUtil;
 
 import javax.inject.Inject;

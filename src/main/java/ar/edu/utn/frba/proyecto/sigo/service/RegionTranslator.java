@@ -1,6 +1,6 @@
 package ar.edu.utn.frba.proyecto.sigo.service;
 
-import ar.edu.utn.frba.proyecto.sigo.domain.Region;
+import ar.edu.utn.frba.proyecto.sigo.domain.location.Region;
 import ar.edu.utn.frba.proyecto.sigo.dto.RegionDTO;
 
 import javax.inject.Singleton;

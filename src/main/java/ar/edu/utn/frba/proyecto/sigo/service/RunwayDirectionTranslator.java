@@ -1,8 +1,8 @@
 package ar.edu.utn.frba.proyecto.sigo.service;
 
-import ar.edu.utn.frba.proyecto.sigo.domain.Runway;
-import ar.edu.utn.frba.proyecto.sigo.domain.RunwayDirection;
-import ar.edu.utn.frba.proyecto.sigo.domain.RunwayDirectionPosition;
+import ar.edu.utn.frba.proyecto.sigo.domain.airport.Runway;
+import ar.edu.utn.frba.proyecto.sigo.domain.airport.RunwayDirection;
+import ar.edu.utn.frba.proyecto.sigo.domain.airport.RunwayDirectionPosition;
 import ar.edu.utn.frba.proyecto.sigo.dto.RunwayDirectionDTO;
 import ar.edu.utn.frba.proyecto.sigo.exception.InvalidParameterException;
 import com.google.gson.Gson;

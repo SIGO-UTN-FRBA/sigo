@@ -1,6 +1,6 @@
 package ar.edu.utn.frba.proyecto.sigo.service;
 
-import ar.edu.utn.frba.proyecto.sigo.domain.RunwayApproachSection;
+import ar.edu.utn.frba.proyecto.sigo.domain.airport.RunwayApproachSection;
 import ar.edu.utn.frba.proyecto.sigo.dto.RunwayApproachSectionDTO;
 import com.google.gson.Gson;
 

@@ -1,9 +1,9 @@
 package ar.edu.utn.frba.proyecto.sigo.service;
 
 import ar.edu.utn.frba.proyecto.sigo.persistence.HibernateUtil;
-import ar.edu.utn.frba.proyecto.sigo.domain.Airport;
-import ar.edu.utn.frba.proyecto.sigo.domain.Airport_;
-import ar.edu.utn.frba.proyecto.sigo.domain.Runway;
+import ar.edu.utn.frba.proyecto.sigo.domain.airport.Airport;
+import ar.edu.utn.frba.proyecto.sigo.domain.airport.Airport_;
+import ar.edu.utn.frba.proyecto.sigo.domain.airport.Runway;
 import com.google.common.collect.Lists;
 
 import spark.QueryParamsMap;
