@@ -1,6 +1,6 @@
 package ar.edu.utn.frba.proyecto.sigo.domain.airport;
 
-public enum RunwayDirectionPosition {
+public enum RunwayDirectionPositions {
 
     NONE(""),
     LEFT ("L"),
@@ -10,7 +10,7 @@ public enum RunwayDirectionPosition {
 
     private final String position;
 
-    RunwayDirectionPosition(String position){
+    RunwayDirectionPositions(String position){
         this.position = position;
     }
 
@@ -18,7 +18,7 @@ public enum RunwayDirectionPosition {
         return position;
     }
 
-    public static RunwayDirectionPosition getEnum(Integer code) {
+    public static RunwayDirectionPositions getEnum(Integer code) {
 
         switch (code){
             case 0:

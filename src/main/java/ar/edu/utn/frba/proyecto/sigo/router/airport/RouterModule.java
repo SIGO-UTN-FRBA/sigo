@@ -1,11 +1,11 @@
-package ar.edu.utn.frba.proyecto.sigo.router;
+package ar.edu.utn.frba.proyecto.sigo.router.airport;
 
-import ar.edu.utn.frba.proyecto.sigo.service.AirportService;
-import ar.edu.utn.frba.proyecto.sigo.service.AirportTranslator;
-import ar.edu.utn.frba.proyecto.sigo.service.RunwayService;
-import ar.edu.utn.frba.proyecto.sigo.service.RunwayTranslator;
-import ar.edu.utn.frba.proyecto.sigo.service.RunwayDirectionService;
-import ar.edu.utn.frba.proyecto.sigo.service.RunwayDirectionTranslator;
+import ar.edu.utn.frba.proyecto.sigo.service.airport.AirportService;
+import ar.edu.utn.frba.proyecto.sigo.service.airport.AirportTranslator;
+import ar.edu.utn.frba.proyecto.sigo.service.airport.RunwayService;
+import ar.edu.utn.frba.proyecto.sigo.service.airport.RunwayTranslator;
+import ar.edu.utn.frba.proyecto.sigo.service.airport.RunwayDirectionService;
+import ar.edu.utn.frba.proyecto.sigo.service.airport.RunwayDirectionTranslator;
 import ar.edu.utn.frba.proyecto.sigo.spark.Router;
 import com.google.inject.AbstractModule;
 import com.google.inject.multibindings.Multibinder;

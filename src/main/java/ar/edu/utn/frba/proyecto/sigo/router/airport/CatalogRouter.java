@@ -1,8 +1,9 @@
-package ar.edu.utn.frba.proyecto.sigo.router;
+package ar.edu.utn.frba.proyecto.sigo.router.airport;
 
-import ar.edu.utn.frba.proyecto.sigo.domain.airport.RunwayDirectionPosition;
+import ar.edu.utn.frba.proyecto.sigo.domain.airport.RunwayDirectionPositions;
 import ar.edu.utn.frba.proyecto.sigo.persistence.HibernateUtil;
-import ar.edu.utn.frba.proyecto.sigo.service.CatalogService;
+import ar.edu.utn.frba.proyecto.sigo.router.SigoRouter;
+import ar.edu.utn.frba.proyecto.sigo.service.airport.CatalogService;
 import ar.edu.utn.frba.proyecto.sigo.spark.JsonTransformer;
 import com.google.gson.Gson;
 import spark.Request;
@@ -34,7 +35,7 @@ public class CatalogRouter extends SigoRouter {
 
     private final Route fetchRunwaySurface = doInTransaction( false,(Request request, Response response) -> catalogService.findAllRunwaySurfaces());
 
-    private final Route fetchRunwayDirectionPosition = doInTransaction(false, (Request request, Response response) -> RunwayDirectionPosition.values());
+    private final Route fetchRunwayDirectionPosition = doInTransaction(false, (Request request, Response response) -> RunwayDirectionPositions.values());
 
     private final Route fetchAirportRegulations = doInTransaction(false, (Request request, Response response) -> catalogService.findAllAirportRegulations());
 

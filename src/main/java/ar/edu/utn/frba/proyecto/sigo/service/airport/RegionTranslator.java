@@ -1,12 +1,13 @@
-package ar.edu.utn.frba.proyecto.sigo.service;
+package ar.edu.utn.frba.proyecto.sigo.service.airport;
 
 import ar.edu.utn.frba.proyecto.sigo.domain.location.Region;
 import ar.edu.utn.frba.proyecto.sigo.dto.RegionDTO;
+import ar.edu.utn.frba.proyecto.sigo.service.Translator;
 
 import javax.inject.Singleton;
 
 @Singleton
-public class RegionTranslator extends Translator<Region, RegionDTO>{
+public class RegionTranslator extends Translator<Region, RegionDTO> {
     @Override
     public RegionDTO getAsDTO(Region domain) {
         return RegionDTO.builder()

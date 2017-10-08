@@ -28,7 +28,7 @@ public class RunwayDirection extends SigoDomain implements Spatial<Point> {
 
     @Enumerated(EnumType.ORDINAL)
     @Column(name= "position")
-    private RunwayDirectionPosition position;
+    private RunwayDirectionPositions position;
 
     @ManyToOne
     @JoinColumn(name="runway_id", nullable=false, updatable= false)
@@ -52,7 +52,7 @@ public class RunwayDirection extends SigoDomain implements Spatial<Point> {
         return String.format(
                 "%s%s",
                 StringUtils.leftPad(number.toString(), 2, "0"),
-                Optional.ofNullable(position).map(RunwayDirectionPosition::position).get()
+                Optional.ofNullable(position).map(RunwayDirectionPositions::position).get()
         );
     }
 

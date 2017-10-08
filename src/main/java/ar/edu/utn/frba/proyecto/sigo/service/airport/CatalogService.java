@@ -1,4 +1,4 @@
-package ar.edu.utn.frba.proyecto.sigo.service;
+package ar.edu.utn.frba.proyecto.sigo.service.airport;
 
 import ar.edu.utn.frba.proyecto.sigo.domain.regulation.Regulation;
 import ar.edu.utn.frba.proyecto.sigo.domain.airport.RunwaySurface;

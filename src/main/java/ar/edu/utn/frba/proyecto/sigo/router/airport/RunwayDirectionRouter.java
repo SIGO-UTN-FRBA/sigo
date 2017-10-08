@@ -1,4 +1,4 @@
-package ar.edu.utn.frba.proyecto.sigo.router;
+package ar.edu.utn.frba.proyecto.sigo.router.airport;
 
 import ar.edu.utn.frba.proyecto.sigo.domain.airport.RunwayApproachSection;
 import ar.edu.utn.frba.proyecto.sigo.domain.airport.RunwayTakeoffSection;
@@ -8,7 +8,8 @@ import ar.edu.utn.frba.proyecto.sigo.persistence.HibernateUtil;
 import ar.edu.utn.frba.proyecto.sigo.domain.airport.Runway;
 import ar.edu.utn.frba.proyecto.sigo.domain.airport.RunwayDirection;
 import ar.edu.utn.frba.proyecto.sigo.dto.RunwayDirectionDTO;
-import ar.edu.utn.frba.proyecto.sigo.service.*;
+import ar.edu.utn.frba.proyecto.sigo.router.SigoRouter;
+import ar.edu.utn.frba.proyecto.sigo.service.airport.*;
 import ar.edu.utn.frba.proyecto.sigo.spark.JsonTransformer;
 import com.google.gson.Gson;
 import com.vividsolutions.jts.geom.Point;
@@ -22,7 +23,7 @@ import static java.lang.String.format;
 import static java.util.stream.Collectors.toList;
 import static spark.Spark.*;
 
-public class RunwayDirectionRouter extends SigoRouter{
+public class RunwayDirectionRouter extends SigoRouter {
 
     private JsonTransformer jsonTransformer;
     private RunwayService runwayService;

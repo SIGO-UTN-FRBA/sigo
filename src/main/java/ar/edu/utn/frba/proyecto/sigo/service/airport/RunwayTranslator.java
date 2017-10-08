@@ -1,10 +1,11 @@
-package ar.edu.utn.frba.proyecto.sigo.service;
+package ar.edu.utn.frba.proyecto.sigo.service.airport;
 
 import ar.edu.utn.frba.proyecto.sigo.domain.airport.Airport;
 import ar.edu.utn.frba.proyecto.sigo.domain.airport.Runway;
 import ar.edu.utn.frba.proyecto.sigo.domain.airport.RunwaySurface;
 import ar.edu.utn.frba.proyecto.sigo.dto.RunwayDTO;
 import ar.edu.utn.frba.proyecto.sigo.exception.InvalidParameterException;
+import ar.edu.utn.frba.proyecto.sigo.service.Translator;
 import com.google.common.collect.Lists;
 import com.google.gson.Gson;
 
@@ -13,7 +14,7 @@ import javax.inject.Singleton;
 import java.util.Optional;
 
 @Singleton
-public class RunwayTranslator extends Translator<Runway, RunwayDTO>{
+public class RunwayTranslator extends Translator<Runway, RunwayDTO> {
 
     private AirportService airportService;
     private CatalogService catalogService;

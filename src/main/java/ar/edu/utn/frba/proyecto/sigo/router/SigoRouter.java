@@ -54,7 +54,7 @@ public abstract class SigoRouter extends Router {
     }
 
 
-    <R> Route doInTransaction(Boolean inTransaction, BiFunction<Request, Response, R> route){
+    protected <R> Route doInTransaction(Boolean inTransaction, BiFunction<Request, Response, R> route){
 
         return (Request request, Response response) ->{
 

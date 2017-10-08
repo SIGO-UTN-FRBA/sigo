@@ -1,9 +1,10 @@
-package ar.edu.utn.frba.proyecto.sigo.service;
+package ar.edu.utn.frba.proyecto.sigo.service.airport;
 
 import ar.edu.utn.frba.proyecto.sigo.persistence.HibernateUtil;
 import ar.edu.utn.frba.proyecto.sigo.domain.airport.Airport;
 import ar.edu.utn.frba.proyecto.sigo.domain.airport.Airport_;
 import ar.edu.utn.frba.proyecto.sigo.domain.airport.Runway;
+import ar.edu.utn.frba.proyecto.sigo.service.SigoService;
 import com.google.common.collect.Lists;
 
 import spark.QueryParamsMap;
@@ -17,7 +18,7 @@ import java.util.Optional;
 import static java.util.stream.Collectors.toList;
 
 @Singleton
-public class AirportService extends SigoService<Airport, Airport>{
+public class AirportService extends SigoService<Airport, Airport> {
 
     @Inject
     public AirportService(HibernateUtil hibernateUtil) {
