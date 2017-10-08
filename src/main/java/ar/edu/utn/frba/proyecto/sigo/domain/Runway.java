@@ -31,7 +31,7 @@ public class Runway extends SigoDomain implements Spatial<Polygon>{
     @Column(name = "geom")
     private Polygon geom;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="airport_id", nullable=false, updatable= false)
     private Airport airport;
 

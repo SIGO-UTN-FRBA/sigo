@@ -8,8 +8,10 @@ import ar.edu.utn.frba.proyecto.sigo.exception.InvalidParameterException;
 import com.google.gson.Gson;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.Optional;
 
+@Singleton
 public class AirportTranslator extends Translator<Airport, AirportDTO> {
 
     private RegionService regionService;

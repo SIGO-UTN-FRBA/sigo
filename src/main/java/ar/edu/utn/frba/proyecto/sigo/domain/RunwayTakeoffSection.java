@@ -1,20 +1,15 @@
 package ar.edu.utn.frba.proyecto.sigo.domain;
 
-
-import javax.persistence.ForeignKey;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
-import com.google.common.base.MoreObjects;
 import lombok.*;
+
 import javax.persistence.*;
-import java.util.List;
-import java.util.Optional;
 
 @Entity
 @Table(name = "public.tbl_runway_takeoff_sections")
+@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 @Data
-
+@Builder
 public class RunwayTakeoffSection extends SigoDomain {
     @Id
     @SequenceGenerator(name = "runwayTakeoffSectionGenerator", sequenceName = "Runway_Takeoff_Section_SEQUENCE")
@@ -22,9 +17,9 @@ public class RunwayTakeoffSection extends SigoDomain {
     @Column(name = "section_id")
     private Long id;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "direction_id")
-    private RunwayDirection runwaydirection;
+    private RunwayDirection runwayDirection;
 
     @Column(name = "enabled")
     private Boolean enabled;

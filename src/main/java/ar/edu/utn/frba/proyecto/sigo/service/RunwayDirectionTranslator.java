@@ -8,8 +8,10 @@ import ar.edu.utn.frba.proyecto.sigo.exception.InvalidParameterException;
 import com.google.gson.Gson;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.Optional;
 
+@Singleton
 public class RunwayDirectionTranslator extends Translator<RunwayDirection, RunwayDirectionDTO>{
 
     private RunwayService runwayService;
@@ -32,7 +34,7 @@ public class RunwayDirectionTranslator extends Translator<RunwayDirection, Runwa
                 .number(domain.getNumber())
                 .position(domain.getPosition().ordinal())
                 .runwayId(domain.getRunway().getId())
-                .name(domain.getNumber() + domain.getPosition().position())
+                .name(domain.getIdentifier())
                 .build();
     }
 

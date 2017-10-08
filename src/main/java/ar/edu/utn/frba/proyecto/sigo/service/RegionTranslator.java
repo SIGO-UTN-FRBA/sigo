@@ -3,6 +3,9 @@ package ar.edu.utn.frba.proyecto.sigo.service;
 import ar.edu.utn.frba.proyecto.sigo.domain.Region;
 import ar.edu.utn.frba.proyecto.sigo.dto.RegionDTO;
 
+import javax.inject.Singleton;
+
+@Singleton
 public class RegionTranslator extends Translator<Region, RegionDTO>{
     @Override
     public RegionDTO getAsDTO(Region domain) {

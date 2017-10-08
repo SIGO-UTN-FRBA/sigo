@@ -54,6 +54,8 @@ public abstract class SigoService<ENTITY extends SigoDomain, PARENT_ENTITY exten
 
         currentSession().save(object);
 
+        postCreateActions(object);
+
         return object;
     }
 
@@ -65,10 +67,20 @@ public abstract class SigoService<ENTITY extends SigoDomain, PARENT_ENTITY exten
 
         currentSession().save(object);
 
+        postCreateActions(object, parent);
+
         return object;
     }
 
     protected void preCreateActions(ENTITY object, PARENT_ENTITY parent) {
+
+    }
+
+    protected void postCreateActions(ENTITY object, PARENT_ENTITY parent) {
+
+    }
+
+    protected void postCreateActions(ENTITY object) {
 
     }
 

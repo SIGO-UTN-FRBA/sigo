@@ -1,18 +1,17 @@
 package ar.edu.utn.frba.proyecto.sigo.domain;
 
 import com.google.common.base.MoreObjects;
-import com.google.common.collect.Lists;
 import com.vividsolutions.jts.geom.Point;
 import lombok.*;
 
 import javax.persistence.*;
 import java.util.List;
 
+@Entity
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 @Builder
 @Data
-@Entity
 @Table(name = "public.tbl_aerodromes")
 public class Airport extends SigoDomain implements Spatial<Point> {
 
@@ -37,7 +36,7 @@ public class Airport extends SigoDomain implements Spatial<Point> {
     @OneToMany(mappedBy = "airport", cascade = CascadeType.REMOVE)
     private List<Runway> runways;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="region_id", nullable=false, updatable= false)
     private Region region;
 

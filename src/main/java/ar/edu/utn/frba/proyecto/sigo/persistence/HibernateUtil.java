@@ -77,8 +77,6 @@ public class HibernateUtil {
                 .addAnnotatedClass(Runway.class)
                 .addAnnotatedClass(RunwaySurface.class)
                 .addAnnotatedClass(RunwayDirection.class)
-                .addAnnotatedClass(RunwayDistanceType.class)
-                .addAnnotatedClass(RunwayDistance.class)
                 .addAnnotatedClass(RunwayTypeLetterICAOAnnex14.class)
                 .addAnnotatedClass(RunwayTypeNumberICAOAnnex14.class)
                 .addAnnotatedClass(RunwayClassificationICAOAnnex14.class)

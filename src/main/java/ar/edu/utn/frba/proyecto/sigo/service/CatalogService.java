@@ -9,11 +9,13 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import java.util.List;
 
+@Singleton
 public class CatalogService {
 
     private SessionFactory sessionFactory;
