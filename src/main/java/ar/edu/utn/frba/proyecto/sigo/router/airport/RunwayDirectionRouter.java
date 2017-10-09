@@ -1,16 +1,15 @@
 package ar.edu.utn.frba.proyecto.sigo.router.airport;
 
-import ar.edu.utn.frba.proyecto.sigo.domain.airport.RunwayApproachSection;
-import ar.edu.utn.frba.proyecto.sigo.domain.airport.RunwayTakeoffSection;
+import ar.edu.utn.frba.proyecto.sigo.domain.airport.*;
 import ar.edu.utn.frba.proyecto.sigo.dto.RunwayApproachSectionDTO;
+import ar.edu.utn.frba.proyecto.sigo.dto.RunwayDistanceDTO;
 import ar.edu.utn.frba.proyecto.sigo.dto.RunwayTakeoffSectionDTO;
 import ar.edu.utn.frba.proyecto.sigo.persistence.HibernateUtil;
-import ar.edu.utn.frba.proyecto.sigo.domain.airport.Runway;
-import ar.edu.utn.frba.proyecto.sigo.domain.airport.RunwayDirection;
 import ar.edu.utn.frba.proyecto.sigo.dto.RunwayDirectionDTO;
 import ar.edu.utn.frba.proyecto.sigo.router.SigoRouter;
 import ar.edu.utn.frba.proyecto.sigo.service.airport.*;
 import ar.edu.utn.frba.proyecto.sigo.spark.JsonTransformer;
+import com.google.common.collect.Lists;
 import com.google.gson.Gson;
 import com.vividsolutions.jts.geom.Point;
 import org.eclipse.jetty.http.HttpStatus;
@@ -18,6 +17,8 @@ import spark.Route;
 import spark.RouteGroup;
 
 import javax.inject.Inject;
+
+import java.util.List;
 
 import static java.lang.String.format;
 import static java.util.stream.Collectors.toList;
@@ -191,6 +192,53 @@ public class RunwayDirectionRouter extends SigoRouter {
         return takeoffTranslator.getAsDTO(domain);
     });
 
+    /**
+     * Calculate declared distance of a runway direction
+     */
+    private final Route calculateDistances = doInTransaction(false, (request, response)-> {
+        RunwayDirection direction = directionService.get(getParamDirectionId(request));
+
+        List<RunwayDistanceDTO> distances = Lists.newArrayList();
+
+        distances.add(
+            RunwayDistanceDTO.builder()
+                        .shortName(RunwayDistances.TODA.shortName())
+                        .largeName(RunwayDistances.TODA.largeName())
+                        .description(RunwayDistances.TODA.description())
+                        .length(RunwayDistanceHelper.calculateTODALength(direction))
+                        .build()
+        );
+
+        distances.add(
+                RunwayDistanceDTO.builder()
+                        .shortName(RunwayDistances.TORA.shortName())
+                        .largeName(RunwayDistances.TORA.largeName())
+                        .description(RunwayDistances.TORA.description())
+                        .length(RunwayDistanceHelper.calculateTORALength(direction))
+                        .build()
+        );
+
+        distances.add(
+                RunwayDistanceDTO.builder()
+                        .shortName(RunwayDistances.ASDA.shortName())
+                        .largeName(RunwayDistances.ASDA.largeName())
+                        .description(RunwayDistances.ASDA.description())
+                        .length(RunwayDistanceHelper.calculateASDALength(direction))
+                        .build()
+        );
+
+        distances.add(
+                RunwayDistanceDTO.builder()
+                        .shortName(RunwayDistances.LDA.shortName())
+                        .largeName(RunwayDistances.LDA.largeName())
+                        .description(RunwayDistances.LDA.description())
+                        .length(RunwayDistanceHelper.calculateLDALength(direction))
+                        .build()
+        );
+
+        return distances;
+    });
+
     @Override
     public RouteGroup routes() {
         return () -> {
@@ -204,7 +252,7 @@ public class RunwayDirectionRouter extends SigoRouter {
             get(format("/:%s/geometry", RUNWAY_DIRECTION_ID_PARAM), fetchGeometry, jsonTransformer);
             post(format("/:%s/geometry", RUNWAY_DIRECTION_ID_PARAM), defineGeometry, jsonTransformer);
 
-            //get(format("/:%s/distances", RUNWAY_DIRECTION_ID_PARAM), calculateDistances, jsonTransformer);
+            get(format("/:%s/distances", RUNWAY_DIRECTION_ID_PARAM), calculateDistances, jsonTransformer);
 
             get(format("/:%s/sections/approach", RUNWAY_DIRECTION_ID_PARAM), fetchApproachSection, jsonTransformer);
             put(format("/:%s/sections/approach", RUNWAY_DIRECTION_ID_PARAM), updateApproachSection, jsonTransformer);

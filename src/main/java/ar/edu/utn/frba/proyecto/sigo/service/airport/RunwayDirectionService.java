@@ -1,13 +1,11 @@
 package ar.edu.utn.frba.proyecto.sigo.service.airport;
 
-import ar.edu.utn.frba.proyecto.sigo.domain.airport.Runway;
-import ar.edu.utn.frba.proyecto.sigo.domain.airport.RunwayApproachSection;
-import ar.edu.utn.frba.proyecto.sigo.domain.airport.RunwayDirection;
-import ar.edu.utn.frba.proyecto.sigo.domain.airport.RunwayTakeoffSection;
+import ar.edu.utn.frba.proyecto.sigo.domain.airport.*;
 import ar.edu.utn.frba.proyecto.sigo.persistence.HibernateUtil;
 import ar.edu.utn.frba.proyecto.sigo.service.SigoService;
 
 import javax.inject.Inject;
+import java.util.HashMap;
 
 public class RunwayDirectionService extends SigoService<RunwayDirection, Runway> {
 
