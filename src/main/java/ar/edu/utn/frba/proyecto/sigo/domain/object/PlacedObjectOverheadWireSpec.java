@@ -21,7 +21,8 @@ public class PlacedObjectOverheadWireSpec {
 
     @Column(name = "geom")
     private MultiLineString geom;
-/*
-    @OneToMany(mappedBy="placedobjectoverheadwirespec")
-    private List<PlacedObject> placedobjects;*/
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "object_id")
+    private PlacedObject placedObject;
 }
