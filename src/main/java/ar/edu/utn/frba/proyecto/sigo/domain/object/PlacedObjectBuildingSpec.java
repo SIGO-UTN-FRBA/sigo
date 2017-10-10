@@ -3,6 +3,8 @@ package ar.edu.utn.frba.proyecto.sigo.domain.object;
 
 import javax.persistence.*;
 import java.util.List;
+
+import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisException;
 import lombok.*;
 import com.vividsolutions.jts.geom.MultiPolygon;
 
@@ -20,8 +22,11 @@ public class PlacedObjectBuildingSpec {
 
     @Column(name = "geom")
     private MultiPolygon geom;
-/*
-    @OneToMany(mappedBy="placedobjectbuildingspec")
-    private List<PlacedObject> placedobjects;*/
+
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "object_id")
+    private PlacedObject placedObject;
+
 
 }

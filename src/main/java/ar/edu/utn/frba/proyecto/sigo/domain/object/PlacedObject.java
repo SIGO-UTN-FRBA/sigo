@@ -50,11 +50,13 @@ public class PlacedObject {
     @Column(name = "temporary")
     private Boolean temporary;
 
+    @Enumerated(EnumType.ORDINAL)
     @Column(name = "lighting")
-    private Enum lighting;
+    private LightingTypes lighting;
 
+    @Enumerated(EnumType.ORDINAL)
     @Column(name = "mark_indicator")
-    private Enum markIndicator;
+    private MarkIndicatorTypes markIndicator;
 
     @OneToOne
     @JoinColumn(name = "type_individual_id")

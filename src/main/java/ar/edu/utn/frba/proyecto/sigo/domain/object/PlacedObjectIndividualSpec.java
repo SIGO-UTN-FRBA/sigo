@@ -20,7 +20,9 @@ public class PlacedObjectIndividualSpec {
     @Column(name = "geom")
     private Point geom;
 
-/*    @OneToMany(mappedBy="placedobjectindividualspec")
-    private List<PlacedObject> placedobjects;*/
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "object_id")
+    private PlacedObject placedObject;
 
 }
