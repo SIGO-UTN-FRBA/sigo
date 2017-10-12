@@ -21,8 +21,9 @@ public class PlacedObject extends SigoDomain {
     @Column(name = "name")
     private String name;
 
+    @Enumerated(EnumType.ORDINAL)
     @Column(name = "type")
-    private Enum type;
+    private PlacedObjectTypes type;
 
     @Column(name = "subtype")
     private String subtype;
