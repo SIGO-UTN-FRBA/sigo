@@ -1,11 +1,11 @@
 package ar.edu.utn.frba.proyecto.sigo.router.airport;
 
 import ar.edu.utn.frba.proyecto.sigo.domain.airport.*;
-import ar.edu.utn.frba.proyecto.sigo.dto.RunwayApproachSectionDTO;
-import ar.edu.utn.frba.proyecto.sigo.dto.RunwayDistanceDTO;
-import ar.edu.utn.frba.proyecto.sigo.dto.RunwayTakeoffSectionDTO;
+import ar.edu.utn.frba.proyecto.sigo.dto.airport.RunwayApproachSectionDTO;
+import ar.edu.utn.frba.proyecto.sigo.dto.airport.RunwayDistanceDTO;
+import ar.edu.utn.frba.proyecto.sigo.dto.airport.RunwayTakeoffSectionDTO;
 import ar.edu.utn.frba.proyecto.sigo.persistence.HibernateUtil;
-import ar.edu.utn.frba.proyecto.sigo.dto.RunwayDirectionDTO;
+import ar.edu.utn.frba.proyecto.sigo.dto.airport.RunwayDirectionDTO;
 import ar.edu.utn.frba.proyecto.sigo.router.SigoRouter;
 import ar.edu.utn.frba.proyecto.sigo.service.airport.*;
 import ar.edu.utn.frba.proyecto.sigo.spark.JsonTransformer;

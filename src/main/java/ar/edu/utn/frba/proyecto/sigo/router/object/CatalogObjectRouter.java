@@ -1,7 +1,6 @@
 package ar.edu.utn.frba.proyecto.sigo.router.object;
 
-import ar.edu.utn.frba.proyecto.sigo.domain.object.LightingTypes;
-import ar.edu.utn.frba.proyecto.sigo.dto.LightingTypeDTO;
+import ar.edu.utn.frba.proyecto.sigo.dto.object.LightingTypeDTO;
 import ar.edu.utn.frba.proyecto.sigo.router.SigoRouter;
 import ar.edu.utn.frba.proyecto.sigo.service.object.CatalogObjectService;
 import ar.edu.utn.frba.proyecto.sigo.spark.JsonTransformer;

@@ -1,4 +1,4 @@
-package ar.edu.utn.frba.proyecto.sigo.dto;
+package ar.edu.utn.frba.proyecto.sigo.dto.airport;
 import lombok.*;
 
 @AllArgsConstructor

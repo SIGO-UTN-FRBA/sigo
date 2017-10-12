@@ -1,7 +1,7 @@
 package ar.edu.utn.frba.proyecto.sigo.router.airport;
 
 import ar.edu.utn.frba.proyecto.sigo.domain.airport.RunwayDirectionPositions;
-import ar.edu.utn.frba.proyecto.sigo.dto.RunwayDirectionPositionDTO;
+import ar.edu.utn.frba.proyecto.sigo.dto.airport.RunwayDirectionPositionDTO;
 import ar.edu.utn.frba.proyecto.sigo.persistence.HibernateUtil;
 import ar.edu.utn.frba.proyecto.sigo.router.SigoRouter;
 import ar.edu.utn.frba.proyecto.sigo.service.airport.CatalogAirportService;

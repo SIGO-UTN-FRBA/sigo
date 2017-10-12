@@ -5,7 +5,7 @@ import ar.edu.utn.frba.proyecto.sigo.router.SigoRouter;
 import ar.edu.utn.frba.proyecto.sigo.service.airport.AirportTranslator;
 import ar.edu.utn.frba.proyecto.sigo.service.airport.AirportService;
 import ar.edu.utn.frba.proyecto.sigo.domain.airport.Airport;
-import ar.edu.utn.frba.proyecto.sigo.dto.AirportDTO;
+import ar.edu.utn.frba.proyecto.sigo.dto.airport.AirportDTO;
 import ar.edu.utn.frba.proyecto.sigo.spark.JsonTransformer;
 import com.google.gson.Gson;
 import com.vividsolutions.jts.geom.Point;

@@ -3,7 +3,7 @@ package ar.edu.utn.frba.proyecto.sigo.service.airport;
 import ar.edu.utn.frba.proyecto.sigo.domain.airport.Airport;
 import ar.edu.utn.frba.proyecto.sigo.domain.location.geographic.Region;
 import ar.edu.utn.frba.proyecto.sigo.domain.regulation.Regulation;
-import ar.edu.utn.frba.proyecto.sigo.dto.AirportDTO;
+import ar.edu.utn.frba.proyecto.sigo.dto.airport.AirportDTO;
 import ar.edu.utn.frba.proyecto.sigo.exception.InvalidParameterException;
 import ar.edu.utn.frba.proyecto.sigo.service.Translator;
 import com.google.gson.Gson;

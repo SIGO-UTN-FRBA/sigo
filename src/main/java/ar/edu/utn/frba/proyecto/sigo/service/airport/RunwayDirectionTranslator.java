@@ -3,7 +3,7 @@ package ar.edu.utn.frba.proyecto.sigo.service.airport;
 import ar.edu.utn.frba.proyecto.sigo.domain.airport.Runway;
 import ar.edu.utn.frba.proyecto.sigo.domain.airport.RunwayDirection;
 import ar.edu.utn.frba.proyecto.sigo.domain.airport.RunwayDirectionPositions;
-import ar.edu.utn.frba.proyecto.sigo.dto.RunwayDirectionDTO;
+import ar.edu.utn.frba.proyecto.sigo.dto.airport.RunwayDirectionDTO;
 import ar.edu.utn.frba.proyecto.sigo.exception.InvalidParameterException;
 import ar.edu.utn.frba.proyecto.sigo.service.Translator;
 import com.google.gson.Gson;

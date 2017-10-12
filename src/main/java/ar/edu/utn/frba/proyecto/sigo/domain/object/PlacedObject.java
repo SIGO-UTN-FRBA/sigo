@@ -2,6 +2,7 @@ package ar.edu.utn.frba.proyecto.sigo.domain.object;
 
 import javax.persistence.*;
 
+import ar.edu.utn.frba.proyecto.sigo.domain.SigoDomain;
 import ar.edu.utn.frba.proyecto.sigo.domain.location.political.PoliticalLocation;
 import ar.edu.utn.frba.proyecto.sigo.domain.location.geographic.Region;
 import lombok.*;
@@ -10,7 +11,7 @@ import lombok.*;
 @Table(name = "public.tbl_placed_object")
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 @Data
-public class PlacedObject {
+public class PlacedObject extends SigoDomain {
     @Id
     @SequenceGenerator(name = "placedObjectGenerator", sequenceName = "PLACED_OBJECT_SEQUENCE")
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "placedObjectGenerator")
@@ -39,13 +40,13 @@ public class PlacedObject {
 
     @ManyToOne
     @JoinColumn(name = "owner_id")
-    private PlacedObjectOwner placedObjectOwner;
+    private PlacedObjectOwner owner;
 
     @Column(name = "height_agl")
-    private Long heightAgl;
+    private Double heightAgl;
 
     @Column(name = "height_amls")
-    private Long heightAmls;
+    private Double heightAmls;
 
     @Column(name = "temporary")
     private Boolean temporary;
@@ -60,14 +61,25 @@ public class PlacedObject {
 
     @OneToOne
     @JoinColumn(name = "type_individual_id")
-    private PlacedObjectIndividualSpec placedObjectIndividualSpec;
+    private PlacedObjectIndividualSpec individualSpec;
 
     @OneToOne
     @JoinColumn(name = "type_building_id")
-    private PlacedObjectBuildingSpec placedObjectBuildingSpec;
+    private PlacedObjectBuildingSpec buildingSpec;
 
     @OneToOne
     @JoinColumn(name = "type_overhead_wire_id")
-    private PlacedObjectOverheadWireSpec placedObjectOverheadWireSpec;
+    private PlacedObjectOverheadWireSpec wireSpec;
 
+
+    public Long getSpecId() {
+        if(this.getIndividualSpec() != null)
+            return this.getIndividualSpec().getId();
+        else if (this.getBuildingSpec() != null)
+            return this.getBuildingSpec().getId();
+        else if (this.getWireSpec() != null)
+            return this.wireSpec.getId();
+        else
+            return null;
+    }
 }
