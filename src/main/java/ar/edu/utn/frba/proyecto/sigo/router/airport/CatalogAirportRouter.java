@@ -1,9 +1,10 @@
 package ar.edu.utn.frba.proyecto.sigo.router.airport;
 
 import ar.edu.utn.frba.proyecto.sigo.domain.airport.RunwayDirectionPositions;
+import ar.edu.utn.frba.proyecto.sigo.dto.RunwayDirectionPositionDTO;
 import ar.edu.utn.frba.proyecto.sigo.persistence.HibernateUtil;
 import ar.edu.utn.frba.proyecto.sigo.router.SigoRouter;
-import ar.edu.utn.frba.proyecto.sigo.service.airport.CatalogService;
+import ar.edu.utn.frba.proyecto.sigo.service.airport.CatalogAirportService;
 import ar.edu.utn.frba.proyecto.sigo.spark.JsonTransformer;
 import com.google.gson.Gson;
 import spark.Request;
@@ -13,19 +14,22 @@ import spark.RouteGroup;
 
 import javax.inject.Inject;
 
+import java.util.Arrays;
+import java.util.stream.Collectors;
+
 import static spark.Spark.get;
 
-public class CatalogRouter extends SigoRouter {
+public class CatalogAirportRouter extends SigoRouter {
 
     private final JsonTransformer jsonTransformer;
-    private CatalogService catalogService;
+    private CatalogAirportService catalogService;
 
     @Inject
-    public CatalogRouter(
+    public CatalogAirportRouter(
             HibernateUtil hibernateUtil,
             Gson objectMapper,
             JsonTransformer jsonTransformer,
-            CatalogService catalogService
+            CatalogAirportService catalogService
     ) {
         this.jsonTransformer = jsonTransformer;
         this.catalogService = catalogService;
@@ -35,7 +39,15 @@ public class CatalogRouter extends SigoRouter {
 
     private final Route fetchRunwaySurface = doInTransaction( false,(Request request, Response response) -> catalogService.findAllRunwaySurfaces());
 
-    private final Route fetchRunwayDirectionPosition = doInTransaction(false, (Request request, Response response) -> RunwayDirectionPositions.values());
+    private final Route fetchRunwayDirectionPosition = (Request request, Response response) -> {
+        return Arrays.stream(RunwayDirectionPositions.values())
+                        .map(p -> RunwayDirectionPositionDTO.builder()
+                                        .id(p.ordinal())
+                                        .code(p.position())
+                                        .description(p.name())
+                                        .build()
+                        ).collect(Collectors.toList());
+    };
 
     private final Route fetchAirportRegulations = doInTransaction(false, (Request request, Response response) -> catalogService.findAllAirportRegulations());
 
@@ -50,12 +62,12 @@ public class CatalogRouter extends SigoRouter {
             get("/runways/directions/positions", fetchRunwayDirectionPosition, jsonTransformer);
             get("/runways/types/icao/letters", fetchRunwayTypeLetterICAO, jsonTransformer);
             get("/runways/types/icao/numbers", fetchRunwayTypeNumberICAO, jsonTransformer);
-            get("/airports/regulations", fetchAirportRegulations, jsonTransformer);
+            get("/regulations", fetchAirportRegulations, jsonTransformer);
         };
     }
 
     @Override
     public String path() {
-        return "/catalog";
+        return "/catalogs/airports";
     }
 }

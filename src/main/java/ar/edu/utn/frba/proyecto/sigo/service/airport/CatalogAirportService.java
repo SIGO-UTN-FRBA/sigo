@@ -16,12 +16,12 @@ import javax.persistence.criteria.Root;
 import java.util.List;
 
 @Singleton
-public class CatalogService {
+public class CatalogAirportService {
 
     private SessionFactory sessionFactory;
 
     @Inject
-    public CatalogService(
+    public CatalogAirportService(
         HibernateUtil hibernateUtil
     ){
         this.sessionFactory = hibernateUtil.getSessionFactory();

@@ -17,13 +17,13 @@ import java.util.Optional;
 public class RunwayTranslator extends Translator<Runway, RunwayDTO> {
 
     private AirportService airportService;
-    private CatalogService catalogService;
+    private CatalogAirportService catalogService;
 
     @Inject
     public RunwayTranslator(
         Gson gson,
         AirportService airportService,
-        CatalogService catalogService
+        CatalogAirportService catalogService
     ){
         this.airportService = airportService;
         this.catalogService = catalogService;
