@@ -2,8 +2,8 @@ package ar.edu.utn.frba.proyecto.sigo.domain.object;
 
 import javax.persistence.*;
 
-import ar.edu.utn.frba.proyecto.sigo.domain.location.PoliticalLocation;
-import ar.edu.utn.frba.proyecto.sigo.domain.location.Region;
+import ar.edu.utn.frba.proyecto.sigo.domain.location.political.PoliticalLocation;
+import ar.edu.utn.frba.proyecto.sigo.domain.location.geographic.Region;
 import lombok.*;
 
 @Entity

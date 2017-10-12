@@ -1,4 +1,4 @@
-package ar.edu.utn.frba.proyecto.sigo.domain.location;
+package ar.edu.utn.frba.proyecto.sigo.domain.location.political;
 
 import ar.edu.utn.frba.proyecto.sigo.domain.SigoDomain;
 import ar.edu.utn.frba.proyecto.sigo.domain.Spatial;

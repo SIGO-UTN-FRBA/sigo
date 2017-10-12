@@ -1,4 +1,4 @@
-package ar.edu.utn.frba.proyecto.sigo.domain.location;
+package ar.edu.utn.frba.proyecto.sigo.domain.location.geographic;
 
 import javax.persistence.*;
 import java.util.List;
