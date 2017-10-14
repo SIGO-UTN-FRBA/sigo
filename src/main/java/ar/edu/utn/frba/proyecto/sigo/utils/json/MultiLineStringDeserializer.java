@@ -9,15 +9,17 @@ import org.geotools.geojson.geom.GeometryJSON;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.util.Optional;
 
 public class MultiLineStringDeserializer implements JsonDeserializer<MultiLineString> {
     @Override
     public MultiLineString deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
 
         try{
-            return new GeometryJSON().readMultiLine(jsonElement.toString());
+            return Optional.ofNullable(new GeometryJSON().readMultiLine(jsonElement.toString()))
+                        .orElseThrow(()-> new Exception("Invalid MultiLineString geometry entered."));
 
-        } catch (IOException e) {
+        } catch (Exception e) {
             throw new JsonParseException(e);
         }
     }

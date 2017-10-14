@@ -9,15 +9,17 @@ import org.geotools.geojson.geom.GeometryJSON;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.util.Optional;
 
 public class PointDeserializer implements JsonDeserializer<Point> {
 
     @Override
     public Point deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
         try {
-            return new GeometryJSON().readPoint(jsonElement.toString());
+            return Optional.ofNullable(new GeometryJSON().readPoint(jsonElement.toString()))
+                        .orElseThrow(() -> new Exception("Invalid point geometry entered."));
 
-        } catch (IOException e) {
+        } catch (Exception e) {
             throw new JsonParseException(e);
         }
     }

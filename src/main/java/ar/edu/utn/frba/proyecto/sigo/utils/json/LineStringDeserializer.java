@@ -9,14 +9,16 @@ import org.geotools.geojson.geom.GeometryJSON;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.util.Optional;
 
 public class LineStringDeserializer implements JsonDeserializer<LineString> {
     @Override
     public LineString deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
         try{
-            return new GeometryJSON().readLine(jsonElement.toString());
+            return Optional.ofNullable(new GeometryJSON().readLine(jsonElement.toString()))
+                        .orElseThrow(()-> new Exception("Invalid LineString geometry entered."));
 
-        } catch (IOException e) {
+        } catch (Exception e) {
             throw new JsonParseException(e);
         }
     }

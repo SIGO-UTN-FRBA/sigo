@@ -9,14 +9,16 @@ import org.geotools.geojson.geom.GeometryJSON;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.util.Optional;
 
 public class PolygonDeserializer implements JsonDeserializer<Polygon>{
     @Override
     public Polygon deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
         try {
-            return new GeometryJSON().readPolygon(jsonElement.toString());
+            return Optional.ofNullable(new GeometryJSON().readPolygon(jsonElement.toString()))
+                        .orElseThrow(()-> new Exception("Invalid Polygon geometry entered."));
 
-        } catch (IOException e) {
+        } catch (Exception e) {
             throw new JsonParseException(e);
         }
     }

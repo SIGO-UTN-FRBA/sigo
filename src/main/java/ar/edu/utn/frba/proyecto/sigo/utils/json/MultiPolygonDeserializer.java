@@ -6,15 +6,17 @@ import org.geotools.geojson.geom.GeometryJSON;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.util.Optional;
 
 public class MultiPolygonDeserializer implements JsonDeserializer<MultiPolygon> {
 
     @Override
     public MultiPolygon deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
         try{
-            return new GeometryJSON().readMultiPolygon(jsonElement.toString());
+            return Optional.ofNullable(new GeometryJSON().readMultiPolygon(jsonElement.toString()))
+                        .orElseThrow(()-> new Exception("Invalid MultiPolygon geometry entered."));
 
-        } catch (IOException e) {
+        } catch (Exception e) {
             throw new JsonParseException(e);
         }
     }
