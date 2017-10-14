@@ -2,6 +2,7 @@ package ar.edu.utn.frba.proyecto.sigo.router.object;
 
 import ar.edu.utn.frba.proyecto.sigo.domain.object.PlacedObject;
 import ar.edu.utn.frba.proyecto.sigo.dto.object.PlacedObjectDTO;
+import ar.edu.utn.frba.proyecto.sigo.persistence.HibernateUtil;
 import ar.edu.utn.frba.proyecto.sigo.router.SigoRouter;
 import ar.edu.utn.frba.proyecto.sigo.service.object.PlacedObjectService;
 import ar.edu.utn.frba.proyecto.sigo.service.object.PlacedObjectTranslator;
@@ -24,12 +25,13 @@ public class PlacedObjectRouter extends SigoRouter {
 
     @Inject
     public PlacedObjectRouter(
+        HibernateUtil hibernateUtil,
         JsonTransformer jsonTransformer,
         PlacedObjectService objectService,
         PlacedObjectTranslator objectTranslator,
         Gson objectMapper
     ){
-
+        this.hibernateUtil = hibernateUtil;
         this.jsonTransformer = jsonTransformer;
         this.objectService = objectService;
         this.objectTranslator = objectTranslator;
