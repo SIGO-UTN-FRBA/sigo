@@ -32,11 +32,5 @@ public class GeometryHelper {
 
         return new Coordinate(destination.getX(), destination.getY());
     }
-
-    public static int getDirection(double azimuth){
-        if((azimuth > 0D && azimuth < 90D) || (azimuth > 270 && azimuth < 360))
-            return 1;
-        else
-            return -1;
-    }
+    
 }

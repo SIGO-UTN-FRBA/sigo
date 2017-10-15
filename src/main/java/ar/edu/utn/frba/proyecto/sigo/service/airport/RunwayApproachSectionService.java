@@ -41,12 +41,11 @@ public class RunwayApproachSectionService extends SigoService<RunwayApproachSect
                 .collect(Collectors.toList());
 
         double azimuth = runwayDirection.getNumber()*10;
-        int direction = getDirection(azimuth);
 
         Coordinate extreme1 = extremes.get(0);
         Coordinate extreme4 = extremes.get(1);
-        Coordinate extreme2 = move(extreme1, azimuth, direction * runwayDirection.getApproachSection().getThresholdLength());
-        Coordinate extreme3 = move(extreme4, azimuth, direction * runwayDirection.getApproachSection().getThresholdLength());
+        Coordinate extreme2 = move(extreme1, azimuth, -1 * runwayDirection.getApproachSection().getThresholdLength());
+        Coordinate extreme3 = move(extreme4, azimuth, -1 * runwayDirection.getApproachSection().getThresholdLength());
 
         return new GeometryFactory().createPolygon(new Coordinate[]{extreme1, extreme2, extreme3, extreme4, extreme1});
     }
