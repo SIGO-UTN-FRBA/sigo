@@ -4,13 +4,18 @@ import ar.edu.utn.frba.proyecto.sigo.domain.airport.RunwayApproachSection;
 import ar.edu.utn.frba.proyecto.sigo.domain.airport.RunwayDirection;
 import ar.edu.utn.frba.proyecto.sigo.persistence.HibernateUtil;
 import ar.edu.utn.frba.proyecto.sigo.service.SigoService;
-import com.vividsolutions.jts.geom.*;
-import org.geotools.referencing.GeodeticCalculator;
+import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.GeometryFactory;
+import com.vividsolutions.jts.geom.Polygon;
+
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static ar.edu.utn.frba.proyecto.sigo.utils.geom.GeometryHelper.getDirection;
+import static ar.edu.utn.frba.proyecto.sigo.utils.geom.GeometryHelper.move;
 
 @Singleton
 public class RunwayApproachSectionService extends SigoService<RunwayApproachSection, RunwayDirection> {
@@ -20,14 +25,14 @@ public class RunwayApproachSectionService extends SigoService<RunwayApproachSect
         super(RunwayApproachSection.class, hibernateUtil.getSessionFactory());
     }
 
-    public Polygon getThresholdGeometry(RunwayDirection direction) {
+    public Polygon getThresholdGeometry(RunwayDirection runwayDirection) {
 
-        final Coordinate[] coordinates = direction.getRunway().getGeom().getCoordinates();
+        final Coordinate[] runwayCoordinates = runwayDirection.getRunway().getGeom().getCoordinates();
 
-        List<Coordinate> collect = Arrays.stream(coordinates)
+        List<Coordinate> extremes = Arrays.stream(runwayCoordinates)
                 .distinct()
                 .sorted((i, j) -> {
-                    if (direction.getGeom().getCoordinate().distance(i) > direction.getGeom().getCoordinate().distance(j))
+                    if (runwayDirection.getGeom().getCoordinate().distance(i) > runwayDirection.getGeom().getCoordinate().distance(j))
                         return 1;
                     else
                         return -1;
@@ -35,31 +40,15 @@ public class RunwayApproachSectionService extends SigoService<RunwayApproachSect
                 .limit(2)
                 .collect(Collectors.toList());
 
-        GeodeticCalculator calc1 = new GeodeticCalculator();
-        GeodeticCalculator calc2 = new GeodeticCalculator();
+        double azimuth = runwayDirection.getNumber()*10;
+        int direction = getDirection(azimuth);
 
-        calc1.setStartingGeographicPoint(collect.get(0).x,collect.get(0).y);
-        calc2.setStartingGeographicPoint(collect.get(1).x,collect.get(1).y);
+        Coordinate extreme1 = extremes.get(0);
+        Coordinate extreme4 = extremes.get(1);
+        Coordinate extreme2 = move(extreme1, azimuth, direction * runwayDirection.getApproachSection().getThresholdLength());
+        Coordinate extreme3 = move(extreme4, azimuth, direction * runwayDirection.getApproachSection().getThresholdLength());
 
-        calc1.setDestinationGeographicPoint(collect.get(1).x,collect.get(1).y);
-
-        double azimuth = calc1.getAzimuth();
-        calc1.setDirection(azimuth + 90, 250);
-        calc2.setDirection(azimuth + 90, 250);
-
-        Coordinate dest1 = new Coordinate();
-        Coordinate dest2 = new Coordinate();
-
-        dest1.x = calc1.getDestinationGeographicPoint().getX();
-
-        dest1.y = calc1.getDestinationGeographicPoint().getY();
-
-        dest2.x = calc2.getDestinationGeographicPoint().getX();
-
-        dest2.y = calc2.getDestinationGeographicPoint().getY();
-
-        return new GeometryFactory().createPolygon(new Coordinate[]{collect.get(0), dest1, dest2,collect.get(1),collect.get(0)});
-
+        return new GeometryFactory().createPolygon(new Coordinate[]{extreme1, extreme2, extreme3, extreme4, extreme1});
     }
 
 }
