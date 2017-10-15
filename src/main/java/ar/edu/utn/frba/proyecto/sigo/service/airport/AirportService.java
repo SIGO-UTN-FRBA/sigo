@@ -49,7 +49,11 @@ public class AirportService extends SigoService<Airport, Airport> {
                 .ofNullable(parameters.get(Airport_.codeFIR.getName()).value())
                 .map(v -> builder.equal(airport.get(Airport_.codeFIR), v));
 
-        List<Predicate> collect = Lists.newArrayList(predicate1, predicate2)
+        Optional<Predicate> predicate3 = Optional
+                .ofNullable(parameters.get(Airport_.codeIATA.getName()).value())
+                .map(v -> builder.equal(airport.get(Airport_.codeIATA),v));
+
+        List<Predicate> collect = Lists.newArrayList(predicate1, predicate2, predicate3)
                 .stream()
                 .filter(Optional::isPresent)
                 .map(Optional::get)
