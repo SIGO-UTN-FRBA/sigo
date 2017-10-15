@@ -28,7 +28,7 @@ public class Airport extends SigoDomain implements Spatial<Point> {
     @Column(name = "name_fir", nullable = false)
     private String nameFIR;
 
-    @Column(name = "code_fir", nullable = false, unique = true, length = 4)
+    @Column(name = "code_fir", length = 4)
     private String codeFIR;
 
     @Column(name = "code_iata", length = 3)

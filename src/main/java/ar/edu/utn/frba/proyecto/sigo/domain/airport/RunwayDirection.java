@@ -37,7 +37,7 @@ public class RunwayDirection extends SigoDomain implements Spatial<Point> {
     @Column(name = "geom")
     private Point geom;
   
-    @OneToOne
+    @OneToOne(optional = true)
     @JoinColumn(name = "relation_id", foreignKey = @ForeignKey(name = "type_direction_fk"))
     private RunwayTypeImplICAOAnnex14 type;
 
