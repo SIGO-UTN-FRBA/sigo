@@ -89,6 +89,12 @@ public class PlacedObjectRouter extends SigoRouter {
     });
 
 
+    private final Route fetchGeometry = doInTransaction(false, (request, response) -> {
+
+        PlacedObject domain = objectService.get(getParamObjectId(request));
+
+        return domain.getSpecification().getGeom();
+    });
 
     @Override
     public RouteGroup routes() {
@@ -101,7 +107,7 @@ public class PlacedObjectRouter extends SigoRouter {
             put("/:" + OBJECT_ID_PARAM, updateObject, jsonTransformer);
             delete("/:" + OBJECT_ID_PARAM, deleteObject);
 
-            //get("/:" + OBJECT_ID_PARAM +"/geom". fetchGeometry, jsonTransformer);
+            get("/:" + OBJECT_ID_PARAM +"/geometry", fetchGeometry, jsonTransformer);
             //post("/:" + OBJECT_ID_PARAM +"/geom". defineGeometry, jsonTransformer);
         };
     }
