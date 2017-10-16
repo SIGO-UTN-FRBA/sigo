@@ -14,13 +14,14 @@ import spark.RouteGroup;
 
 import javax.inject.Inject;
 
+import static java.util.stream.Collectors.toList;
 import static spark.Spark.*;
 
 public class PlacedObjectRouter extends SigoRouter {
 
     private JsonTransformer jsonTransformer;
     private PlacedObjectService objectService;
-    private PlacedObjectTranslator objectTranslator;
+    private PlacedObjectTranslator translator;
     private Gson objectMapper;
 
     @Inject
@@ -34,26 +35,33 @@ public class PlacedObjectRouter extends SigoRouter {
         this.hibernateUtil = hibernateUtil;
         this.jsonTransformer = jsonTransformer;
         this.objectService = objectService;
-        this.objectTranslator = objectTranslator;
+        this.translator = objectTranslator;
         this.objectMapper = objectMapper;
     }
+
+    private final Route fetchObjects = doInTransaction(false, (request, response) -> {
+        return objectService.find(request.queryMap())
+                .stream()
+                .map(translator::getAsDTO)
+                .collect(toList());
+    });
 
     private final Route fetchObject = doInTransaction(false, (request, response) -> {
 
         PlacedObject domain = objectService.get(getParamObjectId(request));
 
-        return objectTranslator.getAsDTO(domain);
+        return translator.getAsDTO(domain);
     });
 
     private final Route updateObject = doInTransaction(true, (request, response) -> {
 
         PlacedObjectDTO dto = objectMapper.fromJson(request.body(), PlacedObjectDTO.class);
 
-        PlacedObject domain = objectTranslator.getAsDomain(dto);
+        PlacedObject domain = translator.getAsDomain(dto);
 
         objectService.update(domain);
 
-        return objectTranslator.getAsDTO(domain);
+        return translator.getAsDTO(domain);
     });
 
     private final Route deleteObject = doInTransaction(true, (request, response) -> {
@@ -75,7 +83,7 @@ public class PlacedObjectRouter extends SigoRouter {
     public RouteGroup routes() {
         return ()-> {
 
-            //get("", fetchObjects, jsonTransformer);
+            get("", fetchObjects, jsonTransformer);
             //post("", saveObject, jsonTransformer);
 
             get("/:" + OBJECT_ID_PARAM, fetchObject, jsonTransformer);

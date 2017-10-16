@@ -32,5 +32,5 @@ public class GeometryHelper {
 
         return new Coordinate(destination.getX(), destination.getY());
     }
-    
+
 }

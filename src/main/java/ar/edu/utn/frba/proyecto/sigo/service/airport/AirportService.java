@@ -43,7 +43,7 @@ public class AirportService extends SigoService<Airport, Airport> {
 
         Optional<Predicate> predicate1 = Optional
                 .ofNullable(parameters.get(Airport_.nameFIR.getName()).value())
-                .map(v -> builder.equal(airport.get(Airport_.nameFIR), v));
+                .map(v -> builder.like(airport.get(Airport_.nameFIR), String.format("%%%s%%",v)));
 
         Optional<Predicate> predicate2 = Optional
                 .ofNullable(parameters.get(Airport_.codeFIR.getName()).value())

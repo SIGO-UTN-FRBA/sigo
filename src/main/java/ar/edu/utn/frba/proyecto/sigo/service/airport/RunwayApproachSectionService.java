@@ -13,8 +13,6 @@ import javax.inject.Singleton;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import static ar.edu.utn.frba.proyecto.sigo.utils.geom.GeometryHelper.getDirection;
 import static ar.edu.utn.frba.proyecto.sigo.utils.geom.GeometryHelper.move;
 
 @Singleton
@@ -40,7 +38,7 @@ public class RunwayApproachSectionService extends SigoService<RunwayApproachSect
                 .limit(2)
                 .collect(Collectors.toList());
 
-        double azimuth = runwayDirection.getNumber()*10;
+        double azimuth = runwayDirection.getAzimuth();
 
         Coordinate extreme1 = extremes.get(0);
         Coordinate extreme4 = extremes.get(1);

@@ -26,6 +26,9 @@ public class RunwayDirection extends SigoDomain implements Spatial<Point> {
     @Column(name = "number", nullable = false)
     private Integer number;
 
+    @Column(name = "azimuth")
+    private Double azimuth;
+
     @Enumerated(EnumType.ORDINAL)
     @Column(name= "position")
     private RunwayDirectionPositions position;
