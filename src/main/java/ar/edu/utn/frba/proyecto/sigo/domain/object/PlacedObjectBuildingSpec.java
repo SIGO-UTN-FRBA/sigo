@@ -12,7 +12,7 @@ import com.vividsolutions.jts.geom.MultiPolygon;
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 @Data
 @Builder
-public class PlacedObjectBuildingSpec implements PlacedObjectSpec {
+public class PlacedObjectBuildingSpec implements PlacedObjectSpec<MultiPolygon> {
     @Id
     @SequenceGenerator(name = "placedObjectBuildingSpecGenerator", sequenceName = "PLACED_OBJECT_BUILDING_SPEC_SEQUENCE")
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "placedObjectBuildingSpecGenerator")
@@ -28,4 +28,8 @@ public class PlacedObjectBuildingSpec implements PlacedObjectSpec {
     private PlacedObject placedObject;
 
 
+    @Override
+    public Class getGeomClass() {
+        return MultiPolygon.class;
+    }
 }

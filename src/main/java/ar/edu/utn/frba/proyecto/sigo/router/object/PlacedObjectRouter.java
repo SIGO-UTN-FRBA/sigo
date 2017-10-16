@@ -8,6 +8,7 @@ import ar.edu.utn.frba.proyecto.sigo.service.object.PlacedObjectService;
 import ar.edu.utn.frba.proyecto.sigo.service.object.PlacedObjectTranslator;
 import ar.edu.utn.frba.proyecto.sigo.spark.JsonTransformer;
 import com.google.gson.Gson;
+import com.vividsolutions.jts.geom.Geometry;
 import org.eclipse.jetty.http.HttpStatus;
 import spark.Route;
 import spark.RouteGroup;
@@ -96,6 +97,17 @@ public class PlacedObjectRouter extends SigoRouter {
         return domain.getSpecification().getGeom();
     });
 
+    private final Route defineGeometry = doInTransaction(true, (request, response) -> {
+
+        PlacedObject domain = objectService.get(getParamObjectId(request));
+
+        Geometry geometry = objectMapper.fromJson(request.body(), (Class<Geometry>) domain.getSpecification().getGeomClass());
+
+        objectService.defineGeometry(geometry, domain.getSpecification());
+
+        return geometry;
+    });
+
     @Override
     public RouteGroup routes() {
         return ()-> {
@@ -108,7 +120,7 @@ public class PlacedObjectRouter extends SigoRouter {
             delete("/:" + OBJECT_ID_PARAM, deleteObject);
 
             get("/:" + OBJECT_ID_PARAM +"/geometry", fetchGeometry, jsonTransformer);
-            //post("/:" + OBJECT_ID_PARAM +"/geom". defineGeometry, jsonTransformer);
+            post("/:" + OBJECT_ID_PARAM +"/geometry", defineGeometry, jsonTransformer);
         };
     }
 

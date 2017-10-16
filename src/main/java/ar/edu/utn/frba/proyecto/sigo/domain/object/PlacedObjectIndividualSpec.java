@@ -11,7 +11,7 @@ import com.vividsolutions.jts.geom.Point;
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 @Data
 @Builder
-public class PlacedObjectIndividualSpec implements PlacedObjectSpec {
+public class PlacedObjectIndividualSpec implements PlacedObjectSpec<Point> {
     @Id
     @SequenceGenerator(name = "placedObjectIndividualGenerator", sequenceName = "PLACED_OBJECT_INDIVIDUAL_SEQUENCE")
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "placedObjectIndividualGenerator")
@@ -25,4 +25,9 @@ public class PlacedObjectIndividualSpec implements PlacedObjectSpec {
     @JoinColumn(name = "object_id")
     private PlacedObject placedObject;
 
+
+    @Override
+    public Class getGeomClass() {
+        return Point.class;
+    }
 }
