@@ -25,4 +25,12 @@ public class PoliticalLocationType extends SigoDomain {
     @Column(name = "index")
     private Long index;
 
+
+    public String toString(){
+        return MoreObjects.toStringHelper(this)
+                .add("id", id)
+                .add("name:", name)
+                .add("index", index)
+                .toString();
+    }
 }

@@ -5,6 +5,7 @@ import javax.persistence.*;
 import ar.edu.utn.frba.proyecto.sigo.domain.SigoDomain;
 import ar.edu.utn.frba.proyecto.sigo.domain.location.political.PoliticalLocation;
 import ar.edu.utn.frba.proyecto.sigo.domain.location.geographic.Region;
+import com.google.common.base.MoreObjects;
 import lombok.*;
 import org.hibernate.annotations.LazyToOne;
 import org.hibernate.annotations.LazyToOneOption;
@@ -102,5 +103,14 @@ public class PlacedObject extends SigoDomain {
             return this.wireSpec.getId();
         else
             return null;
+    }
+
+
+    public String toString(){
+        return MoreObjects.toStringHelper(this)
+                .add("id", id)
+                .add("type", type.name())
+                .add("name:", name)
+                .toString();
     }
 }

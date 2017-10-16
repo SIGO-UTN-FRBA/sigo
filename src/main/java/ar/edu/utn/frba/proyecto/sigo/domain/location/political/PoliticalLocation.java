@@ -2,6 +2,7 @@ package ar.edu.utn.frba.proyecto.sigo.domain.location.political;
 
 import ar.edu.utn.frba.proyecto.sigo.domain.SigoDomain;
 import ar.edu.utn.frba.proyecto.sigo.domain.Spatial;
+import com.google.common.base.MoreObjects;
 import com.vividsolutions.jts.geom.MultiPolygon;
 import lombok.*;
 import javax.persistence.*;
@@ -39,4 +40,11 @@ public class PoliticalLocation extends SigoDomain implements Spatial<MultiPolygo
     private PoliticalLocationType type;
 
 
+    public String toString(){
+        return MoreObjects.toStringHelper(this)
+                .add("id", id)
+                .add("name:", name)
+                .add("code", code)
+                .toString();
+    }
 }

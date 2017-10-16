@@ -1,6 +1,7 @@
 package ar.edu.utn.frba.proyecto.sigo.domain.airport;
 
 import ar.edu.utn.frba.proyecto.sigo.domain.SigoDomain;
+import com.google.common.base.MoreObjects;
 import lombok.*;
 
 import javax.persistence.*;
@@ -33,5 +34,17 @@ public class RunwayTakeoffSection extends SigoDomain {
 
     @Column(name = "stopway_length")
     private Double stopwayLength;
+
+
+    public String toString(){
+        return MoreObjects.toStringHelper(this)
+                .add("id", id)
+                .add("direction_id", runwayDirection.getId())
+                .add("enabled", enabled)
+                .add("stopway_length", stopwayLength)
+                .add("clearwayWidth", clearwayWidth)
+                .add("clearway_length", clearwayLength)
+                .toString();
+    }
 
 }

@@ -5,6 +5,7 @@ import javax.persistence.*;
 import java.util.List;
 
 import ar.edu.utn.frba.proyecto.sigo.domain.SigoDomain;
+import com.google.common.base.MoreObjects;
 import lombok.*;
 
 
@@ -34,4 +35,11 @@ public class PlacedObjectOwner extends SigoDomain {
     @Column(name = "phone2")
     private String phone2;
 
+
+    public String toString(){
+        return MoreObjects.toStringHelper(this)
+                .add("id", id)
+                .add("name:", name)
+                .toString();
+    }
 }

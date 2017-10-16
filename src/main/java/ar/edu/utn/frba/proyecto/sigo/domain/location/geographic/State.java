@@ -4,6 +4,7 @@ import javax.persistence.*;
 import java.util.List;
 
 import ar.edu.utn.frba.proyecto.sigo.domain.SigoDomain;
+import com.google.common.base.MoreObjects;
 import lombok.*;
 
 @Entity
@@ -30,4 +31,11 @@ public class State extends SigoDomain {
     private List<Region> regions;
 
 
+    public String toString(){
+        return MoreObjects.toStringHelper(this)
+                .add("id", id)
+                .add("name:", name)
+                .add("code", code)
+                .toString();
+    }
 }

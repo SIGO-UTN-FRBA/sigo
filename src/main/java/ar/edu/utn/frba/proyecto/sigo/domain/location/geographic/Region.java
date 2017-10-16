@@ -2,10 +2,12 @@ package ar.edu.utn.frba.proyecto.sigo.domain.location.geographic;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.Optional;
 
 import ar.edu.utn.frba.proyecto.sigo.domain.SigoDomain;
 import ar.edu.utn.frba.proyecto.sigo.domain.Spatial;
 import ar.edu.utn.frba.proyecto.sigo.domain.airport.Airport;
+import com.google.common.base.MoreObjects;
 import com.vividsolutions.jts.geom.MultiPolygon;
 import lombok.*;
 
@@ -37,4 +39,11 @@ public class Region extends SigoDomain implements Spatial<MultiPolygon> {
     private State state;
 
 
+    public String toString(){
+        return MoreObjects.toStringHelper(this)
+                .add("id", id)
+                .add("name:", name)
+                .add("code_fir", codeFIR)
+                .toString();
+    }
 }
