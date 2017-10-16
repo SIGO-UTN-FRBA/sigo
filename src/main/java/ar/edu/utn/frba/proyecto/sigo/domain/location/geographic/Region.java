@@ -33,7 +33,7 @@ public class Region extends SigoDomain implements Spatial<MultiPolygon> {
     private List<Airport> airports;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="state_id", nullable=true, updatable= false)
+    @JoinColumn(name="state_id", nullable=false, updatable= false)
     private State state;
 
 
