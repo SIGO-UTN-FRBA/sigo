@@ -21,5 +21,4 @@ public class PlacedObjectDTO {
     private Boolean temporary;
     private Integer lighting;
     private Integer markIndicator;
-    private Long specId;
 }

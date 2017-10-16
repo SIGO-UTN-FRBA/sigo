@@ -5,6 +5,7 @@ import javax.persistence.*;
 import ar.edu.utn.frba.proyecto.sigo.domain.SigoDomain;
 import ar.edu.utn.frba.proyecto.sigo.domain.location.political.PoliticalLocation;
 import ar.edu.utn.frba.proyecto.sigo.domain.location.geographic.Region;
+import ar.edu.utn.frba.proyecto.sigo.exception.SigoException;
 import com.google.common.base.MoreObjects;
 import lombok.*;
 import org.hibernate.annotations.LazyToOne;
@@ -94,17 +95,33 @@ public class PlacedObject extends SigoDomain {
     private PlacedObjectOverheadWireSpec wireSpec;
 
 
-    public Long getSpecId() {
-        if(this.getIndividualSpec() != null)
-            return this.getIndividualSpec().getId();
-        else if (this.getBuildingSpec() != null)
-            return this.getBuildingSpec().getId();
-        else if (this.getWireSpec() != null)
-            return this.wireSpec.getId();
-        else
-            return null;
+
+    public PlacedObjectSpec getSpecification(){
+        switch (this.type) {
+            case BUILDING:
+                return this.getBuildingSpec();
+            case OVERHEAD_WIRED:
+                return this.getWireSpec();
+            case INDIVIDUAL:
+                return this.getIndividualSpec();
+        }
+
+        throw new SigoException("Missing PlacedObject type definition");
     }
 
+    public void setSpecification(PlacedObjectSpec spec){
+        switch (this.getType()) {
+            case BUILDING:
+                this.setBuildingSpec((PlacedObjectBuildingSpec)spec);
+                break;
+            case INDIVIDUAL:
+                this.setIndividualSpec((PlacedObjectIndividualSpec)spec);
+                break;
+            case OVERHEAD_WIRED:
+                this.setWireSpec((PlacedObjectOverheadWireSpec)spec);
+                break;
+        }
+    }
 
     public String toString(){
         return MoreObjects.toStringHelper(this)

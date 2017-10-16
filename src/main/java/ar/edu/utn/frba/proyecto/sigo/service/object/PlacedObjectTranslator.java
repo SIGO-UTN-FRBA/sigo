@@ -48,7 +48,6 @@ public class PlacedObjectTranslator extends Translator<PlacedObject, PlacedObjec
                     .markIndicator(domain.getMarkIndicator().ordinal())
                     .name(domain.getName())
                     .ownerId(domain.getOwner().getId())
-                    .specId(domain.getSpecId())
                     .type(domain.getType().ordinal())
                     .subtype(domain.getSubtype())
                     .verified(domain.getVerified())
@@ -95,9 +94,6 @@ public class PlacedObjectTranslator extends Translator<PlacedObject, PlacedObjec
                 .orElseThrow(()-> new InvalidParameterException("regionId == " + dto.getRegionId()));
 
         builder.region(region);
-
-        // relation: spec
-        //.specId(domain.getSpecId())
 
         return builder.build();
     }

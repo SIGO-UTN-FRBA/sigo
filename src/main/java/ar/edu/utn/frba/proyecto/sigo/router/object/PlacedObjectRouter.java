@@ -64,6 +64,17 @@ public class PlacedObjectRouter extends SigoRouter {
         return translator.getAsDTO(domain);
     });
 
+    private final Route createObject = doInTransaction(true, (request, response) -> {
+
+        PlacedObjectDTO dto = objectMapper.fromJson(request.body(), PlacedObjectDTO.class);
+
+        PlacedObject domain = translator.getAsDomain(dto);
+
+        objectService.create(domain);
+
+        return translator.getAsDTO(domain);
+    });
+
     private final Route deleteObject = doInTransaction(true, (request, response) -> {
 
         PlacedObject domain = objectService.get(getParamObjectId(request));
@@ -84,7 +95,7 @@ public class PlacedObjectRouter extends SigoRouter {
         return ()-> {
 
             get("", fetchObjects, jsonTransformer);
-            //post("", saveObject, jsonTransformer);
+            post("", createObject, jsonTransformer);
 
             get("/:" + OBJECT_ID_PARAM, fetchObject, jsonTransformer);
             put("/:" + OBJECT_ID_PARAM, updateObject, jsonTransformer);

@@ -1,16 +1,17 @@
 package ar.edu.utn.frba.proyecto.sigo.domain.object;
 
 import javax.persistence.*;
-import java.util.List;
+
 import lombok.*;
 import com.vividsolutions.jts.geom.Point;
 
 @Entity
 @Table(name = "public.tbl_placed_object_individual_spec")
+@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 @Data
-
-public class PlacedObjectIndividualSpec {
+@Builder
+public class PlacedObjectIndividualSpec implements PlacedObjectSpec {
     @Id
     @SequenceGenerator(name = "placedObjectIndividualGenerator", sequenceName = "PLACED_OBJECT_INDIVIDUAL_SEQUENCE")
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "placedObjectIndividualGenerator")
