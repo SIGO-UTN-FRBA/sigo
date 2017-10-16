@@ -9,8 +9,10 @@ import lombok.*;
 
 @Entity
 @Table(name = "public.tbl_placed_object")
+@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 @Data
+@Builder
 public class PlacedObject extends SigoDomain {
     @Id
     @SequenceGenerator(name = "placedObjectGenerator", sequenceName = "PLACED_OBJECT_SEQUENCE")

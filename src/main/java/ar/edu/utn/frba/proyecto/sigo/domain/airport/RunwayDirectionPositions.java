@@ -7,7 +7,6 @@ public enum RunwayDirectionPositions {
     CENTER("C"),
     RIGHT ("R");
 
-
     private final String position;
 
     RunwayDirectionPositions(String position){
@@ -16,21 +15,5 @@ public enum RunwayDirectionPositions {
 
     public String position(){
         return position;
-    }
-
-    public static RunwayDirectionPositions getEnum(Integer code) {
-
-        switch (code){
-            case 0:
-                return NONE;
-            case 1:
-                return LEFT;
-            case 2:
-                return CENTER;
-            case 3:
-                return RIGHT;
-            default:
-                return null;
-        }
     }
 }
