@@ -11,5 +11,6 @@ public class RunwayDirectionDTO {
     private String name;
     private Integer number;
     private Integer position;
+    private Double azimuth;
     private Long runwayId;
 }

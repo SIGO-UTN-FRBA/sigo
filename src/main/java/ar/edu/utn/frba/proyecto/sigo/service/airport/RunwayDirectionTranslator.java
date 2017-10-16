@@ -36,6 +36,7 @@ public class RunwayDirectionTranslator extends Translator<RunwayDirection, Runwa
                 .position(domain.getPosition().ordinal())
                 .runwayId(domain.getRunway().getId())
                 .name(domain.getIdentifier())
+                .azimuth(domain.getAzimuth())
                 .build();
     }
 
@@ -47,7 +48,8 @@ public class RunwayDirectionTranslator extends Translator<RunwayDirection, Runwa
         builder
                 .id(dto.getId())
                 .number(dto.getNumber())
-                .position(RunwayDirectionPositions.getEnum(dto.getPosition()));
+                .position(RunwayDirectionPositions.getEnum(dto.getPosition()))
+                .azimuth(dto.getAzimuth());
 
         // relation: runway
 

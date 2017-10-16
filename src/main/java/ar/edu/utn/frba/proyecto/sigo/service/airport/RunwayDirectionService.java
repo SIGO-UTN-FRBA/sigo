@@ -22,6 +22,11 @@ public class RunwayDirectionService extends SigoService<RunwayDirection, Runway>
         createSections(direction, ruwnay);
     }
 
+    @Override
+    protected void preUpdateActions(RunwayDirection newInstance, RunwayDirection oldInstance){
+        newInstance.setGeom(oldInstance.getGeom());
+    }
+
     private void createSections(RunwayDirection direction, Runway ruwnay) {
         RunwayApproachSection approachSection = RunwayApproachSection.builder()
                 .thresholdElevation(0D)

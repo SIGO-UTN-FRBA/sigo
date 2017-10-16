@@ -44,10 +44,10 @@ public class RunwayDirection extends SigoDomain implements Spatial<Point> {
     @JoinColumn(name = "relation_id", foreignKey = @ForeignKey(name = "type_direction_fk"))
     private RunwayTypeImplICAOAnnex14 type;
 
-    @OneToOne(mappedBy = "runwayDirection", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "runwayDirection", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
     private RunwayTakeoffSection takeoffSection;
 
-    @OneToOne(mappedBy = "runwayDirection", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "runwayDirection", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
     private RunwayApproachSection approachSection;
 
     public String getIdentifier(){
