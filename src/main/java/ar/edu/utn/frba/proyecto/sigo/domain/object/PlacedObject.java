@@ -6,6 +6,8 @@ import ar.edu.utn.frba.proyecto.sigo.domain.SigoDomain;
 import ar.edu.utn.frba.proyecto.sigo.domain.location.political.PoliticalLocation;
 import ar.edu.utn.frba.proyecto.sigo.domain.location.geographic.Region;
 import lombok.*;
+import org.hibernate.annotations.LazyToOne;
+import org.hibernate.annotations.LazyToOneOption;
 
 @Entity
 @Table(name = "public.tbl_placed_object")
@@ -33,12 +35,12 @@ public class PlacedObject extends SigoDomain {
     @Column(name = "verified")
     private Boolean verified;
 
-    @ManyToOne
-    @JoinColumn(name = "location_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "location_id", nullable=false, updatable= false)
     private PoliticalLocation politicalLocation;
 
-    @ManyToOne
-    @JoinColumn(name = "region_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "region_id", nullable=false, updatable= false)
     private Region region;
 
     @ManyToOne
@@ -62,16 +64,32 @@ public class PlacedObject extends SigoDomain {
     @Column(name = "mark_indicator")
     private MarkIndicatorTypes markIndicator;
 
-    @OneToOne
-    @JoinColumn(name = "type_individual_id")
+
+    @OneToOne(
+            mappedBy = "placedObject",
+            cascade = CascadeType.REMOVE,
+            orphanRemoval = true,
+            fetch = FetchType.LAZY
+    )
+    @LazyToOne( LazyToOneOption.NO_PROXY )
     private PlacedObjectIndividualSpec individualSpec;
 
-    @OneToOne
-    @JoinColumn(name = "type_building_id")
+    @OneToOne(
+            mappedBy = "placedObject",
+            cascade = CascadeType.REMOVE,
+            orphanRemoval = true,
+            fetch = FetchType.LAZY
+    )
+    @LazyToOne( LazyToOneOption.NO_PROXY )
     private PlacedObjectBuildingSpec buildingSpec;
 
-    @OneToOne
-    @JoinColumn(name = "type_overhead_wire_id")
+    @OneToOne(
+            mappedBy = "placedObject",
+            cascade = CascadeType.REMOVE,
+            orphanRemoval = true,
+            fetch = FetchType.LAZY
+    )
+    @LazyToOne( LazyToOneOption.NO_PROXY )
     private PlacedObjectOverheadWireSpec wireSpec;
 
 

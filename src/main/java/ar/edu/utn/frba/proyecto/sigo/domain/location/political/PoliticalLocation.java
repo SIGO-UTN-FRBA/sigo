@@ -24,14 +24,14 @@ public class PoliticalLocation extends SigoDomain implements Spatial<MultiPolygo
     @Column(name = "code")
     private String code;
 
-    @ManyToOne
-    @JoinColumn(name = "parent_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "parent_id", updatable = false)
     private PoliticalLocation parent;
 
     @Column(name = "geom")
     private MultiPolygon geom;
 
-    @OneToMany(mappedBy="parent")
+    @OneToMany(mappedBy="parent", cascade = CascadeType.REMOVE)
     private List<PoliticalLocation> children;
 
     @ManyToOne

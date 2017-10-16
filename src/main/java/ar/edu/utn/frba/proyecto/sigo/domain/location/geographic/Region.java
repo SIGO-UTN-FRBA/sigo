@@ -32,7 +32,7 @@ public class Region extends SigoDomain implements Spatial<MultiPolygon> {
     @OneToMany(mappedBy="region", cascade = CascadeType.REMOVE)
     private List<Airport> airports;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="state_id", nullable=true, updatable= false)
     private State state;
 

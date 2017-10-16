@@ -20,7 +20,6 @@ public class PlacedObjectIndividualSpec {
     @Column(name = "geom")
     private Point geom;
 
-
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "object_id")
     private PlacedObject placedObject;
