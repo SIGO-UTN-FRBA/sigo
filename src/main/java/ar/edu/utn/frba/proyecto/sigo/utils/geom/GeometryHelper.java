@@ -1,6 +1,7 @@
 package ar.edu.utn.frba.proyecto.sigo.utils.geom;
 
 import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.LineSegment;
 import com.vividsolutions.jts.geom.Point;
 import org.geotools.geometry.jts.JTS;
 import org.geotools.referencing.GeodeticCalculator;
@@ -31,6 +32,11 @@ public class GeometryHelper {
         Point2D destination = gc.getDestinationGeographicPoint();
 
         return new Coordinate(destination.getX(), destination.getY());
+    }
+
+    public static Coordinate getMiddle(Coordinate startPoint, Coordinate finalPoint){
+        LineSegment segment = new LineSegment(startPoint, finalPoint);
+        return segment.pointAlong(0.5);
     }
 
 }
