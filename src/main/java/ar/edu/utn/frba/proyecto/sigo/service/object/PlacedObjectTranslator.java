@@ -1,7 +1,6 @@
 package ar.edu.utn.frba.proyecto.sigo.service.object;
 
-import ar.edu.utn.frba.proyecto.sigo.domain.location.geographic.Region;
-import ar.edu.utn.frba.proyecto.sigo.domain.location.political.PoliticalLocation;
+import ar.edu.utn.frba.proyecto.sigo.domain.location.PoliticalLocation;
 import ar.edu.utn.frba.proyecto.sigo.domain.object.LightingTypes;
 import ar.edu.utn.frba.proyecto.sigo.domain.object.MarkIndicatorTypes;
 import ar.edu.utn.frba.proyecto.sigo.domain.object.PlacedObject;
@@ -42,13 +41,12 @@ public class PlacedObjectTranslator extends Translator<PlacedObject, PlacedObjec
                     .id(domain.getId())
                     .heightAgl(domain.getHeightAgl())
                     .heightAmls(domain.getHeightAmls())
-                    .lighting(domain.getLighting().ordinal())
+                    .lightingId(domain.getLighting().ordinal())
                     .locationId(domain.getPoliticalLocation().getId())
-                    .regionId(domain.getRegion().getId())
-                    .markIndicator(domain.getMarkIndicator().ordinal())
+                    .markIndicatorId(domain.getMarkIndicator().ordinal())
                     .name(domain.getName())
                     .ownerId(domain.getOwner().getId())
-                    .type(domain.getType().ordinal())
+                    .typeId(domain.getType().ordinal())
                     .subtype(domain.getSubtype())
                     .verified(domain.getVerified())
                     .temporary(domain.getTemporary())
@@ -65,10 +63,10 @@ public class PlacedObjectTranslator extends Translator<PlacedObject, PlacedObjec
                 .id(dto.getId())
                 .heightAgl(dto.getHeightAgl())
                 .heightAmls(dto.getHeightAmls())
-                .lighting(LightingTypes.values()[dto.getLighting()])
-                .markIndicator(MarkIndicatorTypes.values()[dto.getMarkIndicator()])
+                .lighting(LightingTypes.values()[dto.getLightingId()])
+                .markIndicator(MarkIndicatorTypes.values()[dto.getMarkIndicatorId()])
                 .name(dto.getName())
-                .type(PlacedObjectTypes.values()[dto.getType()])
+                .type(PlacedObjectTypes.values()[dto.getTypeId()])
                 .subtype(dto.getSubtype())
                 .verified(dto.getVerified())
                 .temporary(dto.getTemporary());
@@ -87,13 +85,6 @@ public class PlacedObjectTranslator extends Translator<PlacedObject, PlacedObjec
                 .orElseThrow(()-> new InvalidParameterException("locationId == " + dto.getLocationId()));
 
         builder.politicalLocation(location);
-
-        // relation: region
-        Region region = Optional
-                .ofNullable(this.regionService.get(dto.getRegionId()))
-                .orElseThrow(()-> new InvalidParameterException("regionId == " + dto.getRegionId()));
-
-        builder.region(region);
 
         return builder.build();
     }

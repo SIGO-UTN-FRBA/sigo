@@ -1,4 +1,4 @@
-package ar.edu.utn.frba.proyecto.sigo.dto;
+package ar.edu.utn.frba.proyecto.sigo.dto.common;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

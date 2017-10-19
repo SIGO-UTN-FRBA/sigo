@@ -3,8 +3,7 @@ package ar.edu.utn.frba.proyecto.sigo.domain.object;
 import javax.persistence.*;
 
 import ar.edu.utn.frba.proyecto.sigo.domain.SigoDomain;
-import ar.edu.utn.frba.proyecto.sigo.domain.location.political.PoliticalLocation;
-import ar.edu.utn.frba.proyecto.sigo.domain.location.geographic.Region;
+import ar.edu.utn.frba.proyecto.sigo.domain.location.PoliticalLocation;
 import ar.edu.utn.frba.proyecto.sigo.exception.SigoException;
 import com.google.common.base.MoreObjects;
 import lombok.*;
@@ -40,10 +39,6 @@ public class PlacedObject extends SigoDomain {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "location_id", nullable=false, updatable= false)
     private PoliticalLocation politicalLocation;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "region_id", nullable=false, updatable= false)
-    private Region region;
 
     @ManyToOne
     @JoinColumn(name = "owner_id")

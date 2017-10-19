@@ -1,6 +1,6 @@
 package ar.edu.utn.frba.proyecto.sigo.service.object;
 
-import ar.edu.utn.frba.proyecto.sigo.domain.location.geographic.Region;
+import ar.edu.utn.frba.proyecto.sigo.domain.analysis.Region;
 import ar.edu.utn.frba.proyecto.sigo.domain.object.PlacedObject;
 import ar.edu.utn.frba.proyecto.sigo.domain.object.PlacedObjectBuildingSpec;
 import ar.edu.utn.frba.proyecto.sigo.domain.object.PlacedObjectIndividualSpec;

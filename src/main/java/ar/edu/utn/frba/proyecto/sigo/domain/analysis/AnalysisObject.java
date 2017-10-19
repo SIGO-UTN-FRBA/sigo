@@ -1,5 +1,6 @@
 package ar.edu.utn.frba.proyecto.sigo.domain.analysis;
 
+import ar.edu.utn.frba.proyecto.sigo.domain.object.PlacedObject;
 import lombok.*;
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -9,17 +10,17 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 @Data
 
-public class AnalysisObjects {
+public class AnalysisObject {
     @Id
     @SequenceGenerator(name = "analysisObjectsGenerator", sequenceName = "ANALYSIS_OBJECTS_SEQUENCE")
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "analysisObjectsGenerator")
-    @Column(name = "case_id")
+    @Column(name = "analysis_object_id")
     private Long id;
 
-    @Column(name = "object_id")
-    private Long objectId;
+    @ManyToOne
+    @JoinColumn(name = "object_id", foreignKey = @ForeignKey(name = "OBJECT_ANALYSIS_FK"))
+    private PlacedObject placedObject;
 
-    @Column(name = "action")
-    private Enum action;
-
+    @ManyToOne
+    private AnalysisCase analysisCase;
 }

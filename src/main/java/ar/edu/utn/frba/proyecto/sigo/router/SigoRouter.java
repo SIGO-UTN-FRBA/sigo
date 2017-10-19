@@ -25,6 +25,7 @@ public abstract class SigoRouter extends Router {
     protected static String RUNWAY_DIRECTION_ID_PARAM = "direction_id";
     protected static String REGION_ID_PARAM = "region_id";
     protected static String OBJECT_ID_PARAM = "object_id";
+    protected static String OWNER_ID_PARAM = "owner_id";
 
     protected Gson objectMapper;
 
@@ -49,6 +50,10 @@ public abstract class SigoRouter extends Router {
 
     protected Long getParamObjectId(Request request) {
         return getParam(request, OBJECT_ID_PARAM);
+    }
+
+    protected Long getParamOwnerId(Request request) {
+        return getParam(request, OWNER_ID_PARAM);
     }
 
     private Long getParam(Request request, String key) {

@@ -1,6 +1,6 @@
 package ar.edu.utn.frba.proyecto.sigo.service.airport;
 
-import ar.edu.utn.frba.proyecto.sigo.domain.location.geographic.Region;
+import ar.edu.utn.frba.proyecto.sigo.domain.analysis.Region;
 import ar.edu.utn.frba.proyecto.sigo.dto.airport.RegionDTO;
 import ar.edu.utn.frba.proyecto.sigo.service.Translator;
 

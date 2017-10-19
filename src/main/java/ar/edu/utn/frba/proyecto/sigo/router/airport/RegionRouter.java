@@ -1,6 +1,6 @@
 package ar.edu.utn.frba.proyecto.sigo.router.airport;
 
-import ar.edu.utn.frba.proyecto.sigo.domain.location.geographic.Region;
+import ar.edu.utn.frba.proyecto.sigo.domain.analysis.Region;
 import ar.edu.utn.frba.proyecto.sigo.persistence.HibernateUtil;
 import ar.edu.utn.frba.proyecto.sigo.router.SigoRouter;
 import ar.edu.utn.frba.proyecto.sigo.service.airport.RegionService;
