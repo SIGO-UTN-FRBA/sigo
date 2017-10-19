@@ -1,4 +1,4 @@
-package ar.edu.utn.frba.proyecto.sigo.domain.location.political;
+package ar.edu.utn.frba.proyecto.sigo.domain.location;
 
 import ar.edu.utn.frba.proyecto.sigo.domain.SigoDomain;
 import com.google.common.base.MoreObjects;
@@ -25,4 +25,12 @@ public class PoliticalLocationType extends SigoDomain {
     @Column(name = "index")
     private Long index;
 
+
+    public String toString(){
+        return MoreObjects.toStringHelper(this)
+                .add("id", id)
+                .add("name:", name)
+                .add("index", index)
+                .toString();
+    }
 }

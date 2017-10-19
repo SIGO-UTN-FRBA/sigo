@@ -3,14 +3,19 @@ package ar.edu.utn.frba.proyecto.sigo.domain.object;
 import javax.persistence.*;
 
 import ar.edu.utn.frba.proyecto.sigo.domain.SigoDomain;
-import ar.edu.utn.frba.proyecto.sigo.domain.location.political.PoliticalLocation;
-import ar.edu.utn.frba.proyecto.sigo.domain.location.geographic.Region;
+import ar.edu.utn.frba.proyecto.sigo.domain.location.PoliticalLocation;
+import ar.edu.utn.frba.proyecto.sigo.exception.SigoException;
+import com.google.common.base.MoreObjects;
 import lombok.*;
+import org.hibernate.annotations.LazyToOne;
+import org.hibernate.annotations.LazyToOneOption;
 
 @Entity
 @Table(name = "public.tbl_placed_object")
+@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 @Data
+@Builder
 public class PlacedObject extends SigoDomain {
     @Id
     @SequenceGenerator(name = "placedObjectGenerator", sequenceName = "PLACED_OBJECT_SEQUENCE")
@@ -31,13 +36,9 @@ public class PlacedObject extends SigoDomain {
     @Column(name = "verified")
     private Boolean verified;
 
-    @ManyToOne
-    @JoinColumn(name = "location_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "location_id", nullable=false, updatable= false)
     private PoliticalLocation politicalLocation;
-
-    @ManyToOne
-    @JoinColumn(name = "region_id")
-    private Region region;
 
     @ManyToOne
     @JoinColumn(name = "owner_id")
@@ -60,27 +61,68 @@ public class PlacedObject extends SigoDomain {
     @Column(name = "mark_indicator")
     private MarkIndicatorTypes markIndicator;
 
-    @OneToOne
-    @JoinColumn(name = "type_individual_id")
+
+    @OneToOne(
+            mappedBy = "placedObject",
+            cascade = CascadeType.REMOVE,
+            orphanRemoval = true,
+            fetch = FetchType.LAZY
+    )
+    @LazyToOne( LazyToOneOption.NO_PROXY )
     private PlacedObjectIndividualSpec individualSpec;
 
-    @OneToOne
-    @JoinColumn(name = "type_building_id")
+    @OneToOne(
+            mappedBy = "placedObject",
+            cascade = CascadeType.REMOVE,
+            orphanRemoval = true,
+            fetch = FetchType.LAZY
+    )
+    @LazyToOne( LazyToOneOption.NO_PROXY )
     private PlacedObjectBuildingSpec buildingSpec;
 
-    @OneToOne
-    @JoinColumn(name = "type_overhead_wire_id")
+    @OneToOne(
+            mappedBy = "placedObject",
+            cascade = CascadeType.REMOVE,
+            orphanRemoval = true,
+            fetch = FetchType.LAZY
+    )
+    @LazyToOne( LazyToOneOption.NO_PROXY )
     private PlacedObjectOverheadWireSpec wireSpec;
 
 
-    public Long getSpecId() {
-        if(this.getIndividualSpec() != null)
-            return this.getIndividualSpec().getId();
-        else if (this.getBuildingSpec() != null)
-            return this.getBuildingSpec().getId();
-        else if (this.getWireSpec() != null)
-            return this.wireSpec.getId();
-        else
-            return null;
+
+    public PlacedObjectSpec getSpecification(){
+        switch (this.type) {
+            case BUILDING:
+                return this.getBuildingSpec();
+            case OVERHEAD_WIRED:
+                return this.getWireSpec();
+            case INDIVIDUAL:
+                return this.getIndividualSpec();
+        }
+
+        throw new SigoException("Missing PlacedObject type definition");
+    }
+
+    public void setSpecification(PlacedObjectSpec spec){
+        switch (this.getType()) {
+            case BUILDING:
+                this.setBuildingSpec((PlacedObjectBuildingSpec)spec);
+                break;
+            case INDIVIDUAL:
+                this.setIndividualSpec((PlacedObjectIndividualSpec)spec);
+                break;
+            case OVERHEAD_WIRED:
+                this.setWireSpec((PlacedObjectOverheadWireSpec)spec);
+                break;
+        }
+    }
+
+    public String toString(){
+        return MoreObjects.toStringHelper(this)
+                .add("id", id)
+                .add("type", type.name())
+                .add("name:", name)
+                .toString();
     }
 }

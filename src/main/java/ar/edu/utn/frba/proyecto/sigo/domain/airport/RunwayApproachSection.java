@@ -1,6 +1,7 @@
 package ar.edu.utn.frba.proyecto.sigo.domain.airport;
 
 import ar.edu.utn.frba.proyecto.sigo.domain.SigoDomain;
+import com.google.common.base.MoreObjects;
 import lombok.*;
 
 import javax.persistence.*;
@@ -30,5 +31,16 @@ public class RunwayApproachSection extends SigoDomain {
 
     @Column(name = "threshold_elevation")
     private Double thresholdElevation;
+
+
+    public String toString(){
+        return MoreObjects.toStringHelper(this)
+                .add("id", id)
+                .add("direction_id", runwayDirection.getId())
+                .add("enabled", enabled)
+                .add("threshold_length", thresholdLength)
+                .add("threshold_elevation", thresholdElevation)
+                .toString();
+    }
 
 }

@@ -3,6 +3,9 @@ package ar.edu.utn.frba.proyecto.sigo.domain.object;
 
 import javax.persistence.*;
 import java.util.List;
+
+import ar.edu.utn.frba.proyecto.sigo.domain.SigoDomain;
+import com.google.common.base.MoreObjects;
 import lombok.*;
 
 
@@ -10,7 +13,7 @@ import lombok.*;
 @Table(name = "public.tbl_placed_object_owner")
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 @Data
-public class PlacedObjectOwner {
+public class PlacedObjectOwner extends SigoDomain {
     @Id
     @SequenceGenerator(name = "placedObjectOwnerGenerator", sequenceName = "PLACED_OBJECT_OWNER_SEQUENCE")
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "placedObjectOwnerGenerator")
@@ -32,4 +35,11 @@ public class PlacedObjectOwner {
     @Column(name = "phone2")
     private String phone2;
 
+
+    public String toString(){
+        return MoreObjects.toStringHelper(this)
+                .add("id", id)
+                .add("name:", name)
+                .toString();
+    }
 }

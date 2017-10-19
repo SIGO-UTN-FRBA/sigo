@@ -1,6 +1,6 @@
 package ar.edu.utn.frba.proyecto.sigo;
 
-import ar.edu.utn.frba.proyecto.sigo.dto.ExceptionDTO;
+import ar.edu.utn.frba.proyecto.sigo.dto.common.ExceptionDTO;
 import ar.edu.utn.frba.proyecto.sigo.exception.*;
 import ar.edu.utn.frba.proyecto.sigo.spark.Router;
 import com.github.racc.tscg.TypesafeConfig;

@@ -8,6 +8,7 @@ import ar.edu.utn.frba.proyecto.sigo.service.object.PlacedObjectService;
 import ar.edu.utn.frba.proyecto.sigo.service.object.PlacedObjectTranslator;
 import ar.edu.utn.frba.proyecto.sigo.spark.JsonTransformer;
 import com.google.gson.Gson;
+import com.vividsolutions.jts.geom.Geometry;
 import org.eclipse.jetty.http.HttpStatus;
 import spark.Route;
 import spark.RouteGroup;
@@ -64,6 +65,17 @@ public class PlacedObjectRouter extends SigoRouter {
         return translator.getAsDTO(domain);
     });
 
+    private final Route createObject = doInTransaction(true, (request, response) -> {
+
+        PlacedObjectDTO dto = objectMapper.fromJson(request.body(), PlacedObjectDTO.class);
+
+        PlacedObject domain = translator.getAsDomain(dto);
+
+        objectService.create(domain);
+
+        return translator.getAsDTO(domain);
+    });
+
     private final Route deleteObject = doInTransaction(true, (request, response) -> {
 
         PlacedObject domain = objectService.get(getParamObjectId(request));
@@ -78,20 +90,37 @@ public class PlacedObjectRouter extends SigoRouter {
     });
 
 
+    private final Route fetchGeometry = doInTransaction(false, (request, response) -> {
+
+        PlacedObject domain = objectService.get(getParamObjectId(request));
+
+        return domain.getSpecification().getGeom();
+    });
+
+    private final Route defineGeometry = doInTransaction(true, (request, response) -> {
+
+        PlacedObject domain = objectService.get(getParamObjectId(request));
+
+        Geometry geometry = objectMapper.fromJson(request.body(), (Class<Geometry>) domain.getSpecification().getGeomClass());
+
+        objectService.defineGeometry(geometry, domain.getSpecification());
+
+        return geometry;
+    });
 
     @Override
     public RouteGroup routes() {
         return ()-> {
 
             get("", fetchObjects, jsonTransformer);
-            //post("", saveObject, jsonTransformer);
+            post("", createObject, jsonTransformer);
 
             get("/:" + OBJECT_ID_PARAM, fetchObject, jsonTransformer);
             put("/:" + OBJECT_ID_PARAM, updateObject, jsonTransformer);
             delete("/:" + OBJECT_ID_PARAM, deleteObject);
 
-            //get("/:" + OBJECT_ID_PARAM +"/geom". fetchGeometry, jsonTransformer);
-            //post("/:" + OBJECT_ID_PARAM +"/geom". defineGeometry, jsonTransformer);
+            get("/:" + OBJECT_ID_PARAM +"/geometry", fetchGeometry, jsonTransformer);
+            post("/:" + OBJECT_ID_PARAM +"/geometry", defineGeometry, jsonTransformer);
         };
     }
 

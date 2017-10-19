@@ -2,10 +2,10 @@ package ar.edu.utn.frba.proyecto.sigo.persistence;
 
 import ar.edu.utn.frba.proyecto.sigo.domain.airport.*;
 import ar.edu.utn.frba.proyecto.sigo.domain.analysis.*;
-import ar.edu.utn.frba.proyecto.sigo.domain.location.political.PoliticalLocation;
-import ar.edu.utn.frba.proyecto.sigo.domain.location.political.PoliticalLocationType;
-import ar.edu.utn.frba.proyecto.sigo.domain.location.geographic.Region;
-import ar.edu.utn.frba.proyecto.sigo.domain.location.geographic.State;
+import ar.edu.utn.frba.proyecto.sigo.domain.location.PoliticalLocation;
+import ar.edu.utn.frba.proyecto.sigo.domain.location.PoliticalLocationType;
+import ar.edu.utn.frba.proyecto.sigo.domain.analysis.Region;
+import ar.edu.utn.frba.proyecto.sigo.domain.analysis.State;
 import ar.edu.utn.frba.proyecto.sigo.domain.object.*;
 import ar.edu.utn.frba.proyecto.sigo.domain.regulation.OlsRule;
 import ar.edu.utn.frba.proyecto.sigo.domain.regulation.OlsRulesICAOAnnex14;
@@ -97,6 +97,7 @@ public class HibernateUtil {
                 .addAnnotatedClass(OlsRulesICAOAnnex14.class)
                 .addAnnotatedClass(AnalysisArea.class)
                 .addAnnotatedClass(AnalysisAreaSurface.class)
+                .addAnnotatedClass(AnalysisAreaObstacle.class)
                 .addAnnotatedClass(AnalysisCase.class)
                 .addAnnotatedClass(AnalysisCaseStatus.class)
                 .addAnnotatedClass(AnalysisCaseStatusRegistry.class)
@@ -104,7 +105,7 @@ public class HibernateUtil {
                 .addAnnotatedClass(ExceptionRuleValueSpec.class)
                 .addAnnotatedClass(ExceptionSurfaceSpec.class)
                 .addAnnotatedClass(ExceptionModificationSpec.class)
-                .addAnnotatedClass(AnalysisObjects.class)
+                .addAnnotatedClass(AnalysisObject.class)
                 .addAnnotatedClass(Region.class);
 
         Metadata metadata = sources.getMetadataBuilder().build();

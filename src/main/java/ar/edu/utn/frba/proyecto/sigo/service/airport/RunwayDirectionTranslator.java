@@ -48,15 +48,13 @@ public class RunwayDirectionTranslator extends Translator<RunwayDirection, Runwa
         builder
                 .id(dto.getId())
                 .number(dto.getNumber())
-                .position(RunwayDirectionPositions.getEnum(dto.getPosition()))
+                .position(RunwayDirectionPositions.values()[dto.getPosition()])
                 .azimuth(dto.getAzimuth());
 
         // relation: runway
-
-        Runway runway = runwayService.get(dto.getRunwayId());
-
-        if(!Optional.ofNullable(runway).isPresent())
-            throw new InvalidParameterException("ruwnay_id == " + dto.getRunwayId());
+        Runway runway = Optional
+                .ofNullable(runwayService.get(dto.getRunwayId()))
+                .orElseThrow(()-> new InvalidParameterException("ruwnayId == " + dto.getRunwayId()));
 
         builder.runway(runway);
 

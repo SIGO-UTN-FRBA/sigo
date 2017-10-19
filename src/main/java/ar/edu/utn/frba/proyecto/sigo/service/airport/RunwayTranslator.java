@@ -57,10 +57,9 @@ public class RunwayTranslator extends Translator<Runway, RunwayDTO> {
 
         // relation: airport
 
-        Airport airport = airportService.get(dto.getAirportId());
-
-        if(!Optional.ofNullable(airport).isPresent())
-            throw new InvalidParameterException("airport_id == " + dto.getAirportId());
+        Airport airport = Optional
+                .ofNullable(airportService.get(dto.getAirportId()))
+                .orElseThrow( () -> new InvalidParameterException("airport_id == " + dto.getAirportId()));
 
         builder.airport(airport);
 

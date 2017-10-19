@@ -9,9 +9,8 @@ import lombok.Data;
 @Builder
 public class PlacedObjectDTO {
     private Long id;
-    private Long regionId;
     private String name;
-    private Integer type;
+    private Integer typeId;
     private String subtype;
     private Boolean verified;
     private Long locationId;
@@ -19,7 +18,6 @@ public class PlacedObjectDTO {
     private Double heightAgl;
     private Double heightAmls;
     private Boolean temporary;
-    private Integer lighting;
-    private Integer markIndicator;
-    private Long specId;
+    private Integer lightingId;
+    private Integer markIndicatorId;
 }

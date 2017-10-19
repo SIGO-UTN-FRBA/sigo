@@ -6,19 +6,19 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "public.tbl_analysis_area_surfaces")
+@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 @Data
-
+@Builder
 public class AnalysisAreaSurface {
     @Id
-    @SequenceGenerator(name = "analysAreaSurface", sequenceName = "ANALYS_AREA_SURFACE_SEQUENCE")
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "analysAreaSurface")
+    @SequenceGenerator(name = "analysisAreaSurface", sequenceName = "ANALYSIS_AREA_SURFACE_SEQUENCE")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "analysisAreaSurface")
     @Column(name = "surface_id")
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "area_id")
-    private AnalysisArea analysisArea;
+    private AnalysisArea area;
 
     @Column(name = "name")
     private String name;
