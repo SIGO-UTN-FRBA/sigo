@@ -29,8 +29,8 @@ public class RunwayTakeoffSectionService extends SigoService<RunwayTakeoffSectio
 
         List<Coordinate> extremes = sortDirectionCoordinates(direction.getRunway().getGeom().getCoordinates(), direction.getGeom().getCoordinate());
         //TODO: Validar distancia de ASDA. Modificar 150 por Stepway
-        Coordinate extreme2= move(extremes.get(2), getAzimuthRunway(direction), 150);
-        Coordinate extreme3= move(extremes.get(3), getAzimuthRunway(direction), 150);
+        Coordinate extreme2= move(extremes.get(2), getAzimuthRunway(direction), direction.getTakeoffSection().getStopwayLength());
+        Coordinate extreme3= move(extremes.get(3), getAzimuthRunway(direction), direction.getTakeoffSection().getStopwayLength());
 
         return new GeometryFactory().createPolygon(new Coordinate[]{extremes.get(2), extreme2, extreme3, extremes.get(3), extremes.get(2)});
     }
@@ -39,10 +39,10 @@ public class RunwayTakeoffSectionService extends SigoService<RunwayTakeoffSectio
 
         List<Coordinate> extremes = sortDirectionCoordinates(direction.getRunway().getGeom().getCoordinates(), direction.getGeom().getCoordinate());
         //TODO: Validar distancia de TODA. Modificar 200 por Clearway
-        Coordinate extreme1= move(extremes.get(2), getAzimuthRunway(direction)+90, 25);
-        Coordinate extreme4= move(extremes.get(3), getAzimuthRunway(direction)-90, 25);
-        Coordinate extreme2= move(extreme1, getAzimuthRunway(direction), 200);
-        Coordinate extreme3= move(extreme4, getAzimuthRunway(direction), 200);
+        Coordinate extreme1= move(extremes.get(2), getAzimuthRunway(direction)+90, direction.getTakeoffSection().getClearwayWidth());
+        Coordinate extreme4= move(extremes.get(3), getAzimuthRunway(direction)-90, direction.getTakeoffSection().getClearwayWidth());
+        Coordinate extreme2= move(extreme1, getAzimuthRunway(direction), direction.getTakeoffSection().getClearwayLength());
+        Coordinate extreme3= move(extreme4, getAzimuthRunway(direction), direction.getTakeoffSection().getClearwayLength());
 
         return new GeometryFactory().createPolygon(new Coordinate[]{extreme1, extreme2, extreme3, extreme4, extreme1});
     }
