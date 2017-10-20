@@ -3,9 +3,17 @@ package ar.edu.utn.frba.proyecto.sigo.service.airport;
 import ar.edu.utn.frba.proyecto.sigo.domain.airport.*;
 import ar.edu.utn.frba.proyecto.sigo.persistence.HibernateUtil;
 import ar.edu.utn.frba.proyecto.sigo.service.SigoService;
+import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.GeometryFactory;
+import com.vividsolutions.jts.geom.LineString;
 
 import javax.inject.Inject;
 import java.util.HashMap;
+import java.util.List;
+
+import static ar.edu.utn.frba.proyecto.sigo.utils.geom.GeometryHelper.getAzimuth;
+import static ar.edu.utn.frba.proyecto.sigo.utils.geom.GeometryHelper.getMiddle;
+import static ar.edu.utn.frba.proyecto.sigo.utils.geom.GeometryHelper.sortDirectionCoordinates;
 
 public class RunwayDirectionService extends SigoService<RunwayDirection, Runway> {
 
@@ -47,4 +55,5 @@ public class RunwayDirectionService extends SigoService<RunwayDirection, Runway>
 
         currentSession().save(takeoffSection);
     }
+
 }

@@ -8,6 +8,9 @@ import org.geotools.referencing.GeodeticCalculator;
 
 import javax.inject.Singleton;
 import java.awt.geom.Point2D;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Singleton
 public class GeometryHelper {
@@ -37,6 +40,21 @@ public class GeometryHelper {
     public static Coordinate getMiddle(Coordinate startPoint, Coordinate finalPoint){
         LineSegment segment = new LineSegment(startPoint, finalPoint);
         return segment.pointAlong(0.5);
+    }
+
+
+    public static List<Coordinate> sortDirectionCoordinates(Coordinate[] unsortedCoordinates, Coordinate referenceCoordinate){
+        List<Coordinate> sortedCoordinates = Arrays.stream(unsortedCoordinates)
+                .distinct()
+                .sorted((i, j) -> {
+                    if (referenceCoordinate.distance(i) > referenceCoordinate.distance(j))
+                        return 1;
+                    else
+                        return -1;
+                })
+                .limit(4)
+                .collect(Collectors.toList());
+        return sortedCoordinates;
     }
 
 }
