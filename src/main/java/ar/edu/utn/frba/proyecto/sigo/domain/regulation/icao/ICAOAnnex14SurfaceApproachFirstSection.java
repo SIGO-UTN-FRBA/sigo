@@ -1,4 +1,12 @@
 package ar.edu.utn.frba.proyecto.sigo.domain.regulation.icao;
 
-public class ICAOAnnex14SurfaceApproachFirstSection {
+import lombok.Builder;
+import lombok.Data;
+
+@Data
+@Builder
+public class ICAOAnnex14SurfaceApproachFirstSection extends ICAOAnnex14Surface {
+
+    private Double length;
+    private Double slope;
 }

@@ -1,4 +1,12 @@
 package ar.edu.utn.frba.proyecto.sigo.domain.regulation.icao;
 
-public class ICAOAnnex14SurfaceTakeoffClimb {
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@NoArgsConstructor(access = AccessLevel.PUBLIC)
+@Data
+@Builder
+public class ICAOAnnex14SurfaceTakeoffClimb extends ICAOAnnex14Surface {
 }
