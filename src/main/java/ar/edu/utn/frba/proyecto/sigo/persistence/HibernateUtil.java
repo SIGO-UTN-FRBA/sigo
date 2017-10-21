@@ -8,7 +8,8 @@ import ar.edu.utn.frba.proyecto.sigo.domain.analysis.Region;
 import ar.edu.utn.frba.proyecto.sigo.domain.analysis.State;
 import ar.edu.utn.frba.proyecto.sigo.domain.object.*;
 import ar.edu.utn.frba.proyecto.sigo.domain.regulation.OlsRule;
-import ar.edu.utn.frba.proyecto.sigo.domain.regulation.OlsRulesICAOAnnex14;
+import ar.edu.utn.frba.proyecto.sigo.domain.regulation.faa.OlsRulesFAASpec;
+import ar.edu.utn.frba.proyecto.sigo.domain.regulation.icao.OlsRulesICAOAnnex14Spec;
 import ar.edu.utn.frba.proyecto.sigo.domain.regulation.Regulation;
 import com.github.racc.tscg.TypesafeConfig;
 import lombok.AccessLevel;
@@ -94,7 +95,8 @@ public class HibernateUtil {
                 .addAnnotatedClass(RunwayTakeoffSection.class)
                 .addAnnotatedClass(RunwayTypeImplICAOAnnex14.class)
                 .addAnnotatedClass(OlsRule.class)
-                .addAnnotatedClass(OlsRulesICAOAnnex14.class)
+                .addAnnotatedClass(OlsRulesICAOAnnex14Spec.class)
+                .addAnnotatedClass(OlsRulesFAASpec.class)
                 .addAnnotatedClass(AnalysisArea.class)
                 .addAnnotatedClass(AnalysisAreaSurface.class)
                 .addAnnotatedClass(AnalysisAreaObstacle.class)
