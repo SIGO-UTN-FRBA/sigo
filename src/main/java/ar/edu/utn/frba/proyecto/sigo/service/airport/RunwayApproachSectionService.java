@@ -6,6 +6,13 @@ import ar.edu.utn.frba.proyecto.sigo.domain.airport.RunwayDirection;
 import ar.edu.utn.frba.proyecto.sigo.persistence.HibernateUtil;
 import ar.edu.utn.frba.proyecto.sigo.service.SigoService;
 import com.vividsolutions.jts.geom.*;
+import org.geotools.data.collection.ListFeatureCollection;
+import org.geotools.data.simple.SimpleFeatureCollection;
+import org.geotools.feature.simple.SimpleFeatureBuilder;
+import org.geotools.feature.simple.SimpleFeatureTypeBuilder;
+import org.geotools.referencing.crs.DefaultGeographicCRS;
+import org.opengis.feature.simple.SimpleFeature;
+import org.opengis.feature.simple.SimpleFeatureType;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -13,9 +20,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static ar.edu.utn.frba.proyecto.sigo.service.airport.RunwayDistanceHelper.calculateTORALength;
-import static ar.edu.utn.frba.proyecto.sigo.service.airport.RunwayDistanceHelper.getAzimuthRunway;
-import static ar.edu.utn.frba.proyecto.sigo.service.airport.RunwayDistanceHelper.getCenterRunwayPoint;
+import static ar.edu.utn.frba.proyecto.sigo.service.airport.RunwayDistanceHelper.*;
 import static ar.edu.utn.frba.proyecto.sigo.utils.geom.GeometryHelper.*;
 
 @Singleton
@@ -27,24 +32,12 @@ public class RunwayApproachSectionService extends SigoService<RunwayApproachSect
     }
 
     public Geometry getThresholdGeometry(RunwayDirection runwayDirection) {
-
         List<Coordinate> extremes = sortDirectionCoordinates(runwayDirection.getRunway().getGeom().getCoordinates(), runwayDirection.getGeom().getCoordinate());
 
-        Coordinate extreme1 = extremes.get(0);
-        Coordinate extreme4 = extremes.get(1);
         double azimuth = getAzimuthRunway(runwayDirection);
 
-        Coordinate extreme2 = move(extreme1, azimuth, -1 * runwayDirection.getApproachSection().getThresholdLength());
-        Coordinate extreme3 = move(extreme4, azimuth, -1 * runwayDirection.getApproachSection().getThresholdLength());
-
-        return new GeometryFactory().createPolygon(new Coordinate[]{extreme1, extreme2, extreme3, extreme4, extreme1});
-    }
-
-    public Geometry getDisplacement(RunwayDirection runwayDirection) {
-        List<Coordinate> extremes = sortDirectionCoordinates(runwayDirection.getRunway().getGeom().getCoordinates(), runwayDirection.getGeom().getCoordinate());
-        //TODO: Validar distancia de TORA. Modificar 150 por Displacement
-        Coordinate extreme2= move(extremes.get(0), getAzimuthRunway(runwayDirection), -150);
-        Coordinate extreme3= move(extremes.get(1), getAzimuthRunway(runwayDirection), -150);
+        Coordinate extreme2= move(extremes.get(0), azimuth, -1 * runwayDirection.getApproachSection().getThresholdLength());
+        Coordinate extreme3= move(extremes.get(1), azimuth, -1 * runwayDirection.getApproachSection().getThresholdLength());
 
         return new GeometryFactory().createPolygon(new Coordinate[]{extremes.get(0), extreme2, extreme3, extremes.get(1), extremes.get(0)});
 
@@ -63,10 +56,40 @@ public class RunwayApproachSectionService extends SigoService<RunwayApproachSect
 
     //TODO: Migrar la superficie de approach
     /*Determino la superficie de approach para la runway*/
+
+    private SimpleFeatureCollection getApproachFeature (RunwayDirection direction){
+
+        Geometry approachGeom = getApproachSurface(direction);
+        Double divergence = null;
+        Double lenght = null;
+
+        //create the builder
+        SimpleFeatureTypeBuilder approachTB = new SimpleFeatureTypeBuilder();
+
+        //add the attributes
+        approachTB.setName("Polygon");
+        approachTB.add("geom", approachGeom.getClass(), DefaultGeographicCRS.WGS84);
+        approachTB.add("name", String.class);
+        approachTB.add( "divergence", Double.class );
+        approachTB.add( "lenght", Double.class );
+
+        //type of features we would like to build
+        SimpleFeatureType schema = approachTB.buildFeatureType();
+
+        //build the feature
+        SimpleFeature sf = SimpleFeatureBuilder.build(schema, new Object[] { approachGeom, "Approach Surface", divergence, lenght }, null);
+
+
+        ListFeatureCollection result = new ListFeatureCollection(schema);
+        result.add(sf);
+
+        return result;
+
+    };
+
     private Geometry getApproachSurface(RunwayDirection runwayDirection){
         Coordinate[] centerRunwayPath = getCenterRunwayPoint(runwayDirection);
         double azimuth = getAzimuthRunway(runwayDirection);
-        runwayDirection.getTakeoffSection();
         Coordinate startRightPoint = move(centerRunwayPath[0], azimuth-90,25);
         Coordinate startLeftPoint = move(centerRunwayPath[0], azimuth +90,25);
         //TODO: Modificar 4 por la divergencia
