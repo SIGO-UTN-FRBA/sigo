@@ -12,6 +12,7 @@ import lombok.*;
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 @Data
 public class OlsRulesICAOAnnex14Spec extends SigoDomain {
+
     @Id
     @SequenceGenerator(name = "olsRuleIcaoGenerator", sequenceName = "OLS_RULE_ICAO_SEQUENCE")
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "olsRuleIcaoGenerator")
@@ -22,17 +23,21 @@ public class OlsRulesICAOAnnex14Spec extends SigoDomain {
     @JoinColumn(name = "rule_id")
     private OlsRule rule;
 
+    @Enumerated(EnumType.ORDINAL)
     @Column(name = "surface_name")
-    private String surfaceName;
+    private ICAOAnnex14Surfaces surface;
 
+    @Enumerated(EnumType.ORDINAL)
     @Column(name = "runway_classification")
-    private String runwayClassification;
+    private ICAOAnnex14RunwayClassifications runwayClassification;
 
+    @Enumerated(EnumType.ORDINAL)
     @Column(name = "runway_category")
-    private String runwayCategory;
+    private ICAOAnnex14RunwayCategories runwayCategory;
 
-    @Column(name = "runway_code_number")
-    private String runwayCodeNumber;
+    @Enumerated(EnumType.ORDINAL)
+    @Column(name = "runway_code")
+    private ICAOAnnex14RunwayCodes runwayCode;
 
     @Column(name = "property")
     private String property;
