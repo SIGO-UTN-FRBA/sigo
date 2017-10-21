@@ -5,6 +5,7 @@ import ar.edu.utn.frba.proyecto.sigo.domain.airport.RunwayTakeoffSection;
 import ar.edu.utn.frba.proyecto.sigo.persistence.HibernateUtil;
 import ar.edu.utn.frba.proyecto.sigo.service.SigoService;
 import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.Polygon;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
@@ -25,20 +26,18 @@ public class RunwayTakeoffSectionService extends SigoService<RunwayTakeoffSectio
         super(RunwayTakeoffSection.class, hibernateUtil.getSessionFactory());
     }
 
-    public Polygon getStopwayGeometry(RunwayDirection direction) {
+    public Geometry getStopwayGeometry(RunwayDirection direction) {
 
         List<Coordinate> extremes = sortDirectionCoordinates(direction.getRunway().getGeom().getCoordinates(), direction.getGeom().getCoordinate());
-        //TODO: Validar distancia de ASDA. Modificar 150 por Stepway
         Coordinate extreme2= move(extremes.get(2), getAzimuthRunway(direction), direction.getTakeoffSection().getStopwayLength());
         Coordinate extreme3= move(extremes.get(3), getAzimuthRunway(direction), direction.getTakeoffSection().getStopwayLength());
 
         return new GeometryFactory().createPolygon(new Coordinate[]{extremes.get(2), extreme2, extreme3, extremes.get(3), extremes.get(2)});
     }
 
-    public Polygon getClearwayGeometry(RunwayDirection direction) {
+    public Geometry getClearwayGeometry(RunwayDirection direction) {
 
         List<Coordinate> extremes = sortDirectionCoordinates(direction.getRunway().getGeom().getCoordinates(), direction.getGeom().getCoordinate());
-        //TODO: Validar distancia de TODA. Modificar 200 por Clearway
         Coordinate extreme1= move(extremes.get(2), getAzimuthRunway(direction)+90, direction.getTakeoffSection().getClearwayWidth());
         Coordinate extreme4= move(extremes.get(3), getAzimuthRunway(direction)-90, direction.getTakeoffSection().getClearwayWidth());
         Coordinate extreme2= move(extreme1, getAzimuthRunway(direction), direction.getTakeoffSection().getClearwayLength());
