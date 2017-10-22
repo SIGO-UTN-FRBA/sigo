@@ -1,8 +1,6 @@
 package ar.edu.utn.frba.proyecto.sigo.router.object;
 
-import ar.edu.utn.frba.proyecto.sigo.dto.object.LightingTypeDTO;
-import ar.edu.utn.frba.proyecto.sigo.dto.object.MarkIndicatorTypeDTO;
-import ar.edu.utn.frba.proyecto.sigo.dto.object.PlacedObjectTypeDTO;
+import ar.edu.utn.frba.proyecto.sigo.dto.common.EnumerationDTO;
 import ar.edu.utn.frba.proyecto.sigo.router.SigoRouter;
 import ar.edu.utn.frba.proyecto.sigo.service.object.CatalogObjectService;
 import ar.edu.utn.frba.proyecto.sigo.spark.JsonTransformer;
@@ -35,9 +33,9 @@ public class CatalogObjectRouter extends SigoRouter {
 
     private final Route fetchLightings = (Request request, Response response) -> {
         return Arrays.stream(catalogService.listLightingTypes())
-                .map(v -> LightingTypeDTO.builder()
+                .map(v -> EnumerationDTO.builder()
                         .id(v.ordinal())
-                        .code(v.name())
+                        .name(v.name())
                         .description(v.type())
                         .build()
                 ).collect(Collectors.toList());
@@ -45,9 +43,9 @@ public class CatalogObjectRouter extends SigoRouter {
 
     private final Route fetchMarkIndicators = (Request request, Response response) -> {
         return Arrays.stream(catalogService.markIndicatorsTypes())
-                .map(v -> MarkIndicatorTypeDTO.builder()
+                .map(v -> EnumerationDTO.builder()
                             .id(v.ordinal())
-                            .code(v.name())
+                            .name(v.name())
                             .description(v.type())
                             .build()
                 )
@@ -56,9 +54,9 @@ public class CatalogObjectRouter extends SigoRouter {
 
     private final Route fetchObjectTypes = (Request request, Response response) -> {
         return Arrays.stream(catalogService.fetchObjectTypes())
-                .map(v -> PlacedObjectTypeDTO.builder()
+                .map(v -> EnumerationDTO.builder()
                             .id(v.ordinal())
-                            .code(v.name())
+                            .name(v.name())
                             .description(v.type())
                             .build()
                 )

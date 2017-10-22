@@ -1,6 +1,8 @@
 package ar.edu.utn.frba.proyecto.sigo.persistence;
 
 import ar.edu.utn.frba.proyecto.sigo.domain.airport.*;
+import ar.edu.utn.frba.proyecto.sigo.domain.airport.faa.RunwayClassificationFAA;
+import ar.edu.utn.frba.proyecto.sigo.domain.airport.icao.RunwayClassificationICAOAnnex14;
 import ar.edu.utn.frba.proyecto.sigo.domain.analysis.*;
 import ar.edu.utn.frba.proyecto.sigo.domain.location.PoliticalLocation;
 import ar.edu.utn.frba.proyecto.sigo.domain.location.PoliticalLocationType;
@@ -87,13 +89,11 @@ public class HibernateUtil {
                 .addAnnotatedClass(Runway.class)
                 .addAnnotatedClass(RunwaySurface.class)
                 .addAnnotatedClass(RunwayDirection.class)
-                .addAnnotatedClass(RunwayTypeLetterICAOAnnex14.class)
-                .addAnnotatedClass(RunwayTypeNumberICAOAnnex14.class)
+                .addAnnotatedClass(RunwayClassification.class)
                 .addAnnotatedClass(RunwayClassificationICAOAnnex14.class)
-                .addAnnotatedClass(RunwayClassificationImplICAOAnnex14.class)
+                .addAnnotatedClass(RunwayClassificationFAA.class)
                 .addAnnotatedClass(RunwayApproachSection.class)
                 .addAnnotatedClass(RunwayTakeoffSection.class)
-                .addAnnotatedClass(RunwayTypeImplICAOAnnex14.class)
                 .addAnnotatedClass(OlsRule.class)
                 .addAnnotatedClass(OlsRulesICAOAnnex14Spec.class)
                 .addAnnotatedClass(OlsRulesFAASpec.class)
