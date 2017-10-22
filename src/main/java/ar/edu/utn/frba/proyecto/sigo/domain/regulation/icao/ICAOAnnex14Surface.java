@@ -10,5 +10,5 @@ public class ICAOAnnex14Surface {
 
     private ICAOAnnex14RunwayClassifications classification;
     private ICAOAnnex14RunwayCategories category;
-    private ICAOAnnex14RunwayCodes code;
+    private ICAOAnnex14RunwayCodeNumbers code;
 }

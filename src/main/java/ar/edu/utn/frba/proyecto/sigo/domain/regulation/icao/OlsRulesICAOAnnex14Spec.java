@@ -1,7 +1,6 @@
 package ar.edu.utn.frba.proyecto.sigo.domain.regulation.icao;
 
 import javax.persistence.*;
-import java.util.List;
 
 import ar.edu.utn.frba.proyecto.sigo.domain.SigoDomain;
 import ar.edu.utn.frba.proyecto.sigo.domain.regulation.OlsRule;
@@ -36,8 +35,8 @@ public class OlsRulesICAOAnnex14Spec extends SigoDomain {
     private ICAOAnnex14RunwayCategories runwayCategory;
 
     @Enumerated(EnumType.ORDINAL)
-    @Column(name = "runway_code")
-    private ICAOAnnex14RunwayCodes runwayCode;
+    @Column(name = "runway_code_number")
+    private ICAOAnnex14RunwayCodeNumbers runwayCodeNumber;
 
     @Column(name = "property")
     private String property;

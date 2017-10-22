@@ -5,6 +5,7 @@ import ar.edu.utn.frba.proyecto.sigo.router.location.LocationRouter;
 import ar.edu.utn.frba.proyecto.sigo.router.object.CatalogObjectRouter;
 import ar.edu.utn.frba.proyecto.sigo.router.object.ObjectOwnerRouter;
 import ar.edu.utn.frba.proyecto.sigo.router.object.PlacedObjectRouter;
+import ar.edu.utn.frba.proyecto.sigo.router.regulation.OlsRouter;
 import ar.edu.utn.frba.proyecto.sigo.service.airport.AirportService;
 import ar.edu.utn.frba.proyecto.sigo.service.airport.AirportTranslator;
 import ar.edu.utn.frba.proyecto.sigo.service.airport.RunwayService;
@@ -31,5 +32,6 @@ public class RouterModule extends AbstractModule {
         routerBinder.addBinding().to(PlacedObjectRouter.class);
         routerBinder.addBinding().to(ObjectOwnerRouter.class);
         routerBinder.addBinding().to(LocationRouter.class);
+        routerBinder.addBinding().to(OlsRouter.class);
     }
 }

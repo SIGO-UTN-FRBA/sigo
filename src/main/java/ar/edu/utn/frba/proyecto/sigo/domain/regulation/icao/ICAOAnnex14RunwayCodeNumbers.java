@@ -1,6 +1,6 @@
 package ar.edu.utn.frba.proyecto.sigo.domain.regulation.icao;
 
-public enum ICAOAnnex14RunwayCodes {
+public enum ICAOAnnex14RunwayCodeNumbers {
 
     ONE("1"),       //0
     TWO("2"),       //1
@@ -11,7 +11,7 @@ public enum ICAOAnnex14RunwayCodes {
 
     private String code;
 
-    ICAOAnnex14RunwayCodes(String code) {
+    ICAOAnnex14RunwayCodeNumbers(String code) {
         this.code = code;
     }
 

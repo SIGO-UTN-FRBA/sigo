@@ -9,4 +9,5 @@ public class ICAOAnnex14SurfaceConical extends ICAOAnnex14Surface {
 
     private Double slope;
     private Double height;
+    private Double ratio;
 }

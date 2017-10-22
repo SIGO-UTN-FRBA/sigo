@@ -42,7 +42,7 @@ public class OlsRule extends SigoDomain {
             fetch = FetchType.LAZY
     )
     @LazyToOne( LazyToOneOption.NO_PROXY )
-    private OlsRulesFAASpec faaRuleId;
+    private OlsRulesFAASpec faaRule;
 
 }
 
