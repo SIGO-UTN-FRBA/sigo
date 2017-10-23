@@ -2,15 +2,16 @@ package ar.edu.utn.frba.proyecto.sigo.router.regulation;
 
 import ar.edu.utn.frba.proyecto.sigo.domain.regulation.icao.ICAOAnnex14RunwayCategories;
 import ar.edu.utn.frba.proyecto.sigo.domain.regulation.icao.ICAOAnnex14RunwayClassifications;
+import ar.edu.utn.frba.proyecto.sigo.domain.regulation.icao.ICAOAnnex14RunwayCodeLetters;
 import ar.edu.utn.frba.proyecto.sigo.domain.regulation.icao.ICAOAnnex14RunwayCodeNumbers;
 import ar.edu.utn.frba.proyecto.sigo.domain.regulation.icao.ICAOAnnex14Surface;
 import ar.edu.utn.frba.proyecto.sigo.domain.regulation.icao.ICAOAnnex14Surfaces;
+import ar.edu.utn.frba.proyecto.sigo.dto.common.EnumerationDTO;
 import ar.edu.utn.frba.proyecto.sigo.dto.common.ListItemDTO;
 import ar.edu.utn.frba.proyecto.sigo.exception.InvalidParameterException;
 import ar.edu.utn.frba.proyecto.sigo.exception.MissingParameterException;
 import ar.edu.utn.frba.proyecto.sigo.persistence.HibernateUtil;
 import ar.edu.utn.frba.proyecto.sigo.router.SigoRouter;
-import ar.edu.utn.frba.proyecto.sigo.service.regulation.ICAOAnnex14SurfacesFactory;
 import ar.edu.utn.frba.proyecto.sigo.service.regulation.OlsRuleService;
 import ar.edu.utn.frba.proyecto.sigo.spark.JsonTransformer;
 import spark.QueryParamsMap;
@@ -20,25 +21,26 @@ import spark.RouteGroup;
 
 import javax.inject.Inject;
 
+import java.util.Arrays;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static spark.Spark.get;
 
-public class OlsRouter extends SigoRouter {
+public class RegulationICAOAnnex14Router extends SigoRouter {
 
-    private JsonTransformer jsonTransformer;
+    private final JsonTransformer jsonTransformer;
     private OlsRuleService ruleService;
 
     @Inject
-    public OlsRouter(
-        HibernateUtil hibernateUtil,
-        JsonTransformer jsonTransformer,
-        OlsRuleService ruleService
+    public RegulationICAOAnnex14Router(
+            JsonTransformer jsonTransformer,
+            HibernateUtil hibernateUtil,
+            OlsRuleService ruleService
     ){
+        this.ruleService = ruleService;
         this.hibernateUtil = hibernateUtil;
         this.jsonTransformer = jsonTransformer;
-        this.ruleService = ruleService;
     }
 
     private ICAOAnnex14RunwayCodeNumbers getParamNumberCode(Request request){
@@ -56,28 +58,28 @@ public class OlsRouter extends SigoRouter {
 
     private ICAOAnnex14RunwayClassifications getParamClassification(Request request){
         return Optional.ofNullable(request.queryMap("classification"))
-                    .map(QueryParamsMap::integerValue)
-                    .map( c -> {
+                .map(QueryParamsMap::integerValue)
+                .map( c -> {
 
-                        if(c >= ICAOAnnex14RunwayClassifications.values().length)
-                            throw new InvalidParameterException(String.format("Classification '%s' does not exists.", c));
+                    if(c >= ICAOAnnex14RunwayClassifications.values().length)
+                        throw new InvalidParameterException(String.format("Classification '%s' does not exists.", c));
 
-                        return ICAOAnnex14RunwayClassifications.values()[c];
-                    })
-                    .orElseThrow(()-> new MissingParameterException("classification"));
+                    return ICAOAnnex14RunwayClassifications.values()[c];
+                })
+                .orElseThrow(()-> new MissingParameterException("classification"));
     }
 
     private ICAOAnnex14RunwayCategories getParamCategory(Request request){
         return Optional.ofNullable(request.queryMap("category"))
-                    .map(QueryParamsMap::integerValue)
-                    .map(c -> {
+                .map(QueryParamsMap::integerValue)
+                .map(c -> {
 
-                        if(c >= ICAOAnnex14RunwayCategories.values().length)
-                            throw new InvalidParameterException(String.format("Category '%s' does not exists.", c));
+                    if(c >= ICAOAnnex14RunwayCategories.values().length)
+                        throw new InvalidParameterException(String.format("Category '%s' does not exists.", c));
 
-                        return ICAOAnnex14RunwayCategories.values()[c];
-                    })
-                    .orElseThrow(() -> new MissingParameterException("category"));
+                    return ICAOAnnex14RunwayCategories.values()[c];
+                })
+                .orElseThrow(() -> new MissingParameterException("category"));
     }
 
     private Boolean getParamRecommendations(Request request) {
@@ -97,13 +99,37 @@ public class OlsRouter extends SigoRouter {
                 }).get();
     }
 
+    private final Route fetchRunwayCategories = (request, response) -> {
+        return Arrays.stream(ICAOAnnex14RunwayCategories.values())
+                .map(o -> new EnumerationDTO(o.ordinal(), o.name(), o.code()))
+                .collect(Collectors.toList());
+    };
+
+    private final Route fetchRunwayClassifications = (request, response) -> {
+        return Arrays.stream(ICAOAnnex14RunwayClassifications.values())
+                .map(o -> new EnumerationDTO(o.ordinal(), o.name(), o.code()))
+                .collect(Collectors.toList());
+    };
+
+    private final Route fetchRunwayCodeLetters = (request, response) -> {
+        return Arrays.stream(ICAOAnnex14RunwayCodeLetters.values())
+                .map(o -> new EnumerationDTO(o.ordinal(), o.name(), o.name()))
+                .collect(Collectors.toList());
+    };
+
+    private final Route fetchRunwayCodeNumbers = (request, response) -> {
+        return Arrays.stream(ICAOAnnex14RunwayCodeNumbers.values())
+                .map(o -> new EnumerationDTO(o.ordinal(), o.name(), o.name()))
+                .collect(Collectors.toList());
+    };
+
     private final Route fetchSurfaces = doInTransaction(false, (request, response) -> {
 
         return ruleService.getICAOAnnex14Surfaces(
-                    this.getParamClassification(request),
-                    this.getParamCategory(request),
-                    this.getParamRecommendations(request)
-                )
+                this.getParamClassification(request),
+                this.getParamCategory(request),
+                this.getParamRecommendations(request)
+        )
                 .stream()
                 .map(s -> new ListItemDTO((long) s.ordinal(), s.description()))
                 .collect(Collectors.toList());
@@ -152,13 +178,18 @@ public class OlsRouter extends SigoRouter {
     @Override
     public RouteGroup routes() {
         return ()-> {
-            get("/icao/surfaces", fetchSurfaces ,jsonTransformer);
-            get("/icao/surfaces/:" + SURFACE_ID_PARAM, fetchSurface, jsonTransformer);
+            get("/runwayCategories", fetchRunwayCategories, jsonTransformer);
+            get("/runwayClassifications", fetchRunwayClassifications, jsonTransformer);
+            get("/runwayCodeLetters", fetchRunwayCodeLetters, jsonTransformer);
+            get("/runwayCodeNumbers", fetchRunwayCodeNumbers, jsonTransformer);
+
+            get("/surfaces", fetchSurfaces ,jsonTransformer);
+            get("/surfaces/:" + SURFACE_ID_PARAM, fetchSurface, jsonTransformer);
         };
     }
 
     @Override
     public String path() {
-        return "/regulations";
+        return "/regulations/icao";
     }
 }

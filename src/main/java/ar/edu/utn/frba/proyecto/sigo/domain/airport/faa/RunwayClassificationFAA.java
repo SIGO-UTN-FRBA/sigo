@@ -4,8 +4,8 @@ import ar.edu.utn.frba.proyecto.sigo.domain.airport.RunwayClassification;
 import ar.edu.utn.frba.proyecto.sigo.domain.airport.RunwayDirection;
 import ar.edu.utn.frba.proyecto.sigo.domain.regulation.faa.FAAAircraftApproachCategories;
 import ar.edu.utn.frba.proyecto.sigo.domain.regulation.faa.FAAAircraftClassifications;
-import ar.edu.utn.frba.proyecto.sigo.domain.regulation.faa.FAARunwaysCategories;
-import ar.edu.utn.frba.proyecto.sigo.domain.regulation.faa.FAARunwaysClassifications;
+import ar.edu.utn.frba.proyecto.sigo.domain.regulation.faa.FAARunwayCategories;
+import ar.edu.utn.frba.proyecto.sigo.domain.regulation.faa.FAARunwayClassifications;
 import ar.edu.utn.frba.proyecto.sigo.domain.regulation.faa.FAARunwaysTypes;
 import ar.edu.utn.frba.proyecto.sigo.service.airport.RunwayClassificationVisitor;
 import lombok.AccessLevel;
@@ -29,11 +29,11 @@ public class RunwayClassificationFAA extends RunwayClassification {
 
     @Enumerated(EnumType.ORDINAL)
     @Column(name = "runway_classification")
-    private FAARunwaysClassifications runwayClassification;
+    private FAARunwayClassifications runwayClassification;
 
     @Enumerated(EnumType.ORDINAL)
     @Column(name = "runway_category")
-    private FAARunwaysCategories runwayCategory;
+    private FAARunwayCategories runwayCategory;
 
     @Enumerated(EnumType.ORDINAL)
     @Column(name = "aircraft_approach_category")
@@ -51,8 +51,8 @@ public class RunwayClassificationFAA extends RunwayClassification {
     public RunwayClassificationFAA(
             Long id,
             RunwayDirection runwayDirection,
-            FAARunwaysClassifications classification,
-            FAARunwaysCategories category,
+            FAARunwayClassifications classification,
+            FAARunwayCategories category,
             FAAAircraftApproachCategories aircraftApproachCategory,
             FAAAircraftClassifications aircraftClassification,
             FAARunwaysTypes letter
