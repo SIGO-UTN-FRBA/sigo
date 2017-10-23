@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 public class Runway extends SigoDomain implements Spatial<Polygon> {
 
     @Id
-    @SequenceGenerator(name = "runwayGenerator", sequenceName = "RUNWAY_SEQUENCE")
+    @SequenceGenerator(name = "runwayGenerator", sequenceName = "RUNWAY_SEQUENCE", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "runwayGenerator")
     @Column(name = "runway_id")
     private Long id;

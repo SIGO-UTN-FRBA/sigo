@@ -15,7 +15,7 @@ import lombok.*;
 @Data
 public class PlacedObjectOwner extends SigoDomain {
     @Id
-    @SequenceGenerator(name = "placedObjectOwnerGenerator", sequenceName = "PLACED_OBJECT_OWNER_SEQUENCE")
+    @SequenceGenerator(name = "placedObjectOwnerGenerator", sequenceName = "PLACED_OBJECT_OWNER_SEQUENCE", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "placedObjectOwnerGenerator")
     @Column(name = "owner_id")
     private Long id;

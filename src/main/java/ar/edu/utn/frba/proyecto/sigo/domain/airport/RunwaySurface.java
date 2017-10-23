@@ -13,7 +13,7 @@ import javax.persistence.*;
 public class RunwaySurface extends SigoDomain {
 
     @Id
-    @SequenceGenerator(name = "surfaceGenerator", sequenceName = "RUNWAY_SURFACE_SEQUENCE")
+    @SequenceGenerator(name = "surfaceGenerator", sequenceName = "RUNWAY_SURFACE_SEQUENCE", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "surfaceGenerator")
     @Column(name = "surface_id")
     private Long id;

@@ -13,7 +13,7 @@ import lombok.*;
 @Data
 public class Regulation extends SigoDomain {
     @Id
-    @SequenceGenerator(name = "regulationGenerator", sequenceName = "REGULATION_SEQUENCE")
+    @SequenceGenerator(name = "regulationGenerator", sequenceName = "REGULATION_SEQUENCE", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "regulationGenerator")
     @Column(name = "regulation_id")
     private Long id;

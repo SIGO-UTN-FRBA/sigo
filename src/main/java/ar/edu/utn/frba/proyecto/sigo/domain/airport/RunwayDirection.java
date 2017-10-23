@@ -19,7 +19,7 @@ import java.util.Optional;
 public class RunwayDirection extends SigoDomain implements Spatial<Point> {
 
     @Id
-    @SequenceGenerator(name = "directionGenerator", sequenceName = "RUNWAY_DIRECTION_SEQUENCE")
+    @SequenceGenerator(name = "directionGenerator", sequenceName = "RUNWAY_DIRECTION_SEQUENCE", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "directionGenerator")
     @Column(name = "direction_id")
     private Long id;

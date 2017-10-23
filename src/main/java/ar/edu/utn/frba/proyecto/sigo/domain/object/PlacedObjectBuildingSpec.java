@@ -14,7 +14,7 @@ import com.vividsolutions.jts.geom.MultiPolygon;
 @Builder
 public class PlacedObjectBuildingSpec implements PlacedObjectSpec<MultiPolygon> {
     @Id
-    @SequenceGenerator(name = "placedObjectBuildingSpecGenerator", sequenceName = "PLACED_OBJECT_BUILDING_SPEC_SEQUENCE")
+    @SequenceGenerator(name = "placedObjectBuildingSpecGenerator", sequenceName = "PLACED_OBJECT_BUILDING_SPEC_SEQUENCE", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "placedObjectBuildingSpecGenerator")
     @Column(name = "spec_id")
     private Long id;

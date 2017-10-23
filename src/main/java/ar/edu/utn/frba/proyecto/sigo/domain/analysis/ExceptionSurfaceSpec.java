@@ -11,7 +11,7 @@ import com.vividsolutions.jts.geom.Polygon;
 @Data
 public class ExceptionSurfaceSpec {
     @Id
-    @SequenceGenerator(name = "exceptionSurfaceSpecGenerator", sequenceName = "EXCEPTION_SURFACE_SPEC_SEQUENCE")
+    @SequenceGenerator(name = "exceptionSurfaceSpecGenerator", sequenceName = "EXCEPTION_SURFACE_SPEC_SEQUENCE", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "exceptionSurfaceSpecGenerator")
     @Column(name = "spec_id")
     private Long id;

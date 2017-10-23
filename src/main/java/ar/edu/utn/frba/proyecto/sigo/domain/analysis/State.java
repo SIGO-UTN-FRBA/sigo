@@ -13,7 +13,7 @@ import lombok.*;
 @Data
 public class State extends SigoDomain {
     @Id
-    @SequenceGenerator(name = "stateGenerator", sequenceName = "STATE_SEQUENCE")
+    @SequenceGenerator(name = "stateGenerator", sequenceName = "STATE_SEQUENCE", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "stateGenerator")
 
     @Column(name = "state_id")

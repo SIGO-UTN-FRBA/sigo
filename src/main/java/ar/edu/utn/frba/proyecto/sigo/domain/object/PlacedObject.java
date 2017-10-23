@@ -18,7 +18,7 @@ import org.hibernate.annotations.LazyToOneOption;
 @Builder
 public class PlacedObject extends SigoDomain {
     @Id
-    @SequenceGenerator(name = "placedObjectGenerator", sequenceName = "PLACED_OBJECT_SEQUENCE")
+    @SequenceGenerator(name = "placedObjectGenerator", sequenceName = "PLACED_OBJECT_SEQUENCE", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "placedObjectGenerator")
     @Column(name = "object_id")
     private Long id;

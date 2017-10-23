@@ -20,7 +20,7 @@ import java.util.List;
 public class Airport extends SigoDomain implements Spatial<Point> {
 
     @Id
-    @SequenceGenerator(name = "airportGenerator", sequenceName = "AIRPORT_SEQUENCE", allocationSize = 1,initialValue = 100)
+    @SequenceGenerator(name = "airportGenerator", sequenceName = "AIRPORT_SEQUENCE", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "airportGenerator")
     @Column(name = "aerodrome_id")
     private Long id;
