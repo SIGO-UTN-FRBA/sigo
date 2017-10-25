@@ -41,9 +41,9 @@ public class Runway extends SigoDomain implements Spatial<Polygon> {
     @OrderBy("number ASC")
     private List<RunwayDirection> directions;
 
-    @ManyToOne
-    @JoinColumn(name = "surface_id", foreignKey = @ForeignKey(name = "surface_id_fk"))
-    private RunwaySurface surface;
+    @Enumerated(EnumType.ORDINAL)
+    @Column(name = "surface")
+    private RunwaySurfaces surface;
 
     public String getName(){
 

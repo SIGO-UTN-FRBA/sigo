@@ -11,6 +11,6 @@ public class RunwayDTO {
     private String name;
     private Double width;
     private Double length;
-    private Long surfaceId;
+    private Integer surfaceId;
     private Long airportId;
 }

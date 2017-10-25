@@ -5,7 +5,9 @@ import javax.persistence.*;
 import ar.edu.utn.frba.proyecto.sigo.domain.SigoDomain;
 import ar.edu.utn.frba.proyecto.sigo.domain.regulation.faa.OlsRulesFAASpec;
 import ar.edu.utn.frba.proyecto.sigo.domain.regulation.icao.OlsRulesICAOAnnex14Spec;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.LazyToOne;
 import org.hibernate.annotations.LazyToOneOption;
 
@@ -22,9 +24,9 @@ public class OlsRule extends SigoDomain {
     @Column(name = "rule_id")
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "regulation_id")
-    private Regulation regulation;
+    @Enumerated(EnumType.ORDINAL)
+    @Column(name = "regulation_id")
+    private Regulations regulation;
 
     @OneToOne(
             mappedBy = "rule",
