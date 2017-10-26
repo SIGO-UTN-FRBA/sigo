@@ -1,11 +1,13 @@
 package ar.edu.utn.frba.proyecto.sigo.router.regulation;
 
+import ar.edu.utn.frba.proyecto.sigo.domain.regulation.Regulations;
 import ar.edu.utn.frba.proyecto.sigo.domain.regulation.faa.FAAAircraftApproachCategories;
 import ar.edu.utn.frba.proyecto.sigo.domain.regulation.faa.FAAAircraftClassifications;
 import ar.edu.utn.frba.proyecto.sigo.domain.regulation.faa.FAAAircraftDesignGroups;
 import ar.edu.utn.frba.proyecto.sigo.domain.regulation.faa.FAARunwayCategories;
 import ar.edu.utn.frba.proyecto.sigo.domain.regulation.faa.FAARunwayClassifications;
 import ar.edu.utn.frba.proyecto.sigo.domain.regulation.faa.FAARunwaysTypes;
+import ar.edu.utn.frba.proyecto.sigo.domain.regulation.faa.RegulationFAA;
 import ar.edu.utn.frba.proyecto.sigo.dto.common.EnumerationDTO;
 import ar.edu.utn.frba.proyecto.sigo.persistence.HibernateUtil;
 import ar.edu.utn.frba.proyecto.sigo.router.SigoRouter;
@@ -83,6 +85,6 @@ public class RegulationFAARouter extends SigoRouter {
 
     @Override
     public String path() {
-        return "/regulations/faa";
+        return "/regulations/"+ Regulations.FAA_CFR_PART_77.ordinal();
     }
 }

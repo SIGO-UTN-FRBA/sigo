@@ -2,7 +2,6 @@ package ar.edu.utn.frba.proyecto.sigo.service.airport;
 
 import ar.edu.utn.frba.proyecto.sigo.domain.airport.Airport;
 import ar.edu.utn.frba.proyecto.sigo.domain.analysis.Region;
-import ar.edu.utn.frba.proyecto.sigo.domain.regulation.Regulation;
 import ar.edu.utn.frba.proyecto.sigo.domain.regulation.Regulations;
 import ar.edu.utn.frba.proyecto.sigo.dto.airport.AirportDTO;
 import ar.edu.utn.frba.proyecto.sigo.exception.InvalidParameterException;
@@ -17,19 +16,16 @@ import java.util.Optional;
 public class AirportTranslator extends Translator<Airport, AirportDTO> {
 
     private RegionService regionService;
-    private RegulationService regulationService;
 
     @Inject
     public AirportTranslator(
             Gson gson,
-            RegionService regionService,
-            RegulationService regulationService
+            RegionService regionService
     ){
         this.regionService = regionService;
         this.objectMapper = gson;
         this.dtoClass = AirportDTO.class;
         this.domainClass = Airport.class;
-        this.regulationService = regulationService;
     }
 
     @Override

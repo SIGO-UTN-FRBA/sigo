@@ -1,17 +1,20 @@
 package ar.edu.utn.frba.proyecto.sigo.router.regulation;
 
+import ar.edu.utn.frba.proyecto.sigo.domain.regulation.Regulations;
 import ar.edu.utn.frba.proyecto.sigo.domain.regulation.icao.ICAOAnnex14RunwayCategories;
 import ar.edu.utn.frba.proyecto.sigo.domain.regulation.icao.ICAOAnnex14RunwayClassifications;
 import ar.edu.utn.frba.proyecto.sigo.domain.regulation.icao.ICAOAnnex14RunwayCodeLetters;
 import ar.edu.utn.frba.proyecto.sigo.domain.regulation.icao.ICAOAnnex14RunwayCodeNumbers;
 import ar.edu.utn.frba.proyecto.sigo.domain.regulation.icao.ICAOAnnex14Surface;
 import ar.edu.utn.frba.proyecto.sigo.domain.regulation.icao.ICAOAnnex14Surfaces;
+import ar.edu.utn.frba.proyecto.sigo.domain.regulation.icao.RegulationICAOAnnex14;
 import ar.edu.utn.frba.proyecto.sigo.dto.common.EnumerationDTO;
 import ar.edu.utn.frba.proyecto.sigo.dto.common.ListItemDTO;
 import ar.edu.utn.frba.proyecto.sigo.exception.InvalidParameterException;
 import ar.edu.utn.frba.proyecto.sigo.exception.MissingParameterException;
 import ar.edu.utn.frba.proyecto.sigo.persistence.HibernateUtil;
 import ar.edu.utn.frba.proyecto.sigo.router.SigoRouter;
+import ar.edu.utn.frba.proyecto.sigo.service.regulation.OlsRuleICAOAnnex14Translator;
 import ar.edu.utn.frba.proyecto.sigo.service.regulation.OlsRuleService;
 import ar.edu.utn.frba.proyecto.sigo.spark.JsonTransformer;
 import spark.QueryParamsMap;
@@ -31,14 +34,17 @@ public class RegulationICAOAnnex14Router extends SigoRouter {
 
     private final JsonTransformer jsonTransformer;
     private OlsRuleService ruleService;
+    private OlsRuleICAOAnnex14Translator icaoAnnex14Translator;
 
     @Inject
     public RegulationICAOAnnex14Router(
             JsonTransformer jsonTransformer,
             HibernateUtil hibernateUtil,
-            OlsRuleService ruleService
+            OlsRuleService ruleService,
+            OlsRuleICAOAnnex14Translator icaoAnnex14Translator
     ){
         this.ruleService = ruleService;
+        this.icaoAnnex14Translator = icaoAnnex14Translator;
         this.hibernateUtil = hibernateUtil;
         this.jsonTransformer = jsonTransformer;
     }
@@ -175,9 +181,18 @@ public class RegulationICAOAnnex14Router extends SigoRouter {
         return surface;
     });
 
+    private final Route fetchRules = doInTransaction(false, (request, response) -> {
+        return this.ruleService.getICAOAnnex14Rules()
+                .stream()
+                .map(r -> this.icaoAnnex14Translator.getAsDTO(r.getIcaoRule()))
+                .collect(Collectors.toList());
+    });
+
     @Override
     public RouteGroup routes() {
         return ()-> {
+
+            get("/rules", fetchRules, jsonTransformer);
             get("/runwayCategories", fetchRunwayCategories, jsonTransformer);
             get("/runwayClassifications", fetchRunwayClassifications, jsonTransformer);
             get("/runwayCodeLetters", fetchRunwayCodeLetters, jsonTransformer);
@@ -190,6 +205,6 @@ public class RegulationICAOAnnex14Router extends SigoRouter {
 
     @Override
     public String path() {
-        return "/regulations/icao";
+        return "/regulations/"+ Regulations.ICAO_ANNEX_14.ordinal();
     }
 }

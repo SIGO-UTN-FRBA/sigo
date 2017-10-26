@@ -31,6 +31,19 @@ public class OlsRuleService extends SigoService<OlsRule, OlsRule> {
         super(OlsRule.class, hibernateUtil.getSessionFactory());
     }
 
+    public List<OlsRule> getICAOAnnex14Rules(){
+
+        CriteriaBuilder builder = currentSession().getCriteriaBuilder();
+
+        CriteriaQuery<OlsRule> criteria = builder.createQuery(OlsRule.class);
+
+        Root<OlsRule> rule = criteria.from(OlsRule.class);
+
+        Join<Object, Object> icao = rule.join(OlsRule_.icaoRule.getName());
+
+        return currentSession().createQuery(criteria).getResultList();
+    }
+
     public List<OlsRule> getICAOAnnex14Rules(
             ICAOAnnex14Surfaces surface,
             ICAOAnnex14RunwayCodeNumbers codeNumber,
@@ -46,12 +59,12 @@ public class OlsRuleService extends SigoService<OlsRule, OlsRule> {
 
         Join<Object, Object> icao = rule.join(OlsRule_.icaoRule.getName());
 
-        Predicate predicate0 = builder.equal(icao.get(OlsRulesICAOAnnex14Spec_.surface.getName()), surface);
-        Predicate predicate1 = builder.equal(icao.get(OlsRulesICAOAnnex14Spec_.runwayCodeNumber.getName()), codeNumber);
-        Predicate predicate2 = builder.equal(icao.get(OlsRulesICAOAnnex14Spec_.runwayClassification.getName()), classification);
-        Predicate predicate3 = builder.equal(icao.get(OlsRulesICAOAnnex14Spec_.runwayCategory.getName()), category);
+        Predicate predicate1 = builder.equal(icao.get(OlsRulesICAOAnnex14Spec_.surface.getName()), surface);
+        Predicate predicate2 = builder.equal(icao.get(OlsRulesICAOAnnex14Spec_.runwayCodeNumber.getName()), codeNumber);
+        Predicate predicate3 = builder.equal(icao.get(OlsRulesICAOAnnex14Spec_.runwayClassification.getName()), classification);
+        Predicate predicate4 = builder.equal(icao.get(OlsRulesICAOAnnex14Spec_.runwayCategory.getName()), category);
 
-        criteria.where(predicate0, predicate1,predicate2,predicate3);
+        criteria.where(predicate1, predicate2,predicate3,predicate4);
 
         return currentSession().createQuery(criteria).getResultList();
     }

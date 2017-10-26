@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
-public class ICAOAnnex14Surface {
+public abstract class ICAOAnnex14Surface {
 
     private ICAOAnnex14RunwayClassifications classification;
     private ICAOAnnex14RunwayCategories category;
