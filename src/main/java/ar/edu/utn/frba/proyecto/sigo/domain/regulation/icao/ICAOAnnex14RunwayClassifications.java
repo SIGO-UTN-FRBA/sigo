@@ -2,9 +2,9 @@ package ar.edu.utn.frba.proyecto.sigo.domain.regulation.icao;
 
 public enum ICAOAnnex14RunwayClassifications {
 
-    NON_INSTRUMENT("NI"),           // 0
-    NON_PRECISION_APPROACH("NP"),   // 1
-    PRECISION_APPROACH("P");        // 2
+    NON_INSTRUMENT("Non-Instrumental Approach"),            // 0
+    NON_PRECISION_APPROACH("Non-Precision Approach"),       // 1
+    PRECISION_APPROACH("Precision Approach");               // 2
 
     private String code;
 
@@ -13,7 +13,7 @@ public enum ICAOAnnex14RunwayClassifications {
     }
 
 
-    public String code() {
+    public String description() {
         return code;
     }
 

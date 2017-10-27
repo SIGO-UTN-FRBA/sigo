@@ -7,7 +7,6 @@ import ar.edu.utn.frba.proyecto.sigo.domain.regulation.icao.ICAOAnnex14RunwayCod
 import ar.edu.utn.frba.proyecto.sigo.domain.regulation.icao.ICAOAnnex14RunwayCodeNumbers;
 import ar.edu.utn.frba.proyecto.sigo.domain.regulation.icao.ICAOAnnex14Surface;
 import ar.edu.utn.frba.proyecto.sigo.domain.regulation.icao.ICAOAnnex14Surfaces;
-import ar.edu.utn.frba.proyecto.sigo.domain.regulation.icao.RegulationICAOAnnex14;
 import ar.edu.utn.frba.proyecto.sigo.dto.common.EnumerationDTO;
 import ar.edu.utn.frba.proyecto.sigo.dto.common.ListItemDTO;
 import ar.edu.utn.frba.proyecto.sigo.exception.InvalidParameterException;
@@ -113,7 +112,7 @@ public class RegulationICAOAnnex14Router extends SigoRouter {
 
     private final Route fetchRunwayClassifications = (request, response) -> {
         return Arrays.stream(ICAOAnnex14RunwayClassifications.values())
-                .map(o -> new EnumerationDTO(o.ordinal(), o.name(), o.code()))
+                .map(o -> new EnumerationDTO(o.ordinal(), o.name(), o.description()))
                 .collect(Collectors.toList());
     };
 
@@ -125,7 +124,7 @@ public class RegulationICAOAnnex14Router extends SigoRouter {
 
     private final Route fetchRunwayCodeNumbers = (request, response) -> {
         return Arrays.stream(ICAOAnnex14RunwayCodeNumbers.values())
-                .map(o -> new EnumerationDTO(o.ordinal(), o.name(), o.name()))
+                .map(o -> new EnumerationDTO(o.ordinal(), o.name(), o.description()))
                 .collect(Collectors.toList());
     };
 
