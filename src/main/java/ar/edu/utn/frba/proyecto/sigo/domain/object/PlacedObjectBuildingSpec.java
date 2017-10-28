@@ -2,19 +2,20 @@ package ar.edu.utn.frba.proyecto.sigo.domain.object;
 
 
 import javax.persistence.*;
+import java.util.List;
 
+import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisException;
 import lombok.*;
 import com.vividsolutions.jts.geom.MultiPolygon;
 
 @Entity
 @Table(name = "public.tbl_placed_object_building_spec")
-@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 @Data
-@Builder
-public class PlacedObjectBuildingSpec implements PlacedObjectSpec<MultiPolygon> {
+
+public class PlacedObjectBuildingSpec {
     @Id
-    @SequenceGenerator(name = "placedObjectBuildingSpecGenerator", sequenceName = "PLACED_OBJECT_BUILDING_SPEC_SEQUENCE", allocationSize = 1)
+    @SequenceGenerator(name = "placedObjectBuildingSpecGenerator", sequenceName = "PLACED_OBJECT_BUILDING_SPEC_SEQUENCE")
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "placedObjectBuildingSpecGenerator")
     @Column(name = "spec_id")
     private Long id;
@@ -28,8 +29,4 @@ public class PlacedObjectBuildingSpec implements PlacedObjectSpec<MultiPolygon> 
     private PlacedObject placedObject;
 
 
-    @Override
-    public Class getGeomClass() {
-        return MultiPolygon.class;
-    }
 }
