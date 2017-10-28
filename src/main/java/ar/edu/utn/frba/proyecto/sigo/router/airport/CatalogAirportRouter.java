@@ -1,7 +1,7 @@
 package ar.edu.utn.frba.proyecto.sigo.router.airport;
 
 import ar.edu.utn.frba.proyecto.sigo.domain.airport.RunwayDirectionPositions;
-import ar.edu.utn.frba.proyecto.sigo.dto.airport.RunwayDirectionPositionDTO;
+import ar.edu.utn.frba.proyecto.sigo.dto.common.EnumerationDTO;
 import ar.edu.utn.frba.proyecto.sigo.persistence.HibernateUtil;
 import ar.edu.utn.frba.proyecto.sigo.router.SigoRouter;
 import ar.edu.utn.frba.proyecto.sigo.service.airport.CatalogAirportService;
@@ -37,31 +37,25 @@ public class CatalogAirportRouter extends SigoRouter {
         this.hibernateUtil = hibernateUtil;
     }
 
-    private final Route fetchRunwaySurface = doInTransaction( false,(Request request, Response response) -> catalogService.findAllRunwaySurfaces());
+    private final Route fetchRunwaySurface = (Request request, Response response) -> {
+        return Arrays.stream(this.catalogService.findAllRunwaySurfaces())
+                        .map(s -> new EnumerationDTO(s.ordinal(), s.name(), s.description()))
+                        .collect(Collectors.toList());
+    };
 
     private final Route fetchRunwayDirectionPosition = (Request request, Response response) -> {
         return Arrays.stream(RunwayDirectionPositions.values())
-                        .map(p -> RunwayDirectionPositionDTO.builder()
-                                        .id(p.ordinal())
-                                        .code(p.position())
-                                        .description(p.name())
-                                        .build()
-                        ).collect(Collectors.toList());
+                .map(p -> new EnumerationDTO(p.ordinal(), p.name(), p.position()))
+                .collect(Collectors.toList());
     };
 
     private final Route fetchAirportRegulations = doInTransaction(false, (Request request, Response response) -> catalogService.findAllAirportRegulations());
-
-    private final Route fetchRunwayTypeLetterICAO = doInTransaction(false, (Request request, Response response) -> catalogService.findAllRunwayTypeLetterICAO());
-
-    private final Route fetchRunwayTypeNumberICAO = doInTransaction(false, (Request request, Response response) -> catalogService.findAllRunwayTypeNumberICAO());
 
     @Override
     public RouteGroup routes() {
         return () -> {
             get("/runways/surfaces", fetchRunwaySurface, jsonTransformer);
             get("/runways/directions/positions", fetchRunwayDirectionPosition, jsonTransformer);
-            get("/runways/types/icao/letters", fetchRunwayTypeLetterICAO, jsonTransformer);
-            get("/runways/types/icao/numbers", fetchRunwayTypeNumberICAO, jsonTransformer);
             get("/regulations", fetchAirportRegulations, jsonTransformer);
         };
     }

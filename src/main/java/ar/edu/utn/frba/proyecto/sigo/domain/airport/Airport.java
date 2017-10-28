@@ -3,7 +3,7 @@ package ar.edu.utn.frba.proyecto.sigo.domain.airport;
 import ar.edu.utn.frba.proyecto.sigo.domain.analysis.Region;
 import ar.edu.utn.frba.proyecto.sigo.domain.SigoDomain;
 import ar.edu.utn.frba.proyecto.sigo.domain.Spatial;
-import ar.edu.utn.frba.proyecto.sigo.domain.regulation.Regulation;
+import ar.edu.utn.frba.proyecto.sigo.domain.regulation.Regulations;
 import com.google.common.base.MoreObjects;
 import com.vividsolutions.jts.geom.Point;
 import lombok.*;
@@ -20,7 +20,7 @@ import java.util.List;
 public class Airport extends SigoDomain implements Spatial<Point> {
 
     @Id
-    @SequenceGenerator(name = "airportGenerator", sequenceName = "AIRPORT_SEQUENCE", allocationSize = 1,initialValue = 100)
+    @SequenceGenerator(name = "airportGenerator", sequenceName = "AIRPORT_SEQUENCE", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "airportGenerator")
     @Column(name = "aerodrome_id")
     private Long id;
@@ -44,9 +44,9 @@ public class Airport extends SigoDomain implements Spatial<Point> {
     @JoinColumn(name="region_id", nullable=false, updatable= false)
     private Region region;
 
-    @ManyToOne
-    @JoinColumn(name="regulation_id", nullable = false, updatable = true)
-    private Regulation regulation;
+    @Enumerated(EnumType.ORDINAL)
+    @Column(name="regulation_id", nullable = false)
+    private Regulations regulation;
 
     public String toString(){
 

@@ -16,7 +16,7 @@ import lombok.*;
 @Data
 public class Region extends SigoDomain implements Spatial<MultiPolygon> {
     @Id
-    @SequenceGenerator(name = "regionGenerator", sequenceName = "REGION_SEQUENCE")
+    @SequenceGenerator(name = "regionGenerator", sequenceName = "REGION_SEQUENCE", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "regionGenerator")
     @Column(name = "region_id")
     private Long id;

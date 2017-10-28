@@ -16,7 +16,7 @@ import com.vividsolutions.jts.geom.MultiLineString;
 @Builder
 public class PlacedObjectOverheadWireSpec implements PlacedObjectSpec<MultiLineString> {
     @Id
-    @SequenceGenerator(name = "placedObjectOverheadWireSpecGenerator", sequenceName="PLACED_OBJECT_OVERHEAD_WIRE_SPEC_SEQUENCE")
+    @SequenceGenerator(name = "placedObjectOverheadWireSpecGenerator", sequenceName="PLACED_OBJECT_OVERHEAD_WIRE_SPEC_SEQUENCE", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "placedObjectOverheadWireSpecGenerator")
 
     @Column(name = "spec_id")

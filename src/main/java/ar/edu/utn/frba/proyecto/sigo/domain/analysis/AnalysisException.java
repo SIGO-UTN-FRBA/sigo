@@ -9,7 +9,7 @@ import javax.persistence.*;
 public class AnalysisException {
 
     @Id
-    @SequenceGenerator(name = "analysExceptionGenerator", sequenceName = "ANALYS_EXCEPTION_SEQUENCE")
+    @SequenceGenerator(name = "analysExceptionGenerator", sequenceName = "ANALYS_EXCEPTION_SEQUENCE", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "analysExceptionGenerator")
     @Column(name = "exception_id")
     private Long id;

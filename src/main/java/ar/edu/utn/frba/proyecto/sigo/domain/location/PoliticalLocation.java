@@ -14,7 +14,7 @@ import java.util.List;
 @Data
 public class PoliticalLocation extends SigoDomain implements Spatial<MultiPolygon> {
     @Id
-    @SequenceGenerator(name = "politicalLocationGenerator", sequenceName = "POLITICAL_LOCATION_SEQUENCE")
+    @SequenceGenerator(name = "politicalLocationGenerator", sequenceName = "POLITICAL_LOCATION_SEQUENCE", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "politicalLocationGenerator")
     @Column(name = "location_id")
     private Long id;

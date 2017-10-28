@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 
 public class AnalysisCaseStatusRegistry {
     @Id
-    @SequenceGenerator(name = "analysCaseStatusRegistryGenerator", sequenceName = "ANALYSIS_CASE_STATUS_REGISTRY_SEQUENCE")
+    @SequenceGenerator(name = "analysCaseStatusRegistryGenerator", sequenceName = "ANALYSIS_CASE_STATUS_REGISTRY_SEQUENCE", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "analysCaseStatusRegistryGenerator")
     @Column(name = "register_id")
     private Long id;

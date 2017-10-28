@@ -3,8 +3,13 @@ package ar.edu.utn.frba.proyecto.sigo.domain.regulation;
 import javax.persistence.*;
 
 import ar.edu.utn.frba.proyecto.sigo.domain.SigoDomain;
-import ar.edu.utn.frba.proyecto.sigo.domain.regulation.Regulation;
-import lombok.*;
+import ar.edu.utn.frba.proyecto.sigo.domain.regulation.faa.OlsRulesFAASpec;
+import ar.edu.utn.frba.proyecto.sigo.domain.regulation.icao.OlsRulesICAOAnnex14Spec;
+import lombok.AccessLevel;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.LazyToOne;
+import org.hibernate.annotations.LazyToOneOption;
 
 
 @Entity
@@ -14,20 +19,32 @@ import lombok.*;
 public class OlsRule extends SigoDomain {
 
     @Id
-    @SequenceGenerator(name = "olsGenerator", sequenceName = "OLS_SEQUENCE")
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "olsGenerator")
+    @SequenceGenerator(name = "olsRuleGenerator", sequenceName = "OLS_RULE_SEQUENCE", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "olsRuleGenerator")
     @Column(name = "rule_id")
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "regulation_id")
-    private Regulation regulation;
+    @Enumerated(EnumType.ORDINAL)
+    @Column(name = "regulation_id")
+    private Regulations regulation;
 
-    @Column(name = "icao_rule_id")
-    private Long icaoRuleId;
+    @OneToOne(
+            mappedBy = "rule",
+            cascade = CascadeType.REMOVE,
+            orphanRemoval = true,
+            fetch = FetchType.LAZY
+    )
+    @LazyToOne( LazyToOneOption.NO_PROXY )
+    private OlsRulesICAOAnnex14Spec icaoRule;
 
-    @Column(name = "faa_rule_id")
-    private Long faaRuleId;
+    @OneToOne(
+            mappedBy = "rule",
+            cascade = CascadeType.REMOVE,
+            orphanRemoval = true,
+            fetch = FetchType.LAZY
+    )
+    @LazyToOne( LazyToOneOption.NO_PROXY )
+    private OlsRulesFAASpec faaRule;
 
 }
 

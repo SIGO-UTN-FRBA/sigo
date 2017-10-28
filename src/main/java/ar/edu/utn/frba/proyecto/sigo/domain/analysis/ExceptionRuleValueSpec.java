@@ -9,7 +9,7 @@ import javax.persistence.*;
 @Data
 public class ExceptionRuleValueSpec {
     @Id
-    @SequenceGenerator(name = "exceptionRuleValueSpecGenerator", sequenceName = "EXCEPTION_RULE_VALUE_SPEC_SEQUENCE")
+    @SequenceGenerator(name = "exceptionRuleValueSpecGenerator", sequenceName = "EXCEPTION_RULE_VALUE_SPEC_SEQUENCE", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "exceptionRuleValueSpecGenerator")
     @Column(name = "spec_id")
     private Long id;

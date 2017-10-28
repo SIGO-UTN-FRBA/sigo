@@ -13,7 +13,7 @@ import com.vividsolutions.jts.geom.Point;
 @Builder
 public class PlacedObjectIndividualSpec implements PlacedObjectSpec<Point> {
     @Id
-    @SequenceGenerator(name = "placedObjectIndividualGenerator", sequenceName = "PLACED_OBJECT_INDIVIDUAL_SEQUENCE")
+    @SequenceGenerator(name = "placedObjectIndividualGenerator", sequenceName = "PLACED_OBJECT_INDIVIDUAL_SEQUENCE", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "placedObjectIndividualGenerator")
     @Column(name = "spec_id")
     private Long id;

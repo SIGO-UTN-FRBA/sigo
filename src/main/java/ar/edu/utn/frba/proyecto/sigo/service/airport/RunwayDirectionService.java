@@ -1,6 +1,7 @@
 package ar.edu.utn.frba.proyecto.sigo.service.airport;
 
 import ar.edu.utn.frba.proyecto.sigo.domain.airport.*;
+import ar.edu.utn.frba.proyecto.sigo.domain.airport.icao.RunwayClassificationICAOAnnex14;
 import ar.edu.utn.frba.proyecto.sigo.persistence.HibernateUtil;
 import ar.edu.utn.frba.proyecto.sigo.service.SigoService;
 import com.vividsolutions.jts.geom.Coordinate;
@@ -15,6 +16,8 @@ import static ar.edu.utn.frba.proyecto.sigo.utils.geom.GeometryHelper.getAzimuth
 import static ar.edu.utn.frba.proyecto.sigo.utils.geom.GeometryHelper.getMiddle;
 import static ar.edu.utn.frba.proyecto.sigo.utils.geom.GeometryHelper.sortDirectionCoordinates;
 
+import static org.reflections.util.ConfigurationBuilder.build;
+
 public class RunwayDirectionService extends SigoService<RunwayDirection, Runway> {
 
     @Inject
@@ -25,9 +28,13 @@ public class RunwayDirectionService extends SigoService<RunwayDirection, Runway>
     }
 
     @Override
-    protected void postCreateActions(RunwayDirection direction, Runway ruwnay) {
+    protected void postCreateActions(RunwayDirection direction, Runway runway) {
 
-        createSections(direction, ruwnay);
+        createApproachSection(direction);
+
+        createTakeoffSection(direction, runway);
+
+        createClassification(direction, runway);
     }
 
     @Override
@@ -35,7 +42,19 @@ public class RunwayDirectionService extends SigoService<RunwayDirection, Runway>
         newInstance.setGeom(oldInstance.getGeom());
     }
 
-    private void createSections(RunwayDirection direction, Runway ruwnay) {
+    private void createTakeoffSection(RunwayDirection direction, Runway runway) {
+        RunwayTakeoffSection takeoffSection = RunwayTakeoffSection.builder()
+                .clearwayLength(0D)
+                .clearwayWidth(runway.getWidth())
+                .stopwayLength(0D)
+                .runwayDirection(direction)
+                .enabled(true)
+                .build();
+
+        currentSession().save(takeoffSection);
+    }
+
+    private void createApproachSection(RunwayDirection direction) {
         RunwayApproachSection approachSection = RunwayApproachSection.builder()
                 .thresholdElevation(0D)
                 .thresholdLength(0D)
@@ -44,16 +63,18 @@ public class RunwayDirectionService extends SigoService<RunwayDirection, Runway>
                 .build();
 
         currentSession().save(approachSection);
+    }
 
-        RunwayTakeoffSection takeoffSection = RunwayTakeoffSection.builder()
-                .clearwayLength(0D)
-                .clearwayWidth(ruwnay.getWidth())
-                .stopwayLength(0D)
+    private void createClassification(RunwayDirection direction, Runway runway) {
+
+        //TODO determinar clasificacion en base a la regulacion
+        // runway.getAirport().getRegulation();
+
+        RunwayClassificationICAOAnnex14 classification = RunwayClassificationICAOAnnex14.builder()
                 .runwayDirection(direction)
-                .enabled(true)
                 .build();
 
-        currentSession().save(takeoffSection);
+        currentSession().save(classification);
     }
 
 }

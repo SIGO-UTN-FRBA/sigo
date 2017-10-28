@@ -27,7 +27,7 @@ import javax.persistence.Table;
 public class AnalysisAreaObstacle extends SigoDomain {
 
     @Id
-    @SequenceGenerator(name = "analysisAreaObstacleGenerator", sequenceName = "ANALYSIS_AREA_OBSTACLE_SEQUENCE")
+    @SequenceGenerator(name = "analysisAreaObstacleGenerator", sequenceName = "ANALYSIS_AREA_OBSTACLE_SEQUENCE", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "analysisAreaObstacleGenerator")
     @Column(name = "obstacle_id")
     private Long id;

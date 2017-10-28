@@ -1,7 +1,9 @@
 package ar.edu.utn.frba.proyecto.sigo.router.airport;
 
 import ar.edu.utn.frba.proyecto.sigo.domain.airport.*;
+import ar.edu.utn.frba.proyecto.sigo.domain.airport.icao.RunwayClassificationICAOAnnex14;
 import ar.edu.utn.frba.proyecto.sigo.dto.airport.RunwayApproachSectionDTO;
+import ar.edu.utn.frba.proyecto.sigo.dto.airport.RunwayClassificationDTO;
 import ar.edu.utn.frba.proyecto.sigo.dto.airport.RunwayDistanceDTO;
 import ar.edu.utn.frba.proyecto.sigo.dto.airport.RunwayTakeoffSectionDTO;
 import ar.edu.utn.frba.proyecto.sigo.persistence.HibernateUtil;
@@ -34,6 +36,8 @@ public class RunwayDirectionRouter extends SigoRouter {
     private RunwayTakeoffSectionTranslator takeoffTranslator;
     private RunwayApproachSectionService approachService;
     private RunwayTakeoffSectionService takeoffService;
+    private RunwayClassificationService classificationService;
+    private RunwayClassificationTranslator classificationTranslator;
 
     @Inject
     public RunwayDirectionRouter(
@@ -46,7 +50,9 @@ public class RunwayDirectionRouter extends SigoRouter {
         RunwayApproachSectionTranslator approachTranslator,
         RunwayTakeoffSectionTranslator takeoffTranslator,
         RunwayApproachSectionService approachService,
-        RunwayTakeoffSectionService takeoffService
+        RunwayTakeoffSectionService takeoffService,
+        RunwayClassificationService classificationService,
+        RunwayClassificationTranslator classificationTranslator
     ){
         this.jsonTransformer = jsonTransformer;
         this.runwayService = runwayService;
@@ -56,10 +62,15 @@ public class RunwayDirectionRouter extends SigoRouter {
         this.takeoffTranslator = takeoffTranslator;
         this.approachService = approachService;
         this.takeoffService = takeoffService;
+        this.classificationService = classificationService;
+        this.classificationTranslator = classificationTranslator;
         this.objectMapper = objectMapper;
         this.hibernateUtil = hibernateUtil;
     }
 
+    /**
+     * Get directions for a runway
+     */
     private final Route fetchDirections = doInTransaction(false, (request, response)-> {
 
         Runway runway = runwayService.get(getParamRunwayId(request));
@@ -257,6 +268,23 @@ public class RunwayDirectionRouter extends SigoRouter {
         return takeoffService.getStopwayGeometry(direction);
     });
 
+    private final Route fetchClassification = doInTransaction(false, (request, response) -> {
+        RunwayClassification classification = directionService.get(getParamDirectionId(request)).getClassification();
+
+        return classificationTranslator.getAsDTO(classification);
+    });
+
+    private final Route updateClassification = doInTransaction(true, (request, response) -> {
+
+        RunwayClassificationDTO dto = this.objectMapper.fromJson(request.body(), RunwayClassificationDTO.class);
+
+        RunwayClassification domain = this.classificationTranslator.getAsDomain(dto);
+
+        this.classificationService.update(domain);
+
+        return classificationTranslator.getAsDTO(domain);
+    });
+
     @Override
     public RouteGroup routes() {
         return () -> {
@@ -266,6 +294,9 @@ public class RunwayDirectionRouter extends SigoRouter {
             get("/:" + RUNWAY_DIRECTION_ID_PARAM, fetchDirection, jsonTransformer);
             put("/:" + RUNWAY_DIRECTION_ID_PARAM, updateDirection, jsonTransformer);
             delete("/:" + RUNWAY_DIRECTION_ID_PARAM, deleteDirection);
+
+            get(format("/:%s/classification", RUNWAY_DIRECTION_ID_PARAM), fetchClassification, jsonTransformer);
+            put(format("/:%s/classification", RUNWAY_DIRECTION_ID_PARAM), updateClassification, jsonTransformer);
 
             get(format("/:%s/geometry", RUNWAY_DIRECTION_ID_PARAM), fetchGeometry, jsonTransformer);
             post(format("/:%s/geometry", RUNWAY_DIRECTION_ID_PARAM), defineGeometry, jsonTransformer);

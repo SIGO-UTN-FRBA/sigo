@@ -10,7 +10,7 @@ import java.util.List;
 @Data
 public class AnalysisCaseStatus {
     @Id
-    @SequenceGenerator(name = "analysCaseStatusGenerator", sequenceName = "AnalysCaseStatus_SEQUENCE")
+    @SequenceGenerator(name = "analysCaseStatusGenerator", sequenceName = "AnalysCaseStatus_SEQUENCE", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "analysCaseStatusGenerator")
     @Column(name = "status_id")
     private Long id;

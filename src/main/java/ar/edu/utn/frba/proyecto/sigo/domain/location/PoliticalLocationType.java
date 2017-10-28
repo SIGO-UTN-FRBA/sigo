@@ -14,7 +14,7 @@ import java.util.List;
 @Data
 public class PoliticalLocationType extends SigoDomain {
     @Id
-    @SequenceGenerator(name = "PoliticalLocationTypeGenerator", sequenceName = "POLITICA_LOCATION_TYPE_SEQUENCE")
+    @SequenceGenerator(name = "PoliticalLocationTypeGenerator", sequenceName = "POLITICA_LOCATION_TYPE_SEQUENCE", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "PoliticalLocationTypeGenerator")
     @Column(name = "type_id")
     private Long id;

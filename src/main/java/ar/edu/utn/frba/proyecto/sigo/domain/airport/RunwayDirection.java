@@ -2,6 +2,7 @@ package ar.edu.utn.frba.proyecto.sigo.domain.airport;
 
 import ar.edu.utn.frba.proyecto.sigo.domain.SigoDomain;
 import ar.edu.utn.frba.proyecto.sigo.domain.Spatial;
+import ar.edu.utn.frba.proyecto.sigo.service.airport.RunwayClassificationVisitor;
 import com.google.common.base.MoreObjects;
 import com.vividsolutions.jts.geom.Point;
 import lombok.*;
@@ -18,7 +19,7 @@ import java.util.Optional;
 public class RunwayDirection extends SigoDomain implements Spatial<Point> {
 
     @Id
-    @SequenceGenerator(name = "directionGenerator", sequenceName = "RUNWAY_DIRECTION_SEQUENCE")
+    @SequenceGenerator(name = "directionGenerator", sequenceName = "RUNWAY_DIRECTION_SEQUENCE", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "directionGenerator")
     @Column(name = "direction_id")
     private Long id;
@@ -39,16 +40,16 @@ public class RunwayDirection extends SigoDomain implements Spatial<Point> {
 
     @Column(name = "geom")
     private Point geom;
-  
-    @OneToOne(optional = true)
-    @JoinColumn(name = "relation_id", foreignKey = @ForeignKey(name = "type_direction_fk"))
-    private RunwayTypeImplICAOAnnex14 type;
 
     @OneToOne(mappedBy = "runwayDirection", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
     private RunwayTakeoffSection takeoffSection;
 
     @OneToOne(mappedBy = "runwayDirection", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
     private RunwayApproachSection approachSection;
+
+    @OneToOne(mappedBy = "runwayDirection", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private RunwayClassification classification;
+
 
     public String getIdentifier(){
 
@@ -67,5 +68,4 @@ public class RunwayDirection extends SigoDomain implements Spatial<Point> {
                 .add("runway", Optional.ofNullable(runway).map(Runway::getId).orElse(null))
                 .toString();
     }
-
 }

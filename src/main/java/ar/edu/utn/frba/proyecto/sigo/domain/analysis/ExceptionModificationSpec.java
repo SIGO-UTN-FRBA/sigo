@@ -10,7 +10,7 @@ import javax.persistence.*;
 @Data
 public class ExceptionModificationSpec {
     @Id
-    @SequenceGenerator(name = "exceptionModificationGenerator", sequenceName = "EXCEPTION_MODIFICATION_SEQUENCE")
+    @SequenceGenerator(name = "exceptionModificationGenerator", sequenceName = "EXCEPTION_MODIFICATION_SEQUENCE", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "exceptionModificationGenerator")
     @Column(name = "spec_id")
     private Long id;

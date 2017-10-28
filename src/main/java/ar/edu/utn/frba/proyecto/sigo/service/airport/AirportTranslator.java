@@ -2,7 +2,7 @@ package ar.edu.utn.frba.proyecto.sigo.service.airport;
 
 import ar.edu.utn.frba.proyecto.sigo.domain.airport.Airport;
 import ar.edu.utn.frba.proyecto.sigo.domain.analysis.Region;
-import ar.edu.utn.frba.proyecto.sigo.domain.regulation.Regulation;
+import ar.edu.utn.frba.proyecto.sigo.domain.regulation.Regulations;
 import ar.edu.utn.frba.proyecto.sigo.dto.airport.AirportDTO;
 import ar.edu.utn.frba.proyecto.sigo.exception.InvalidParameterException;
 import ar.edu.utn.frba.proyecto.sigo.service.Translator;
@@ -16,19 +16,16 @@ import java.util.Optional;
 public class AirportTranslator extends Translator<Airport, AirportDTO> {
 
     private RegionService regionService;
-    private RegulationService regulationService;
 
     @Inject
     public AirportTranslator(
             Gson gson,
-            RegionService regionService,
-            RegulationService regulationService
+            RegionService regionService
     ){
         this.regionService = regionService;
         this.objectMapper = gson;
         this.dtoClass = AirportDTO.class;
         this.domainClass = Airport.class;
-        this.regulationService = regulationService;
     }
 
     @Override
@@ -39,7 +36,7 @@ public class AirportTranslator extends Translator<Airport, AirportDTO> {
                 .codeIATA(domain.getCodeIATA())
                 .nameFIR(domain.getNameFIR())
                 .regionId(domain.getRegion().getId())
-                .regulationId(domain.getRegulation().getId())
+                .regulationId(domain.getRegulation().ordinal())
                 .build();
     }
 
@@ -53,20 +50,14 @@ public class AirportTranslator extends Translator<Airport, AirportDTO> {
             .id(dto.getId())
             .codeFIR(dto.getCodeFIR())
             .codeIATA(dto.getCodeIATA())
-            .nameFIR(dto.getNameFIR());
+            .nameFIR(dto.getNameFIR())
+            .regulation(Regulations.values()[dto.getRegulationId()]);
 
         // relation: region
         Region region = this.regionService.get(dto.getRegionId());
         if(!Optional.ofNullable(region).isPresent())
             throw new InvalidParameterException("region_id == " + dto.getRegionId());
         builder.region(region);
-
-        // relation: regulation
-        Regulation regulation = this.regulationService.get(dto.getRegulationId());
-        if(!Optional.ofNullable(regulation).isPresent())
-            throw new InvalidParameterException("regulation_id == " + dto.getRegulationId());
-        builder.regulation(regulation);
-
 
         return builder.build();
     }

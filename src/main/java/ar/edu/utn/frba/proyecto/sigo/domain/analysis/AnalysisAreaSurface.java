@@ -12,7 +12,7 @@ import javax.persistence.*;
 @Builder
 public class AnalysisAreaSurface {
     @Id
-    @SequenceGenerator(name = "analysisAreaSurface", sequenceName = "ANALYSIS_AREA_SURFACE_SEQUENCE")
+    @SequenceGenerator(name = "analysisAreaSurface", sequenceName = "ANALYSIS_AREA_SURFACE_SEQUENCE", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "analysisAreaSurface")
     @Column(name = "surface_id")
     private Long id;

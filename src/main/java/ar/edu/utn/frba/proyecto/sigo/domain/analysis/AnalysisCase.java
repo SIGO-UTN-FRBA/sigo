@@ -17,7 +17,7 @@ import java.util.List;
 @Builder
 public class AnalysisCase {
     @Id
-    @SequenceGenerator(name = "analysisCaseGenerator", sequenceName = "ANALYSIS_CASE_SEQUENCE")
+    @SequenceGenerator(name = "analysisCaseGenerator", sequenceName = "ANALYSIS_CASE_SEQUENCE", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "analysisCaseGenerator")
     @Column(name = "case_id")
     private Long id;

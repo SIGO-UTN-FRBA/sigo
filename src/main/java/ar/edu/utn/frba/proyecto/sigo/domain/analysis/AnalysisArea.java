@@ -13,7 +13,7 @@ import java.util.List;
 @Data
 public class AnalysisArea {
     @Id
-    @SequenceGenerator(name = "analysAreaGenerator", sequenceName = "ANALYS_AREA_SEQUENCE")
+    @SequenceGenerator(name = "analysAreaGenerator", sequenceName = "ANALYS_AREA_SEQUENCE", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "analysAreaGenerator")
     @Column(name = "area_id")
     private Long id;
