@@ -133,6 +133,7 @@ public class RegulationICAOAnnex14Router extends SigoRouter {
         return ruleService.getICAOAnnex14Surfaces(
                 this.getParamClassification(request),
                 this.getParamCategory(request),
+                this.getParamNumberCode(request),
                 this.getParamRecommendations(request)
         )
                 .stream()

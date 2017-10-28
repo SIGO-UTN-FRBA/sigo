@@ -72,6 +72,7 @@ public class OlsRuleService extends SigoService<OlsRule, OlsRule> {
     public List<ICAOAnnex14Surfaces> getICAOAnnex14Surfaces(
             ICAOAnnex14RunwayClassifications classification,
             ICAOAnnex14RunwayCategories category,
+            ICAOAnnex14RunwayCodeNumbers number,
             Boolean withRecommendations
     ){
 
@@ -79,7 +80,9 @@ public class OlsRuleService extends SigoService<OlsRule, OlsRule> {
                 ICAOAnnex14Surfaces.CONICAL,
                 ICAOAnnex14Surfaces.INNER_HORIZONTAL,
                 ICAOAnnex14Surfaces.APPROACH,
-                ICAOAnnex14Surfaces.TRANSITIONAL
+                ICAOAnnex14Surfaces.APPROACH_FIRST_SECTION,
+                ICAOAnnex14Surfaces.TRANSITIONAL,
+                ICAOAnnex14Surfaces.TAKEOFF_CLIMB
         );
 
         switch (classification){
@@ -88,9 +91,18 @@ public class OlsRuleService extends SigoService<OlsRule, OlsRule> {
                 return surfaces;
 
             case NON_PRECISION_APPROACH:
+
+                if(ICAOAnnex14RunwayCodeNumbers.THREE == number || ICAOAnnex14RunwayCodeNumbers.FOUR == number){
+                    surfaces.add(ICAOAnnex14Surfaces.APPROACH_SECOND_SECTION);
+                    surfaces.add(ICAOAnnex14Surfaces.APPROACH_HORIZONTAL_SECTION);
+                }
+
                 return surfaces;
 
             case PRECISION_APPROACH:
+
+                surfaces.add(ICAOAnnex14Surfaces.APPROACH_SECOND_SECTION);
+                surfaces.add(ICAOAnnex14Surfaces.APPROACH_HORIZONTAL_SECTION);
 
                 ArrayList<ICAOAnnex14Surfaces> extras = Lists.newArrayList(
                         ICAOAnnex14Surfaces.INNER_APPROACH,
