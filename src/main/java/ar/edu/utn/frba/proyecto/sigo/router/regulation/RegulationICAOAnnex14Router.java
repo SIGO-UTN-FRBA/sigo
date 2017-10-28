@@ -24,6 +24,7 @@ import spark.RouteGroup;
 import javax.inject.Inject;
 
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -133,9 +134,11 @@ public class RegulationICAOAnnex14Router extends SigoRouter {
         return ruleService.getICAOAnnex14Surfaces(
                 this.getParamClassification(request),
                 this.getParamCategory(request),
+                this.getParamNumberCode(request),
                 this.getParamRecommendations(request)
         )
                 .stream()
+                .sorted(Comparator.comparingInt(Enum::ordinal))
                 .map(s -> new ListItemDTO((long) s.ordinal(), s.description()))
                 .collect(Collectors.toList());
     });

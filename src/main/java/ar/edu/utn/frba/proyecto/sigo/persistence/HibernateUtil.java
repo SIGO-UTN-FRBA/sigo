@@ -12,7 +12,6 @@ import ar.edu.utn.frba.proyecto.sigo.domain.object.*;
 import ar.edu.utn.frba.proyecto.sigo.domain.regulation.OlsRule;
 import ar.edu.utn.frba.proyecto.sigo.domain.regulation.faa.OlsRulesFAASpec;
 import ar.edu.utn.frba.proyecto.sigo.domain.regulation.icao.OlsRulesICAOAnnex14Spec;
-import ar.edu.utn.frba.proyecto.sigo.domain.regulation.Regulation;
 import com.github.racc.tscg.TypesafeConfig;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -102,9 +101,9 @@ public class HibernateUtil {
                 .addAnnotatedClass(AnalysisCaseStatus.class)
                 .addAnnotatedClass(AnalysisCaseStatusRegistry.class)
                 .addAnnotatedClass(AnalysisException.class)
-                .addAnnotatedClass(ExceptionRuleValueSpec.class)
-                .addAnnotatedClass(ExceptionSurfaceSpec.class)
-                .addAnnotatedClass(ExceptionModificationSpec.class)
+                .addAnnotatedClass(AnalysisExceptionRule.class)
+                .addAnnotatedClass(AnalysisExceptionSurface.class)
+                .addAnnotatedClass(AnalysisExceptionAvailability.class)
                 .addAnnotatedClass(AnalysisObject.class)
                 .addAnnotatedClass(Region.class);
 
