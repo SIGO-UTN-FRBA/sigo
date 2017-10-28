@@ -25,8 +25,8 @@ public class AnalysisCaseTranslator extends Translator<AnalysisCase, AnalysisCas
 
         builder
                 .id(domain.getId())
-                .aerodromeId(domain.getAerodrome().getId())
-                .analysisCaseStatus(domain.getAnalysisCaseStatus().getId())
+                .airportId(domain.getAerodrome().getId())
+                .status(domain.getAnalysisCaseStatus().getId())
                 .regulationId(domain.getRegulation().ordinal());
 
         Optional.ofNullable(domain.getArea()).ifPresent(a -> builder.areaId(a.getId()));
