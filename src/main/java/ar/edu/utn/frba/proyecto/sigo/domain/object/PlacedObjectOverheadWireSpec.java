@@ -4,6 +4,7 @@ package ar.edu.utn.frba.proyecto.sigo.domain.object;
 import javax.persistence.*;
 
 import ar.edu.utn.frba.proyecto.sigo.domain.Spatial;
+import com.vividsolutions.jts.geom.LineString;
 import lombok.*;
 import com.vividsolutions.jts.geom.MultiLineString;
 
@@ -14,7 +15,7 @@ import com.vividsolutions.jts.geom.MultiLineString;
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 @Data
 @Builder
-public class PlacedObjectOverheadWireSpec implements PlacedObjectSpec<MultiLineString> {
+public class PlacedObjectOverheadWireSpec implements PlacedObjectSpec<LineString> {
     @Id
     @SequenceGenerator(name = "placedObjectOverheadWireSpecGenerator", sequenceName="PLACED_OBJECT_OVERHEAD_WIRE_SPEC_SEQUENCE", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "placedObjectOverheadWireSpecGenerator")
@@ -23,7 +24,7 @@ public class PlacedObjectOverheadWireSpec implements PlacedObjectSpec<MultiLineS
     private Long id;
 
     @Column(name = "geom")
-    private MultiLineString geom;
+    private LineString geom;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "object_id")
@@ -31,6 +32,6 @@ public class PlacedObjectOverheadWireSpec implements PlacedObjectSpec<MultiLineS
 
     @Override
     public Class getGeomClass() {
-        return MultiLineString.class;
+        return LineString.class;
     }
 }
