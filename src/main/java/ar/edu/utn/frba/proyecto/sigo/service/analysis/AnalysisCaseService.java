@@ -11,6 +11,7 @@ import ar.edu.utn.frba.proyecto.sigo.domain.object.PlacedObjectBuilding;
 import ar.edu.utn.frba.proyecto.sigo.domain.object.PlacedObjectIndividual;
 import ar.edu.utn.frba.proyecto.sigo.domain.object.PlacedObjectIndividual_;
 import ar.edu.utn.frba.proyecto.sigo.domain.object.PlacedObjectOverheadWire;
+import ar.edu.utn.frba.proyecto.sigo.exception.BusinessConstrainException;
 import ar.edu.utn.frba.proyecto.sigo.persistence.HibernateUtil;
 import ar.edu.utn.frba.proyecto.sigo.service.SigoService;
 import com.google.common.collect.Lists;
@@ -80,7 +81,7 @@ public class AnalysisCaseService extends SigoService <AnalysisCase, AnalysisCase
 
         object.setBaseCase(parent);
         object.setAerodrome(parent.getAerodrome());
-        object.setStatus(AnalysisCaseStatuses.PENDING);
+        object.setStatus(AnalysisCaseStatuses.OPEN);
         object.setExceptions(Sets.newHashSet());
         object.setObjects(Lists.newArrayList());
     }
@@ -115,7 +116,27 @@ public class AnalysisCaseService extends SigoService <AnalysisCase, AnalysisCase
     @Override
     protected void validateCreation(AnalysisCase object, AnalysisCase parent) {
         super.validateCreation(object, parent);
-        //TODO validar que no existe otro caso abierto
+
+        if(checkAnyCaseOpen(parent.getAerodrome()))
+            throw new BusinessConstrainException("Cannot create a case, because any open case already exists.");
+
+    }
+
+    private boolean checkAnyCaseOpen(Airport aerodrome) {
+
+        CriteriaBuilder builder = currentSession().getCriteriaBuilder();
+
+        CriteriaQuery<AnalysisCase> criteria = builder.createQuery(AnalysisCase.class);
+
+        Root<AnalysisCase> analysisCase = criteria.from(AnalysisCase.class);
+
+        Predicate predicate1 = builder.equal(analysisCase.get(AnalysisCase_.aerodrome.getName()), aerodrome.getId());
+
+        Predicate predicate2 = builder.equal(analysisCase.get(AnalysisCase_.status.getName()), AnalysisCaseStatuses.OPEN);
+
+        criteria.where(predicate1, predicate2);
+
+        return ! currentSession().createQuery(criteria).getResultList().isEmpty();
     }
 
     public void updateObjects(AnalysisCase analysisCase){
@@ -125,9 +146,7 @@ public class AnalysisCaseService extends SigoService <AnalysisCase, AnalysisCase
         initializeObjects(analysisCase);
     }
 
-
-
-    public List<PlacedObject> collectPlacedObject(AnalysisCase analysisCase) {
+    private List<PlacedObject> collectPlacedObject(AnalysisCase analysisCase) {
 
         List<PlacedObject> placedObjects = Lists.newArrayList();
 
