@@ -3,20 +3,25 @@ package ar.edu.utn.frba.proyecto.sigo.domain.object;
 import javax.persistence.*;
 
 import ar.edu.utn.frba.proyecto.sigo.domain.SigoDomain;
+import ar.edu.utn.frba.proyecto.sigo.domain.Spatial;
 import ar.edu.utn.frba.proyecto.sigo.domain.location.PoliticalLocation;
 import ar.edu.utn.frba.proyecto.sigo.exception.SigoException;
 import com.google.common.base.MoreObjects;
+import com.vividsolutions.jts.geom.Geometry;
 import lombok.*;
 import org.hibernate.annotations.LazyToOne;
 import org.hibernate.annotations.LazyToOneOption;
 
 @Entity
 @Table(name = "public.tbl_placed_object")
+@Inheritance(strategy = InheritanceType.JOINED)
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 @Data
-@Builder
-public class PlacedObject extends SigoDomain {
+public abstract class PlacedObject<T extends Geometry>
+        extends SigoDomain
+        implements Spatial<T>
+{
     @Id
     @SequenceGenerator(name = "placedObjectGenerator", sequenceName = "PLACED_OBJECT_SEQUENCE", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "placedObjectGenerator")
@@ -62,61 +67,7 @@ public class PlacedObject extends SigoDomain {
     private MarkIndicatorTypes markIndicator;
 
 
-    @OneToOne(
-            mappedBy = "placedObject",
-            cascade = CascadeType.REMOVE,
-            orphanRemoval = true,
-            fetch = FetchType.LAZY
-    )
-    @LazyToOne( LazyToOneOption.NO_PROXY )
-    private PlacedObjectIndividualSpec individualSpec;
-
-    @OneToOne(
-            mappedBy = "placedObject",
-            cascade = CascadeType.REMOVE,
-            orphanRemoval = true,
-            fetch = FetchType.LAZY
-    )
-    @LazyToOne( LazyToOneOption.NO_PROXY )
-    private PlacedObjectBuildingSpec buildingSpec;
-
-    @OneToOne(
-            mappedBy = "placedObject",
-            cascade = CascadeType.REMOVE,
-            orphanRemoval = true,
-            fetch = FetchType.LAZY
-    )
-    @LazyToOne( LazyToOneOption.NO_PROXY )
-    private PlacedObjectOverheadWireSpec wireSpec;
-
-
-
-    public PlacedObjectSpec getSpecification(){
-        switch (this.type) {
-            case BUILDING:
-                return this.getBuildingSpec();
-            case OVERHEAD_WIRED:
-                return this.getWireSpec();
-            case INDIVIDUAL:
-                return this.getIndividualSpec();
-        }
-
-        throw new SigoException("Missing PlacedObject type definition");
-    }
-
-    public void setSpecification(PlacedObjectSpec spec){
-        switch (this.getType()) {
-            case BUILDING:
-                this.setBuildingSpec((PlacedObjectBuildingSpec)spec);
-                break;
-            case INDIVIDUAL:
-                this.setIndividualSpec((PlacedObjectIndividualSpec)spec);
-                break;
-            case OVERHEAD_WIRED:
-                this.setWireSpec((PlacedObjectOverheadWireSpec)spec);
-                break;
-        }
-    }
+    public abstract Class getGeomClass();
 
     public String toString(){
         return MoreObjects.toStringHelper(this)
