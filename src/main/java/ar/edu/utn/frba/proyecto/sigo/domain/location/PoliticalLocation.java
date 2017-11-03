@@ -7,6 +7,7 @@ import com.vividsolutions.jts.geom.MultiPolygon;
 import lombok.*;
 import javax.persistence.*;
 import java.util.List;
+import java.util.Optional;
 
 @Entity
 @Table(name = "public.tbl_political_locations")
@@ -39,6 +40,11 @@ public class PoliticalLocation extends SigoDomain implements Spatial<MultiPolygo
     @JoinColumn(name = "type_id")
     private PoliticalLocationType type;
 
+    public String getPath(){
+        return Optional.ofNullable(this.getParent())
+                .map(p -> String.format("%s, %s", this.getName(), p.getPath()))
+                .orElse(this.getName());
+    }
 
     public String toString(){
         return MoreObjects.toStringHelper(this)
