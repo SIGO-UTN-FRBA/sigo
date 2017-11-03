@@ -18,56 +18,54 @@ import org.hibernate.annotations.LazyToOneOption;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 @Data
-public abstract class PlacedObject<T extends Geometry>
-        extends SigoDomain
-        implements Spatial<T>
-{
+public abstract class PlacedObject extends SigoDomain implements Spatial<Geometry>{
     @Id
     @SequenceGenerator(name = "placedObjectGenerator", sequenceName = "PLACED_OBJECT_SEQUENCE", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "placedObjectGenerator")
     @Column(name = "object_id")
-    private Long id;
+    protected Long id;
 
     @Column(name = "name")
-    private String name;
+    protected String name;
 
     @Enumerated(EnumType.ORDINAL)
     @Column(name = "type")
-    private PlacedObjectTypes type;
+    protected PlacedObjectTypes type;
 
     @Column(name = "subtype")
-    private String subtype;
+    protected String subtype;
 
     @Column(name = "verified")
-    private Boolean verified;
+    protected Boolean verified;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "location_id", nullable=false, updatable= false)
-    private PoliticalLocation politicalLocation;
+    protected PoliticalLocation politicalLocation;
 
     @ManyToOne
     @JoinColumn(name = "owner_id")
-    private PlacedObjectOwner owner;
+    protected PlacedObjectOwner owner;
 
     @Column(name = "height_agl")
-    private Double heightAgl;
+    protected Double heightAgl;
 
     @Column(name = "height_amls")
-    private Double heightAmls;
+    protected Double heightAmls;
 
     @Column(name = "temporary")
-    private Boolean temporary;
+    protected Boolean temporary;
 
     @Enumerated(EnumType.ORDINAL)
     @Column(name = "lighting")
-    private LightingTypes lighting;
+    protected LightingTypes lighting;
 
     @Enumerated(EnumType.ORDINAL)
     @Column(name = "mark_indicator")
-    private MarkIndicatorTypes markIndicator;
+    protected MarkIndicatorTypes markIndicator;
 
 
     public abstract Class getGeomClass();
+
 
     public String toString(){
         return MoreObjects.toStringHelper(this)

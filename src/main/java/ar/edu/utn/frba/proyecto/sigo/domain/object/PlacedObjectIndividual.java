@@ -1,6 +1,8 @@
 package ar.edu.utn.frba.proyecto.sigo.domain.object;
 
+import ar.edu.utn.frba.proyecto.sigo.domain.Spatial;
 import ar.edu.utn.frba.proyecto.sigo.domain.location.PoliticalLocation;
+import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.Point;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -9,13 +11,15 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "public.tbl_placed_object_individual")
+@PrimaryKeyJoinColumn(name = "object_id")
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 @Data
-public class PlacedObjectIndividual extends PlacedObject<Point> {
+public class PlacedObjectIndividual extends PlacedObject{
 
     @Builder
     public PlacedObjectIndividual(
@@ -38,7 +42,7 @@ public class PlacedObjectIndividual extends PlacedObject<Point> {
     }
 
     @Column(name = "geom")
-    private Point geom;
+    private Geometry geom;
 
     @Override
     public Class getGeomClass() {
