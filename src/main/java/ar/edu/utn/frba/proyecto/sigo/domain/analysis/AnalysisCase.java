@@ -25,9 +25,13 @@ public class AnalysisCase extends SigoDomain {
     @Column(name = "case_id")
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "status_id")
-    private AnalysisCaseStatus analysisCaseStatus;
+    @OneToOne
+    @JoinColumn(name = "case_id")
+    private AnalysisCase baseCase;
+
+    @Enumerated(EnumType.ORDINAL)
+    @Column(name = "status_id")
+    private AnalysisCaseStatuses status;
 
     @ManyToOne
     @JoinColumn(name = "aerodrome_id")

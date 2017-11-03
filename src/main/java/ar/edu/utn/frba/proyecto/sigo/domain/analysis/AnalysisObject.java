@@ -3,6 +3,8 @@ package ar.edu.utn.frba.proyecto.sigo.domain.analysis;
 import ar.edu.utn.frba.proyecto.sigo.domain.SigoDomain;
 import ar.edu.utn.frba.proyecto.sigo.domain.object.PlacedObject;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -19,8 +21,10 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "public.tbl_analysis_objects")
+@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 @Data
+@Builder
 public class AnalysisObject extends SigoDomain {
     @Id
     @SequenceGenerator(name = "analysisObjectsGenerator", sequenceName = "ANALYSIS_OBJECTS_SEQUENCE", allocationSize = 1)
@@ -34,7 +38,4 @@ public class AnalysisObject extends SigoDomain {
 
     @ManyToOne
     private AnalysisCase analysisCase;
-
-    @Column(name = "analysed")
-    private Boolean analysed;
 }

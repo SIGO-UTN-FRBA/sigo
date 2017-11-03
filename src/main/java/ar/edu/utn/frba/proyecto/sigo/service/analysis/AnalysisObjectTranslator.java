@@ -25,7 +25,6 @@ public class AnalysisObjectTranslator extends Translator<AnalysisObject, Analysi
                 .id(domain.getId())
                 .caseId(domain.getAnalysisCase().getId())
                 .objectId(domain.getPlacedObject().getId())
-                .analysed(domain.getAnalysed())
                 .build();
     }
 

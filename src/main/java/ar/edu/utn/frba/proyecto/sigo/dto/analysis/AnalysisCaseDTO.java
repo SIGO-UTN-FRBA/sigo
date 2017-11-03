@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class AnalysisCaseDTO {
     private Long id;
-    private Long status;
+    private Integer status;
     private Long airportId;
     private Integer regulationId;
     private Long areaId;

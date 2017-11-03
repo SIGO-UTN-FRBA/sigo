@@ -2,9 +2,6 @@ package ar.edu.utn.frba.proyecto.sigo.service.object;
 
 import ar.edu.utn.frba.proyecto.sigo.domain.analysis.Region;
 import ar.edu.utn.frba.proyecto.sigo.domain.object.PlacedObject;
-import ar.edu.utn.frba.proyecto.sigo.domain.object.PlacedObjectBuilding;
-import ar.edu.utn.frba.proyecto.sigo.domain.object.PlacedObjectIndividual;
-import ar.edu.utn.frba.proyecto.sigo.domain.object.PlacedObjectOverheadWire;
 import ar.edu.utn.frba.proyecto.sigo.domain.object.PlacedObject_;
 import ar.edu.utn.frba.proyecto.sigo.persistence.HibernateUtil;
 import ar.edu.utn.frba.proyecto.sigo.service.SigoService;
