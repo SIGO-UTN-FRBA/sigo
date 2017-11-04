@@ -9,6 +9,7 @@ import org.hibernate.annotations.LazyToOne;
 import org.hibernate.annotations.LazyToOneOption;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 
@@ -57,6 +58,13 @@ public class AnalysisCase extends SigoDomain {
 
     @OneToMany(mappedBy="analysisCase", cascade = CascadeType.REMOVE)
     private Set<AnalysisException> exceptions;
+
+    @Enumerated(EnumType.ORDINAL)
+    @Column(name = "stage_id")
+    private AnalysisWizardStages stage;
+
+    @Column(name="creation_date")
+    private LocalDateTime creationDate;
 
    public Regulations getRegulation(){
        return this.getAerodrome().getRegulation();

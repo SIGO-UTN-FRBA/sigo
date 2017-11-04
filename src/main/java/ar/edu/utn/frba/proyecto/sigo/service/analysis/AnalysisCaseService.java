@@ -6,6 +6,7 @@ import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisCase;
 import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisCaseStatuses;
 import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisCase_;
 import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisObject;
+import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisWizardStages;
 import ar.edu.utn.frba.proyecto.sigo.domain.object.PlacedObject;
 import ar.edu.utn.frba.proyecto.sigo.domain.object.PlacedObjectBuilding;
 import ar.edu.utn.frba.proyecto.sigo.domain.object.PlacedObjectIndividual;
@@ -84,6 +85,7 @@ public class AnalysisCaseService extends SigoService <AnalysisCase, AnalysisCase
         object.setStatus(AnalysisCaseStatuses.OPEN);
         object.setExceptions(Sets.newHashSet());
         object.setObjects(Lists.newArrayList());
+        object.setStage(AnalysisWizardStages.OBJECT);
     }
 
     @Override
