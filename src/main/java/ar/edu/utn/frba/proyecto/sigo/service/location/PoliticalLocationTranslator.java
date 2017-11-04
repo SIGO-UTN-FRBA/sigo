@@ -10,7 +10,7 @@ public class PoliticalLocationTranslator extends Translator<PoliticalLocation, P
     public PoliticalLocationDTO getAsDTO(PoliticalLocation domain) {
         return PoliticalLocationDTO.builder()
                 .id(domain.getId())
-                .name(domain.getName())
+                .name(domain.getPath())
                 .code(domain.getCode())
                 .typeId(domain.getType().getId())
                 .build();

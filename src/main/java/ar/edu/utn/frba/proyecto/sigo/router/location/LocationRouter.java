@@ -43,7 +43,7 @@ public class LocationRouter extends SigoRouter {
 
         return locationService.find(request.queryMap())
                 .stream()
-                .map(l -> new ListItemDTO(l.getId(), l.getName())) //TODO fullpath as value
+                .map(l -> new ListItemDTO(l.getId(), l.getPath())) //TODO fullpath as value
                 .collect(Collectors.toList());
     });
 

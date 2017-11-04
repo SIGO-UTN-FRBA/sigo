@@ -3,16 +3,29 @@ package ar.edu.utn.frba.proyecto.sigo.service.analysis;
 import ar.edu.utn.frba.proyecto.sigo.domain.airport.Airport;
 import ar.edu.utn.frba.proyecto.sigo.domain.airport.Airport_;
 import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisCase;
+import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisCaseStatuses;
 import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisCase_;
+import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisObject;
+import ar.edu.utn.frba.proyecto.sigo.domain.object.PlacedObject;
+import ar.edu.utn.frba.proyecto.sigo.domain.object.PlacedObjectBuilding;
+import ar.edu.utn.frba.proyecto.sigo.domain.object.PlacedObjectIndividual;
+import ar.edu.utn.frba.proyecto.sigo.domain.object.PlacedObjectIndividual_;
+import ar.edu.utn.frba.proyecto.sigo.domain.object.PlacedObjectOverheadWire;
+import ar.edu.utn.frba.proyecto.sigo.exception.BusinessConstrainException;
 import ar.edu.utn.frba.proyecto.sigo.persistence.HibernateUtil;
 import ar.edu.utn.frba.proyecto.sigo.service.SigoService;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
+import com.vividsolutions.jts.geom.Geometry;
+import org.hibernate.query.Query;
 import spark.QueryParamsMap;
 
 import javax.inject.Inject;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.Join;
+import javax.persistence.criteria.ParameterExpression;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.util.List;
@@ -23,7 +36,9 @@ import static java.util.stream.Collectors.toList;
 public class AnalysisCaseService extends SigoService <AnalysisCase, AnalysisCase> {
 
     @Inject
-    public AnalysisCaseService(HibernateUtil hibernateUtil) {
+    public AnalysisCaseService(
+            HibernateUtil hibernateUtil
+    ) {
         super(AnalysisCase.class, hibernateUtil.getSessionFactory());
     }
 
@@ -58,5 +73,119 @@ public class AnalysisCaseService extends SigoService <AnalysisCase, AnalysisCase
         criteria.where(builder.and(collect.toArray(new Predicate[collect.size()])));
 
         return currentSession().createQuery(criteria).getResultList();
+    }
+
+    @Override
+    protected void preCreateActions(AnalysisCase object, AnalysisCase parent) {
+        super.preCreateActions(object, parent);
+
+        object.setBaseCase(parent);
+        object.setAerodrome(parent.getAerodrome());
+        object.setStatus(AnalysisCaseStatuses.OPEN);
+        object.setExceptions(Sets.newHashSet());
+        object.setObjects(Lists.newArrayList());
+    }
+
+    @Override
+    protected void postCreateActions(AnalysisCase object, AnalysisCase parent) {
+        super.postCreateActions(object, parent);
+
+        initializeObjects(object);
+    }
+
+    private void initializeObjects(AnalysisCase analysisCase) {
+
+        this.collectPlacedObject(analysisCase)
+                .stream()
+                .map(o -> AnalysisObject.builder()
+                        .analysisCase(analysisCase)
+                        .placedObject(o)
+                        .build()
+                )
+                .forEach(o -> {
+                    currentSession().save(o);
+                    analysisCase.getObjects().add(o);
+                });
+    }
+
+    private void discardObjects(AnalysisCase analysisCase) {
+        analysisCase.getObjects().forEach( o -> currentSession().delete(o));
+        analysisCase.getObjects().clear();
+    }
+
+    @Override
+    protected void validateCreation(AnalysisCase object, AnalysisCase parent) {
+        super.validateCreation(object, parent);
+
+        if(checkAnyCaseOpen(parent.getAerodrome()))
+            throw new BusinessConstrainException("Cannot create a case, because any open case already exists.");
+
+    }
+
+    private boolean checkAnyCaseOpen(Airport aerodrome) {
+
+        CriteriaBuilder builder = currentSession().getCriteriaBuilder();
+
+        CriteriaQuery<AnalysisCase> criteria = builder.createQuery(AnalysisCase.class);
+
+        Root<AnalysisCase> analysisCase = criteria.from(AnalysisCase.class);
+
+        Predicate predicate1 = builder.equal(analysisCase.get(AnalysisCase_.aerodrome.getName()), aerodrome.getId());
+
+        Predicate predicate2 = builder.equal(analysisCase.get(AnalysisCase_.status.getName()), AnalysisCaseStatuses.OPEN);
+
+        criteria.where(predicate1, predicate2);
+
+        return ! currentSession().createQuery(criteria).getResultList().isEmpty();
+    }
+
+    public void updateObjects(AnalysisCase analysisCase){
+
+        discardObjects(analysisCase);
+
+        initializeObjects(analysisCase);
+    }
+
+    private List<PlacedObject> collectPlacedObject(AnalysisCase analysisCase) {
+
+        List<PlacedObject> placedObjects = Lists.newArrayList();
+
+        Double ratio = 0.1D;
+
+        Geometry buffer = analysisCase.getAerodrome().getGeom().buffer(ratio);
+
+        buffer.setSRID(4326);
+
+
+        placedObjects.addAll(collectPlacedObjectsOnArea(PlacedObjectIndividual.class, buffer));
+
+        placedObjects.addAll(collectPlacedObjectsOnArea(PlacedObjectBuilding.class, buffer));
+
+        placedObjects.addAll(collectPlacedObjectsOnArea(PlacedObjectOverheadWire.class, buffer));
+
+
+        return placedObjects;
+    }
+
+    private <T extends PlacedObject> List<T> collectPlacedObjectsOnArea(Class<T> clazz, Geometry buffer) {
+
+        CriteriaBuilder builder = currentSession().getCriteriaBuilder();
+
+        CriteriaQuery<T> criteria = builder.createQuery(clazz);
+
+        Root<T> individual = criteria.from(clazz);
+
+
+        ParameterExpression bufferParam = builder.parameter(Geometry.class);
+
+
+        Expression<Boolean> st_coveredby = builder.function("st_coveredby", Boolean.class, individual.get(PlacedObjectIndividual_.geom.getName()), bufferParam);
+
+        criteria.where(builder.isTrue(st_coveredby));
+
+        Query<T> query = currentSession().createQuery(criteria);
+        query.setParameter(bufferParam, buffer);
+
+        return query.getResultList();
     }
 }

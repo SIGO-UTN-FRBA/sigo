@@ -94,16 +94,16 @@ public class PlacedObjectRouter extends SigoRouter {
 
         PlacedObject domain = objectService.get(getParamObjectId(request));
 
-        return domain.getSpecification().getGeom();
+        return domain.getGeom();
     });
 
     private final Route defineGeometry = doInTransaction(true, (request, response) -> {
 
         PlacedObject domain = objectService.get(getParamObjectId(request));
 
-        Geometry geometry = objectMapper.fromJson(request.body(), (Class<Geometry>) domain.getSpecification().getGeomClass());
+        Geometry geometry = objectMapper.fromJson(request.body(), (Class<Geometry>) domain.getGeomClass());
 
-        objectService.defineGeometry(geometry, domain.getSpecification());
+        domain.setGeom(geometry);
 
         return geometry;
     });

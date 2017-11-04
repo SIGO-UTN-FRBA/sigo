@@ -2,10 +2,6 @@ package ar.edu.utn.frba.proyecto.sigo.service.object;
 
 import ar.edu.utn.frba.proyecto.sigo.domain.analysis.Region;
 import ar.edu.utn.frba.proyecto.sigo.domain.object.PlacedObject;
-import ar.edu.utn.frba.proyecto.sigo.domain.object.PlacedObjectBuildingSpec;
-import ar.edu.utn.frba.proyecto.sigo.domain.object.PlacedObjectIndividualSpec;
-import ar.edu.utn.frba.proyecto.sigo.domain.object.PlacedObjectOverheadWireSpec;
-import ar.edu.utn.frba.proyecto.sigo.domain.object.PlacedObjectSpec;
 import ar.edu.utn.frba.proyecto.sigo.domain.object.PlacedObject_;
 import ar.edu.utn.frba.proyecto.sigo.persistence.HibernateUtil;
 import ar.edu.utn.frba.proyecto.sigo.service.SigoService;
@@ -56,69 +52,5 @@ public class PlacedObjectService extends SigoService<PlacedObject, Region>{
         criteria.where(builder.and(collect.toArray(new Predicate[collect.size()])));
 
         return currentSession().createQuery(criteria).getResultList();
-    }
-
-    @Override
-    protected void preUpdateActions(PlacedObject newInstance, PlacedObject oldInstance) {
-        newInstance.setSpecification(oldInstance.getSpecification());
-    }
-
-    @Override
-    protected void postCreateActions(PlacedObject object) {
-        createSpecification(object);
-    }
-
-    private void createSpecification(PlacedObject object) {
-
-        PlacedObjectSpec spec;
-
-        switch (object.getType()) {
-            case BUILDING:
-                spec = createBuildingSpec(object);
-                break;
-            case INDIVIDUAL:
-                spec = createIndividualSpec(object);
-                break;
-            case OVERHEAD_WIRED:
-                spec = createWiredSpect(object);
-                break;
-            default:
-                spec = null;
-        }
-
-        object.setSpecification(spec);
-    }
-
-    private PlacedObjectOverheadWireSpec createWiredSpect(PlacedObject object) {
-
-        PlacedObjectOverheadWireSpec spec = PlacedObjectOverheadWireSpec.builder()
-                .placedObject(object)
-                .build();
-
-        currentSession().save(spec);
-
-        return spec;
-    }
-
-    private PlacedObjectIndividualSpec createIndividualSpec(PlacedObject object) {
-
-        PlacedObjectIndividualSpec spec = PlacedObjectIndividualSpec.builder()
-                .placedObject(object)
-                .build();
-
-        currentSession().save(spec);
-
-        return spec;
-    }
-
-    private PlacedObjectBuildingSpec createBuildingSpec(PlacedObject object) {
-
-        PlacedObjectBuildingSpec spec = PlacedObjectBuildingSpec.builder()
-                .placedObject(object)
-                .build();
-
-        currentSession().save(spec);
-
-        return spec;
     }
 }

@@ -102,6 +102,17 @@ public class ApiContext {
             );
         });
 
+        exception(BusinessConstrainException.class, (e, request, response) -> {
+            response.status(HttpStatus.BAD_REQUEST_400);
+            response.body(jsonTransformer.toJson(
+                    new ExceptionDTO(
+                            BusinessConstrainException.class.getSimpleName(),
+                            e.getMessage()
+                    )
+                )
+            );
+        });
+
         exception(MissingParameterException.class, (e, request, response) ->{
             response.status(HttpStatus.BAD_REQUEST_400);
             response.body(jsonTransformer.toJson(

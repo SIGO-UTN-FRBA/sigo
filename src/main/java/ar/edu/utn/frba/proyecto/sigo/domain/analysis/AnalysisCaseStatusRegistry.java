@@ -11,18 +11,18 @@ import java.time.LocalDateTime;
 
 public class AnalysisCaseStatusRegistry {
     @Id
-    @SequenceGenerator(name = "analysCaseStatusRegistryGenerator", sequenceName = "ANALYSIS_CASE_STATUS_REGISTRY_SEQUENCE", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "analysCaseStatusRegistryGenerator")
+    @SequenceGenerator(name = "analysisCaseStatusRegistryGenerator", sequenceName = "ANALYSIS_CASE_STATUS_REGISTRY_SEQUENCE", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "analysisCaseStatusRegistryGenerator")
     @Column(name = "register_id")
     private Long id;
 
     @ManyToOne
     @JoinColumn(name = "case_id")
-    private AnalysisCase analysCase;
+    private AnalysisCase analysisCase;
 
-    @ManyToOne
-    @JoinColumn(name = "status_id")
-    private AnalysisCaseStatus analysCaseStatus;
+    @Enumerated(value = EnumType.ORDINAL)
+    @Column(name = "status_id")
+    private AnalysisCaseStatuses status;
 
     @Column(name = "start_date")
     private LocalDateTime startDate;

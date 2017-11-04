@@ -3,120 +3,69 @@ package ar.edu.utn.frba.proyecto.sigo.domain.object;
 import javax.persistence.*;
 
 import ar.edu.utn.frba.proyecto.sigo.domain.SigoDomain;
+import ar.edu.utn.frba.proyecto.sigo.domain.Spatial;
 import ar.edu.utn.frba.proyecto.sigo.domain.location.PoliticalLocation;
 import ar.edu.utn.frba.proyecto.sigo.exception.SigoException;
 import com.google.common.base.MoreObjects;
+import com.vividsolutions.jts.geom.Geometry;
 import lombok.*;
 import org.hibernate.annotations.LazyToOne;
 import org.hibernate.annotations.LazyToOneOption;
 
 @Entity
 @Table(name = "public.tbl_placed_object")
+@Inheritance(strategy = InheritanceType.JOINED)
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 @Data
-@Builder
-public class PlacedObject extends SigoDomain {
+public abstract class PlacedObject extends SigoDomain implements Spatial<Geometry>{
     @Id
     @SequenceGenerator(name = "placedObjectGenerator", sequenceName = "PLACED_OBJECT_SEQUENCE", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "placedObjectGenerator")
     @Column(name = "object_id")
-    private Long id;
+    protected Long id;
 
     @Column(name = "name")
-    private String name;
+    protected String name;
 
     @Enumerated(EnumType.ORDINAL)
     @Column(name = "type")
-    private PlacedObjectTypes type;
+    protected PlacedObjectTypes type;
 
     @Column(name = "subtype")
-    private String subtype;
+    protected String subtype;
 
     @Column(name = "verified")
-    private Boolean verified;
+    protected Boolean verified;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "location_id", nullable=false, updatable= false)
-    private PoliticalLocation politicalLocation;
+    protected PoliticalLocation politicalLocation;
 
     @ManyToOne
     @JoinColumn(name = "owner_id")
-    private PlacedObjectOwner owner;
+    protected PlacedObjectOwner owner;
 
     @Column(name = "height_agl")
-    private Double heightAgl;
+    protected Double heightAgl;
 
     @Column(name = "height_amls")
-    private Double heightAmls;
+    protected Double heightAmls;
 
     @Column(name = "temporary")
-    private Boolean temporary;
+    protected Boolean temporary;
 
     @Enumerated(EnumType.ORDINAL)
     @Column(name = "lighting")
-    private LightingTypes lighting;
+    protected LightingTypes lighting;
 
     @Enumerated(EnumType.ORDINAL)
     @Column(name = "mark_indicator")
-    private MarkIndicatorTypes markIndicator;
+    protected MarkIndicatorTypes markIndicator;
 
 
-    @OneToOne(
-            mappedBy = "placedObject",
-            cascade = CascadeType.REMOVE,
-            orphanRemoval = true,
-            fetch = FetchType.LAZY
-    )
-    @LazyToOne( LazyToOneOption.NO_PROXY )
-    private PlacedObjectIndividualSpec individualSpec;
+    public abstract Class getGeomClass();
 
-    @OneToOne(
-            mappedBy = "placedObject",
-            cascade = CascadeType.REMOVE,
-            orphanRemoval = true,
-            fetch = FetchType.LAZY
-    )
-    @LazyToOne( LazyToOneOption.NO_PROXY )
-    private PlacedObjectBuildingSpec buildingSpec;
-
-    @OneToOne(
-            mappedBy = "placedObject",
-            cascade = CascadeType.REMOVE,
-            orphanRemoval = true,
-            fetch = FetchType.LAZY
-    )
-    @LazyToOne( LazyToOneOption.NO_PROXY )
-    private PlacedObjectOverheadWireSpec wireSpec;
-
-
-
-    public PlacedObjectSpec getSpecification(){
-        switch (this.type) {
-            case BUILDING:
-                return this.getBuildingSpec();
-            case OVERHEAD_WIRED:
-                return this.getWireSpec();
-            case INDIVIDUAL:
-                return this.getIndividualSpec();
-        }
-
-        throw new SigoException("Missing PlacedObject type definition");
-    }
-
-    public void setSpecification(PlacedObjectSpec spec){
-        switch (this.getType()) {
-            case BUILDING:
-                this.setBuildingSpec((PlacedObjectBuildingSpec)spec);
-                break;
-            case INDIVIDUAL:
-                this.setIndividualSpec((PlacedObjectIndividualSpec)spec);
-                break;
-            case OVERHEAD_WIRED:
-                this.setWireSpec((PlacedObjectOverheadWireSpec)spec);
-                break;
-        }
-    }
 
     public String toString(){
         return MoreObjects.toStringHelper(this)
