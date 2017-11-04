@@ -13,8 +13,9 @@ import lombok.NoArgsConstructor;
 public class AnalysisCaseDTO {
     private Long id;
     private Integer status;
+    private Integer stage;
     private Long airportId;
     private Integer regulationId;
     private Long areaId;
-
+    private Long creationDate;
 }

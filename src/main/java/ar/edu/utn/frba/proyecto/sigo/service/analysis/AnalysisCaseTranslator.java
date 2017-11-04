@@ -7,6 +7,9 @@ import com.google.gson.Gson;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import javax.inject.Inject;
+import java.time.Instant;
+import java.time.ZoneOffset;
+import java.time.temporal.TemporalField;
 import java.util.Optional;
 
 public class AnalysisCaseTranslator extends Translator<AnalysisCase, AnalysisCaseDTO> {
@@ -27,7 +30,9 @@ public class AnalysisCaseTranslator extends Translator<AnalysisCase, AnalysisCas
                 .id(domain.getId())
                 .airportId(domain.getAerodrome().getId())
                 .status(domain.getStatus().ordinal())
-                .regulationId(domain.getRegulation().ordinal());
+                .stage(domain.getStage().ordinal())
+                .regulationId(domain.getRegulation().ordinal())
+                .creationDate(domain.getCreationDate().toInstant(ZoneOffset.UTC).toEpochMilli());
 
         Optional.ofNullable(domain.getArea()).ifPresent(a -> builder.areaId(a.getId()));
 
