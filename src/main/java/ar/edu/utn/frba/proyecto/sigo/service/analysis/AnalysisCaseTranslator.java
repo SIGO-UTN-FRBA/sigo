@@ -7,9 +7,7 @@ import com.google.gson.Gson;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import javax.inject.Inject;
-import java.time.Instant;
 import java.time.ZoneOffset;
-import java.time.temporal.TemporalField;
 import java.util.Optional;
 
 public class AnalysisCaseTranslator extends Translator<AnalysisCase, AnalysisCaseDTO> {
