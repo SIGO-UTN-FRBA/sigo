@@ -1,15 +1,15 @@
 package ar.edu.utn.frba.proyecto.sigo.router.analysis;
 
+import ar.edu.utn.frba.proyecto.sigo.domain.analysis.Analysis;
 import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisCase;
-import ar.edu.utn.frba.proyecto.sigo.exception.MissingParameterException;
 import ar.edu.utn.frba.proyecto.sigo.persistence.HibernateUtil;
 import ar.edu.utn.frba.proyecto.sigo.router.SigoRouter;
 import ar.edu.utn.frba.proyecto.sigo.service.analysis.AnalysisCaseService;
 import ar.edu.utn.frba.proyecto.sigo.service.analysis.AnalysisCaseTranslator;
 import ar.edu.utn.frba.proyecto.sigo.service.analysis.AnalysisObjectTranslator;
+import ar.edu.utn.frba.proyecto.sigo.service.analysis.AnalysisService;
 import ar.edu.utn.frba.proyecto.sigo.spark.JsonTransformer;
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import spark.Route;
 import spark.RouteGroup;
 
@@ -26,6 +26,7 @@ public class AnalysisCaseRouter extends SigoRouter {
 
     private JsonTransformer jsonTransformer;
     private AnalysisCaseService caseService;
+    private AnalysisService analysisService;
     private AnalysisCaseTranslator caseTranslator;
     private AnalysisObjectTranslator objectTranslator;
 
@@ -36,7 +37,8 @@ public class AnalysisCaseRouter extends SigoRouter {
             JsonTransformer jsonTransformer,
             AnalysisCaseService caseService,
             AnalysisCaseTranslator caseTranslator,
-            AnalysisObjectTranslator objectTranslator
+            AnalysisObjectTranslator objectTranslator,
+            AnalysisService analysisService
     ){
         this.objectMapper = gson;
         this.jsonTransformer = jsonTransformer;
@@ -44,23 +46,18 @@ public class AnalysisCaseRouter extends SigoRouter {
         this.caseTranslator = caseTranslator;
         this.objectTranslator = objectTranslator;
         this.hibernateUtil = hibernateUtil;
+        this.analysisService = analysisService;
     }
 
-    private final Route searchCases = doInTransaction(false, (request, response) -> {
-        return this.caseService.find(request.queryMap())
-            .stream()
-            .map(c -> caseTranslator.getAsDTO(c))
-            .collect(Collectors.toList());
-    });
 
     /**
      * Get calculated objects (static)
      */
     private final Route fetchAnalysisObject = doInTransaction(true, (request, response) -> {
 
-        AnalysisCase analysisCase = this.caseService.get(this.getParamCaseId(request));
+        Analysis analysis = this.analysisService.get(this.getParamAnalysisId(request));
 
-        return analysisCase.getObjects()
+        return analysis.getAnalysisCase().getObjects()
                 .stream()
                 .map(o -> objectTranslator.getAsDTO(o))
                 .collect(Collectors.toList());
@@ -71,7 +68,9 @@ public class AnalysisCaseRouter extends SigoRouter {
      */
     private final Route updateAnalysisObject = doInTransaction(true, (request, response) -> {
 
-        AnalysisCase analysisCase = this.caseService.get(this.getParamCaseId(request));
+        Analysis analysis = this.analysisService.get(this.getParamAnalysisId(request));
+
+        AnalysisCase analysisCase = analysis.getAnalysisCase();
 
         caseService.updateObjects(analysisCase);
 
@@ -81,37 +80,16 @@ public class AnalysisCaseRouter extends SigoRouter {
                 .collect(Collectors.toList());
     });
 
-    /**
-     * Create a case depending on older case.
-     */
-    private final Route createCase = doInTransaction(true, (request, response) -> {
-
-        JsonObject jsonObject = objectMapper.fromJson(request.body(), JsonObject.class);
-
-        if(!jsonObject.has("baseId"))
-            throw new MissingParameterException("baseId");
-
-        AnalysisCase baseCase = this.caseService.get(jsonObject.get("baseId").getAsLong());
-
-        AnalysisCase analysisCase = this.caseService.create(new AnalysisCase(), baseCase);
-
-        return caseTranslator.getAsDTO(analysisCase);
-    });
-
     @Override
     public RouteGroup routes() {
         return ()->{
-            post("", createCase, jsonTransformer);
-            get("", searchCases, jsonTransformer);
-            //TODO get("/on-going", searchOnGoingCases, jsonTransformer);
-
-            get(format("/:%s/objects", CASE_ID_PARAM), fetchAnalysisObject, jsonTransformer);
-            put(format("/:%s/objects", CASE_ID_PARAM), updateAnalysisObject, jsonTransformer);
+            get("/objects", fetchAnalysisObject, jsonTransformer);
+            put("/objects", updateAnalysisObject, jsonTransformer);
         };
     }
 
     @Override
     public String path() {
-        return "/analysis/cases";
+        return "/analysis/:" + ANALYSIS_ID_PARAM + "/case";
     }
 }

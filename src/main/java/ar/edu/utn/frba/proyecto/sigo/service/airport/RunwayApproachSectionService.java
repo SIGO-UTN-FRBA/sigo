@@ -5,9 +5,15 @@ import ar.edu.utn.frba.proyecto.sigo.domain.airport.RunwayApproachSection;
 import ar.edu.utn.frba.proyecto.sigo.domain.airport.RunwayDirection;
 import ar.edu.utn.frba.proyecto.sigo.persistence.HibernateUtil;
 import ar.edu.utn.frba.proyecto.sigo.service.SigoService;
+<<<<<<< HEAD
 import com.vividsolutions.jts.geom.*;
 import org.geotools.data.collection.ListFeatureCollection;
 import org.geotools.data.simple.SimpleFeatureCollection;
+=======
+import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.GeometryFactory;
+import com.vividsolutions.jts.geom.Polygon;
+>>>>>>> f2185b1b2c52cc0ec7c6eae56107906dc1a73ade
 import org.geotools.feature.simple.SimpleFeatureBuilder;
 import org.geotools.feature.simple.SimpleFeatureTypeBuilder;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
@@ -31,6 +37,7 @@ public class RunwayApproachSectionService extends SigoService<RunwayApproachSect
         super(RunwayApproachSection.class, hibernateUtil.getSessionFactory());
     }
 
+<<<<<<< HEAD
     public Geometry getThresholdGeometry(RunwayDirection runwayDirection) {
         List<Coordinate> extremes = sortDirectionCoordinates(runwayDirection.getRunway().getGeom().getCoordinates(), runwayDirection.getGeom().getCoordinate());
 
@@ -79,6 +86,23 @@ public class RunwayApproachSectionService extends SigoService<RunwayApproachSect
         //build the feature
         SimpleFeature sf = SimpleFeatureBuilder.build(schema, new Object[] { approachGeom, "Approach Surface", divergence, lenght }, null);
 
+=======
+    public SimpleFeature getThresholdFeature(RunwayDirection runwayDirection) {
+
+        return SimpleFeatureBuilder.build(
+                getThresholdFeatureSchema(),
+                new Object[]{
+                        calculateThresholdGeometry(runwayDirection),
+                        "Runway",
+                        runwayDirection.getApproachSection().getThresholdLength()
+                },
+                runwayDirection.getApproachSection().getId().toString()
+        );
+    }
+
+    private Polygon calculateThresholdGeometry(RunwayDirection runwayDirection) {
+        final Coordinate[] runwayCoordinates = runwayDirection.getRunway().getGeom().getCoordinates();
+>>>>>>> f2185b1b2c52cc0ec7c6eae56107906dc1a73ade
 
         ListFeatureCollection result = new ListFeatureCollection(schema);
         result.add(sf);
@@ -97,6 +121,17 @@ public class RunwayApproachSectionService extends SigoService<RunwayApproachSect
         Coordinate endRightPoint = move(startRightPoint, azimuth+4,-500);
         Coordinate endLeftPoint = move(startLeftPoint, azimuth-4,-500);
         return new GeometryFactory().createPolygon(new Coordinate[]{startRightPoint, endRightPoint, endLeftPoint, startLeftPoint, startRightPoint});
+    }
+
+    private SimpleFeatureType getThresholdFeatureSchema() {
+        SimpleFeatureTypeBuilder tb = new SimpleFeatureTypeBuilder();
+
+        tb.setName("Threshold Displaced");
+        tb.add("geom", java.awt.Polygon.class, DefaultGeographicCRS.WGS84);
+        tb.add("class", String.class);
+        tb.add("length", Double.class);
+
+        return tb.buildFeatureType();
     }
 
 }

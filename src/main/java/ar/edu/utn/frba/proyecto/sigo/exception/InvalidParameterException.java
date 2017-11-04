@@ -5,4 +5,8 @@ public class InvalidParameterException extends SigoException {
     public InvalidParameterException(String message) {
         super(message);
     }
+
+    public InvalidParameterException(String message, Throwable cause) {
+        super(message, cause);
+    }
 }

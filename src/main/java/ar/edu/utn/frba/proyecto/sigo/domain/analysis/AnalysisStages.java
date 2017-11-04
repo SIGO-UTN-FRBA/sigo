@@ -1,6 +1,6 @@
 package ar.edu.utn.frba.proyecto.sigo.domain.analysis;
 
-public enum AnalysisWizardStages {
+public enum AnalysisStages {
     OBJECT,
     EXCEPTION,
     ANALYSIS,

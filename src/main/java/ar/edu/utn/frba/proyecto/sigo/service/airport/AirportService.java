@@ -7,11 +7,17 @@ import ar.edu.utn.frba.proyecto.sigo.domain.airport.Runway;
 import ar.edu.utn.frba.proyecto.sigo.service.SigoService;
 import com.google.common.collect.Lists;
 
+import org.geotools.feature.simple.SimpleFeatureBuilder;
+import org.geotools.feature.simple.SimpleFeatureTypeBuilder;
+import org.geotools.referencing.crs.DefaultGeographicCRS;
+import org.opengis.feature.simple.SimpleFeature;
+import org.opengis.feature.simple.SimpleFeatureType;
 import spark.QueryParamsMap;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.persistence.criteria.*;
+import java.awt.*;
 import java.util.List;
 import java.util.Optional;
 
@@ -62,5 +68,34 @@ public class AirportService extends SigoService<Airport, Airport> {
         criteria.where(builder.and(collect.toArray(new Predicate[collect.size()])));
 
         return currentSession().createQuery(criteria).getResultList();
+    }
+
+    public SimpleFeature getFeature(Airport airport){
+
+        return SimpleFeatureBuilder.build(
+                getFeatureSchema(),
+                new Object[]{
+                        airport.getGeom(),
+                        "Airport",
+                        airport.getNameFIR(),
+                        airport.getCodeFIR(),
+                        airport.getCodeIATA()
+                },
+                airport.getId().toString()
+        );
+    }
+
+    private SimpleFeatureType getFeatureSchema() {
+
+        SimpleFeatureTypeBuilder tb = new SimpleFeatureTypeBuilder();
+
+        tb.setName("Airport");
+        tb.add("geom", Point.class, DefaultGeographicCRS.WGS84);
+        tb.add("class", String.class);
+        tb.add("name", String.class);
+        tb.add("codeFIR", String.class);
+        tb.add("codeIATA", String.class);
+
+        return tb.buildFeatureType();
     }
 }

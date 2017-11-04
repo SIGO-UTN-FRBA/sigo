@@ -1,20 +1,30 @@
 package ar.edu.utn.frba.proyecto.sigo.router;
 
+import ar.edu.utn.frba.proyecto.sigo.exception.InvalidParameterException;
 import ar.edu.utn.frba.proyecto.sigo.persistence.HibernateUtil;
 import ar.edu.utn.frba.proyecto.sigo.exception.MissingParameterException;
 import ar.edu.utn.frba.proyecto.sigo.exception.SigoException;
 import ar.edu.utn.frba.proyecto.sigo.spark.Router;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import lombok.Getter;
+import org.geotools.geojson.feature.FeatureJSON;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.context.internal.ManagedSessionContext;
 import org.hibernate.resource.transaction.spi.TransactionStatus;
+import org.opengis.feature.simple.SimpleFeature;
 import spark.Request;
 import spark.Response;
 import spark.Route;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 import java.util.function.BiFunction;
 
@@ -29,7 +39,7 @@ public abstract class SigoRouter extends Router {
     protected static String LOCATION_ID_PARAM = "location_id";
     protected static String SURFACE_ID_PARAM = "surface_id";
     protected static String REGULATION_ID_PARAM="regulation_id";
-    protected static String CASE_ID_PARAM="case_id";
+    protected static String ANALYSIS_ID_PARAM ="analysis_id";
 
     protected Gson objectMapper;
 
@@ -72,8 +82,8 @@ public abstract class SigoRouter extends Router {
         return getParam(request, REGULATION_ID_PARAM);
     }
 
-    protected Long getParamCaseId(Request request){
-        return getParam(request, CASE_ID_PARAM);
+    protected Long getParamAnalysisId(Request request){
+        return getParam(request, ANALYSIS_ID_PARAM);
     }
 
     private Long getParam(Request request, String key) {
@@ -144,6 +154,32 @@ public abstract class SigoRouter extends Router {
 
         if (txn != null && txn.getStatus() == TransactionStatus.ACTIVE) {
             txn.commit();
+        }
+    }
+
+    protected JsonObject featureToGeoJson(SimpleFeature feature) {
+
+        try(OutputStream outputStream = new ByteArrayOutputStream()) {
+
+            new FeatureJSON().writeFeature(feature, outputStream);
+
+            return objectMapper.fromJson(outputStream.toString(),JsonObject.class);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new SigoException(e);
+        }
+    }
+
+    protected SimpleFeature featureFromGeoJson(String json) {
+
+        try (InputStream stream = new ByteArrayInputStream(json.getBytes(StandardCharsets.UTF_8.name()))){
+
+            return new FeatureJSON().readFeature(stream);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new InvalidParameterException("Malformed geometry.",e);
         }
     }
 }

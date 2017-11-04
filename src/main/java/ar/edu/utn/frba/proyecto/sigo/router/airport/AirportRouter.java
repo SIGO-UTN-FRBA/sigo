@@ -8,8 +8,10 @@ import ar.edu.utn.frba.proyecto.sigo.domain.airport.Airport;
 import ar.edu.utn.frba.proyecto.sigo.dto.airport.AirportDTO;
 import ar.edu.utn.frba.proyecto.sigo.spark.JsonTransformer;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.vividsolutions.jts.geom.Point;
 import org.eclipse.jetty.http.HttpStatus;
+import org.opengis.feature.simple.SimpleFeature;
 import spark.Request;
 import spark.Response;
 import spark.Route;
@@ -106,28 +108,30 @@ public class AirportRouter extends SigoRouter {
     });
 
     /**
-     * Get point given an airport identifier
+     * Get airport as feature
      */
-    private final Route fetchGeometry = doInTransaction(false, (Request request, Response response) -> {
+    private final Route fetchFeature = doInTransaction(false, (Request request, Response response) -> {
 
         Airport airport = airportService.get(getParamAirportId(request));
+
+        return featureToGeoJson(airportService.getFeature(airport));
+
+    });
+
+    /**
+     * Update airport's geometry (point)
+     */
+    private final Route updateFeature = doInTransaction(true, (Request request, Response response) -> {
+
+        Airport airport = airportService.get(getParamAirportId(request));
+
+        SimpleFeature feature = featureFromGeoJson(request.body());
+
+        airportService.updateGeometry((Point)feature.getDefaultGeometry(), airport);
 
         return airport.getGeom();
     });
 
-    /**
-     * Create point for an airport
-     */
-    private final Route defineGeometry = doInTransaction(true, (Request request, Response response) -> {
-
-        Point point = objectMapper.fromJson(request.body(), Point.class);
-
-        Airport airport = airportService.get(getParamAirportId(request));
-
-        airportService.defineGeometry(point, airport);
-
-        return point;
-    });
 
     @SuppressWarnings("Duplicates")
     @Override
@@ -140,8 +144,8 @@ public class AirportRouter extends SigoRouter {
             put(format("/:%s", AIRPORT_ID_PARAM), updateAirport, jsonTransformer);
             delete(format("/:%s", AIRPORT_ID_PARAM), deleteAirport);
 
-            get(format("/:%s/geometry", AIRPORT_ID_PARAM), fetchGeometry, jsonTransformer);
-            post(format("/:%s/geometry", AIRPORT_ID_PARAM), defineGeometry, jsonTransformer);
+            get(format("/:%s/feature", AIRPORT_ID_PARAM), fetchFeature, jsonTransformer);
+            patch(format("/:%s/feature", AIRPORT_ID_PARAM), updateFeature, jsonTransformer);
         };
     }
 
