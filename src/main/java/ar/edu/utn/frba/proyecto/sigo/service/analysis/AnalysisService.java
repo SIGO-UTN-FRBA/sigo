@@ -12,6 +12,10 @@ import ar.edu.utn.frba.proyecto.sigo.exception.BusinessConstrainException;
 import ar.edu.utn.frba.proyecto.sigo.persistence.HibernateUtil;
 import ar.edu.utn.frba.proyecto.sigo.service.SigoService;
 import com.google.common.collect.Lists;
+import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Projections;
+import org.hibernate.criterion.Property;
+import org.hibernate.criterion.Subqueries;
 import spark.QueryParamsMap;
 
 import javax.inject.Inject;
@@ -20,6 +24,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import javax.persistence.criteria.Subquery;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
@@ -65,8 +70,22 @@ public class AnalysisService extends SigoService<Analysis, Analysis>{
                 .map(v -> builder.equal(airport.get(Airport_.codeIATA.getName()),v));
 
         Optional<Predicate> predicateCurrent = Optional
-                .ofNullable(parameters.get("current").booleanValue())
-                .map(v -> (v) ? builder.isNull(analysis.get(Analysis_.parent.getName())) : builder.isNotNull(analysis.get(Analysis_.parent.getName())));
+                .ofNullable(parameters.get("current"))
+                .map(p -> {
+
+                    Subquery<Analysis> subquery = criteria.subquery(Analysis.class);
+
+                    Root<Analysis> otherAnalysis = subquery.from(Analysis.class);
+
+                    Predicate predicateParent = builder.equal(otherAnalysis.get(Analysis_.parent), analysis.get(Analysis_.id));
+
+                    subquery.select(otherAnalysis.get(Analysis_.id.getName()));
+
+                    subquery.where(predicateParent);
+
+                    return builder.not(builder.exists(subquery));
+                });
+
 
         List<Predicate> collect = Lists.newArrayList(predicateNameFIR, predicateCodeFIR, predicateCodeIATA, predicateCurrent)
                 .stream()
