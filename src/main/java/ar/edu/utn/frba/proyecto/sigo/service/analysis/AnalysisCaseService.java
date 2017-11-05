@@ -2,11 +2,11 @@ package ar.edu.utn.frba.proyecto.sigo.service.analysis;
 
 import ar.edu.utn.frba.proyecto.sigo.domain.airport.Airport;
 import ar.edu.utn.frba.proyecto.sigo.domain.airport.Airport_;
+import ar.edu.utn.frba.proyecto.sigo.domain.analysis.Analysis;
 import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisCase;
-import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisCaseStatuses;
 import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisCase_;
 import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisObject;
-import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisWizardStages;
+import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisStages;
 import ar.edu.utn.frba.proyecto.sigo.domain.object.PlacedObject;
 import ar.edu.utn.frba.proyecto.sigo.domain.object.PlacedObjectBuilding;
 import ar.edu.utn.frba.proyecto.sigo.domain.object.PlacedObjectIndividual;
@@ -34,7 +34,7 @@ import java.util.Optional;
 
 import static java.util.stream.Collectors.toList;
 
-public class AnalysisCaseService extends SigoService <AnalysisCase, AnalysisCase> {
+public class AnalysisCaseService extends SigoService <AnalysisCase, Analysis> {
 
     @Inject
     public AnalysisCaseService(
@@ -77,22 +77,18 @@ public class AnalysisCaseService extends SigoService <AnalysisCase, AnalysisCase
     }
 
     @Override
-    protected void preCreateActions(AnalysisCase object, AnalysisCase parent) {
+    protected void preCreateActions(AnalysisCase object, Analysis parent) {
         super.preCreateActions(object, parent);
 
-        object.setBaseCase(parent);
-        object.setAerodrome(parent.getAerodrome());
-        object.setStatus(AnalysisCaseStatuses.OPEN);
         object.setExceptions(Sets.newHashSet());
         object.setObjects(Lists.newArrayList());
-        object.setStage(AnalysisWizardStages.OBJECT);
     }
 
     @Override
-    protected void postCreateActions(AnalysisCase object, AnalysisCase parent) {
-        super.postCreateActions(object, parent);
+    protected void postCreateActions(AnalysisCase analysisCase, Analysis parent) {
+        super.postCreateActions(analysisCase, parent);
 
-        initializeObjects(object);
+        initializeObjects(analysisCase);
     }
 
     private void initializeObjects(AnalysisCase analysisCase) {
@@ -113,32 +109,6 @@ public class AnalysisCaseService extends SigoService <AnalysisCase, AnalysisCase
     private void discardObjects(AnalysisCase analysisCase) {
         analysisCase.getObjects().forEach( o -> currentSession().delete(o));
         analysisCase.getObjects().clear();
-    }
-
-    @Override
-    protected void validateCreation(AnalysisCase object, AnalysisCase parent) {
-        super.validateCreation(object, parent);
-
-        if(checkAnyCaseOpen(parent.getAerodrome()))
-            throw new BusinessConstrainException("Cannot create a case, because any open case already exists.");
-
-    }
-
-    private boolean checkAnyCaseOpen(Airport aerodrome) {
-
-        CriteriaBuilder builder = currentSession().getCriteriaBuilder();
-
-        CriteriaQuery<AnalysisCase> criteria = builder.createQuery(AnalysisCase.class);
-
-        Root<AnalysisCase> analysisCase = criteria.from(AnalysisCase.class);
-
-        Predicate predicate1 = builder.equal(analysisCase.get(AnalysisCase_.aerodrome.getName()), aerodrome.getId());
-
-        Predicate predicate2 = builder.equal(analysisCase.get(AnalysisCase_.status.getName()), AnalysisCaseStatuses.OPEN);
-
-        criteria.where(predicate1, predicate2);
-
-        return ! currentSession().createQuery(criteria).getResultList().isEmpty();
     }
 
     public void updateObjects(AnalysisCase analysisCase){
@@ -175,13 +145,13 @@ public class AnalysisCaseService extends SigoService <AnalysisCase, AnalysisCase
 
         CriteriaQuery<T> criteria = builder.createQuery(clazz);
 
-        Root<T> individual = criteria.from(clazz);
+        Root<T> placedObject = criteria.from(clazz);
 
 
         ParameterExpression bufferParam = builder.parameter(Geometry.class);
 
 
-        Expression<Boolean> st_coveredby = builder.function("st_coveredby", Boolean.class, individual.get(PlacedObjectIndividual_.geom.getName()), bufferParam);
+        Expression<Boolean> st_coveredby = builder.function("st_coveredby", Boolean.class, placedObject.get("geom"), bufferParam);
 
         criteria.where(builder.isTrue(st_coveredby));
 
@@ -190,4 +160,5 @@ public class AnalysisCaseService extends SigoService <AnalysisCase, AnalysisCase
 
         return query.getResultList();
     }
+
 }

@@ -4,6 +4,7 @@ import ar.edu.utn.frba.proyecto.sigo.domain.SigoDomain;
 import ar.edu.utn.frba.proyecto.sigo.domain.airport.Airport;
 import ar.edu.utn.frba.proyecto.sigo.domain.regulation.Regulation;
 import ar.edu.utn.frba.proyecto.sigo.domain.regulation.Regulations;
+import com.google.common.base.MoreObjects;
 import lombok.*;
 import org.hibernate.annotations.LazyToOne;
 import org.hibernate.annotations.LazyToOneOption;
@@ -11,6 +12,7 @@ import org.hibernate.annotations.LazyToOneOption;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @Entity
@@ -26,13 +28,9 @@ public class AnalysisCase extends SigoDomain {
     @Column(name = "case_id")
     private Long id;
 
-    @OneToOne
-    @JoinColumn(name = "case_id")
-    private AnalysisCase baseCase;
-
-    @Enumerated(EnumType.ORDINAL)
-    @Column(name = "status_id")
-    private AnalysisCaseStatuses status;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "analysis_id")
+    private Analysis analysis;
 
     @ManyToOne
     @JoinColumn(name = "aerodrome_id")
@@ -50,23 +48,20 @@ public class AnalysisCase extends SigoDomain {
     @OneToMany(mappedBy = "analysisCase", cascade = CascadeType.REMOVE)
     private List<AnalysisObject> objects;
 
-   /*
-    TODO
-    @OneToMany(mappedBy="analyscase")
-    private Set<AnalysisCaseStatusRegistry> analyscasestatusregistrys;
-    */
-
     @OneToMany(mappedBy="analysisCase", cascade = CascadeType.REMOVE)
     private Set<AnalysisException> exceptions;
 
-    @Enumerated(EnumType.ORDINAL)
-    @Column(name = "stage_id")
-    private AnalysisWizardStages stage;
 
-    @Column(name="creation_date")
-    private LocalDateTime creationDate;
+    public String toString(){
 
-   public Regulations getRegulation(){
+        return MoreObjects.toStringHelper(this)
+                .add("id", id)
+                .add("airport", aerodrome.getId())
+                .add("analysis", analysis.getId())
+                .toString();
+    }
+
+    public Regulations getRegulation(){
        return this.getAerodrome().getRegulation();
    }
 }

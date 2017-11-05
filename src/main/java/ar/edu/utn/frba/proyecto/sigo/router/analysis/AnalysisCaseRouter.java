@@ -46,12 +46,6 @@ public class AnalysisCaseRouter extends SigoRouter {
         this.hibernateUtil = hibernateUtil;
     }
 
-    private final Route searchCases = doInTransaction(false, (request, response) -> {
-        return this.caseService.find(request.queryMap())
-            .stream()
-            .map(c -> caseTranslator.getAsDTO(c))
-            .collect(Collectors.toList());
-    });
 
     /**
      * Get calculated objects (static)
@@ -81,37 +75,16 @@ public class AnalysisCaseRouter extends SigoRouter {
                 .collect(Collectors.toList());
     });
 
-    /**
-     * Create a case depending on older case.
-     */
-    private final Route createCase = doInTransaction(true, (request, response) -> {
-
-        JsonObject jsonObject = objectMapper.fromJson(request.body(), JsonObject.class);
-
-        if(!jsonObject.has("baseId"))
-            throw new MissingParameterException("baseId");
-
-        AnalysisCase baseCase = this.caseService.get(jsonObject.get("baseId").getAsLong());
-
-        AnalysisCase analysisCase = this.caseService.create(new AnalysisCase(), baseCase);
-
-        return caseTranslator.getAsDTO(analysisCase);
-    });
-
     @Override
     public RouteGroup routes() {
         return ()->{
-            post("", createCase, jsonTransformer);
-            get("", searchCases, jsonTransformer);
-            //TODO get("/on-going", searchOnGoingCases, jsonTransformer);
-
-            get(format("/:%s/objects", CASE_ID_PARAM), fetchAnalysisObject, jsonTransformer);
-            put(format("/:%s/objects", CASE_ID_PARAM), updateAnalysisObject, jsonTransformer);
+            get("/objects", fetchAnalysisObject, jsonTransformer);
+            put("/objects", updateAnalysisObject, jsonTransformer);
         };
     }
 
     @Override
     public String path() {
-        return "/analysis/cases";
+        return "/analysis/:" + ANALYSIS_ID_PARAM + "/case";
     }
 }

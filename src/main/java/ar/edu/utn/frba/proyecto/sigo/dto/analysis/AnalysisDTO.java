@@ -10,9 +10,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 @Data
 @Builder
-public class AnalysisCaseDTO {
+public class AnalysisDTO {
     private Long id;
+    private Long caseId;
+    private Long parentId;
+    private Long creationDate;
+    private Integer stageId;
+    private Integer statusId;
     private Long airportId;
-    private Integer regulationId;
-    private Long areaId;
 }
