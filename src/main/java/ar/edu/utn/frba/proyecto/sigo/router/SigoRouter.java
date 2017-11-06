@@ -72,7 +72,7 @@ public abstract class SigoRouter extends Router {
         return getParam(request, REGULATION_ID_PARAM);
     }
 
-    protected Long getParamCaseId(Request request){
+    protected Long getParamAnalysisId(Request request){
         return getParam(request, ANALYSIS_ID_PARAM);
     }
 

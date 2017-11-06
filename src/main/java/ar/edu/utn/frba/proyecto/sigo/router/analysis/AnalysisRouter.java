@@ -1,7 +1,6 @@
 package ar.edu.utn.frba.proyecto.sigo.router.analysis;
 
 import ar.edu.utn.frba.proyecto.sigo.domain.analysis.Analysis;
-import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisCase;
 import ar.edu.utn.frba.proyecto.sigo.exception.MissingParameterException;
 import ar.edu.utn.frba.proyecto.sigo.persistence.HibernateUtil;
 import ar.edu.utn.frba.proyecto.sigo.router.SigoRouter;
@@ -12,7 +11,6 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import spark.Route;
 import spark.RouteGroup;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import javax.inject.Inject;
 import java.util.stream.Collectors;
@@ -68,11 +66,24 @@ public class AnalysisRouter extends SigoRouter {
         return analysisTranslator.getAsDTO(analysisCase);
     });
 
+
+    /**
+     * Get an analysis instance by its identifier
+     */
+    private final Route fetchAnalysis = doInTransaction(false, (request, response) -> {
+
+        Analysis analysis = this.analysisService.get(getParamAnalysisId(request));
+
+        return analysisTranslator.getAsDTO(analysis);
+    });
+
     @Override
     public RouteGroup routes() {
         return ()->{
             post("", createAnalysis, jsonTransformer);
             get("", searchAnalysis, jsonTransformer);
+
+            get("/:" + ANALYSIS_ID_PARAM, fetchAnalysis, jsonTransformer);
         };
     }
 
