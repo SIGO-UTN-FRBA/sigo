@@ -38,4 +38,7 @@ public class AnalysisObject extends SigoDomain {
 
     @ManyToOne
     private AnalysisCase analysisCase;
+
+    @Column
+    private Boolean included;
 }

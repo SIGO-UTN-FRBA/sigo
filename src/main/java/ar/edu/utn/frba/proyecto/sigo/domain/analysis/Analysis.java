@@ -1,6 +1,7 @@
 package ar.edu.utn.frba.proyecto.sigo.domain.analysis;
 
 import ar.edu.utn.frba.proyecto.sigo.domain.SigoDomain;
+import ar.edu.utn.frba.proyecto.sigo.domain.object.PlacedObject;
 import com.google.common.base.MoreObjects;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -64,5 +65,9 @@ public class Analysis extends SigoDomain {
                 .add("stage", stage.name())
                 .add("parent", Optional.ofNullable(parent).map(p -> p.id ).orElse(0L))
                 .toString();
+    }
+
+    public Boolean isObjectAnalyzed(PlacedObject o) {
+        return this.getAnalysisCase().isObjectAnalyzed(o);
     }
 }

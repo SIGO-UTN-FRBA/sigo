@@ -2,6 +2,7 @@ package ar.edu.utn.frba.proyecto.sigo.domain.analysis;
 
 import ar.edu.utn.frba.proyecto.sigo.domain.SigoDomain;
 import ar.edu.utn.frba.proyecto.sigo.domain.airport.Airport;
+import ar.edu.utn.frba.proyecto.sigo.domain.object.PlacedObject;
 import ar.edu.utn.frba.proyecto.sigo.domain.regulation.Regulation;
 import ar.edu.utn.frba.proyecto.sigo.domain.regulation.Regulations;
 import com.google.common.base.MoreObjects;
@@ -12,6 +13,7 @@ import org.hibernate.annotations.LazyToOneOption;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
@@ -64,4 +66,10 @@ public class AnalysisCase extends SigoDomain {
     public Regulations getRegulation(){
        return this.getAerodrome().getRegulation();
    }
+
+    public Boolean isObjectAnalyzed(PlacedObject o) {
+        return this.getObjects()
+                .stream()
+                .anyMatch(r -> r.getIncluded() && Objects.equals(r.getPlacedObject().getId(), o.getId()));
+    }
 }
