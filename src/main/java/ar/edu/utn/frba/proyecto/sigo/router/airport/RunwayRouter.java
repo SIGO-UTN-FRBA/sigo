@@ -12,6 +12,7 @@ import ar.edu.utn.frba.proyecto.sigo.spark.JsonTransformer;
 import com.google.gson.Gson;
 import com.vividsolutions.jts.geom.Polygon;
 import org.eclipse.jetty.http.HttpStatus;
+import org.opengis.feature.simple.SimpleFeature;
 import spark.Request;
 import spark.Response;
 import spark.Route;
@@ -49,7 +50,7 @@ public class RunwayRouter extends SigoRouter {
     }
 
     /**
-     * Get runways releated to an airport
+     * Get runways related to an airport
      */
     private final Route fetchRunways = doInTransaction(false, (Request request, Response response) ->{
 
@@ -88,27 +89,27 @@ public class RunwayRouter extends SigoRouter {
     });
 
     /**
-     * Create polygon for a runway
+     * Update runway's geometry (polygon)
      */
-    private final Route defineGeometry = doInTransaction(true, (Request request, Response response) -> {
+    private final Route updateFeature = doInTransaction(true, (Request request, Response response) -> {
 
         Runway runway = runwayService.get(getParamRunwayId(request));
 
-        Polygon geometry = objectMapper.fromJson(request.body(), Polygon.class);
+        SimpleFeature feature = featureFromGeoJson(request.body());
 
-        runwayService.defineGeometry(geometry, runway);
+        runwayService.updateGeometry((Polygon)feature.getDefaultGeometry(), runway);
 
-        return geometry;
+        return runway.getGeom();
     });
 
     /**
-     * Get polygon for a runway
+     * Get runway as feature
      */
-    private final Route fetchGeometry = doInTransaction(false, (Request request, Response response) -> {
+    private final Route fetchFeature = doInTransaction(false, (Request request, Response response) -> {
 
         Runway runway = runwayService.get(getParamRunwayId(request));
 
-        return runway.getGeom();
+        return featureToGeoJson(runwayService.getFeature(runway));
     });
 
     /**
@@ -148,8 +149,8 @@ public class RunwayRouter extends SigoRouter {
             put(format("/:%s", RUNWAY_ID_PARAM), updateRunway, jsonTransformer);
             delete(format("/:%s", RUNWAY_ID_PARAM), deleteRunway);
 
-            get(format("/:%s/geometry", RUNWAY_ID_PARAM), fetchGeometry, jsonTransformer);
-            post(format("/:%s/geometry", RUNWAY_ID_PARAM), defineGeometry, jsonTransformer);
+            get(format("/:%s/feature", RUNWAY_ID_PARAM), fetchFeature, jsonTransformer);
+            patch(format("/:%s/feature", RUNWAY_ID_PARAM), updateFeature, jsonTransformer);
         };
     }
 

@@ -1,7 +1,6 @@
 package ar.edu.utn.frba.proyecto.sigo.router.airport;
 
 import ar.edu.utn.frba.proyecto.sigo.domain.airport.*;
-import ar.edu.utn.frba.proyecto.sigo.domain.airport.icao.RunwayClassificationICAOAnnex14;
 import ar.edu.utn.frba.proyecto.sigo.dto.airport.RunwayApproachSectionDTO;
 import ar.edu.utn.frba.proyecto.sigo.dto.airport.RunwayClassificationDTO;
 import ar.edu.utn.frba.proyecto.sigo.dto.airport.RunwayDistanceDTO;
@@ -143,7 +142,7 @@ public class RunwayDirectionRouter extends SigoRouter {
 
         Point geometry = objectMapper.fromJson(request.body(), Point.class);
 
-        directionService.defineGeometry(geometry, direction);
+        directionService.updateGeometry(geometry, direction);
 
         return geometry;
     });

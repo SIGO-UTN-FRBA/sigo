@@ -113,7 +113,7 @@ public abstract class SigoService<ENTITY extends SigoDomain, PARENT_ENTITY exten
         //TODO
     }
 
-    public void defineGeometry(Geometry geom, Spatial domain) {
+    public void updateGeometry(Geometry geom, Spatial domain) {
 
         domain.setGeom(geom);
 
