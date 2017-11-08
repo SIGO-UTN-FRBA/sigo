@@ -1,5 +1,7 @@
 package ar.edu.utn.frba.proyecto.sigo.router.airport;
 
+import ar.edu.utn.frba.proyecto.sigo.exception.InvalidParameterException;
+import ar.edu.utn.frba.proyecto.sigo.exception.SigoException;
 import ar.edu.utn.frba.proyecto.sigo.persistence.HibernateUtil;
 import ar.edu.utn.frba.proyecto.sigo.router.SigoRouter;
 import ar.edu.utn.frba.proyecto.sigo.service.airport.AirportTranslator;
@@ -8,8 +10,11 @@ import ar.edu.utn.frba.proyecto.sigo.domain.airport.Airport;
 import ar.edu.utn.frba.proyecto.sigo.dto.airport.AirportDTO;
 import ar.edu.utn.frba.proyecto.sigo.spark.JsonTransformer;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.vividsolutions.jts.geom.Point;
 import org.eclipse.jetty.http.HttpStatus;
+import org.geotools.geojson.feature.FeatureJSON;
+import org.opengis.feature.simple.SimpleFeature;
 import spark.Request;
 import spark.Response;
 import spark.Route;
@@ -17,6 +22,9 @@ import spark.RouteGroup;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+
+import java.io.ByteArrayOutputStream;
+import java.io.OutputStream;
 
 import static java.lang.String.*;
 import static java.util.stream.Collectors.toList;
@@ -106,27 +114,50 @@ public class AirportRouter extends SigoRouter {
     });
 
     /**
-     * Get point given an airport identifier
+     * Get airport's feature
      */
-    private final Route fetchGeometry = doInTransaction(false, (Request request, Response response) -> {
+    private final Route fetchFeature = doInTransaction(false, (Request request, Response response) -> {
+
+        JsonObject feature;
 
         Airport airport = airportService.get(getParamAirportId(request));
 
-        return airport.getGeom();
+        try(OutputStream outputStream = new ByteArrayOutputStream()) {
+
+            new FeatureJSON().writeFeature(airportService.getFeature(airport), outputStream);
+
+            feature = objectMapper.fromJson(outputStream.toString(),JsonObject.class);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new SigoException(e);
+        }
+
+        return feature;
     });
 
     /**
-     * Create point for an airport
+     * Update airport's geometry (point)
      */
-    private final Route defineGeometry = doInTransaction(true, (Request request, Response response) -> {
+    private final Route updateFeature = doInTransaction(true, (Request request, Response response) -> {
 
-        Point point = objectMapper.fromJson(request.body(), Point.class);
+        SimpleFeature feature;
 
         Airport airport = airportService.get(getParamAirportId(request));
 
+        try {
+            feature = new FeatureJSON().readFeature(request.body());
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new InvalidParameterException("Malformed point geometry.",e);
+        }
+
+        Point point = (Point)feature.getDefaultGeometry();
+
         airportService.defineGeometry(point, airport);
 
-        return point;
+        return airportService.getFeature(airport);
     });
 
     @SuppressWarnings("Duplicates")
@@ -140,8 +171,8 @@ public class AirportRouter extends SigoRouter {
             put(format("/:%s", AIRPORT_ID_PARAM), updateAirport, jsonTransformer);
             delete(format("/:%s", AIRPORT_ID_PARAM), deleteAirport);
 
-            get(format("/:%s/geometry", AIRPORT_ID_PARAM), fetchGeometry, jsonTransformer);
-            post(format("/:%s/geometry", AIRPORT_ID_PARAM), defineGeometry, jsonTransformer);
+            get(format("/:%s/feature", AIRPORT_ID_PARAM), fetchFeature, jsonTransformer);
+            patch(format("/:%s/feature", AIRPORT_ID_PARAM), updateFeature, jsonTransformer);
         };
     }
 
