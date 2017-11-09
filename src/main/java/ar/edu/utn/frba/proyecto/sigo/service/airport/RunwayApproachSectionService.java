@@ -7,6 +7,11 @@ import ar.edu.utn.frba.proyecto.sigo.service.SigoService;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.Polygon;
+import org.geotools.feature.simple.SimpleFeatureBuilder;
+import org.geotools.feature.simple.SimpleFeatureTypeBuilder;
+import org.geotools.referencing.crs.DefaultGeographicCRS;
+import org.opengis.feature.simple.SimpleFeature;
+import org.opengis.feature.simple.SimpleFeatureType;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -23,8 +28,20 @@ public class RunwayApproachSectionService extends SigoService<RunwayApproachSect
         super(RunwayApproachSection.class, hibernateUtil.getSessionFactory());
     }
 
-    public Polygon getThresholdGeometry(RunwayDirection runwayDirection) {
+    public SimpleFeature getThresholdFeature(RunwayDirection runwayDirection) {
 
+        return SimpleFeatureBuilder.build(
+                getThresholdFeatureSchema(),
+                new Object[]{
+                        calculateThresholdGeometry(runwayDirection),
+                        "Runway",
+                        runwayDirection.getApproachSection().getThresholdLength()
+                },
+                runwayDirection.getApproachSection().getId().toString()
+        );
+    }
+
+    private Polygon calculateThresholdGeometry(RunwayDirection runwayDirection) {
         final Coordinate[] runwayCoordinates = runwayDirection.getRunway().getGeom().getCoordinates();
 
         List<Coordinate> extremes = Arrays.stream(runwayCoordinates)
@@ -46,6 +63,17 @@ public class RunwayApproachSectionService extends SigoService<RunwayApproachSect
         Coordinate extreme3 = move(extreme4, azimuth, -1 * runwayDirection.getApproachSection().getThresholdLength());
 
         return new GeometryFactory().createPolygon(new Coordinate[]{extreme1, extreme2, extreme3, extreme4, extreme1});
+    }
+
+    private SimpleFeatureType getThresholdFeatureSchema() {
+        SimpleFeatureTypeBuilder tb = new SimpleFeatureTypeBuilder();
+
+        tb.setName("Threshold Displaced");
+        tb.add("geom", java.awt.Polygon.class, DefaultGeographicCRS.WGS84);
+        tb.add("class", String.class);
+        tb.add("length", Double.class);
+
+        return tb.buildFeatureType();
     }
 
 }

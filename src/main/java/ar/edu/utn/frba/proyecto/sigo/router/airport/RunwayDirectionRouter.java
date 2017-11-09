@@ -250,22 +250,25 @@ public class RunwayDirectionRouter extends SigoRouter {
         return distances;
     });
 
-    private final Route calculateThresholdGeometry = doInTransaction(false, (request, response) -> {
+    private final Route getThresholdFeature = doInTransaction(false, (request, response) -> {
+
         RunwayDirection direction = directionService.get(getParamDirectionId(request));
 
-        return approachService.getThresholdGeometry(direction);
+        return featureToGeoJson(approachService.getThresholdFeature(direction));
     });
 
-    private final Route calculateClearwayGeometry= doInTransaction(false, (request, response) -> {
+    private final Route getClearwayFeature = doInTransaction(false, (request, response) -> {
+
         RunwayDirection direction = directionService.get(getParamDirectionId(request));
 
-        return takeoffService.getClearwayGeometry(direction);
+        return featureToGeoJson(takeoffService.getClearwayFeature(direction));
     });
 
-    private final Route calculateStopwayGeometry = doInTransaction(false, (request, response) -> {
+    private final Route getStopwayFeature = doInTransaction(false, (request, response) -> {
+
         RunwayDirection direction = directionService.get(getParamDirectionId(request));
 
-        return takeoffService.getStopwayGeometry(direction);
+        return featureToGeoJson(takeoffService.getStopwayFeature(direction));
     });
 
     private final Route fetchClassification = doInTransaction(false, (request, response) -> {
@@ -305,12 +308,12 @@ public class RunwayDirectionRouter extends SigoRouter {
 
             get(format("/:%s/sections/approach", RUNWAY_DIRECTION_ID_PARAM), fetchApproachSection, jsonTransformer);
             put(format("/:%s/sections/approach", RUNWAY_DIRECTION_ID_PARAM), updateApproachSection, jsonTransformer);
-            get(format("/:%s/sections/approach/geometries/threshold", RUNWAY_DIRECTION_ID_PARAM), calculateThresholdGeometry, jsonTransformer);
+            get(format("/:%s/sections/approach/threshold/feature", RUNWAY_DIRECTION_ID_PARAM), getThresholdFeature, jsonTransformer);
 
             get(format("/:%s/sections/takeoff", RUNWAY_DIRECTION_ID_PARAM), fetchTakeoffSection, jsonTransformer);
             put(format("/:%s/sections/takeoff", RUNWAY_DIRECTION_ID_PARAM), updateTakeoffSection, jsonTransformer);
-            get(format("/:%s/sections/takeoff/geometries/clearway", RUNWAY_DIRECTION_ID_PARAM), calculateClearwayGeometry, jsonTransformer);
-            get(format("/:%s/sections/takeoff/geometries/stopway", RUNWAY_DIRECTION_ID_PARAM), calculateStopwayGeometry, jsonTransformer);
+            get(format("/:%s/sections/takeoff/clearway/feature", RUNWAY_DIRECTION_ID_PARAM), getClearwayFeature, jsonTransformer);
+            get(format("/:%s/sections/takeoff/stopway/feature", RUNWAY_DIRECTION_ID_PARAM), getStopwayFeature, jsonTransformer);
         };
     }
 
