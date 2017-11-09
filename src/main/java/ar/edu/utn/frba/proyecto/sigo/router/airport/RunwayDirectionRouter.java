@@ -14,6 +14,7 @@ import com.google.common.collect.Lists;
 import com.google.gson.Gson;
 import com.vividsolutions.jts.geom.Point;
 import org.eclipse.jetty.http.HttpStatus;
+import org.opengis.feature.simple.SimpleFeature;
 import spark.Route;
 import spark.RouteGroup;
 
@@ -134,28 +135,28 @@ public class RunwayDirectionRouter extends SigoRouter {
 
 
     /**
-     * Create point for a runway direction
+     * Update runway direction's geometry (point)
      */
-    private final Route defineGeometry = doInTransaction(true, (request, response) -> {
+    private final Route updateFeature = doInTransaction(true, (request, response) -> {
 
         RunwayDirection direction = directionService.get(getParamDirectionId(request));
 
-        Point geometry = objectMapper.fromJson(request.body(), Point.class);
+        SimpleFeature feature = featureFromGeoJson(request.body());
 
-        directionService.updateGeometry(geometry, direction);
+        directionService.updateGeometry((Point)feature.getDefaultGeometry(), direction);
 
-        return geometry;
+        return direction.getGeom();
     });
 
 
     /**
-     * Get point for a runway direction
+     * Get runway direction as feature
      */
-    private final Route fetchGeometry = doInTransaction(false, (request, response) -> {
+    private final Route fetchFeature = doInTransaction(false, (request, response) -> {
 
         RunwayDirection direction = directionService.get(getParamDirectionId(request));
 
-        return direction.getGeom();
+        return featureToGeoJson(directionService.getFeature(direction));
     });
 
     /**
@@ -297,8 +298,8 @@ public class RunwayDirectionRouter extends SigoRouter {
             get(format("/:%s/classification", RUNWAY_DIRECTION_ID_PARAM), fetchClassification, jsonTransformer);
             put(format("/:%s/classification", RUNWAY_DIRECTION_ID_PARAM), updateClassification, jsonTransformer);
 
-            get(format("/:%s/geometry", RUNWAY_DIRECTION_ID_PARAM), fetchGeometry, jsonTransformer);
-            post(format("/:%s/geometry", RUNWAY_DIRECTION_ID_PARAM), defineGeometry, jsonTransformer);
+            get(format("/:%s/feature", RUNWAY_DIRECTION_ID_PARAM), fetchFeature, jsonTransformer);
+            patch(format("/:%s/feature", RUNWAY_DIRECTION_ID_PARAM), updateFeature, jsonTransformer);
 
             get(format("/:%s/distances", RUNWAY_DIRECTION_ID_PARAM), calculateDistances, jsonTransformer);
 

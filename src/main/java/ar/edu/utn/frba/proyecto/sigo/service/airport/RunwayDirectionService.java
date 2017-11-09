@@ -4,8 +4,14 @@ import ar.edu.utn.frba.proyecto.sigo.domain.airport.*;
 import ar.edu.utn.frba.proyecto.sigo.domain.airport.icao.RunwayClassificationICAOAnnex14;
 import ar.edu.utn.frba.proyecto.sigo.persistence.HibernateUtil;
 import ar.edu.utn.frba.proyecto.sigo.service.SigoService;
+import org.geotools.feature.simple.SimpleFeatureBuilder;
+import org.geotools.feature.simple.SimpleFeatureTypeBuilder;
+import org.geotools.referencing.crs.DefaultGeographicCRS;
+import org.opengis.feature.simple.SimpleFeature;
+import org.opengis.feature.simple.SimpleFeatureType;
 
 import javax.inject.Inject;
+import java.awt.*;
 import java.util.HashMap;
 
 import static org.reflections.util.ConfigurationBuilder.build;
@@ -67,5 +73,33 @@ public class RunwayDirectionService extends SigoService<RunwayDirection, Runway>
                 .build();
 
         currentSession().save(classification);
+    }
+
+    public SimpleFeature getFeature(RunwayDirection direction) {
+
+        return SimpleFeatureBuilder.build(
+                getFeatureSchema(),
+                new Object[]{
+                        direction.getGeom(),
+                        "Direction",
+                        direction.getNumber().toString(),
+                        direction.getPosition().position(),
+                        direction.getAzimuth()
+                },
+                direction.getId().toString()
+        );
+    }
+
+    private SimpleFeatureType getFeatureSchema() {
+        SimpleFeatureTypeBuilder tb = new SimpleFeatureTypeBuilder();
+
+        tb.setName("Direction");
+        tb.add("geom", Polygon.class, DefaultGeographicCRS.WGS84);
+        tb.add("class", String.class);
+        tb.add("number", String.class);
+        tb.add("position", String.class);
+        tb.add("azimuth", Double.class);
+
+        return tb.buildFeatureType();
     }
 }

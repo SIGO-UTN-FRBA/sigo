@@ -112,8 +112,6 @@ public class AirportRouter extends SigoRouter {
      */
     private final Route fetchFeature = doInTransaction(false, (Request request, Response response) -> {
 
-        JsonObject feature;
-
         Airport airport = airportService.get(getParamAirportId(request));
 
         return featureToGeoJson(airportService.getFeature(airport));
