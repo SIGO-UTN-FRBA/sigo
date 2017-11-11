@@ -2,7 +2,6 @@ package ar.edu.utn.frba.proyecto.sigo.domain.airport;
 
 import ar.edu.utn.frba.proyecto.sigo.domain.SigoDomain;
 import ar.edu.utn.frba.proyecto.sigo.domain.Spatial;
-import ar.edu.utn.frba.proyecto.sigo.service.airport.RunwayClassificationVisitor;
 import com.google.common.base.MoreObjects;
 import com.vividsolutions.jts.geom.Point;
 import lombok.*;
@@ -50,6 +49,8 @@ public class RunwayDirection extends SigoDomain implements Spatial<Point> {
     @OneToOne(mappedBy = "runwayDirection", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private RunwayClassification classification;
 
+    @Column(name = "height")
+    private Double height;
 
     public String getIdentifier(){
 

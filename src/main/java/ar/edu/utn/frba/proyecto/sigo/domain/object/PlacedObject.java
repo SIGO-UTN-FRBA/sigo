@@ -5,12 +5,9 @@ import javax.persistence.*;
 import ar.edu.utn.frba.proyecto.sigo.domain.SigoDomain;
 import ar.edu.utn.frba.proyecto.sigo.domain.Spatial;
 import ar.edu.utn.frba.proyecto.sigo.domain.location.PoliticalLocation;
-import ar.edu.utn.frba.proyecto.sigo.exception.SigoException;
 import com.google.common.base.MoreObjects;
 import com.vividsolutions.jts.geom.Geometry;
 import lombok.*;
-import org.hibernate.annotations.LazyToOne;
-import org.hibernate.annotations.LazyToOneOption;
 
 @Entity
 @Table(name = "public.tbl_placed_object")
@@ -74,4 +71,6 @@ public abstract class PlacedObject extends SigoDomain implements Spatial<Geometr
                 .add("name:", name)
                 .toString();
     }
+
+    public abstract <T> T accept(PlacedObjectVisitor<T> visitor);
 }

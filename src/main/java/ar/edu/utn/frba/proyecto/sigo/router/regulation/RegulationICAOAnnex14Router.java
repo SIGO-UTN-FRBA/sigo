@@ -43,6 +43,8 @@ public class RegulationICAOAnnex14Router extends SigoRouter {
             OlsRuleService ruleService,
             OlsRuleICAOAnnex14Translator icaoAnnex14Translator
     ){
+        super(null, hibernateUtil);
+
         this.ruleService = ruleService;
         this.icaoAnnex14Translator = icaoAnnex14Translator;
         this.hibernateUtil = hibernateUtil;

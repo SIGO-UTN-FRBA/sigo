@@ -53,6 +53,9 @@ public class AnalysisCase extends SigoDomain {
     @OneToMany(mappedBy="analysisCase", cascade = CascadeType.REMOVE)
     private Set<AnalysisException> exceptions;
 
+    @Column(name="search_radius")
+    private Double searchRadius;
+
 
     public String toString(){
 

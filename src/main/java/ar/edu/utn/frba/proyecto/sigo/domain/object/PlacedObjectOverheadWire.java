@@ -1,11 +1,9 @@
 package ar.edu.utn.frba.proyecto.sigo.domain.object;
 
-import ar.edu.utn.frba.proyecto.sigo.domain.Spatial;
 import ar.edu.utn.frba.proyecto.sigo.domain.location.PoliticalLocation;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.MultiLineString;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -49,6 +47,11 @@ public class PlacedObjectOverheadWire extends PlacedObject {
     @Override
     public Class getGeomClass() {
         return MultiLineString.class;
+    }
+
+    @Override
+    public <T> T accept(PlacedObjectVisitor<T> visitor) {
+        return visitor.visitPlacedObjectOverheadWire(this);
     }
 
 }

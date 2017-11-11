@@ -30,11 +30,11 @@ public class RegionRouter extends SigoRouter {
             RegionService regionService,
             RegionTranslator translator
     ) {
+        super(objectMapper, hibernateUtil);
+
         this.jsonTransformer = jsonTransformer;
         this.regionService = regionService;
-        this.objectMapper = objectMapper;
         this.translator = translator;
-        this.hibernateUtil = hibernateUtil;
     }
 
     private final Route fetchRegions = doInTransaction(false,(request, response) -> {

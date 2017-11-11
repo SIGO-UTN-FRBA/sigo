@@ -26,6 +26,7 @@ public class CatalogObjectRouter extends SigoRouter {
         JsonTransformer jsonTransformer,
         CatalogObjectService catalogService
     ){
+        super(null, null);
 
         this.jsonTransformer = jsonTransformer;
         this.catalogService = catalogService;

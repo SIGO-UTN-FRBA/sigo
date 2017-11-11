@@ -39,11 +39,11 @@ public class AirportRouter extends SigoRouter {
             AirportService airportService,
             AirportTranslator translator
     ) {
+        super(objectMapper, hibernateUtil);
+
         this.jsonTransformer = jsonTransformer;
         this.airportService = airportService;
-        this.objectMapper = objectMapper;
         this.translator = translator;
-        this.hibernateUtil = hibernateUtil;
     }
 
     /**

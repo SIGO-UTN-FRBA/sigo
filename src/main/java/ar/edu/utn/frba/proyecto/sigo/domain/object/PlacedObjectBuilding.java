@@ -1,6 +1,5 @@
 package ar.edu.utn.frba.proyecto.sigo.domain.object;
 
-import ar.edu.utn.frba.proyecto.sigo.domain.Spatial;
 import ar.edu.utn.frba.proyecto.sigo.domain.location.PoliticalLocation;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.MultiPolygon;
@@ -47,5 +46,10 @@ public class PlacedObjectBuilding extends PlacedObject {
     @Override
     public Class getGeomClass() {
         return MultiPolygon.class;
+    }
+
+    @Override
+    public <T> T accept(PlacedObjectVisitor<T> visitor) {
+        return visitor.visitPlacedObjectBuilding(this);
     }
 }

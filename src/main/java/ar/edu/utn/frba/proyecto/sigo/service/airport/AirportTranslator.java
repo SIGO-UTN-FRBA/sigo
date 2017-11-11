@@ -34,6 +34,7 @@ public class AirportTranslator extends Translator<Airport, AirportDTO> {
                 .id(domain.getId())
                 .codeFIR(domain.getCodeFIR())
                 .codeIATA(domain.getCodeIATA())
+                .codeLocal(domain.getCodeLocal())
                 .nameFIR(domain.getNameFIR())
                 .regionId(domain.getRegion().getId())
                 .regulationId(domain.getRegulation().ordinal())
@@ -50,6 +51,7 @@ public class AirportTranslator extends Translator<Airport, AirportDTO> {
             .id(dto.getId())
             .codeFIR(dto.getCodeFIR())
             .codeIATA(dto.getCodeIATA())
+            .codeLocal(dto.getCodeLocal())
             .nameFIR(dto.getNameFIR())
             .regulation(Regulations.values()[dto.getRegulationId()]);
 

@@ -30,6 +30,7 @@ public class RegulationFAARouter extends SigoRouter {
             HibernateUtil hibernateUtil,
             JsonTransformer jsonTransformer
     ){
+        super(null, hibernateUtil);
 
         this.jsonTransformer = jsonTransformer;
         this.hibernateUtil = hibernateUtil;

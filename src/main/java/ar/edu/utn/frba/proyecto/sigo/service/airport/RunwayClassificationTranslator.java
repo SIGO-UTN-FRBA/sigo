@@ -1,6 +1,7 @@
 package ar.edu.utn.frba.proyecto.sigo.service.airport;
 
 import ar.edu.utn.frba.proyecto.sigo.domain.airport.RunwayClassification;
+import ar.edu.utn.frba.proyecto.sigo.domain.airport.RunwayClassificationVisitor;
 import ar.edu.utn.frba.proyecto.sigo.domain.airport.RunwayDirection;
 import ar.edu.utn.frba.proyecto.sigo.domain.airport.faa.RunwayClassificationFAA;
 import ar.edu.utn.frba.proyecto.sigo.domain.airport.icao.RunwayClassificationICAOAnnex14;
@@ -81,7 +82,7 @@ public class RunwayClassificationTranslator extends Translator<RunwayClassificat
         return builder.build();
     }
 
-    private class ToDTO implements RunwayClassificationVisitor<RunwayClassificationDTO>{
+    private class ToDTO implements RunwayClassificationVisitor<RunwayClassificationDTO> {
 
         @Override
         public RunwayClassificationDTO visitRunwayClassificationICAOAnnex14(RunwayClassificationICAOAnnex14 domain) {

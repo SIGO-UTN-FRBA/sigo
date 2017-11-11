@@ -1,6 +1,5 @@
 package ar.edu.utn.frba.proyecto.sigo.domain.analysis;
 
-import ar.edu.utn.frba.proyecto.sigo.service.analysis.AnalysisExceptionVisitor;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Data;

@@ -67,7 +67,9 @@ public class AnalysisCaseService extends SigoService <AnalysisCase, Analysis> {
         analysisCase.getObjects().clear();
     }
 
-    public void updateObjects(AnalysisCase analysisCase){
+    public void updateObjects(AnalysisCase analysisCase, Double radius){
+
+        analysisCase.setSearchRadius(radius);
 
         discardObjects(analysisCase);
 
@@ -78,9 +80,7 @@ public class AnalysisCaseService extends SigoService <AnalysisCase, Analysis> {
 
         List<PlacedObject> placedObjects = Lists.newArrayList();
 
-        Double ratio = 0.1D;
-
-        Geometry buffer = analysisCase.getAerodrome().getGeom().buffer(ratio);
+        Geometry buffer = analysisCase.getAerodrome().getGeom().buffer(analysisCase.getSearchRadius());
 
         buffer.setSRID(4326);
 
