@@ -1,4 +1,4 @@
-package ar.edu.utn.frba.proyecto.sigo.service.analysis;
+package ar.edu.utn.frba.proyecto.sigo.domain.analysis;
 
 import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisExceptionAvailability;
 import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisExceptionRule;

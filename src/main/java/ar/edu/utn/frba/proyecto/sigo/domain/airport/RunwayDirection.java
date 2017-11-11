@@ -2,7 +2,6 @@ package ar.edu.utn.frba.proyecto.sigo.domain.airport;
 
 import ar.edu.utn.frba.proyecto.sigo.domain.SigoDomain;
 import ar.edu.utn.frba.proyecto.sigo.domain.Spatial;
-import ar.edu.utn.frba.proyecto.sigo.service.airport.RunwayClassificationVisitor;
 import com.google.common.base.MoreObjects;
 import com.vividsolutions.jts.geom.Point;
 import lombok.*;

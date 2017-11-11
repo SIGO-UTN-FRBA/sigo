@@ -1,4 +1,4 @@
-package ar.edu.utn.frba.proyecto.sigo.service.airport;
+package ar.edu.utn.frba.proyecto.sigo.domain.airport;
 
 import ar.edu.utn.frba.proyecto.sigo.domain.airport.faa.RunwayClassificationFAA;
 import ar.edu.utn.frba.proyecto.sigo.domain.airport.icao.RunwayClassificationICAOAnnex14;

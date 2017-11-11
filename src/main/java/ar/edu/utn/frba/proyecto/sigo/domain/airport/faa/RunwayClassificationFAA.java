@@ -7,7 +7,7 @@ import ar.edu.utn.frba.proyecto.sigo.domain.regulation.faa.FAAAircraftClassifica
 import ar.edu.utn.frba.proyecto.sigo.domain.regulation.faa.FAARunwayCategories;
 import ar.edu.utn.frba.proyecto.sigo.domain.regulation.faa.FAARunwayClassifications;
 import ar.edu.utn.frba.proyecto.sigo.domain.regulation.faa.FAARunwaysTypes;
-import ar.edu.utn.frba.proyecto.sigo.service.airport.RunwayClassificationVisitor;
+import ar.edu.utn.frba.proyecto.sigo.domain.airport.RunwayClassificationVisitor;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Data;

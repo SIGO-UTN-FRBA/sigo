@@ -2,14 +2,13 @@ package ar.edu.utn.frba.proyecto.sigo.domain.airport.icao;
 
 import javax.persistence.*;
 
-import ar.edu.utn.frba.proyecto.sigo.domain.SigoDomain;
 import ar.edu.utn.frba.proyecto.sigo.domain.airport.RunwayClassification;
 import ar.edu.utn.frba.proyecto.sigo.domain.airport.RunwayDirection;
 import ar.edu.utn.frba.proyecto.sigo.domain.regulation.icao.ICAOAnnex14RunwayCategories;
 import ar.edu.utn.frba.proyecto.sigo.domain.regulation.icao.ICAOAnnex14RunwayClassifications;
 import ar.edu.utn.frba.proyecto.sigo.domain.regulation.icao.ICAOAnnex14RunwayCodeLetters;
 import ar.edu.utn.frba.proyecto.sigo.domain.regulation.icao.ICAOAnnex14RunwayCodeNumbers;
-import ar.edu.utn.frba.proyecto.sigo.service.airport.RunwayClassificationVisitor;
+import ar.edu.utn.frba.proyecto.sigo.domain.airport.RunwayClassificationVisitor;
 import lombok.*;
 
 @Entity

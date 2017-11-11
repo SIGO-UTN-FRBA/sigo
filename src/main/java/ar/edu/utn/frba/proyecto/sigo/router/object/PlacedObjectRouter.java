@@ -4,12 +4,14 @@ import ar.edu.utn.frba.proyecto.sigo.domain.object.PlacedObject;
 import ar.edu.utn.frba.proyecto.sigo.dto.object.PlacedObjectDTO;
 import ar.edu.utn.frba.proyecto.sigo.persistence.HibernateUtil;
 import ar.edu.utn.frba.proyecto.sigo.router.SigoRouter;
+import ar.edu.utn.frba.proyecto.sigo.service.object.PlacedObjectFeatureService;
 import ar.edu.utn.frba.proyecto.sigo.service.object.PlacedObjectService;
 import ar.edu.utn.frba.proyecto.sigo.service.object.PlacedObjectTranslator;
 import ar.edu.utn.frba.proyecto.sigo.spark.JsonTransformer;
 import com.google.gson.Gson;
 import com.vividsolutions.jts.geom.Geometry;
 import org.eclipse.jetty.http.HttpStatus;
+import org.opengis.feature.simple.SimpleFeature;
 import spark.Route;
 import spark.RouteGroup;
 
@@ -23,7 +25,7 @@ public class PlacedObjectRouter extends SigoRouter {
     private JsonTransformer jsonTransformer;
     private PlacedObjectService objectService;
     private PlacedObjectTranslator translator;
-    private Gson objectMapper;
+    private PlacedObjectFeatureService featureService;
 
     @Inject
     public PlacedObjectRouter(
@@ -31,8 +33,10 @@ public class PlacedObjectRouter extends SigoRouter {
         JsonTransformer jsonTransformer,
         PlacedObjectService objectService,
         PlacedObjectTranslator objectTranslator,
+        PlacedObjectFeatureService featureService,
         Gson objectMapper
     ){
+        this.featureService = featureService;
         this.hibernateUtil = hibernateUtil;
         this.jsonTransformer = jsonTransformer;
         this.objectService = objectService;
@@ -89,23 +93,28 @@ public class PlacedObjectRouter extends SigoRouter {
         return response.body();
     });
 
+    /**
+     * Get object as feature
+     */
+    private final Route fetchFeature = doInTransaction(false, (request, response) -> {
 
-    private final Route fetchGeometry = doInTransaction(false, (request, response) -> {
+        PlacedObject object = objectService.get(getParamObjectId(request));
 
-        PlacedObject domain = objectService.get(getParamObjectId(request));
-
-        return domain.getGeom();
+        return featureToGeoJson(featureService.getFeature(object));
     });
 
-    private final Route defineGeometry = doInTransaction(true, (request, response) -> {
+    /**
+     * Update object's geometry
+     */
+    private final Route updateFeature = doInTransaction(true, (request, response) -> {
 
-        PlacedObject domain = objectService.get(getParamObjectId(request));
+        PlacedObject placedObject = objectService.get(getParamObjectId(request));
 
-        Geometry geometry = objectMapper.fromJson(request.body(), (Class<Geometry>) domain.getGeomClass());
+        SimpleFeature feature = featureFromGeoJson(request.body());
 
-        domain.setGeom(geometry);
+        objectService.updateGeometry((Geometry)feature.getDefaultGeometry(), placedObject);
 
-        return geometry;
+        return placedObject.getGeom();
     });
 
     @Override
@@ -119,8 +128,8 @@ public class PlacedObjectRouter extends SigoRouter {
             put("/:" + OBJECT_ID_PARAM, updateObject, jsonTransformer);
             delete("/:" + OBJECT_ID_PARAM, deleteObject);
 
-            get("/:" + OBJECT_ID_PARAM +"/geometry", fetchGeometry, jsonTransformer);
-            post("/:" + OBJECT_ID_PARAM +"/geometry", defineGeometry, jsonTransformer);
+            get("/:" + OBJECT_ID_PARAM +"/feature", fetchFeature, jsonTransformer);
+            patch("/:" + OBJECT_ID_PARAM +"/feature", updateFeature, jsonTransformer);
         };
     }
 
