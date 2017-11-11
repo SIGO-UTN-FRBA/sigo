@@ -15,4 +15,5 @@ public class AnalysisCaseDTO {
     private Long airportId;
     private Integer regulationId;
     private Long areaId;
+    private Double searchRadius;
 }
