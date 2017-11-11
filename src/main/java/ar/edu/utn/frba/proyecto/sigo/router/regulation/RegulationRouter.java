@@ -28,6 +28,8 @@ public class RegulationRouter extends SigoRouter {
     public RegulationRouter(
             JsonTransformer jsonTransformer
     ){
+        super(null, null);
+
         this.jsonTransformer = jsonTransformer;
     }
 

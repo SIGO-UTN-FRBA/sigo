@@ -40,13 +40,12 @@ public class RunwayRouter extends SigoRouter {
         AirportService airportService,
         RunwayTranslator runwayTranslator
     ){
+        super(objectMapper, hibernateUtil);
 
         this.jsonTransformer = jsonTransformer;
         this.runwayService = runwayService;
         this.airportService = airportService;
         this.translator = runwayTranslator;
-        this.objectMapper = objectMapper;
-        this.hibernateUtil = hibernateUtil;
     }
 
     /**

@@ -36,12 +36,12 @@ public class PlacedObjectRouter extends SigoRouter {
         PlacedObjectFeatureService featureService,
         Gson objectMapper
     ){
+        super(objectMapper, hibernateUtil);
+
         this.featureService = featureService;
-        this.hibernateUtil = hibernateUtil;
         this.jsonTransformer = jsonTransformer;
         this.objectService = objectService;
         this.translator = objectTranslator;
-        this.objectMapper = objectMapper;
     }
 
     private final Route fetchObjects = doInTransaction(false, (request, response) -> {

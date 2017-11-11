@@ -25,7 +25,8 @@ public class ObjectOwnerRouter extends SigoRouter {
             JsonTransformer jsonTransformer,
             ObjectOwnerService objectService
     ) {
-        this.hibernateUtil = hibernateUtil;
+        super(null, hibernateUtil);
+
         this.jsonTransformer = jsonTransformer;
         this.objectService = objectService;
     }

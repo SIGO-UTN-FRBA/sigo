@@ -54,6 +54,8 @@ public class RunwayDirectionRouter extends SigoRouter {
         RunwayClassificationService classificationService,
         RunwayClassificationTranslator classificationTranslator
     ){
+        super(objectMapper, hibernateUtil);
+
         this.jsonTransformer = jsonTransformer;
         this.runwayService = runwayService;
         this.directionService = directionService;
@@ -64,8 +66,6 @@ public class RunwayDirectionRouter extends SigoRouter {
         this.takeoffService = takeoffService;
         this.classificationService = classificationService;
         this.classificationTranslator = classificationTranslator;
-        this.objectMapper = objectMapper;
-        this.hibernateUtil = hibernateUtil;
     }
 
     /**

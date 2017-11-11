@@ -33,19 +33,19 @@ public class AnalysisCaseRouter extends SigoRouter {
     @Inject
     public AnalysisCaseRouter(
             HibernateUtil hibernateUtil,
-            Gson gson,
+            Gson objectMapper,
             JsonTransformer jsonTransformer,
             AnalysisCaseService caseService,
             AnalysisCaseTranslator caseTranslator,
             AnalysisObjectTranslator objectTranslator,
             AnalysisService analysisService
     ){
-        this.objectMapper = gson;
+        super(objectMapper, hibernateUtil);
+
         this.jsonTransformer = jsonTransformer;
         this.caseService = caseService;
         this.caseTranslator = caseTranslator;
         this.objectTranslator = objectTranslator;
-        this.hibernateUtil = hibernateUtil;
         this.analysisService = analysisService;
     }
 

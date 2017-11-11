@@ -27,16 +27,16 @@ public class AnalysisRouter extends SigoRouter {
     @Inject
     public AnalysisRouter(
             HibernateUtil hibernateUtil,
-            Gson gson,
+            Gson objectMapper,
             JsonTransformer jsonTransformer,
             AnalysisService analysisService,
             AnalysisTranslator analysisTranslator
     ){
-        this.objectMapper = gson;
+        super(objectMapper, hibernateUtil);
+
         this.jsonTransformer = jsonTransformer;
         this.analysisService = analysisService;
         this.analysisTranslator = analysisTranslator;
-        this.hibernateUtil = hibernateUtil;
     }
 
     /**

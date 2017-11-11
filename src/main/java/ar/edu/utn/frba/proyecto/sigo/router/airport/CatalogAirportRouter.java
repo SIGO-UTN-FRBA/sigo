@@ -31,10 +31,10 @@ public class CatalogAirportRouter extends SigoRouter {
             JsonTransformer jsonTransformer,
             CatalogAirportService catalogService
     ) {
+        super(objectMapper, hibernateUtil);
+
         this.jsonTransformer = jsonTransformer;
         this.catalogService = catalogService;
-        this.objectMapper = objectMapper;
-        this.hibernateUtil = hibernateUtil;
     }
 
     private final Route fetchRunwaySurface = (Request request, Response response) -> {

@@ -42,9 +42,13 @@ public abstract class SigoRouter extends Router {
     protected static String ANALYSIS_ID_PARAM ="analysis_id";
 
     protected Gson objectMapper;
-
     @Getter
     public HibernateUtil hibernateUtil;
+
+    public SigoRouter(Gson objectMapper, HibernateUtil hibernateUtil) {
+        this.objectMapper = objectMapper;
+        this.hibernateUtil = hibernateUtil;
+    }
 
     protected Long getParamAirportId(Request request){
         return getParam(request, AIRPORT_ID_PARAM);
