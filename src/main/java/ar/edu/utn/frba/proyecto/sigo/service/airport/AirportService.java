@@ -47,19 +47,23 @@ public class AirportService extends SigoService<Airport, Airport> {
 
         Root<Airport> airport = criteria.from(Airport.class);
 
-        Optional<Predicate> predicate1 = Optional
+        Optional<Predicate> predicateNameFIR = Optional
                 .ofNullable(parameters.get(Airport_.nameFIR.getName()).value())
                 .map(v -> builder.like(airport.get(Airport_.nameFIR), String.format("%%%s%%",v)));
 
-        Optional<Predicate> predicate2 = Optional
+        Optional<Predicate> predicateCodeFIR = Optional
                 .ofNullable(parameters.get(Airport_.codeFIR.getName()).value())
                 .map(v -> builder.equal(airport.get(Airport_.codeFIR), v));
 
-        Optional<Predicate> predicate3 = Optional
+        Optional<Predicate> predicateCodeIATA = Optional
                 .ofNullable(parameters.get(Airport_.codeIATA.getName()).value())
                 .map(v -> builder.equal(airport.get(Airport_.codeIATA),v));
 
-        List<Predicate> collect = Lists.newArrayList(predicate1, predicate2, predicate3)
+        Optional<Predicate> predicateCodeLocal = Optional
+                .ofNullable(parameters.get(Airport_.codeLocal.getName()).value())
+                .map(v -> builder.equal(airport.get(Airport_.codeLocal),v));
+
+        List<Predicate> collect = Lists.newArrayList(predicateNameFIR, predicateCodeFIR, predicateCodeIATA, predicateCodeLocal)
                 .stream()
                 .filter(Optional::isPresent)
                 .map(Optional::get)
@@ -79,7 +83,8 @@ public class AirportService extends SigoService<Airport, Airport> {
                         "Airport",
                         airport.getNameFIR(),
                         airport.getCodeFIR(),
-                        airport.getCodeIATA()
+                        airport.getCodeIATA(),
+                        airport.getCodeLocal()
                 },
                 airport.getId().toString()
         );
@@ -95,6 +100,7 @@ public class AirportService extends SigoService<Airport, Airport> {
         tb.add("name", String.class);
         tb.add("codeFIR", String.class);
         tb.add("codeIATA", String.class);
+        tb.add("codeLocal", String.class);
 
         return tb.buildFeatureType();
     }
