@@ -37,6 +37,7 @@ public class RunwayDirectionTranslator extends Translator<RunwayDirection, Runwa
                 .runwayId(domain.getRunway().getId())
                 .name(domain.getIdentifier())
                 .azimuth(domain.getAzimuth())
+                .height(domain.getHeight())
                 .build();
     }
 
@@ -49,7 +50,8 @@ public class RunwayDirectionTranslator extends Translator<RunwayDirection, Runwa
                 .id(dto.getId())
                 .number(dto.getNumber())
                 .position(RunwayDirectionPositions.values()[dto.getPosition()])
-                .azimuth(dto.getAzimuth());
+                .azimuth(dto.getAzimuth())
+                .height(dto.getHeight());
 
         // relation: runway
         Runway runway = Optional

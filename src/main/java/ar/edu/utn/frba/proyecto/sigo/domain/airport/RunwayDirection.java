@@ -49,6 +49,8 @@ public class RunwayDirection extends SigoDomain implements Spatial<Point> {
     @OneToOne(mappedBy = "runwayDirection", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private RunwayClassification classification;
 
+    @Column(name = "height")
+    private Double height;
 
     public String getIdentifier(){
 

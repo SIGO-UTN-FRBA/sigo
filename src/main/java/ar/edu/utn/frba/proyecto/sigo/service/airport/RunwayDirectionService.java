@@ -84,7 +84,8 @@ public class RunwayDirectionService extends SigoService<RunwayDirection, Runway>
                         "Direction",
                         direction.getNumber().toString(),
                         direction.getPosition().position(),
-                        direction.getAzimuth()
+                        direction.getAzimuth(),
+                        direction.getHeight()
                 },
                 direction.getId().toString()
         );
@@ -99,6 +100,7 @@ public class RunwayDirectionService extends SigoService<RunwayDirection, Runway>
         tb.add("number", String.class);
         tb.add("position", String.class);
         tb.add("azimuth", Double.class);
+        tb.add("height", Double.class);
 
         return tb.buildFeatureType();
     }

@@ -13,4 +13,5 @@ public class RunwayDirectionDTO {
     private Integer position;
     private Double azimuth;
     private Long runwayId;
+    private Double height;
 }
