@@ -69,6 +69,10 @@ public class AnalysisService extends SigoService<Analysis, Analysis>{
                 .ofNullable(parameters.get(Airport_.codeIATA.getName()).value())
                 .map(v -> builder.equal(airport.get(Airport_.codeIATA.getName()),v));
 
+        Optional<Predicate> predicateCodeLocal = Optional
+                .ofNullable(parameters.get(Airport_.codeLocal.getName()).value())
+                .map(v -> builder.equal(airport.get(Airport_.codeLocal.getName()),v));
+
         Optional<Predicate> predicateCurrent = Optional
                 .ofNullable(parameters.get("current"))
                 .map(p -> {
@@ -87,7 +91,7 @@ public class AnalysisService extends SigoService<Analysis, Analysis>{
                 });
 
 
-        List<Predicate> collect = Lists.newArrayList(predicateNameFIR, predicateCodeFIR, predicateCodeIATA, predicateCurrent)
+        List<Predicate> collect = Lists.newArrayList(predicateNameFIR, predicateCodeFIR, predicateCodeIATA, predicateCodeLocal, predicateCurrent)
                 .stream()
                 .filter(Optional::isPresent)
                 .map(Optional::get)
