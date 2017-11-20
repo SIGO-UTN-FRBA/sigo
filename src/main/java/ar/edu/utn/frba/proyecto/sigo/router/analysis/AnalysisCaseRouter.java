@@ -64,19 +64,6 @@ public class AnalysisCaseRouter extends SigoRouter {
     });
 
     /**
-     * Get calculated objects (static)
-     */
-    private final Route fetchObjects = doInTransaction(true, (request, response) -> {
-
-        Analysis analysis = this.analysisService.get(this.getParamAnalysisId(request));
-
-        return analysis.getAnalysisCase().getObjects()
-                .stream()
-                .map(o -> objectTranslator.getAsDTO(o))
-                .collect(Collectors.toList());
-    });
-
-    /**
      * Calculate related objects to the case depending on their distance to the airport
      */
     private final Route updateAnalysisCase = doInTransaction(true, (request, response) -> {
@@ -105,8 +92,6 @@ public class AnalysisCaseRouter extends SigoRouter {
         return ()->{
             get("/:" + CASE_ID_PARAM, fetchAnalysisCase, jsonTransformer);
             patch("/:" + CASE_ID_PARAM, updateAnalysisCase, jsonTransformer);
-
-            get("/:" + CASE_ID_PARAM + "/objects", fetchObjects, jsonTransformer);
         };
     }
 
