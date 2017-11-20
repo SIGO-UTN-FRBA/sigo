@@ -2,6 +2,7 @@ package ar.edu.utn.frba.proyecto.sigo.router;
 
 import ar.edu.utn.frba.proyecto.sigo.router.airport.*;
 import ar.edu.utn.frba.proyecto.sigo.router.analysis.AnalysisCaseRouter;
+import ar.edu.utn.frba.proyecto.sigo.router.analysis.AnalysisExceptionRouter;
 import ar.edu.utn.frba.proyecto.sigo.router.analysis.AnalysisRouter;
 import ar.edu.utn.frba.proyecto.sigo.router.location.LocationRouter;
 import ar.edu.utn.frba.proyecto.sigo.router.object.CatalogObjectRouter;
@@ -35,5 +36,6 @@ public class RouterModule extends AbstractModule {
         routerBinder.addBinding().to(RegulationFAARouter.class);
         routerBinder.addBinding().to(AnalysisRouter.class);
         routerBinder.addBinding().to(AnalysisCaseRouter.class);
+        routerBinder.addBinding().to(AnalysisExceptionRouter.class);
     }
 }

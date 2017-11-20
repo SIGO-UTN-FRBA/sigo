@@ -2,6 +2,7 @@ package ar.edu.utn.frba.proyecto.sigo.router.analysis;
 
 import ar.edu.utn.frba.proyecto.sigo.domain.analysis.Analysis;
 import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisCase;
+import ar.edu.utn.frba.proyecto.sigo.dto.common.ListItemDTO;
 import ar.edu.utn.frba.proyecto.sigo.exception.MissingParameterException;
 import ar.edu.utn.frba.proyecto.sigo.persistence.HibernateUtil;
 import ar.edu.utn.frba.proyecto.sigo.router.SigoRouter;
@@ -12,14 +13,11 @@ import ar.edu.utn.frba.proyecto.sigo.service.analysis.AnalysisService;
 import ar.edu.utn.frba.proyecto.sigo.spark.JsonTransformer;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import spark.QueryParamsMap;
-import spark.Request;
 import spark.Route;
 import spark.RouteGroup;
 
 import javax.inject.Inject;
 
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static java.lang.String.format;
@@ -68,7 +66,7 @@ public class AnalysisCaseRouter extends SigoRouter {
     /**
      * Get calculated objects (static)
      */
-    private final Route fetchAnalysisObject = doInTransaction(true, (request, response) -> {
+    private final Route fetchObjects = doInTransaction(true, (request, response) -> {
 
         Analysis analysis = this.analysisService.get(this.getParamAnalysisId(request));
 
@@ -107,7 +105,8 @@ public class AnalysisCaseRouter extends SigoRouter {
         return ()->{
             get("/:" + CASE_ID_PARAM, fetchAnalysisCase, jsonTransformer);
             patch("/:" + CASE_ID_PARAM, updateAnalysisCase, jsonTransformer);
-            get("/:" + CASE_ID_PARAM + "/objects", fetchAnalysisObject, jsonTransformer);
+
+            get("/:" + CASE_ID_PARAM + "/objects", fetchObjects, jsonTransformer);
         };
     }
 

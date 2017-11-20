@@ -41,6 +41,7 @@ public abstract class SigoRouter extends Router {
     protected static String REGULATION_ID_PARAM="regulation_id";
     protected static String ANALYSIS_ID_PARAM ="analysis_id";
     protected static String CASE_ID_PARAM ="case_id";
+    protected static String EXCEPTION_ID_PARAM ="exception_id";
 
     protected Gson objectMapper;
     @Getter

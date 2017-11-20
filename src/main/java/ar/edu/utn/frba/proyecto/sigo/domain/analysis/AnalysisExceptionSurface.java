@@ -29,11 +29,13 @@ public class AnalysisExceptionSurface extends AnalysisException {
     @Builder
     public AnalysisExceptionSurface(
             Long id,
+            String name,
+            AnalysisExceptions type,
             AnalysisCase analysisCase,
             String surfaceName,
             Map<String, Double> properties
     ){
-        super(id, analysisCase);
+        super(id, name, type, analysisCase);
         this.surfaceName = surfaceName;
         this.properties = properties;
     }

@@ -1,6 +1,7 @@
 package ar.edu.utn.frba.proyecto.sigo.domain.analysis;
 
 
+import com.google.gson.JsonElement;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Data;
@@ -25,12 +26,14 @@ public class AnalysisExceptionRule extends AnalysisException {
     @Builder
     public AnalysisExceptionRule(
             Long id,
+            String name,
+            AnalysisExceptions type,
             AnalysisCase analysisCase,
             Long olsRuleId,
             String property,
             Double value
     ){
-        super(id, analysisCase);
+        super(id, name, type, analysisCase);
 
         this.olsRuleId = olsRuleId;
         this.property = property;

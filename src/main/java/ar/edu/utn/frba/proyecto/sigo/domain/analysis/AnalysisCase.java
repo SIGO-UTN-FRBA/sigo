@@ -6,6 +6,8 @@ import ar.edu.utn.frba.proyecto.sigo.domain.object.PlacedObject;
 import ar.edu.utn.frba.proyecto.sigo.domain.regulation.Regulation;
 import ar.edu.utn.frba.proyecto.sigo.domain.regulation.Regulations;
 import com.google.common.base.MoreObjects;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import lombok.*;
 import org.hibernate.annotations.LazyToOne;
 import org.hibernate.annotations.LazyToOneOption;
@@ -48,10 +50,10 @@ public class AnalysisCase extends SigoDomain {
     private AnalysisArea area;
 
     @OneToMany(mappedBy = "analysisCase", cascade = CascadeType.REMOVE)
-    private List<AnalysisObject> objects;
+    private List<AnalysisObject> objects = Lists.newArrayList();
 
     @OneToMany(mappedBy="analysisCase", cascade = CascadeType.REMOVE)
-    private Set<AnalysisException> exceptions;
+    private Set<AnalysisException> exceptions = Sets.newHashSet();
 
     @Column(name="search_radius")
     private Double searchRadius;

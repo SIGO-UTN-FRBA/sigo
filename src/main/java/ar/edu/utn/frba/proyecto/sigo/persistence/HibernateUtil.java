@@ -102,7 +102,6 @@ public class HibernateUtil {
                 .addAnnotatedClass(AnalysisException.class)
                 .addAnnotatedClass(AnalysisExceptionRule.class)
                 .addAnnotatedClass(AnalysisExceptionSurface.class)
-                .addAnnotatedClass(AnalysisExceptionAvailability.class)
                 .addAnnotatedClass(AnalysisObject.class)
                 .addAnnotatedClass(Region.class);
 

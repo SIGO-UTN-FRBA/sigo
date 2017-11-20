@@ -1,5 +1,6 @@
 package ar.edu.utn.frba.proyecto.sigo.domain.analysis;
 
+import ar.edu.utn.frba.proyecto.sigo.domain.SigoDomain;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,6 +8,8 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -24,13 +27,19 @@ import javax.persistence.Table;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 @Data
-public abstract class AnalysisException {
+public abstract class AnalysisException extends SigoDomain {
 
     @Id
     @SequenceGenerator(name = "analysisExceptionGenerator", sequenceName = "ANALYSIS_EXCEPTION_SEQUENCE", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "analysisExceptionGenerator")
     @Column(name = "exception_id")
     private Long id;
+
+    @Column(name="name")
+    private String name;
+
+    @Enumerated(value = EnumType.ORDINAL)
+    private AnalysisExceptions type;
 
     @ManyToOne
     @JoinColumn(name = "case_id")

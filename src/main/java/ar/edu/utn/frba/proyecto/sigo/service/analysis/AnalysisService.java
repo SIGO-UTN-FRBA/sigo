@@ -162,4 +162,10 @@ public class AnalysisService extends SigoService<Analysis, Analysis>{
         return ! currentSession().createQuery(criteria).getResultList().isEmpty();
     }
 
+    public void changeStatus(Analysis analysis, AnalysisStages newStage) {
+
+        //TODO implementar validaciones y acciones (extraer)
+
+        analysis.setStage(newStage);
+    }
 }
