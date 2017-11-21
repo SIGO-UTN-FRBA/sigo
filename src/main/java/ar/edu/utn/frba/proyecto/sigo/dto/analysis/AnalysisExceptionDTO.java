@@ -14,6 +14,7 @@ import java.util.Map;
 @Data
 @Builder
 public class AnalysisExceptionDTO {
+    //AnalysisException
     private Long id;
     private Integer typeId;
     private String name;

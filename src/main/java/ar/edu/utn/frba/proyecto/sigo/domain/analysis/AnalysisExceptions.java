@@ -1,8 +1,8 @@
 package ar.edu.utn.frba.proyecto.sigo.domain.analysis;
 
 public enum AnalysisExceptions {
-    SURFACE("Surface"),
-    RULE("Rule");
+    SURFACE("Surface"),     //0
+    RULE("Rule");           //1
 
     private String description;
 

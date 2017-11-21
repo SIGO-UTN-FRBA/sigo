@@ -59,7 +59,7 @@ public class AnalysisExceptionRouter extends SigoRouter {
 
         return analysis.getAnalysisCase().getExceptions()
                 .stream()
-                .map(e -> new ListItemDTO(e.getId(), String.format("%s [%s]", e.getName(), e.getType().description())))
+                .map(e -> translator.getAsAbstractDTO(e))
                 .collect(Collectors.toList());
     });
 

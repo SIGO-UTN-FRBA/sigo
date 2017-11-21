@@ -17,7 +17,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "public.tbl_exception_rule_value_spe")
+@Table(name = "public.tbl_analysis_exceptions_rule")
 @PrimaryKeyJoinColumn(name = "exception_id")
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 @Data
