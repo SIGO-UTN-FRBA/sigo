@@ -209,6 +209,6 @@ public class RegulationICAOAnnex14Router extends SigoRouter {
 
     @Override
     public String path() {
-        return "/regulations/"+ Regulations.ICAO_ANNEX_14.ordinal();
+        return "/regulations/icao14";
     }
 }
