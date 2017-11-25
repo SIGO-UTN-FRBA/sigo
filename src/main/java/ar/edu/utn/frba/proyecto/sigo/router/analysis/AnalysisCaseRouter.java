@@ -58,7 +58,7 @@ public class AnalysisCaseRouter extends SigoRouter {
      */
     private final Route fetchAnalysisCase = doInTransaction(false, (request, response) -> {
 
-        AnalysisCase analysisCase = this.caseService.get(this.getParamCaseId(request));
+        AnalysisCase analysisCase = this.caseService.get(this.getParamAnalysisId(request));
 
         return caseTranslator.getAsDTO(analysisCase);
     });
@@ -81,17 +81,14 @@ public class AnalysisCaseRouter extends SigoRouter {
 
         caseService.updateObjects(analysisCase, radius);
 
-        return analysisCase.getObjects()
-                .stream()
-                .map(o -> objectTranslator.getAsDTO(o))
-                .collect(Collectors.toList());
+        return caseTranslator.getAsDTO(analysisCase);
     });
 
     @Override
     public RouteGroup routes() {
         return ()->{
-            get("/:" + CASE_ID_PARAM, fetchAnalysisCase, jsonTransformer);
-            patch("/:" + CASE_ID_PARAM, updateAnalysisCase, jsonTransformer);
+            get("", fetchAnalysisCase, jsonTransformer);
+            patch("", updateAnalysisCase, jsonTransformer);
         };
     }
 

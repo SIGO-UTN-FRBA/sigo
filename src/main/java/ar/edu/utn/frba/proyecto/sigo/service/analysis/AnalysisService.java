@@ -121,6 +121,7 @@ public class AnalysisService extends SigoService<Analysis, Analysis>{
 
     private void createAnalysisCase(Analysis analysis, Airport airport) {
         AnalysisCase analysisCase = AnalysisCase.builder()
+                .id(analysis.getId())
                 .aerodrome(airport)
                 .analysis(analysis)
                 .searchRadius(0.1D)

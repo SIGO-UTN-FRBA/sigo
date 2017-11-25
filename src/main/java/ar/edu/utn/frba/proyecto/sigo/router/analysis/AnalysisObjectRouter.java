@@ -85,6 +85,6 @@ public class AnalysisObjectRouter extends SigoRouter {
 
     @Override
     public String path() {
-        return "/analysis/:" + ANALYSIS_ID_PARAM + "/case/:" + CASE_ID_PARAM + "/objects" ;
+        return "/analysis/:" + ANALYSIS_ID_PARAM + "/case/objects" ;
     }
 }

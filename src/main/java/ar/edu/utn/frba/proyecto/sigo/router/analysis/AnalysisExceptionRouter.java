@@ -122,6 +122,6 @@ public class AnalysisExceptionRouter extends SigoRouter {
 
     @Override
     public String path() {
-        return "/analysis/:" + ANALYSIS_ID_PARAM + "/case/:" + CASE_ID_PARAM + "/exceptions" ;
+        return "/analysis/:" + ANALYSIS_ID_PARAM + "/case/exceptions" ;
     }
 }
