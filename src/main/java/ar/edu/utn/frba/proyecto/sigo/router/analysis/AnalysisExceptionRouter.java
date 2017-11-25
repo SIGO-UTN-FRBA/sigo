@@ -12,6 +12,7 @@ import ar.edu.utn.frba.proyecto.sigo.service.analysis.AnalysisService;
 import ar.edu.utn.frba.proyecto.sigo.spark.JsonTransformer;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import org.eclipse.jetty.http.HttpStatus;
 import spark.Route;
 import spark.RouteGroup;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
@@ -97,7 +98,14 @@ public class AnalysisExceptionRouter extends SigoRouter {
      * Delete an exception for an analysis case
      */
     private final Route deleteException = doInTransaction(true, (request, response) -> {
-        throw new NotImplementedException();
+
+        exceptionService.delete(this.getParamExceptionId(request));
+
+        response.status(HttpStatus.NO_CONTENT_204);
+
+        response.body("");
+
+        return response.body();
     });
 
     @Override
