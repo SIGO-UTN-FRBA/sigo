@@ -111,6 +111,9 @@ public class AnalysisExceptionRouter extends SigoRouter {
     @Override
     public RouteGroup routes() {
         return () -> {
+
+            //TODO validar que se encuentre en stage correcto
+
             get("", fetchExceptions, jsonTransformer);
             post("", createException, jsonTransformer);
 

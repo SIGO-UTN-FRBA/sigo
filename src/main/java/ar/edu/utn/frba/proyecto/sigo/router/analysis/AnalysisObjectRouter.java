@@ -77,6 +77,9 @@ public class AnalysisObjectRouter extends SigoRouter {
 
     @Override
     public RouteGroup routes() {
+
+        //TODO validar que se encuentre en stage correcto
+
         return ()->{
             get("", fetchObjects, jsonTransformer);
             patch("/:" + OBJECT_ID_PARAM, includeObject, jsonTransformer);
