@@ -96,6 +96,10 @@ public abstract class SigoRouter extends Router {
         return getParam(request, CASE_ID_PARAM);
     }
 
+    protected Long getParamExceptionId(Request request){
+        return getParam(request, EXCEPTION_ID_PARAM);
+    }
+
     private Long getParam(Request request, String key) {
         return Optional
                 .ofNullable(request.params(key))

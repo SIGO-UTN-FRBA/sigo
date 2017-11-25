@@ -81,7 +81,9 @@ public class AnalysisExceptionRouter extends SigoRouter {
      * Get an exception for an analysis case
      */
     private final Route fetchException = doInTransaction(false, (request, response) -> {
-        throw new NotImplementedException();
+        AnalysisException exception = this.exceptionService.get(this.getParamExceptionId(request));
+
+        return translator.getAsDTO(exception);
     });
 
     /**
@@ -104,7 +106,7 @@ public class AnalysisExceptionRouter extends SigoRouter {
             get("", fetchExceptions, jsonTransformer);
             post("", createException, jsonTransformer);
 
-            get("/:" + EXCEPTION_ID_PARAM + "/", fetchException, jsonTransformer);
+            get("/:" + EXCEPTION_ID_PARAM, fetchException, jsonTransformer);
             put("/:" + EXCEPTION_ID_PARAM, updateException, jsonTransformer);
             delete("/:" + EXCEPTION_ID_PARAM, deleteException, jsonTransformer);
         };
