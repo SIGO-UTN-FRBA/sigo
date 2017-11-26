@@ -16,6 +16,9 @@ import ar.edu.utn.frba.proyecto.sigo.router.SigoRouter;
 import ar.edu.utn.frba.proyecto.sigo.service.regulation.OlsRuleICAOAnnex14Translator;
 import ar.edu.utn.frba.proyecto.sigo.service.regulation.OlsRuleService;
 import ar.edu.utn.frba.proyecto.sigo.spark.JsonTransformer;
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import spark.QueryParamsMap;
 import spark.Request;
 import spark.Route;
@@ -41,9 +44,10 @@ public class RegulationICAOAnnex14Router extends SigoRouter {
             JsonTransformer jsonTransformer,
             HibernateUtil hibernateUtil,
             OlsRuleService ruleService,
-            OlsRuleICAOAnnex14Translator icaoAnnex14Translator
+            OlsRuleICAOAnnex14Translator icaoAnnex14Translator,
+            Gson gson
     ){
-        super(null, hibernateUtil);
+        super(gson, hibernateUtil);
 
         this.ruleService = ruleService;
         this.icaoAnnex14Translator = icaoAnnex14Translator;
@@ -149,43 +153,117 @@ public class RegulationICAOAnnex14Router extends SigoRouter {
 
         ICAOAnnex14Surface surface = null;
 
+        ICAOAnnex14RunwayCodeNumbers paramNumberCode = this.getParamNumberCode(request);
+        ICAOAnnex14RunwayClassifications paramClassification = this.getParamClassification(request);
+        ICAOAnnex14RunwayCategories paramCategory = this.getParamCategory(request);
+
         switch (this.getParamSurface(request)){
 
             case STRIP:
+                surface = ruleService.getICAOAnnex14SurfaceStrip(
+                        paramNumberCode,
+                        paramClassification,
+                        paramCategory
+                );
                 break;
             case CONICAL:
                 surface = ruleService.getICAOAnnex14SurfaceConical(
-                        this.getParamNumberCode(request),
-                        this.getParamClassification(request),
-                        this.getParamCategory(request)
+                        paramNumberCode,
+                        paramClassification,
+                        paramCategory
                 );
                 break;
             case INNER_HORIZONTAL:
+                surface = ruleService.getICAOAnnex14SurfaceInnerHorizontal(
+                        paramNumberCode,
+                        paramClassification,
+                        paramCategory
+                );
                 break;
             case INNER_APPROACH:
+                surface = ruleService.getICAOAnnex14SurfaceInnerApproach(
+                        paramNumberCode,
+                        paramClassification,
+                        paramCategory
+                );
                 break;
             case APPROACH:
+                surface = ruleService.getICAOAnnex14SurfaceApproach(
+                        paramNumberCode,
+                        paramClassification,
+                        paramCategory
+                );
                 break;
             case APPROACH_FIRST_SECTION:
+                surface = ruleService.getICAOAnnex14SurfaceApproachFirstSection(
+                        paramNumberCode,
+                        paramClassification,
+                        paramCategory
+                );
                 break;
             case APPROACH_SECOND_SECTION:
+                surface = ruleService.getICAOAnnex14SurfaceApproachSecondSection(
+                        paramNumberCode,
+                        paramClassification,
+                        paramCategory
+                );
                 break;
             case APPROACH_HORIZONTAL_SECTION:
+                surface = ruleService.getICAOAnnex14SurfaceApproachHorizontalSection(
+                        paramNumberCode,
+                        paramClassification,
+                        paramCategory
+                );
                 break;
             case TRANSITIONAL:
+                surface = ruleService.getICAOAnnex14SurfaceTransitional(
+                        paramNumberCode,
+                        paramClassification,
+                        paramCategory
+                );
                 break;
             case INNER_TRANSITIONAL:
+                surface = ruleService.getICAOAnnex14SurfaceInnerTransitional(
+                        paramNumberCode,
+                        paramClassification,
+                        paramCategory
+                );
                 break;
             case BALKED_LANDING_SURFACE:
+                surface = ruleService.getICAOAnnex14SurfaceBalkedLanding(
+                        paramNumberCode,
+                        paramClassification,
+                        paramCategory
+                );
                 break;
             case TAKEOFF_CLIMB:
+                surface = ruleService.getICAOAnnex14SurfaceTakeoffClimb(
+                        paramNumberCode,
+                        paramClassification,
+                        paramCategory
+                );
                 break;
         }
 
-        return surface;
+        surface.setCategory(paramCategory);
+        surface.setClassification(paramClassification);
+        surface.setCode(paramNumberCode);
+
+        //TODO llevar a translator
+
+        JsonObject jsonObject = objectMapper.toJsonTree(surface).getAsJsonObject();
+
+        jsonObject.addProperty("name", surface.getName());
+
+        jsonObject.addProperty("id", surface.getId());
+
+        return jsonObject;
     });
 
     private final Route fetchRules = doInTransaction(false, (request, response) -> {
+
+
+
         return this.ruleService.getICAOAnnex14Rules()
                 .stream()
                 .map(r -> this.icaoAnnex14Translator.getAsDTO(r.getIcaoRule()))

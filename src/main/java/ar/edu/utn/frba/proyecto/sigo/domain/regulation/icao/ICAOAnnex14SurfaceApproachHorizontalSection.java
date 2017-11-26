@@ -9,4 +9,14 @@ public class ICAOAnnex14SurfaceApproachHorizontalSection extends ICAOAnnex14Surf
 
     private Double length;
     private Double totalLength;
+
+    @Override
+    public Long getId() {
+        return (long)ICAOAnnex14Surfaces.APPROACH_HORIZONTAL_SECTION.ordinal();
+    }
+
+    @Override
+    public String getName() {
+        return ICAOAnnex14Surfaces.APPROACH_HORIZONTAL_SECTION.description();
+    }
 }

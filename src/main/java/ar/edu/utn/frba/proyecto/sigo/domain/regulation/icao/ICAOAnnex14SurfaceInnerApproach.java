@@ -11,4 +11,14 @@ public class ICAOAnnex14SurfaceInnerApproach extends ICAOAnnex14Surface{
     private Double distanceFromThreshold;
     private Double length;
     private Double slope;
+
+    @Override
+    public Long getId() {
+        return (long)ICAOAnnex14Surfaces.INNER_APPROACH.ordinal();
+    }
+
+    @Override
+    public String getName() {
+        return ICAOAnnex14Surfaces.INNER_APPROACH.description();
+    }
 }

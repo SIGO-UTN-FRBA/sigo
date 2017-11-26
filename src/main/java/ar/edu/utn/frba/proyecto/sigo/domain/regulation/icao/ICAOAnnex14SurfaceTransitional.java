@@ -13,4 +13,14 @@ import lombok.NoArgsConstructor;
 public class ICAOAnnex14SurfaceTransitional extends ICAOAnnex14Surface {
 
     private Double slope;
+
+    @Override
+    public Long getId() {
+        return (long)ICAOAnnex14Surfaces.TRANSITIONAL.ordinal();
+    }
+
+    @Override
+    public String getName() {
+        return ICAOAnnex14Surfaces.TRANSITIONAL.description();
+    }
 }

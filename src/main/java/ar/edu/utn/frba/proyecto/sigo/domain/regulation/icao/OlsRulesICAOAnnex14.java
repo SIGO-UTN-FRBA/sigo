@@ -10,7 +10,7 @@ import lombok.*;
 @Table(name = "public.tbl_OLS_rules_ICAOAnnex14")
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 @Data
-public class OlsRulesICAOAnnex14Spec extends SigoDomain {
+public class OlsRulesICAOAnnex14 extends SigoDomain {
 
     @Id
     @SequenceGenerator(name = "olsRuleIcaoGenerator", sequenceName = "OLS_RULE_ICAO_SEQUENCE")

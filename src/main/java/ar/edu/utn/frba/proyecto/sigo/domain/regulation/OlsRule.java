@@ -4,7 +4,7 @@ import javax.persistence.*;
 
 import ar.edu.utn.frba.proyecto.sigo.domain.SigoDomain;
 import ar.edu.utn.frba.proyecto.sigo.domain.regulation.faa.OlsRulesFAASpec;
-import ar.edu.utn.frba.proyecto.sigo.domain.regulation.icao.OlsRulesICAOAnnex14Spec;
+import ar.edu.utn.frba.proyecto.sigo.domain.regulation.icao.OlsRulesICAOAnnex14;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -35,7 +35,7 @@ public class OlsRule extends SigoDomain {
             fetch = FetchType.LAZY
     )
     @LazyToOne( LazyToOneOption.NO_PROXY )
-    private OlsRulesICAOAnnex14Spec icaoRule;
+    private OlsRulesICAOAnnex14 icaoRule;
 
     @OneToOne(
             mappedBy = "rule",
