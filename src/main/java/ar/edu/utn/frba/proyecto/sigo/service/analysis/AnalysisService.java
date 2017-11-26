@@ -27,6 +27,7 @@ import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Subquery;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.util.List;
 import java.util.Optional;
 import java.util.TimeZone;
@@ -109,7 +110,8 @@ public class AnalysisService extends SigoService<Analysis, Analysis>{
         analysis.setParent(parent);
         analysis.setStage(AnalysisStages.OBJECT);
         analysis.setStatus(AnalysisStatuses.INITIALIZED);
-        analysis.setCreationDate(LocalDateTime.now(ZoneId.systemDefault()));
+        analysis.setCreationDate(LocalDateTime.now(ZoneOffset.UTC));
+        analysis.setEditionDate(LocalDateTime.now(ZoneOffset.UTC));
     }
 
     @Override
@@ -166,6 +168,8 @@ public class AnalysisService extends SigoService<Analysis, Analysis>{
     public void changeStatus(Analysis analysis, AnalysisStages newStage) {
 
         //TODO implementar validaciones y acciones (extraer)
+
+        analysis.setEditionDate(LocalDateTime.now(ZoneOffset.UTC));
 
         analysis.setStage(newStage);
     }

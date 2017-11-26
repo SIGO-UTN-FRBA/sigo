@@ -57,6 +57,9 @@ public class Analysis extends SigoDomain {
     @Column(name = "creation_date")
     private LocalDateTime creationDate;
 
+    @Column(name = "edition_date")
+    private LocalDateTime editionDate;
+
     public String toString(){
 
         return MoreObjects.toStringHelper(this)

@@ -1,7 +1,6 @@
 package ar.edu.utn.frba.proyecto.sigo.domain.analysis;
 
 
-import com.google.gson.JsonElement;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Data;

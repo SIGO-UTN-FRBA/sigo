@@ -4,6 +4,7 @@ import ar.edu.utn.frba.proyecto.sigo.domain.analysis.Analysis;
 import ar.edu.utn.frba.proyecto.sigo.dto.analysis.AnalysisDTO;
 import ar.edu.utn.frba.proyecto.sigo.service.Translator;
 import com.google.gson.Gson;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import javax.inject.Inject;
 import java.time.ZoneOffset;
@@ -25,12 +26,13 @@ public class AnalysisTranslator extends Translator<Analysis, AnalysisDTO> {
                 .stageId(domain.getStage().ordinal())
                 .statusId(domain.getStatus().ordinal())
                 .creationDate(domain.getCreationDate().toInstant(ZoneOffset.UTC).toEpochMilli())
+                .editionDate(domain.getEditionDate().toInstant(ZoneOffset.UTC).toEpochMilli())
                 .airportId(domain.getAnalysisCase().getAerodrome().getId())
                 .build();
     }
 
     @Override
     public Analysis getAsDomain(AnalysisDTO analysisDTO) {
-        return null;
+        throw new NotImplementedException();
     }
 }
