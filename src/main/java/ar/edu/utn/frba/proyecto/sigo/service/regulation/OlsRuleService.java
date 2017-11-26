@@ -24,6 +24,7 @@ import ar.edu.utn.frba.proyecto.sigo.exception.InvalidParameterException;
 import ar.edu.utn.frba.proyecto.sigo.persistence.HibernateUtil;
 import ar.edu.utn.frba.proyecto.sigo.service.SigoService;
 import com.google.common.collect.Lists;
+import spark.QueryParamsMap;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -34,6 +35,9 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+
+import static java.util.stream.Collectors.toList;
 
 @Singleton
 public class OlsRuleService extends SigoService<OlsRule, OlsRule> {
@@ -71,12 +75,27 @@ public class OlsRuleService extends SigoService<OlsRule, OlsRule> {
 
         Join<Object, Object> icao = rule.join(OlsRule_.icaoRule.getName());
 
-        Predicate predicate1 = builder.equal(icao.get(OlsRulesICAOAnnex14_.surface.getName()), surface);
-        Predicate predicate2 = builder.equal(icao.get(OlsRulesICAOAnnex14_.runwayCodeNumber.getName()), codeNumber);
-        Predicate predicate3 = builder.equal(icao.get(OlsRulesICAOAnnex14_.runwayClassification.getName()), classification);
-        Predicate predicate4 = builder.equal(icao.get(OlsRulesICAOAnnex14_.runwayCategory.getName()), category);
+        Optional<Predicate> predicateSurface = Optional
+                .ofNullable(surface)
+                .map(v -> builder.equal(icao.get(OlsRulesICAOAnnex14_.surface.getName()), surface));
+        Optional<Predicate> predicateCode = Optional
+                .ofNullable(codeNumber)
+                .map(v -> builder.equal(icao.get(OlsRulesICAOAnnex14_.runwayCodeNumber.getName()), codeNumber));
+        Optional<Predicate> predicateClassification = Optional
+                .ofNullable(classification)
+                .map(v-> builder.equal(icao.get(OlsRulesICAOAnnex14_.runwayClassification.getName()), classification));
+        Optional<Predicate> predicateCategory = Optional
+                .ofNullable(category)
+                .map(v-> builder.equal(icao.get(OlsRulesICAOAnnex14_.runwayCategory.getName()), category));
 
-        criteria.where(predicate1, predicate2,predicate3,predicate4);
+
+        List<Predicate> collect = Lists.newArrayList(predicateSurface, predicateCode, predicateClassification, predicateCategory)
+                .stream()
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .collect(toList());
+
+        criteria.where(builder.and(collect.toArray(new Predicate[collect.size()])));
 
         return currentSession().createQuery(criteria).getResultList();
     }
@@ -328,4 +347,12 @@ public class OlsRuleService extends SigoService<OlsRule, OlsRule> {
         return ICAOAnnex14SurfacesFactory.createStripSurface(rules);
     }
 
+    public List<OlsRule> getICAOAnnex14Rules(QueryParamsMap params) {
+        return this.getICAOAnnex14Rules(
+                Optional.ofNullable(params.get("surface")).map(v -> ICAOAnnex14Surfaces.values()[v.integerValue()]).orElse(null),
+                Optional.ofNullable(params.get("number")).map(v -> ICAOAnnex14RunwayCodeNumbers.values()[v.integerValue()]).orElse(null),
+                Optional.ofNullable(params.get("classification")).map(v -> ICAOAnnex14RunwayClassifications.values()[v.integerValue()]).orElse(null),
+                Optional.ofNullable(params.get("category")).map(v -> ICAOAnnex14RunwayCategories.values()[v.integerValue()]).orElse(null)
+        );
+    }
 }

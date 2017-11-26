@@ -1,5 +1,6 @@
 package ar.edu.utn.frba.proyecto.sigo.router.regulation;
 
+import ar.edu.utn.frba.proyecto.sigo.domain.regulation.OlsRule;
 import ar.edu.utn.frba.proyecto.sigo.domain.regulation.Regulations;
 import ar.edu.utn.frba.proyecto.sigo.domain.regulation.icao.ICAOAnnex14RunwayCategories;
 import ar.edu.utn.frba.proyecto.sigo.domain.regulation.icao.ICAOAnnex14RunwayClassifications;
@@ -28,6 +29,7 @@ import javax.inject.Inject;
 
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -262,12 +264,18 @@ public class RegulationICAOAnnex14Router extends SigoRouter {
 
     private final Route fetchRules = doInTransaction(false, (request, response) -> {
 
+        List<OlsRule> rules;
 
+        if(request.queryMap().hasKeys())
+            rules = this.ruleService.getICAOAnnex14Rules(request.queryMap());
+        else
+            rules = this.ruleService.getICAOAnnex14Rules();
 
-        return this.ruleService.getICAOAnnex14Rules()
-                .stream()
-                .map(r -> this.icaoAnnex14Translator.getAsDTO(r.getIcaoRule()))
-                .collect(Collectors.toList());
+        return rules
+                    .stream()
+                    .map(r -> this.icaoAnnex14Translator.getAsDTO(r.getIcaoRule()))
+                    .collect(Collectors.toList());
+
     });
 
     @Override
