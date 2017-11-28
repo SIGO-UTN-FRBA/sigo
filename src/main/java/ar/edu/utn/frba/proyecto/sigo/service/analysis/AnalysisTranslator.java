@@ -28,6 +28,7 @@ public class AnalysisTranslator extends Translator<Analysis, AnalysisDTO> {
                 .creationDate(domain.getCreationDate().toInstant(ZoneOffset.UTC).toEpochMilli())
                 .editionDate(domain.getEditionDate().toInstant(ZoneOffset.UTC).toEpochMilli())
                 .airportId(domain.getAnalysisCase().getAerodrome().getId())
+                .regulationId(domain.getRegulation().ordinal())
                 .build();
     }
 

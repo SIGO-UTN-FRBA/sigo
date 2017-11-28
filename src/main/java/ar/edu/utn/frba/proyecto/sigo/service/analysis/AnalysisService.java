@@ -108,6 +108,7 @@ public class AnalysisService extends SigoService<Analysis, Analysis>{
         super.preCreateActions(analysis, parent);
 
         analysis.setParent(parent);
+        analysis.setRegulation(parent.getRegulation());
         analysis.setStage(AnalysisStages.OBJECT);
         analysis.setStatus(AnalysisStatuses.INITIALIZED);
         analysis.setCreationDate(LocalDateTime.now(ZoneOffset.UTC));

@@ -19,4 +19,5 @@ public class AnalysisDTO {
     private Integer stageId;
     private Integer statusId;
     private Long airportId;
+    private Integer regulationId;
 }
