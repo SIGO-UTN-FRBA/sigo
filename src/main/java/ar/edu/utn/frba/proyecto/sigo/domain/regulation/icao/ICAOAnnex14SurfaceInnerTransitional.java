@@ -8,4 +8,14 @@ import lombok.Data;
 public class ICAOAnnex14SurfaceInnerTransitional extends ICAOAnnex14Surface {
 
     private Double slope;
+
+    @Override
+    public Long getId() {
+        return (long)ICAOAnnex14Surfaces.INNER_TRANSITIONAL.ordinal();
+    }
+
+    @Override
+    public String getName() {
+        return ICAOAnnex14Surfaces.INNER_TRANSITIONAL.description();
+    }
 }

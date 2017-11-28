@@ -34,7 +34,7 @@ public class RunwayApproachSectionService extends SigoService<RunwayApproachSect
                 getThresholdFeatureSchema(),
                 new Object[]{
                         calculateThresholdGeometry(runwayDirection),
-                        "Runway",
+                        "Threshold Displace",
                         runwayDirection.getApproachSection().getThresholdLength()
                 },
                 runwayDirection.getApproachSection().getId().toString()

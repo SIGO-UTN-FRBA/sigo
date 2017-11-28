@@ -2,6 +2,7 @@ package ar.edu.utn.frba.proyecto.sigo.service.analysis;
 
 import ar.edu.utn.frba.proyecto.sigo.domain.analysis.Analysis;
 import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisCase;
+import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisException;
 import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisObject;
 import ar.edu.utn.frba.proyecto.sigo.domain.object.PlacedObject;
 import ar.edu.utn.frba.proyecto.sigo.domain.object.PlacedObjectBuilding;
@@ -24,11 +25,15 @@ import java.util.List;
 
 public class AnalysisCaseService extends SigoService <AnalysisCase, Analysis> {
 
+    private AnalysisExceptionClone clone;
+
     @Inject
     public AnalysisCaseService(
-            HibernateUtil hibernateUtil
+            HibernateUtil hibernateUtil,
+            AnalysisExceptionClone clone
     ) {
         super(AnalysisCase.class, hibernateUtil.getSessionFactory());
+        this.clone = clone;
     }
 
     @Override
@@ -41,9 +46,12 @@ public class AnalysisCaseService extends SigoService <AnalysisCase, Analysis> {
 
     @Override
     protected void postCreateActions(AnalysisCase analysisCase, Analysis parent) {
+
         super.postCreateActions(analysisCase, parent);
 
         initializeObjects(analysisCase);
+
+        initializeExceptions(analysisCase, parent);
     }
 
     private void initializeObjects(AnalysisCase analysisCase) {
@@ -58,7 +66,6 @@ public class AnalysisCaseService extends SigoService <AnalysisCase, Analysis> {
                 )
                 .forEach(o -> {
                     currentSession().save(o);
-                    analysisCase.getObjects().add(o);
                 });
     }
 
@@ -74,6 +81,24 @@ public class AnalysisCaseService extends SigoService <AnalysisCase, Analysis> {
         discardObjects(analysisCase);
 
         initializeObjects(analysisCase);
+    }
+
+    private void initializeExceptions(AnalysisCase analysisCase, Analysis parent) {
+
+        parent.getParent().getAnalysisCase().getExceptions()
+                .stream()
+                .map(e -> e.accept(clone))
+                .forEach(e -> {
+
+                    e.setAnalysisCase(analysisCase);
+
+                    currentSession().save(e);
+                });
+
+    }
+
+    private List<AnalysisException> inheritExceptions(AnalysisCase analysisCase) {
+        return null;
     }
 
     private List<PlacedObject> collectPlacedObject(AnalysisCase analysisCase) {

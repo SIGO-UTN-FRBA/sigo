@@ -15,7 +15,9 @@ public class AnalysisDTO {
     private Long caseId;
     private Long parentId;
     private Long creationDate;
+    private Long editionDate;
     private Integer stageId;
     private Integer statusId;
     private Long airportId;
+    private Integer regulationId;
 }

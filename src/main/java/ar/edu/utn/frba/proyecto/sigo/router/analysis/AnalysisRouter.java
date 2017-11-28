@@ -1,6 +1,7 @@
 package ar.edu.utn.frba.proyecto.sigo.router.analysis;
 
 import ar.edu.utn.frba.proyecto.sigo.domain.analysis.Analysis;
+import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisStages;
 import ar.edu.utn.frba.proyecto.sigo.exception.MissingParameterException;
 import ar.edu.utn.frba.proyecto.sigo.persistence.HibernateUtil;
 import ar.edu.utn.frba.proyecto.sigo.router.SigoRouter;
@@ -16,6 +17,7 @@ import javax.inject.Inject;
 import java.util.stream.Collectors;
 
 import static spark.Spark.get;
+import static spark.Spark.patch;
 import static spark.Spark.post;
 
 public class AnalysisRouter extends SigoRouter {
@@ -77,6 +79,25 @@ public class AnalysisRouter extends SigoRouter {
         return analysisTranslator.getAsDTO(analysis);
     });
 
+    /**
+     * Update analysis' status
+     */
+    private final Route updateAnalysis = doInTransaction(true, (request, response) -> {
+
+        Analysis analysis = this.analysisService.get(getParamAnalysisId(request));
+
+        JsonObject body = objectMapper.fromJson(request.body(), JsonObject.class);
+
+        if(!body.has("stageId"))
+            throw new MissingParameterException("stageId");
+
+        AnalysisStages newStage = AnalysisStages.values()[body.get("stageId").getAsInt()];
+
+        this.analysisService.changeStatus(analysis, newStage);
+
+        return analysisTranslator.getAsDTO(analysis);
+    });
+
     @Override
     public RouteGroup routes() {
         return ()->{
@@ -84,6 +105,7 @@ public class AnalysisRouter extends SigoRouter {
             get("", searchAnalysis, jsonTransformer);
 
             get("/:" + ANALYSIS_ID_PARAM, fetchAnalysis, jsonTransformer);
+            patch("/:" + ANALYSIS_ID_PARAM, updateAnalysis, jsonTransformer);
         };
     }
 

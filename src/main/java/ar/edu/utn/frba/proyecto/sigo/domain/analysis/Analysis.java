@@ -2,6 +2,7 @@ package ar.edu.utn.frba.proyecto.sigo.domain.analysis;
 
 import ar.edu.utn.frba.proyecto.sigo.domain.SigoDomain;
 import ar.edu.utn.frba.proyecto.sigo.domain.object.PlacedObject;
+import ar.edu.utn.frba.proyecto.sigo.domain.regulation.Regulations;
 import com.google.common.base.MoreObjects;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -57,12 +58,20 @@ public class Analysis extends SigoDomain {
     @Column(name = "creation_date")
     private LocalDateTime creationDate;
 
+    @Column(name = "edition_date")
+    private LocalDateTime editionDate;
+
+    @Enumerated(EnumType.ORDINAL)
+    @Column(name= "regulation_id")
+    private Regulations regulation;
+
     public String toString(){
 
         return MoreObjects.toStringHelper(this)
                 .add("id", id)
                 .add("status", status.name())
                 .add("stage", stage.name())
+                .add("regulation", regulation.description())
                 .add("parent", Optional.ofNullable(parent).map(p -> p.id ).orElse(0L))
                 .toString();
     }

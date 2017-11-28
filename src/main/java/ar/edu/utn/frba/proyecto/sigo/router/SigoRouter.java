@@ -40,7 +40,8 @@ public abstract class SigoRouter extends Router {
     protected static String SURFACE_ID_PARAM = "surface_id";
     protected static String REGULATION_ID_PARAM="regulation_id";
     protected static String ANALYSIS_ID_PARAM ="analysis_id";
-    protected static String CASE_ID_PARAM ="case_id";
+    protected static String EXCEPTION_ID_PARAM ="exception_id";
+    protected static String RULE_ID_PARAM = "rule_id";
 
     protected Gson objectMapper;
     @Getter
@@ -91,8 +92,12 @@ public abstract class SigoRouter extends Router {
         return getParam(request, ANALYSIS_ID_PARAM);
     }
 
-    protected Long getParamCaseId(Request request){
-        return getParam(request, CASE_ID_PARAM);
+    protected Long getParamExceptionId(Request request){
+        return getParam(request, EXCEPTION_ID_PARAM);
+    }
+
+    protected Long getParamRuleId(Request request){
+        return getParam(request, RULE_ID_PARAM);
     }
 
     private Long getParam(Request request, String key) {
@@ -101,7 +106,6 @@ public abstract class SigoRouter extends Router {
                 .map(Long::valueOf)
                 .orElseThrow(() -> new MissingParameterException(key));
     }
-
 
     protected <R> Route doInTransaction(Boolean inTransaction, BiFunction<Request, Response, R> route){
 

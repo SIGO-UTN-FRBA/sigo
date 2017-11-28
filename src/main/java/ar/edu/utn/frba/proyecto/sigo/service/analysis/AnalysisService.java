@@ -27,6 +27,7 @@ import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Subquery;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.util.List;
 import java.util.Optional;
 import java.util.TimeZone;
@@ -69,6 +70,10 @@ public class AnalysisService extends SigoService<Analysis, Analysis>{
                 .ofNullable(parameters.get(Airport_.codeIATA.getName()).value())
                 .map(v -> builder.equal(airport.get(Airport_.codeIATA.getName()),v));
 
+        Optional<Predicate> predicateCodeLocal = Optional
+                .ofNullable(parameters.get(Airport_.codeLocal.getName()).value())
+                .map(v -> builder.equal(airport.get(Airport_.codeLocal.getName()),v));
+
         Optional<Predicate> predicateCurrent = Optional
                 .ofNullable(parameters.get("current"))
                 .map(p -> {
@@ -87,7 +92,7 @@ public class AnalysisService extends SigoService<Analysis, Analysis>{
                 });
 
 
-        List<Predicate> collect = Lists.newArrayList(predicateNameFIR, predicateCodeFIR, predicateCodeIATA, predicateCurrent)
+        List<Predicate> collect = Lists.newArrayList(predicateNameFIR, predicateCodeFIR, predicateCodeIATA, predicateCodeLocal, predicateCurrent)
                 .stream()
                 .filter(Optional::isPresent)
                 .map(Optional::get)
@@ -103,9 +108,11 @@ public class AnalysisService extends SigoService<Analysis, Analysis>{
         super.preCreateActions(analysis, parent);
 
         analysis.setParent(parent);
+        analysis.setRegulation(parent.getRegulation());
         analysis.setStage(AnalysisStages.OBJECT);
         analysis.setStatus(AnalysisStatuses.INITIALIZED);
-        analysis.setCreationDate(LocalDateTime.now(ZoneId.systemDefault()));
+        analysis.setCreationDate(LocalDateTime.now(ZoneOffset.UTC));
+        analysis.setEditionDate(LocalDateTime.now(ZoneOffset.UTC));
     }
 
     @Override
@@ -117,6 +124,7 @@ public class AnalysisService extends SigoService<Analysis, Analysis>{
 
     private void createAnalysisCase(Analysis analysis, Airport airport) {
         AnalysisCase analysisCase = AnalysisCase.builder()
+                .id(analysis.getId())
                 .aerodrome(airport)
                 .analysis(analysis)
                 .searchRadius(0.1D)
@@ -158,4 +166,12 @@ public class AnalysisService extends SigoService<Analysis, Analysis>{
         return ! currentSession().createQuery(criteria).getResultList().isEmpty();
     }
 
+    public void changeStatus(Analysis analysis, AnalysisStages newStage) {
+
+        //TODO implementar validaciones y acciones (extraer)
+
+        analysis.setEditionDate(LocalDateTime.now(ZoneOffset.UTC));
+
+        analysis.setStage(newStage);
+    }
 }

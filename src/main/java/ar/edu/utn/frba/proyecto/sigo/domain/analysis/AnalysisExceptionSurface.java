@@ -20,7 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Entity
-@Table(name = "public.tbl_exception_surface_spec")
+@Table(name = "public.tbl_analysis_exceptions_surface")
 @PrimaryKeyJoinColumn(name = "exception_id")
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 @Data
@@ -29,12 +29,12 @@ public class AnalysisExceptionSurface extends AnalysisException {
     @Builder
     public AnalysisExceptionSurface(
             Long id,
+            String name,
+            AnalysisExceptions type,
             AnalysisCase analysisCase,
-            String surfaceName,
             Map<String, Double> properties
     ){
-        super(id, analysisCase);
-        this.surfaceName = surfaceName;
+        super(id, name, type, analysisCase);
         this.properties = properties;
     }
 
@@ -43,9 +43,6 @@ public class AnalysisExceptionSurface extends AnalysisException {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "exceptionSurfaceGenerator")
     @Column(name = "exception_surface_id")
     private Long id;
-
-    @Column(name = "surface_name")
-    private String surfaceName;
 
     @ElementCollection
     @MapKeyColumn(name = "property")

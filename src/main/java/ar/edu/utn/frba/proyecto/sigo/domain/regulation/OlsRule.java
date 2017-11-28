@@ -3,20 +3,17 @@ package ar.edu.utn.frba.proyecto.sigo.domain.regulation;
 import javax.persistence.*;
 
 import ar.edu.utn.frba.proyecto.sigo.domain.SigoDomain;
-import ar.edu.utn.frba.proyecto.sigo.domain.regulation.faa.OlsRulesFAASpec;
-import ar.edu.utn.frba.proyecto.sigo.domain.regulation.icao.OlsRulesICAOAnnex14Spec;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.LazyToOne;
-import org.hibernate.annotations.LazyToOneOption;
 
 
 @Entity
 @Table(name = "public.tbl_ols_rules")
+@Inheritance(strategy = InheritanceType.JOINED)
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 @Data
-public class OlsRule extends SigoDomain {
+public abstract class OlsRule extends SigoDomain {
 
     @Id
     @SequenceGenerator(name = "olsRuleGenerator", sequenceName = "OLS_RULE_SEQUENCE", allocationSize = 1)
@@ -28,24 +25,7 @@ public class OlsRule extends SigoDomain {
     @Column(name = "regulation_id")
     private Regulations regulation;
 
-    @OneToOne(
-            mappedBy = "rule",
-            cascade = CascadeType.REMOVE,
-            orphanRemoval = true,
-            fetch = FetchType.LAZY
-    )
-    @LazyToOne( LazyToOneOption.NO_PROXY )
-    private OlsRulesICAOAnnex14Spec icaoRule;
-
-    @OneToOne(
-            mappedBy = "rule",
-            cascade = CascadeType.REMOVE,
-            orphanRemoval = true,
-            fetch = FetchType.LAZY
-    )
-    @LazyToOne( LazyToOneOption.NO_PROXY )
-    private OlsRulesFAASpec faaRule;
-
+    public abstract<T> T accept(OlsRuleVisitor<T> visitor);
 }
 
 
