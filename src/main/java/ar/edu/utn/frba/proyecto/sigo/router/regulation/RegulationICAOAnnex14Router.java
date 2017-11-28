@@ -138,12 +138,19 @@ public class RegulationICAOAnnex14Router extends SigoRouter {
 
     private final Route fetchSurfaces = doInTransaction(false, (request, response) -> {
 
-        return ruleService.getSurfaces(
-                this.getParamClassification(request),
-                this.getParamCategory(request),
-                this.getParamNumberCode(request),
-                this.getParamRecommendations(request)
-        )
+        List<ICAOAnnex14Surfaces> surfaces;
+
+        if(request.queryMap().hasKeys())
+            surfaces = ruleService.getSurfaces(
+                    this.getParamClassification(request),
+                    this.getParamCategory(request),
+                    this.getParamNumberCode(request),
+                    this.getParamRecommendations(request)
+            );
+        else
+            surfaces = ruleService.getSurfaces();
+
+        return surfaces
                 .stream()
                 .sorted(Comparator.comparingInt(Enum::ordinal))
                 .map(s -> new ListItemDTO((long) s.ordinal(), s.description()))

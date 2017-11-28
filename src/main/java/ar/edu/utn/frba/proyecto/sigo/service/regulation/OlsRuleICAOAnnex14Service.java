@@ -94,6 +94,10 @@ public class OlsRuleICAOAnnex14Service extends SigoService<OlsRuleICAOAnnex14, O
         );
     }
 
+    public List<ICAOAnnex14Surfaces> getSurfaces(){
+        return Lists.newArrayList(ICAOAnnex14Surfaces.values());
+    }
+
     public List<ICAOAnnex14Surfaces> getSurfaces(
             ICAOAnnex14RunwayClassifications classification,
             ICAOAnnex14RunwayCategories category,
