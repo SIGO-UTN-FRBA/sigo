@@ -64,6 +64,7 @@ public class AnalysisExceptionTranslator extends Translator<AnalysisException, A
                     .id(exception.getId())
                     .name(exception.getName())
                     .caseId(exception.getAnalysisCase().getId())
+                    .olsRuleId(exception.getOlsRuleId())
                     .property(exception.getProperty())
                     .value(exception.getValue())
                     .build();
