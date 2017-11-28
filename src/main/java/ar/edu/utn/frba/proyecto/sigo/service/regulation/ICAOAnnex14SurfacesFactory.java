@@ -1,6 +1,5 @@
 package ar.edu.utn.frba.proyecto.sigo.service.regulation;
 
-import ar.edu.utn.frba.proyecto.sigo.domain.regulation.OlsRule;
 import ar.edu.utn.frba.proyecto.sigo.domain.regulation.icao.ICAOAnnex14SurfaceApproach;
 import ar.edu.utn.frba.proyecto.sigo.domain.regulation.icao.ICAOAnnex14SurfaceApproachFirstSection;
 import ar.edu.utn.frba.proyecto.sigo.domain.regulation.icao.ICAOAnnex14SurfaceApproachHorizontalSection;
@@ -13,19 +12,17 @@ import ar.edu.utn.frba.proyecto.sigo.domain.regulation.icao.ICAOAnnex14SurfaceIn
 import ar.edu.utn.frba.proyecto.sigo.domain.regulation.icao.ICAOAnnex14SurfaceStrip;
 import ar.edu.utn.frba.proyecto.sigo.domain.regulation.icao.ICAOAnnex14SurfaceTakeoffClimb;
 import ar.edu.utn.frba.proyecto.sigo.domain.regulation.icao.ICAOAnnex14SurfaceTransitional;
-import ar.edu.utn.frba.proyecto.sigo.domain.regulation.icao.OlsRulesICAOAnnex14;
+import ar.edu.utn.frba.proyecto.sigo.domain.regulation.icao.OlsRuleICAOAnnex14;
 
 import java.util.List;
 
 public class ICAOAnnex14SurfacesFactory {
 
-    static ICAOAnnex14SurfaceConical createConicalSurface(List<OlsRule> rules){
+    static ICAOAnnex14SurfaceConical createConicalSurface(List<OlsRuleICAOAnnex14> rules){
 
         ICAOAnnex14SurfaceConical.ICAOAnnex14SurfaceConicalBuilder builder = ICAOAnnex14SurfaceConical.builder();
 
-        rules.forEach(r -> {
-
-            OlsRulesICAOAnnex14 icaoRule = r.getIcaoRule();
+        rules.forEach(icaoRule -> {
 
             switch (icaoRule.getProperty()){
                 case "Slope":
@@ -42,12 +39,10 @@ public class ICAOAnnex14SurfacesFactory {
         return builder.build();
     }
 
-    static ICAOAnnex14SurfaceApproach createApproachSurface(List<OlsRule> rules) {
+    static ICAOAnnex14SurfaceApproach createApproachSurface(List<OlsRuleICAOAnnex14> rules) {
         ICAOAnnex14SurfaceApproach.ICAOAnnex14SurfaceApproachBuilder builder = ICAOAnnex14SurfaceApproach.builder();
 
-        rules.forEach( r ->{
-
-            OlsRulesICAOAnnex14 icaoRule = r.getIcaoRule();
+        rules.forEach( icaoRule ->{
 
             switch (icaoRule.getProperty()){
                 case "Length of inner edge":
@@ -65,11 +60,10 @@ public class ICAOAnnex14SurfacesFactory {
         return builder.build();
     }
 
-    static ICAOAnnex14SurfaceApproachFirstSection createApproachFirstSectionSurface(List<OlsRule> rules){
+    static ICAOAnnex14SurfaceApproachFirstSection createApproachFirstSectionSurface(List<OlsRuleICAOAnnex14> rules){
         ICAOAnnex14SurfaceApproachFirstSection.ICAOAnnex14SurfaceApproachFirstSectionBuilder builder = ICAOAnnex14SurfaceApproachFirstSection.builder();
 
-        rules.forEach( r ->{
-            OlsRulesICAOAnnex14 icaoRule = r.getIcaoRule();
+        rules.forEach( icaoRule ->{
 
             switch (icaoRule.getProperty()){
                 case "Length":
@@ -84,12 +78,10 @@ public class ICAOAnnex14SurfacesFactory {
         return builder.build();
     }
 
-    static ICAOAnnex14SurfaceApproachSecondSection createApproachSecondSectionSurface(List<OlsRule> rules){
+    static ICAOAnnex14SurfaceApproachSecondSection createApproachSecondSectionSurface(List<OlsRuleICAOAnnex14> rules){
         ICAOAnnex14SurfaceApproachSecondSection.ICAOAnnex14SurfaceApproachSecondSectionBuilder builder = ICAOAnnex14SurfaceApproachSecondSection.builder();
 
-        rules.forEach( r ->{
-            OlsRulesICAOAnnex14 icaoRule = r.getIcaoRule();
-
+        rules.forEach( icaoRule ->{
             switch (icaoRule.getProperty()){
                 case "Length":
                     builder.length(icaoRule.getValue());
@@ -103,12 +95,10 @@ public class ICAOAnnex14SurfacesFactory {
         return builder.build();
     }
 
-    static ICAOAnnex14SurfaceApproachHorizontalSection createApproachHorizontalSectionSurface(List<OlsRule> rules){
+    static ICAOAnnex14SurfaceApproachHorizontalSection createApproachHorizontalSectionSurface(List<OlsRuleICAOAnnex14> rules){
         ICAOAnnex14SurfaceApproachHorizontalSection.ICAOAnnex14SurfaceApproachHorizontalSectionBuilder builder = ICAOAnnex14SurfaceApproachHorizontalSection.builder();
 
-        rules.forEach( r ->{
-            OlsRulesICAOAnnex14 icaoRule = r.getIcaoRule();
-
+        rules.forEach( icaoRule ->{
             switch (icaoRule.getProperty()){
                 case "Length":
                     builder.length(icaoRule.getValue());
@@ -122,27 +112,26 @@ public class ICAOAnnex14SurfacesFactory {
         return builder.build();
     }
 
-    static ICAOAnnex14SurfaceTransitional createTransitionalSurface(List<OlsRule> rules){
+    static ICAOAnnex14SurfaceTransitional createTransitionalSurface(List<OlsRuleICAOAnnex14> rules){
         ICAOAnnex14SurfaceTransitional.ICAOAnnex14SurfaceTransitionalBuilder builder = ICAOAnnex14SurfaceTransitional.builder();
 
-        builder.slope(rules.get(0).getIcaoRule().getValue());
+        builder.slope(rules.get(0).getValue());
 
         return builder.build();
     }
 
-    static ICAOAnnex14SurfaceInnerTransitional createInnerTransitionalSurface(List<OlsRule> rules){
+    static ICAOAnnex14SurfaceInnerTransitional createInnerTransitionalSurface(List<OlsRuleICAOAnnex14> rules){
         ICAOAnnex14SurfaceInnerTransitional.ICAOAnnex14SurfaceInnerTransitionalBuilder builder = ICAOAnnex14SurfaceInnerTransitional.builder();
 
-        builder.slope(rules.get(0).getIcaoRule().getValue());
+        builder.slope(rules.get(0).getValue());
 
         return builder.build();
     }
 
-    static ICAOAnnex14SurfaceBalkedLanding createBalkedLandingSurface(List<OlsRule> rules){
+    static ICAOAnnex14SurfaceBalkedLanding createBalkedLandingSurface(List<OlsRuleICAOAnnex14> rules){
         ICAOAnnex14SurfaceBalkedLanding.ICAOAnnex14SurfaceBalkedLandingBuilder builder = ICAOAnnex14SurfaceBalkedLanding.builder();
 
-        rules.forEach( r ->{
-            OlsRulesICAOAnnex14 icaoRule = r.getIcaoRule();
+        rules.forEach( icaoRule ->{
 
             switch (icaoRule.getProperty()){
                 case "Distance from threshold":
@@ -162,11 +151,10 @@ public class ICAOAnnex14SurfacesFactory {
         return builder.build();
     }
 
-    static ICAOAnnex14SurfaceStrip createStripSurface(List<OlsRule> rules){
+    static ICAOAnnex14SurfaceStrip createStripSurface(List<OlsRuleICAOAnnex14> rules){
         ICAOAnnex14SurfaceStrip.ICAOAnnex14SurfaceStripBuilder builder = ICAOAnnex14SurfaceStrip.builder();
 
-        rules.forEach( r ->{
-            OlsRulesICAOAnnex14 icaoRule = r.getIcaoRule();
+        rules.forEach( icaoRule ->{
 
             switch (icaoRule.getProperty()){
                 case "Width":
@@ -181,11 +169,10 @@ public class ICAOAnnex14SurfacesFactory {
         return builder.build();
     }
 
-    static ICAOAnnex14SurfaceTakeoffClimb createTakeoffClimbSurface(List<OlsRule> rules){
+    static ICAOAnnex14SurfaceTakeoffClimb createTakeoffClimbSurface(List<OlsRuleICAOAnnex14> rules){
         ICAOAnnex14SurfaceTakeoffClimb.ICAOAnnex14SurfaceTakeoffClimbBuilder builder = ICAOAnnex14SurfaceTakeoffClimb.builder();
 
-        rules.forEach( r ->{
-            OlsRulesICAOAnnex14 icaoRule = r.getIcaoRule();
+        rules.forEach( icaoRule ->{
 
             switch (icaoRule.getProperty()){
                 case "Slope":
@@ -212,11 +199,10 @@ public class ICAOAnnex14SurfacesFactory {
         return builder.build();
     }
 
-    static ICAOAnnex14SurfaceInnerHorizontal createInnerHorizontalSurface(List<OlsRule> rules){
+    static ICAOAnnex14SurfaceInnerHorizontal createInnerHorizontalSurface(List<OlsRuleICAOAnnex14> rules){
         ICAOAnnex14SurfaceInnerHorizontal.ICAOAnnex14SurfaceInnerHorizontalBuilder builder = ICAOAnnex14SurfaceInnerHorizontal.builder();
 
-        rules.forEach( r ->{
-            OlsRulesICAOAnnex14 icaoRule = r.getIcaoRule();
+        rules.forEach( icaoRule -> {
 
             switch (icaoRule.getProperty()){
                 case "Height":
@@ -231,11 +217,10 @@ public class ICAOAnnex14SurfacesFactory {
         return builder.build();
     }
 
-    static ICAOAnnex14SurfaceInnerApproach createInnerApproachSurface(List<OlsRule> rules){
+    static ICAOAnnex14SurfaceInnerApproach createInnerApproachSurface(List<OlsRuleICAOAnnex14> rules){
         ICAOAnnex14SurfaceInnerApproach.ICAOAnnex14SurfaceInnerApproachBuilder builder = ICAOAnnex14SurfaceInnerApproach.builder();
 
-        rules.forEach( r ->{
-            OlsRulesICAOAnnex14 icaoRule = r.getIcaoRule();
+        rules.forEach( icaoRule ->{
 
             switch (icaoRule.getProperty()){
                 case "Distance from threshold":

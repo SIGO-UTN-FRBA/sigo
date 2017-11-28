@@ -41,6 +41,7 @@ public abstract class SigoRouter extends Router {
     protected static String REGULATION_ID_PARAM="regulation_id";
     protected static String ANALYSIS_ID_PARAM ="analysis_id";
     protected static String EXCEPTION_ID_PARAM ="exception_id";
+    protected static String RULE_ID_PARAM = "rule_id";
 
     protected Gson objectMapper;
     @Getter
@@ -93,6 +94,10 @@ public abstract class SigoRouter extends Router {
 
     protected Long getParamExceptionId(Request request){
         return getParam(request, EXCEPTION_ID_PARAM);
+    }
+
+    protected Long getParamRuleId(Request request){
+        return getParam(request, RULE_ID_PARAM);
     }
 
     private Long getParam(Request request, String key) {

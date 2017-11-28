@@ -1,26 +1,24 @@
 package ar.edu.utn.frba.proyecto.sigo.domain.regulation.icao;
 
-import javax.persistence.*;
-
-import ar.edu.utn.frba.proyecto.sigo.domain.SigoDomain;
 import ar.edu.utn.frba.proyecto.sigo.domain.regulation.OlsRule;
-import lombok.*;
+import ar.edu.utn.frba.proyecto.sigo.domain.regulation.OlsRuleVisitor;
+import lombok.AccessLevel;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.PrimaryKeyJoinColumn;
+import javax.persistence.Table;
 
 @Entity
-@Table(name = "public.tbl_OLS_rules_ICAOAnnex14")
+@Table(name = "public.tbl_ols_rules_icaoannex14")
+@PrimaryKeyJoinColumn(name = "rule_id")
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 @Data
-public class OlsRulesICAOAnnex14 extends SigoDomain {
-
-    @Id
-    @SequenceGenerator(name = "olsRuleIcaoGenerator", sequenceName = "OLS_RULE_ICAO_SEQUENCE")
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "olsRuleIcaoGenerator")
-    @Column(name = "rule_id")
-    private Long id;
-
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "rule_id")
-    private OlsRule rule;
+public class OlsRuleICAOAnnex14 extends OlsRule {
 
     @Enumerated(EnumType.ORDINAL)
     @Column(name = "surface_name")
@@ -43,4 +41,9 @@ public class OlsRulesICAOAnnex14 extends SigoDomain {
 
     @Column(name = "value")
     private Double value;
+
+    @Override
+    public <T> T accept(OlsRuleVisitor<T> visitor) {
+        return visitor.visitOlsRuleICAOAnnex14(this);
+    }
 }

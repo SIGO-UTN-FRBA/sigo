@@ -1,24 +1,23 @@
 package ar.edu.utn.frba.proyecto.sigo.router.regulation;
 
 import ar.edu.utn.frba.proyecto.sigo.domain.regulation.OlsRule;
-import ar.edu.utn.frba.proyecto.sigo.domain.regulation.Regulations;
 import ar.edu.utn.frba.proyecto.sigo.domain.regulation.icao.ICAOAnnex14RunwayCategories;
 import ar.edu.utn.frba.proyecto.sigo.domain.regulation.icao.ICAOAnnex14RunwayClassifications;
 import ar.edu.utn.frba.proyecto.sigo.domain.regulation.icao.ICAOAnnex14RunwayCodeLetters;
 import ar.edu.utn.frba.proyecto.sigo.domain.regulation.icao.ICAOAnnex14RunwayCodeNumbers;
 import ar.edu.utn.frba.proyecto.sigo.domain.regulation.icao.ICAOAnnex14Surface;
 import ar.edu.utn.frba.proyecto.sigo.domain.regulation.icao.ICAOAnnex14Surfaces;
+import ar.edu.utn.frba.proyecto.sigo.domain.regulation.icao.OlsRuleICAOAnnex14;
 import ar.edu.utn.frba.proyecto.sigo.dto.common.EnumerationDTO;
 import ar.edu.utn.frba.proyecto.sigo.dto.common.ListItemDTO;
 import ar.edu.utn.frba.proyecto.sigo.exception.InvalidParameterException;
 import ar.edu.utn.frba.proyecto.sigo.exception.MissingParameterException;
 import ar.edu.utn.frba.proyecto.sigo.persistence.HibernateUtil;
 import ar.edu.utn.frba.proyecto.sigo.router.SigoRouter;
-import ar.edu.utn.frba.proyecto.sigo.service.regulation.OlsRuleICAOAnnex14Translator;
-import ar.edu.utn.frba.proyecto.sigo.service.regulation.OlsRuleService;
+import ar.edu.utn.frba.proyecto.sigo.service.regulation.OlsRuleTranslator;
+import ar.edu.utn.frba.proyecto.sigo.service.regulation.OlsRuleICAOAnnex14Service;
 import ar.edu.utn.frba.proyecto.sigo.spark.JsonTransformer;
 import com.google.gson.Gson;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import spark.QueryParamsMap;
 import spark.Request;
@@ -38,21 +37,21 @@ import static spark.Spark.get;
 public class RegulationICAOAnnex14Router extends SigoRouter {
 
     private final JsonTransformer jsonTransformer;
-    private OlsRuleService ruleService;
-    private OlsRuleICAOAnnex14Translator icaoAnnex14Translator;
+    private OlsRuleICAOAnnex14Service ruleService;
+    private OlsRuleTranslator ruleTranslator;
 
     @Inject
     public RegulationICAOAnnex14Router(
             JsonTransformer jsonTransformer,
             HibernateUtil hibernateUtil,
-            OlsRuleService ruleService,
-            OlsRuleICAOAnnex14Translator icaoAnnex14Translator,
+            OlsRuleICAOAnnex14Service ruleService,
+            OlsRuleTranslator ruleTranslator,
             Gson gson
     ){
         super(gson, hibernateUtil);
 
         this.ruleService = ruleService;
-        this.icaoAnnex14Translator = icaoAnnex14Translator;
+        this.ruleTranslator = ruleTranslator;
         this.hibernateUtil = hibernateUtil;
         this.jsonTransformer = jsonTransformer;
     }
@@ -139,7 +138,7 @@ public class RegulationICAOAnnex14Router extends SigoRouter {
 
     private final Route fetchSurfaces = doInTransaction(false, (request, response) -> {
 
-        return ruleService.getICAOAnnex14Surfaces(
+        return ruleService.getSurfaces(
                 this.getParamClassification(request),
                 this.getParamCategory(request),
                 this.getParamNumberCode(request),
@@ -153,99 +152,16 @@ public class RegulationICAOAnnex14Router extends SigoRouter {
 
     private final Route fetchSurface = doInTransaction(false, (request, response) -> {
 
-        ICAOAnnex14Surface surface = null;
-
         ICAOAnnex14RunwayCodeNumbers paramNumberCode = this.getParamNumberCode(request);
         ICAOAnnex14RunwayClassifications paramClassification = this.getParamClassification(request);
         ICAOAnnex14RunwayCategories paramCategory = this.getParamCategory(request);
 
-        switch (this.getParamSurface(request)){
-
-            case STRIP:
-                surface = ruleService.getICAOAnnex14SurfaceStrip(
-                        paramNumberCode,
-                        paramClassification,
-                        paramCategory
-                );
-                break;
-            case CONICAL:
-                surface = ruleService.getICAOAnnex14SurfaceConical(
-                        paramNumberCode,
-                        paramClassification,
-                        paramCategory
-                );
-                break;
-            case INNER_HORIZONTAL:
-                surface = ruleService.getICAOAnnex14SurfaceInnerHorizontal(
-                        paramNumberCode,
-                        paramClassification,
-                        paramCategory
-                );
-                break;
-            case INNER_APPROACH:
-                surface = ruleService.getICAOAnnex14SurfaceInnerApproach(
-                        paramNumberCode,
-                        paramClassification,
-                        paramCategory
-                );
-                break;
-            case APPROACH:
-                surface = ruleService.getICAOAnnex14SurfaceApproach(
-                        paramNumberCode,
-                        paramClassification,
-                        paramCategory
-                );
-                break;
-            case APPROACH_FIRST_SECTION:
-                surface = ruleService.getICAOAnnex14SurfaceApproachFirstSection(
-                        paramNumberCode,
-                        paramClassification,
-                        paramCategory
-                );
-                break;
-            case APPROACH_SECOND_SECTION:
-                surface = ruleService.getICAOAnnex14SurfaceApproachSecondSection(
-                        paramNumberCode,
-                        paramClassification,
-                        paramCategory
-                );
-                break;
-            case APPROACH_HORIZONTAL_SECTION:
-                surface = ruleService.getICAOAnnex14SurfaceApproachHorizontalSection(
-                        paramNumberCode,
-                        paramClassification,
-                        paramCategory
-                );
-                break;
-            case TRANSITIONAL:
-                surface = ruleService.getICAOAnnex14SurfaceTransitional(
-                        paramNumberCode,
-                        paramClassification,
-                        paramCategory
-                );
-                break;
-            case INNER_TRANSITIONAL:
-                surface = ruleService.getICAOAnnex14SurfaceInnerTransitional(
-                        paramNumberCode,
-                        paramClassification,
-                        paramCategory
-                );
-                break;
-            case BALKED_LANDING_SURFACE:
-                surface = ruleService.getICAOAnnex14SurfaceBalkedLanding(
-                        paramNumberCode,
-                        paramClassification,
-                        paramCategory
-                );
-                break;
-            case TAKEOFF_CLIMB:
-                surface = ruleService.getICAOAnnex14SurfaceTakeoffClimb(
-                        paramNumberCode,
-                        paramClassification,
-                        paramCategory
-                );
-                break;
-        }
+        ICAOAnnex14Surface surface = ruleService.getSurface(
+                                    this.getParamSurface(request),
+                                    paramNumberCode,
+                                    paramClassification,
+                                    paramCategory
+                                );
 
         surface.setCategory(paramCategory);
         surface.setClassification(paramClassification);
@@ -264,18 +180,24 @@ public class RegulationICAOAnnex14Router extends SigoRouter {
 
     private final Route fetchRules = doInTransaction(false, (request, response) -> {
 
-        List<OlsRule> rules;
+        List<OlsRuleICAOAnnex14> rules;
 
         if(request.queryMap().hasKeys())
-            rules = this.ruleService.getICAOAnnex14Rules(request.queryMap());
+            rules = this.ruleService.find(request.queryMap());
         else
-            rules = this.ruleService.getICAOAnnex14Rules();
+            rules = this.ruleService.findAll();
 
         return rules
                     .stream()
-                    .map(r -> this.icaoAnnex14Translator.getAsDTO(r.getIcaoRule()))
+                    .map(r -> this.ruleTranslator.getAsDTO(r))
                     .collect(Collectors.toList());
 
+    });
+
+    private final Route fetchRule = doInTransaction(false, (request, response) -> {
+        OlsRule rule = this.ruleService.get(this.getParamRuleId(request));
+
+        return this.ruleTranslator.getAsDTO(rule);
     });
 
     @Override
@@ -283,6 +205,7 @@ public class RegulationICAOAnnex14Router extends SigoRouter {
         return ()-> {
 
             get("/rules", fetchRules, jsonTransformer);
+            get("/rules/:" + RULE_ID_PARAM, fetchRule, jsonTransformer);
             get("/runwayCategories", fetchRunwayCategories, jsonTransformer);
             get("/runwayClassifications", fetchRunwayClassifications, jsonTransformer);
             get("/runwayCodeLetters", fetchRunwayCodeLetters, jsonTransformer);
