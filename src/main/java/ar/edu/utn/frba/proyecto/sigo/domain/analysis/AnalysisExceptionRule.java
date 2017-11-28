@@ -1,6 +1,7 @@
 package ar.edu.utn.frba.proyecto.sigo.domain.analysis;
 
 
+import ar.edu.utn.frba.proyecto.sigo.domain.regulation.Regulations;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Data;
@@ -8,6 +9,8 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -30,13 +33,15 @@ public class AnalysisExceptionRule extends AnalysisException {
             AnalysisCase analysisCase,
             Long olsRuleId,
             String property,
-            Double value
+            Double value,
+            Regulations regulation
     ){
         super(id, name, type, analysisCase);
 
         this.olsRuleId = olsRuleId;
         this.property = property;
         this.value = value;
+        this.regulation = regulation;
     }
 
     @Id
@@ -53,6 +58,10 @@ public class AnalysisExceptionRule extends AnalysisException {
 
     @Column(name="value")
     private Double value;
+
+    @Enumerated(EnumType.ORDINAL)
+    @Column(name="regulation_id")
+    private Regulations regulation;
 
     @Override
     public <T> T accept(AnalysisExceptionVisitor<T> visitor) {

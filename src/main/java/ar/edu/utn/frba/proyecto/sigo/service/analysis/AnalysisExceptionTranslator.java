@@ -6,6 +6,7 @@ import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisExceptionRule;
 import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisExceptionSurface;
 import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisExceptionVisitor;
 import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisExceptions;
+import ar.edu.utn.frba.proyecto.sigo.domain.regulation.Regulations;
 import ar.edu.utn.frba.proyecto.sigo.dto.analysis.AnalysisExceptionDTO;
 import ar.edu.utn.frba.proyecto.sigo.exception.InvalidParameterException;
 import ar.edu.utn.frba.proyecto.sigo.service.Translator;
@@ -67,6 +68,7 @@ public class AnalysisExceptionTranslator extends Translator<AnalysisException, A
                     .olsRuleId(exception.getOlsRuleId())
                     .property(exception.getProperty())
                     .value(exception.getValue())
+                    .regulationId(exception.getRegulation().ordinal())
                     .build();
         }
 
@@ -112,7 +114,8 @@ public class AnalysisExceptionTranslator extends Translator<AnalysisException, A
                 .type(AnalysisExceptions.RULE)
                 .property(dto.getProperty())
                 .value(dto.getValue())
-                .olsRuleId(dto.getOlsRuleId());
+                .olsRuleId(dto.getOlsRuleId())
+                .regulation(Regulations.values()[dto.getRegulationId()]);
 
         // relation: case
         AnalysisCase analysisCase = caseService.get(dto.getCaseId());

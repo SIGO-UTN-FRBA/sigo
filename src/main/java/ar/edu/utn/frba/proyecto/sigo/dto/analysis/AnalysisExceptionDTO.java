@@ -24,6 +24,7 @@ public class AnalysisExceptionDTO {
     private Long olsRuleId;
     private String property;
     private Double value;
+    private Integer regulationId;
 
     //AnalysisExceptionSurface
     private String surfaceName;
