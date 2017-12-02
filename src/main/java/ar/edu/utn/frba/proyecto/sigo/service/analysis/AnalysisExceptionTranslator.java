@@ -2,6 +2,7 @@ package ar.edu.utn.frba.proyecto.sigo.service.analysis;
 
 import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisCase;
 import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisException;
+import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisExceptionDynamicSurface;
 import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisExceptionRule;
 import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisExceptionSurface;
 import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisExceptionVisitor;
@@ -52,6 +53,8 @@ public class AnalysisExceptionTranslator extends Translator<AnalysisException, A
                 return this.getAsSurfaceDomain(dto);
             case RULE:
                 return this.getAsRuleDomain(dto);
+            case DYNAMIC_SURFACE:
+                return this.getAsDynamicSurfaceDomain(dto);
         }
 
         throw new InvalidParameterException("typeId does not exist");
@@ -78,7 +81,17 @@ public class AnalysisExceptionTranslator extends Translator<AnalysisException, A
                     .id(exception.getId())
                     .name(exception.getName())
                     .caseId(exception.getAnalysisCase().getId())
-                    .properties(exception.getProperties())
+                    .heightAgl(exception.getHeightAgl())
+                    .build();
+        }
+
+        @Override
+        public AnalysisExceptionDTO visitAnalysisExceptionDynamicSurface(AnalysisExceptionDynamicSurface exception) {
+            return AnalysisExceptionDTO.builder()
+                    .id(exception.getId())
+                    .name(exception.getName())
+                    .caseId(exception.getAnalysisCase().getId())
+                    .function(exception.getFunction())
                     .build();
         }
     }
@@ -92,7 +105,27 @@ public class AnalysisExceptionTranslator extends Translator<AnalysisException, A
             .id(dto.getId())
             .name(dto.getName())
             .type(AnalysisExceptions.SURFACE)
-            .properties(dto.getProperties());
+            .heightAgl(dto.getHeightAgl());
+
+        // relation: case
+        AnalysisCase analysisCase = caseService.get(dto.getCaseId());
+        if(!Optional.ofNullable(analysisCase).isPresent())
+            throw new InvalidParameterException("caseId == " + dto.getCaseId());
+        builder.analysisCase(analysisCase);
+
+        return builder.build();
+    }
+
+    private AnalysisExceptionDynamicSurface getAsDynamicSurfaceDomain(AnalysisExceptionDTO dto) {
+
+        AnalysisExceptionDynamicSurface.AnalysisExceptionDynamicSurfaceBuilder builder = AnalysisExceptionDynamicSurface.builder();
+
+        // basic properties
+        builder
+                .id(dto.getId())
+                .name(dto.getName())
+                .type(AnalysisExceptions.DYNAMIC_SURFACE)
+                .function(dto.getFunction());
 
         // relation: case
         AnalysisCase analysisCase = caseService.get(dto.getCaseId());

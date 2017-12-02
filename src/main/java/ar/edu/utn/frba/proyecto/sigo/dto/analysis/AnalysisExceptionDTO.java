@@ -1,5 +1,6 @@
 package ar.edu.utn.frba.proyecto.sigo.dto.analysis;
 
+import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.Polygon;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -27,7 +28,9 @@ public class AnalysisExceptionDTO {
     private Integer regulationId;
 
     //AnalysisExceptionSurface
-    private String surfaceName;
-    private Map<String, Double> properties;
-    private Polygon geom;
+    private Double heightAgl;
+    private Geometry geom;
+
+    //AnalysisExceptionDynamicSurface
+    private String function;
 }
