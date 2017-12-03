@@ -11,11 +11,8 @@ import ar.edu.utn.frba.proyecto.sigo.domain.analysis.Analysis_;
 import ar.edu.utn.frba.proyecto.sigo.exception.BusinessConstrainException;
 import ar.edu.utn.frba.proyecto.sigo.persistence.HibernateUtil;
 import ar.edu.utn.frba.proyecto.sigo.service.SigoService;
+import ar.edu.utn.frba.proyecto.sigo.wizard.WizardAnalysis;
 import com.google.common.collect.Lists;
-import org.hibernate.criterion.DetachedCriteria;
-import org.hibernate.criterion.Projections;
-import org.hibernate.criterion.Property;
-import org.hibernate.criterion.Subqueries;
 import spark.QueryParamsMap;
 
 import javax.inject.Inject;
@@ -26,11 +23,9 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Subquery;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.util.List;
 import java.util.Optional;
-import java.util.TimeZone;
 
 import static java.util.stream.Collectors.toList;
 
@@ -166,12 +161,4 @@ public class AnalysisService extends SigoService<Analysis, Analysis>{
         return ! currentSession().createQuery(criteria).getResultList().isEmpty();
     }
 
-    public void changeStatus(Analysis analysis, AnalysisStages newStage) {
-
-        //TODO implementar validaciones y acciones (extraer)
-
-        analysis.setEditionDate(LocalDateTime.now(ZoneOffset.UTC));
-
-        analysis.setStage(newStage);
-    }
 }
