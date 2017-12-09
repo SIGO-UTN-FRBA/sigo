@@ -1,4 +1,4 @@
-package ar.edu.utn.frba.proyecto.sigo.service.ols;
+package ar.edu.utn.frba.proyecto.sigo.service.ols.icao;
 
 import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceApproach;
 import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceApproachFirstSection;

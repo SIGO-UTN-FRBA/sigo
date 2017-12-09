@@ -8,7 +8,7 @@ public abstract class OlsAnalyst {
 
     protected AnalysisCase analysisCase;
 
-    OlsAnalyst(AnalysisCase analysisCase) {
+    public OlsAnalyst(AnalysisCase analysisCase) {
         this.analysisCase = analysisCase;
     }
 

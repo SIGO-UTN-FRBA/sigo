@@ -1,4 +1,4 @@
-package ar.edu.utn.frba.proyecto.sigo.service.ols;
+package ar.edu.utn.frba.proyecto.sigo.service.ols.icao;
 
 import ar.edu.utn.frba.proyecto.sigo.domain.airport.Runway;
 import ar.edu.utn.frba.proyecto.sigo.domain.airport.RunwayDirection;
@@ -7,6 +7,7 @@ import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisCase;
 import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisObject;
 import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisObstacle;
 import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisSurface;
+import ar.edu.utn.frba.proyecto.sigo.service.ols.OlsAnalyst;
 import ar.edu.utn.frba.proyecto.sigo.service.regulation.OlsRuleICAOAnnex14Service;
 import com.google.inject.assistedinject.Assisted;
 

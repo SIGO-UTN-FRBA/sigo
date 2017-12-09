@@ -2,8 +2,7 @@ package ar.edu.utn.frba.proyecto.sigo.domain.analysis;
 
 import ar.edu.utn.frba.proyecto.sigo.domain.airport.RunwayDirection;
 import ar.edu.utn.frba.proyecto.sigo.domain.ols.ObstacleLimitationSurface;
-import ar.edu.utn.frba.proyecto.sigo.domain.regulation.Regulations;
-import com.google.common.collect.Sets;
+import com.google.common.collect.Lists;
 import com.vividsolutions.jts.geom.Geometry;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -50,7 +49,7 @@ public class AnalysisSurface {
     private RunwayDirection direction;
 
     @OneToMany(mappedBy = "surface", cascade = CascadeType.REMOVE)
-    private HashSet<Object> obstacles = Sets.newHashSet();
+    private List<AnalysisObstacle> obstacles = Lists.newArrayList();
 
     @Column(name="geom")
     private Geometry geometry;

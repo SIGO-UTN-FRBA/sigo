@@ -23,7 +23,7 @@ import ar.edu.utn.frba.proyecto.sigo.domain.regulation.icao.OlsRuleICAOAnnex14_;
 import ar.edu.utn.frba.proyecto.sigo.exception.InvalidParameterException;
 import ar.edu.utn.frba.proyecto.sigo.persistence.HibernateUtil;
 import ar.edu.utn.frba.proyecto.sigo.service.SigoService;
-import ar.edu.utn.frba.proyecto.sigo.service.ols.ICAOAnnex14SurfaceDefinitionsHelper;
+import ar.edu.utn.frba.proyecto.sigo.service.ols.icao.ICAOAnnex14SurfaceDefinitionsHelper;
 import com.google.common.collect.Lists;
 import spark.QueryParamsMap;
 
