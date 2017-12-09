@@ -1,5 +1,6 @@
 package ar.edu.utn.frba.proyecto.sigo.service.airport;
 
+import ar.edu.utn.frba.proyecto.sigo.domain.airport.RunwayStrip;
 import ar.edu.utn.frba.proyecto.sigo.persistence.HibernateUtil;
 import ar.edu.utn.frba.proyecto.sigo.domain.airport.Airport;
 import ar.edu.utn.frba.proyecto.sigo.domain.airport.Runway;
@@ -72,5 +73,21 @@ public class RunwayService extends SigoService<Runway, Airport> {
         tb.add("length", Double.class);
 
         return tb.buildFeatureType();
+    }
+
+    @Override
+    protected void postCreateActions(Runway runway, Airport airport) {
+        super.postCreateActions(runway, airport);
+
+        createRunwayStrip(runway);
+    }
+
+    private void createRunwayStrip(Runway runway) {
+
+        RunwayStrip strip = RunwayStrip.builder().build();
+
+        runway.setStrip(strip);
+
+        currentSession().persist(strip);
     }
 }

@@ -91,6 +91,7 @@ public class HibernateUtil {
                 .addAnnotatedClass(RunwayClassificationFAA.class)
                 .addAnnotatedClass(RunwayApproachSection.class)
                 .addAnnotatedClass(RunwayTakeoffSection.class)
+                .addAnnotatedClass(RunwayStrip.class)
                 .addAnnotatedClass(OlsRule.class)
                 .addAnnotatedClass(OlsRuleICAOAnnex14.class)
                 .addAnnotatedClass(OlsRulesFAA.class)

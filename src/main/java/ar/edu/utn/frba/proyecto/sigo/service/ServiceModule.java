@@ -1,7 +1,5 @@
 package ar.edu.utn.frba.proyecto.sigo.service;
 
-import ar.edu.utn.frba.proyecto.sigo.domain.airport.RunwayDirection;
-import ar.edu.utn.frba.proyecto.sigo.domain.airport.RunwayTakeoffSection;
 import ar.edu.utn.frba.proyecto.sigo.service.airport.AirportService;
 import ar.edu.utn.frba.proyecto.sigo.service.airport.AirportTranslator;
 import ar.edu.utn.frba.proyecto.sigo.service.airport.CatalogAirportService;
@@ -12,6 +10,7 @@ import ar.edu.utn.frba.proyecto.sigo.service.airport.RunwayClassificationTransla
 import ar.edu.utn.frba.proyecto.sigo.service.airport.RunwayDirectionService;
 import ar.edu.utn.frba.proyecto.sigo.service.airport.RunwayDirectionTranslator;
 import ar.edu.utn.frba.proyecto.sigo.service.airport.RunwayService;
+import ar.edu.utn.frba.proyecto.sigo.service.airport.RunwayStripService;
 import ar.edu.utn.frba.proyecto.sigo.service.airport.RunwayTakeoffSectionService;
 import ar.edu.utn.frba.proyecto.sigo.service.airport.RunwayTakeoffSectionTranslator;
 import ar.edu.utn.frba.proyecto.sigo.service.airport.RunwayTranslator;
@@ -24,11 +23,8 @@ import ar.edu.utn.frba.proyecto.sigo.service.analysis.AnalysisObjectTranslator;
 import ar.edu.utn.frba.proyecto.sigo.service.analysis.AnalysisService;
 import ar.edu.utn.frba.proyecto.sigo.service.analysis.AnalysisTranslator;
 import ar.edu.utn.frba.proyecto.sigo.service.location.PoliticalLocationService;
-import ar.edu.utn.frba.proyecto.sigo.service.location.PoliticalLocationTranslator;
 import ar.edu.utn.frba.proyecto.sigo.service.location.RegionService;
-import ar.edu.utn.frba.proyecto.sigo.service.object.CatalogObjectService;
 import ar.edu.utn.frba.proyecto.sigo.service.object.ObjectOwnerService;
-import ar.edu.utn.frba.proyecto.sigo.service.object.PlacedObjectFeatureService;
 import ar.edu.utn.frba.proyecto.sigo.service.object.PlacedObjectService;
 import ar.edu.utn.frba.proyecto.sigo.service.ols.OlsAnalystFactory;
 import ar.edu.utn.frba.proyecto.sigo.service.regulation.OlsRuleICAOAnnex14Service;
@@ -75,6 +71,7 @@ public class ServiceModule extends AbstractModule {
         bind(AirportService.class);
         bind(AirportTranslator.class);
         bind(CatalogAirportService.class);
+        bind(RunwayStripService.class);
 
         install(new FactoryModuleBuilder()
                 .implement(OlsRuleService.class, OlsRuleICAOAnnex14Service.class)
