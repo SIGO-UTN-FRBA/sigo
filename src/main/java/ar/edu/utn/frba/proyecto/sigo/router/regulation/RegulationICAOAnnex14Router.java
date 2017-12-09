@@ -5,8 +5,8 @@ import ar.edu.utn.frba.proyecto.sigo.domain.regulation.icao.ICAOAnnex14RunwayCat
 import ar.edu.utn.frba.proyecto.sigo.domain.regulation.icao.ICAOAnnex14RunwayClassifications;
 import ar.edu.utn.frba.proyecto.sigo.domain.regulation.icao.ICAOAnnex14RunwayCodeLetters;
 import ar.edu.utn.frba.proyecto.sigo.domain.regulation.icao.ICAOAnnex14RunwayCodeNumbers;
-import ar.edu.utn.frba.proyecto.sigo.domain.regulation.icao.ICAOAnnex14Surface;
-import ar.edu.utn.frba.proyecto.sigo.domain.regulation.icao.ICAOAnnex14Surfaces;
+import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14Surface;
+import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14Surfaces;
 import ar.edu.utn.frba.proyecto.sigo.domain.regulation.icao.OlsRuleICAOAnnex14;
 import ar.edu.utn.frba.proyecto.sigo.dto.common.EnumerationDTO;
 import ar.edu.utn.frba.proyecto.sigo.dto.common.ListItemDTO;
@@ -141,14 +141,14 @@ public class RegulationICAOAnnex14Router extends SigoRouter {
         List<ICAOAnnex14Surfaces> surfaces;
 
         if(request.queryMap().hasKeys())
-            surfaces = ruleService.getSurfaces(
+            surfaces = ruleService.getCatalogOfSurfaces(
                     this.getParamClassification(request),
                     this.getParamCategory(request),
                     this.getParamNumberCode(request),
                     this.getParamRecommendations(request)
             );
         else
-            surfaces = ruleService.getSurfaces();
+            surfaces = ruleService.getCatalogOfSurfaces();
 
         return surfaces
                 .stream()

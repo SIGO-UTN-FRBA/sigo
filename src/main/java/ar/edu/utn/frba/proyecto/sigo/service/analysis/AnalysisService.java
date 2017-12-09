@@ -11,7 +11,6 @@ import ar.edu.utn.frba.proyecto.sigo.domain.analysis.Analysis_;
 import ar.edu.utn.frba.proyecto.sigo.exception.BusinessConstrainException;
 import ar.edu.utn.frba.proyecto.sigo.persistence.HibernateUtil;
 import ar.edu.utn.frba.proyecto.sigo.service.SigoService;
-import ar.edu.utn.frba.proyecto.sigo.wizard.WizardAnalysis;
 import com.google.common.collect.Lists;
 import spark.QueryParamsMap;
 

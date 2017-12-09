@@ -1,5 +1,6 @@
 package ar.edu.utn.frba.proyecto.sigo.router.regulation;
 
+import ar.edu.utn.frba.proyecto.sigo.domain.regulation.Regulation;
 import ar.edu.utn.frba.proyecto.sigo.domain.regulation.Regulations;
 import ar.edu.utn.frba.proyecto.sigo.domain.regulation.bmvbw.RegulationBMVBW;
 import ar.edu.utn.frba.proyecto.sigo.domain.regulation.easa.RegulationEASA;
@@ -43,27 +44,7 @@ public class RegulationRouter extends SigoRouter {
     };
 
     private final Route fetchRegulation = (request, response) -> {
-        switch (Regulations.values()[Math.toIntExact(getParamRegulationId(request))]) {
-
-            case ICAO_ANNEX_14:
-                return new RegulationICAOAnnex14();
-            case EASA:
-                return new RegulationEASA();
-            case BMVBW:
-                return new RegulationBMVBW();
-            case TRANSPORT_CANADA_4TH:
-                return new RegulationTpCanada312_4();
-            case TRANSPORT_CANADA_5TH:
-                return new RegulationTpCanada312_5();
-            case FAA_CFR_PART_77:
-                return new RegulationFAAPart77();
-            case FAA_AC150_5300_13A:
-                return new RegulationFAA13A();
-            case FAA_AC150_5300_18B:
-                return new RegulationFAA18B();
-            default:
-                throw new InvalidParameterException("regulation_id");
-        }
+        return Regulation.of(Regulations.values()[Math.toIntExact(getParamRegulationId(request))]);
     };
 
     @Override

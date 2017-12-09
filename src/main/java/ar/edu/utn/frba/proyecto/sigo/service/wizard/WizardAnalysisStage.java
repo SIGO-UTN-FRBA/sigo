@@ -1,4 +1,4 @@
-package ar.edu.utn.frba.proyecto.sigo.wizard;
+package ar.edu.utn.frba.proyecto.sigo.service.wizard;
 
 import ar.edu.utn.frba.proyecto.sigo.domain.analysis.Analysis;
 import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisStages;
@@ -10,21 +10,6 @@ import java.time.ZoneOffset;
 import java.util.Optional;
 
 public abstract class WizardAnalysisStage {
-
-    public static WizardAnalysisStage of(AnalysisStages stage){
-        switch (stage) {
-            case OBJECT:
-                return new WizardAnalysisStageObject();
-            case EXCEPTION:
-                return new WizardAnalysisStageException();
-            case ANALYSIS:
-                return new WizardAnalysisStageAnalysis();
-            case INFORM:
-                return new WizardAnalysisStageInform();
-        }
-
-        throw new NotImplementedException();
-    }
 
     protected abstract Optional<WizardAnalysisStage> next();
 
