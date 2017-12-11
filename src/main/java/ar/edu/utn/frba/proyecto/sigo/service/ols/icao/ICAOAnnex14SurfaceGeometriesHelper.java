@@ -3,62 +3,33 @@ package ar.edu.utn.frba.proyecto.sigo.service.ols.icao;
 import ar.edu.utn.frba.proyecto.sigo.domain.airport.RunwayDirection;
 import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisSurface;
 import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14Surface;
+import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceInnerHorizontal;
 import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceStrip;
 import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14Surfaces;
 import ar.edu.utn.frba.proyecto.sigo.utils.geom.GeometryHelper;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
+import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.geom.Polygon;
+import com.vividsolutions.jts.geomgraph.GeometryGraph;
 import org.geotools.geojson.geom.GeometryJSON;
+import org.geotools.referencing.GeodeticCalculator;
 
+import javax.inject.Singleton;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
+@Singleton
 public class ICAOAnnex14SurfaceGeometriesHelper {
 
-    public Geometry createSurface(RunwayDirection direction, AnalysisSurface currentAnalysisSurface, List<AnalysisSurface> analysisSurfaces) {
-
-        ICAOAnnex14Surface surface = (ICAOAnnex14Surface) currentAnalysisSurface.getSurface();
-
-        switch (ICAOAnnex14Surfaces.values()[surface.getId().intValue()]) {
-            case STRIP:
-                return createStripSurface(direction, currentAnalysisSurface, analysisSurfaces);
-            case CONICAL:
-                break;
-            case INNER_HORIZONTAL:
-                break;
-            case INNER_APPROACH:
-                break;
-            case APPROACH:
-                break;
-            case APPROACH_FIRST_SECTION:
-                break;
-            case APPROACH_SECOND_SECTION:
-                break;
-            case APPROACH_HORIZONTAL_SECTION:
-                break;
-            case TRANSITIONAL:
-                break;
-            case INNER_TRANSITIONAL:
-                break;
-            case BALKED_LANDING_SURFACE:
-                break;
-            case TAKEOFF_CLIMB:
-                break;
-        }
-
-        return null;
-    }
-
-    private Geometry createStripSurface(RunwayDirection direction, AnalysisSurface currentAnalysisSurface, List<AnalysisSurface> analysisSurfaces) {
+    public Geometry createStripSurfaceGeometry(RunwayDirection direction, ICAOAnnex14SurfaceStrip stripDefinition) {
 
         Double extraWidth, extraLength;
-
-        ICAOAnnex14SurfaceStrip stripDefinition = (ICAOAnnex14SurfaceStrip) currentAnalysisSurface.getSurface();
 
         //1. initialize values
         double halfWidth = direction.getRunway().getWidth() / 2;
@@ -72,6 +43,8 @@ public class ICAOAnnex14SurfaceGeometriesHelper {
                     .orElse(stripDefinition.getLength());
 
         //2. create geom
+
+        //TODO incluir en calculo de longitud: 'antes del umbral THR', 'mas alla del extremo o SWY'
         Coordinate[] baseCoordinates = direction.getRunway().getGeom().getExteriorRing().norm().getCoordinates();
 
         double azimuth = GeometryHelper.getAzimuth(baseCoordinates[0], baseCoordinates[3]);
@@ -89,15 +62,33 @@ public class ICAOAnnex14SurfaceGeometriesHelper {
         newCoordinate4 = GeometryHelper.move(newCoordinate4, azimuth+90, extraWidth);
 
         Polygon stripGeometry = new GeometryFactory().createPolygon(new Coordinate[]{newCoordinate1, newCoordinate2, newCoordinate3, newCoordinate4, newCoordinate1});
-
-/*
+        /*
         OutputStream out = new ByteArrayOutputStream();
         try {
             new GeometryJSON().write(stripGeometry, out);
         } catch (IOException e) {
             e.printStackTrace();
         }
-*/
+        */
         return stripGeometry;
+    }
+
+    public Geometry createInnerHorizontalSurfaceGeometry(RunwayDirection direction, ICAOAnnex14SurfaceInnerHorizontal innerHorizontalDefinition) {
+
+        double radius = innerHorizontalDefinition.getRadius() / 100000;
+        Geometry bufferInteriorPoint = direction.getRunway().getGeom().getInteriorPoint().buffer(radius,20);
+
+        List<Geometry> bufferEdgePoints = direction.getRunway().getDirections().stream().map(d -> d.getGeom().buffer(radius,20)).collect(Collectors.toList());
+
+        Geometry union = bufferInteriorPoint.union(bufferEdgePoints.get(0)).union(bufferEdgePoints.get(1));
+        /*
+        OutputStream out = new ByteArrayOutputStream();
+        try {
+            new GeometryJSON().write(union, out);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        */
+        return union;
     }
 }

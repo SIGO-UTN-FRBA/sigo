@@ -7,8 +7,14 @@ import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisCase;
 import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisObject;
 import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisObstacle;
 import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisSurface;
+import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14Surface;
+import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceInnerHorizontal;
+import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceStrip;
+import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14Surfaces;
+import ar.edu.utn.frba.proyecto.sigo.exception.SigoException;
 import ar.edu.utn.frba.proyecto.sigo.service.ols.OlsAnalyst;
 import ar.edu.utn.frba.proyecto.sigo.service.regulation.OlsRuleICAOAnnex14Service;
+import com.google.common.collect.Lists;
 import com.google.inject.assistedinject.Assisted;
 
 import javax.inject.Inject;
@@ -19,16 +25,19 @@ import java.util.stream.Collectors;
 
 public class OlsAnalystICAOAnnex14 extends OlsAnalyst {
 
-    private OlsRuleICAOAnnex14Service service;
+    private OlsRuleICAOAnnex14Service definitionService;
+    private ICAOAnnex14SurfaceGeometriesHelper geometryHelper;
 
     @Inject
     public OlsAnalystICAOAnnex14(
             OlsRuleICAOAnnex14Service service,
+            ICAOAnnex14SurfaceGeometriesHelper geometryHelper,
             @Assisted AnalysisCase analysisCase
     ) {
         super(analysisCase);
 
-        this.service = service;
+        this.definitionService = service;
+        this.geometryHelper = geometryHelper;
     }
 
     @Override
@@ -89,21 +98,59 @@ public class OlsAnalystICAOAnnex14 extends OlsAnalyst {
 
         RunwayClassificationICAOAnnex14 classification = (RunwayClassificationICAOAnnex14) direction.getClassification();
 
-        List<AnalysisSurface> analysisSurfaces = this.service
-                .getSurfaces(classification.getRunwayClassification(), classification.getRunwayCategory(), classification.getRunwayTypeNumber(), false)
-                //TODO filtrar si es q aplica la definicion de superficie al contexto
-                .stream()
-                .map(s -> AnalysisSurface.builder()
-                        .analysisCase(this.analysisCase)
-                        .surface(s)
-                        .direction(direction)
-                        .build()
-                )
-                .collect(Collectors.toList());
+        List<ICAOAnnex14Surface> surfacesDefinitions = this.definitionService.getSurfaces(classification.getRunwayClassification(), classification.getRunwayCategory(), classification.getRunwayTypeNumber(), false);
 
-        analysisSurfaces
-                .forEach(s -> s.setGeometry(new ICAOAnnex14SurfaceGeometriesHelper().createSurface(direction, s,analysisSurfaces)));
+        switch (classification.getRunwayClassification()) {
+            case NON_INSTRUMENT:
+                return createAnalysisSurfacesForNonInstrument(direction, surfacesDefinitions);
+            case NON_PRECISION_APPROACH:
+                return createAnalysisSurfacesForNonInstrument(direction, surfacesDefinitions); //TODO createAnalysisSurfacesForNonPrecision
+            case PRECISION_APPROACH:
+                return createAnalysisSurfacesForNonInstrument(direction, surfacesDefinitions); //TODO createAnalysisSurfacesForPrecision
+        }
+
+        throw new SigoException("Invalid classification of runway direction");
+    }
+
+    private List<AnalysisSurface> createAnalysisSurfacesForNonInstrument(RunwayDirection direction, List<ICAOAnnex14Surface> surfacesDefinitions) {
+
+        List<AnalysisSurface> analysisSurfaces = Lists.newArrayList();
+
+        //1. franja
+        ICAOAnnex14SurfaceStrip stripDefinition = (ICAOAnnex14SurfaceStrip) surfacesDefinitions.stream().filter(d -> d.getId().intValue() == ICAOAnnex14Surfaces.STRIP.ordinal()).findFirst().get();
+        AnalysisSurface stripAnalysisSurface = createStripAnalysisSurface(direction, stripDefinition);
+        analysisSurfaces.add(stripAnalysisSurface);
+
+        //2. horizontal interna
+        ICAOAnnex14SurfaceInnerHorizontal innerHorizontalDefinition = (ICAOAnnex14SurfaceInnerHorizontal) surfacesDefinitions.stream().filter(d -> d.getId().intValue() == ICAOAnnex14Surfaces.INNER_HORIZONTAL.ordinal()).findFirst().get();
+
+        AnalysisSurface analysisSurfaceForInnerHorizontal = createInnerHorizontalAnalysisSurface(direction,innerHorizontalDefinition);
+
+        //3. transicion
+        //4. conica
+        //5. aprox
+        //6. despegue
+        //7. horizontal externa
 
         return analysisSurfaces;
     }
+
+    private AnalysisSurface createInnerHorizontalAnalysisSurface(RunwayDirection direction, ICAOAnnex14SurfaceInnerHorizontal innerHorizontalDefinition) {
+        return AnalysisSurface.builder()
+                .analysisCase(this.analysisCase)
+                .surface(innerHorizontalDefinition)
+                .geometry(geometryHelper.createInnerHorizontalSurfaceGeometry(direction, innerHorizontalDefinition))
+                .direction(direction)
+                .build();
+    }
+
+    private AnalysisSurface createStripAnalysisSurface(RunwayDirection direction, ICAOAnnex14SurfaceStrip stripDefinition) {
+        return AnalysisSurface.builder()
+                .analysisCase(this.analysisCase)
+                .surface(stripDefinition)
+                .geometry(geometryHelper.createStripSurfaceGeometry(direction, stripDefinition))
+                .direction(direction)
+                .build();
+    }
+
 }
