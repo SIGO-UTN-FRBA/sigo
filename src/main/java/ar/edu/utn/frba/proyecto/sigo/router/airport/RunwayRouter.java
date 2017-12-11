@@ -32,7 +32,6 @@ public class RunwayRouter extends SigoRouter {
     private RunwayService runwayService;
     private AirportService airportService;
     private RunwayTranslator translator;
-    private RunwayStripService stripService;
 
     @Inject
     public RunwayRouter(
@@ -41,8 +40,7 @@ public class RunwayRouter extends SigoRouter {
         JsonTransformer jsonTransformer,
         RunwayService runwayService,
         AirportService airportService,
-        RunwayTranslator runwayTranslator,
-        RunwayStripService stripService
+        RunwayTranslator runwayTranslator
     ){
         super(objectMapper, hibernateUtil);
 
@@ -50,7 +48,6 @@ public class RunwayRouter extends SigoRouter {
         this.runwayService = runwayService;
         this.airportService = airportService;
         this.translator = runwayTranslator;
-        this.stripService = stripService;
     }
 
     /**
@@ -142,21 +139,6 @@ public class RunwayRouter extends SigoRouter {
         return response.body();
     });
 
-    private final Route fetchStrip = doInTransaction(false, (request, response) -> {
-        Runway runway = this.runwayService.get(getParamRunwayId(request));
-
-        return runway.getStrip();
-    });
-
-    private final Route updateStrip = doInTransaction(true, (request, response) -> {
-
-        RunwayStrip strip = objectMapper.fromJson(request.body(), RunwayStrip.class);
-
-        stripService.update(strip);
-
-        return strip;
-    });
-
     @SuppressWarnings("Duplicates")
     @Override
     public RouteGroup routes() {
@@ -170,9 +152,6 @@ public class RunwayRouter extends SigoRouter {
 
             get(format("/:%s/feature", RUNWAY_ID_PARAM), fetchFeature, jsonTransformer);
             patch(format("/:%s/feature", RUNWAY_ID_PARAM), updateFeature, jsonTransformer);
-
-            get(format("/:%s/strip", RUNWAY_ID_PARAM), fetchStrip, jsonTransformer);
-            put(format("/:%s/strip", RUNWAY_ID_PARAM), updateStrip, jsonTransformer);
         };
     }
 

@@ -74,20 +74,4 @@ public class RunwayService extends SigoService<Runway, Airport> {
 
         return tb.buildFeatureType();
     }
-
-    @Override
-    protected void postCreateActions(Runway runway, Airport airport) {
-        super.postCreateActions(runway, airport);
-
-        createRunwayStrip(runway);
-    }
-
-    private void createRunwayStrip(Runway runway) {
-
-        RunwayStrip strip = RunwayStrip.builder().build();
-
-        runway.setStrip(strip);
-
-        currentSession().persist(strip);
-    }
 }
