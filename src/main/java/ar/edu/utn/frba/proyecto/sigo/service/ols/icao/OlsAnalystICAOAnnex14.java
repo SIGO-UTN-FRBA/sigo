@@ -123,8 +123,8 @@ public class OlsAnalystICAOAnnex14 extends OlsAnalyst {
 
         //2. horizontal interna
         ICAOAnnex14SurfaceInnerHorizontal innerHorizontalDefinition = (ICAOAnnex14SurfaceInnerHorizontal) surfacesDefinitions.stream().filter(d -> d.getId().intValue() == ICAOAnnex14Surfaces.INNER_HORIZONTAL.ordinal()).findFirst().get();
-
         AnalysisSurface analysisSurfaceForInnerHorizontal = createInnerHorizontalAnalysisSurface(direction,innerHorizontalDefinition);
+        analysisSurfaces.add(analysisSurfaceForInnerHorizontal);
 
         //3. transicion
         //4. conica
