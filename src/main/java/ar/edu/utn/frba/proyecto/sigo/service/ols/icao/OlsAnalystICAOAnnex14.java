@@ -70,12 +70,7 @@ public class OlsAnalystICAOAnnex14 extends OlsAnalyst {
     @Override
     protected void initializeSurfaces() {
 
-        List<AnalysisSurface> surfaces = createAnalysisSurfaces();
-
-        new ICAOAnnex14SurfaceGeometriesHelper(this.analysisCase.getAerodrome(), surfaces)
-                .setupGeometries();
-
-        this.analysisCase.setSurfaces(surfaces);
+        this.analysisCase.setSurfaces(createAnalysisSurfaces());
     }
 
 
@@ -94,15 +89,21 @@ public class OlsAnalystICAOAnnex14 extends OlsAnalyst {
 
         RunwayClassificationICAOAnnex14 classification = (RunwayClassificationICAOAnnex14) direction.getClassification();
 
-        return this.service
+        List<AnalysisSurface> analysisSurfaces = this.service
                 .getSurfaces(classification.getRunwayClassification(), classification.getRunwayCategory(), classification.getRunwayTypeNumber(), false)
+                //TODO filtrar si es q aplica la definicion de superficie al contexto
                 .stream()
                 .map(s -> AnalysisSurface.builder()
-                            .analysisCase(this.analysisCase)
-                            .surface(s)
-                            .direction(direction)
-                            .build()
+                        .analysisCase(this.analysisCase)
+                        .surface(s)
+                        .direction(direction)
+                        .build()
                 )
                 .collect(Collectors.toList());
+
+        analysisSurfaces
+                .forEach(s -> s.setGeometry(new ICAOAnnex14SurfaceGeometriesHelper().createSurface(direction, s,analysisSurfaces)));
+
+        return analysisSurfaces;
     }
 }
