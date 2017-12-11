@@ -1,6 +1,7 @@
 package ar.edu.utn.frba.proyecto.sigo.service.analysis;
 
 import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisException;
+import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisExceptionDynamicSurface;
 import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisExceptionRule;
 import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisExceptionSurface;
 import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisExceptionVisitor;
@@ -26,7 +27,16 @@ public class AnalysisExceptionClone implements AnalysisExceptionVisitor<Analysis
         return AnalysisExceptionSurface.builder()
                 .name(exception.getName())
                 .type(exception.getType())
-                .properties(exception.getProperties())
+                .heightAgl(exception.getHeightAgl())
+                .build();
+    }
+
+    @Override
+    public AnalysisException visitAnalysisExceptionDynamicSurface(AnalysisExceptionDynamicSurface exception) {
+        return AnalysisExceptionDynamicSurface.builder()
+                .name(exception.getName())
+                .type(exception.getType())
+                .function(exception.getFunction())
                 .build();
     }
 }

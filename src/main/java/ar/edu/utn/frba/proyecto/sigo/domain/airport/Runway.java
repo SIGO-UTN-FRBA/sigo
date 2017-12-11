@@ -45,6 +45,11 @@ public class Runway extends SigoDomain implements Spatial<Polygon> {
     @Column(name = "surface")
     private RunwaySurfaces surface;
 
+    @OneToOne
+    @JoinColumn(name = "strip_id")
+    private RunwayStrip strip;
+
+
     public String getName(){
 
         String directionIdentifiers = this.getDirections()

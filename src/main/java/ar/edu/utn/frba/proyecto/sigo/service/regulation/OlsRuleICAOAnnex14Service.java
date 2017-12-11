@@ -1,29 +1,29 @@
 package ar.edu.utn.frba.proyecto.sigo.service.regulation;
 
+import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14Surface;
+import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceApproach;
+import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceApproachFirstSection;
+import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceApproachHorizontalSection;
+import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceApproachSecondSection;
+import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceBalkedLanding;
+import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceConical;
+import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceInnerApproach;
+import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceInnerHorizontal;
+import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceInnerTransitional;
+import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceStrip;
+import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceTakeoffClimb;
+import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceTransitional;
+import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14Surfaces;
 import ar.edu.utn.frba.proyecto.sigo.domain.regulation.OlsRule;
-import ar.edu.utn.frba.proyecto.sigo.domain.regulation.OlsRule_;
 import ar.edu.utn.frba.proyecto.sigo.domain.regulation.icao.ICAOAnnex14RunwayCategories;
 import ar.edu.utn.frba.proyecto.sigo.domain.regulation.icao.ICAOAnnex14RunwayClassifications;
 import ar.edu.utn.frba.proyecto.sigo.domain.regulation.icao.ICAOAnnex14RunwayCodeNumbers;
-import ar.edu.utn.frba.proyecto.sigo.domain.regulation.icao.ICAOAnnex14Surface;
-import ar.edu.utn.frba.proyecto.sigo.domain.regulation.icao.ICAOAnnex14SurfaceApproach;
-import ar.edu.utn.frba.proyecto.sigo.domain.regulation.icao.ICAOAnnex14SurfaceApproachFirstSection;
-import ar.edu.utn.frba.proyecto.sigo.domain.regulation.icao.ICAOAnnex14SurfaceApproachHorizontalSection;
-import ar.edu.utn.frba.proyecto.sigo.domain.regulation.icao.ICAOAnnex14SurfaceApproachSecondSection;
-import ar.edu.utn.frba.proyecto.sigo.domain.regulation.icao.ICAOAnnex14SurfaceBalkedLanding;
-import ar.edu.utn.frba.proyecto.sigo.domain.regulation.icao.ICAOAnnex14SurfaceConical;
-import ar.edu.utn.frba.proyecto.sigo.domain.regulation.icao.ICAOAnnex14SurfaceInnerApproach;
-import ar.edu.utn.frba.proyecto.sigo.domain.regulation.icao.ICAOAnnex14SurfaceInnerHorizontal;
-import ar.edu.utn.frba.proyecto.sigo.domain.regulation.icao.ICAOAnnex14SurfaceInnerTransitional;
-import ar.edu.utn.frba.proyecto.sigo.domain.regulation.icao.ICAOAnnex14SurfaceStrip;
-import ar.edu.utn.frba.proyecto.sigo.domain.regulation.icao.ICAOAnnex14SurfaceTakeoffClimb;
-import ar.edu.utn.frba.proyecto.sigo.domain.regulation.icao.ICAOAnnex14SurfaceTransitional;
-import ar.edu.utn.frba.proyecto.sigo.domain.regulation.icao.ICAOAnnex14Surfaces;
 import ar.edu.utn.frba.proyecto.sigo.domain.regulation.icao.OlsRuleICAOAnnex14;
 import ar.edu.utn.frba.proyecto.sigo.domain.regulation.icao.OlsRuleICAOAnnex14_;
 import ar.edu.utn.frba.proyecto.sigo.exception.InvalidParameterException;
 import ar.edu.utn.frba.proyecto.sigo.persistence.HibernateUtil;
 import ar.edu.utn.frba.proyecto.sigo.service.SigoService;
+import ar.edu.utn.frba.proyecto.sigo.service.ols.icao.ICAOAnnex14SurfaceDefinitionsHelper;
 import com.google.common.collect.Lists;
 import spark.QueryParamsMap;
 
@@ -36,11 +36,15 @@ import javax.persistence.criteria.Root;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
 
 @Singleton
-public class OlsRuleICAOAnnex14Service extends SigoService<OlsRuleICAOAnnex14, OlsRule> {
+public class OlsRuleICAOAnnex14Service
+        extends SigoService<OlsRuleICAOAnnex14, OlsRule>
+        implements OlsRuleService
+{
 
     @Inject
     public OlsRuleICAOAnnex14Service(HibernateUtil hibernateUtil) {
@@ -94,11 +98,11 @@ public class OlsRuleICAOAnnex14Service extends SigoService<OlsRuleICAOAnnex14, O
         );
     }
 
-    public List<ICAOAnnex14Surfaces> getSurfaces(){
+    public List<ICAOAnnex14Surfaces> getCatalogOfSurfaces(){
         return Lists.newArrayList(ICAOAnnex14Surfaces.values());
     }
 
-    public List<ICAOAnnex14Surfaces> getSurfaces(
+    public List<ICAOAnnex14Surfaces> getCatalogOfSurfaces(
             ICAOAnnex14RunwayClassifications classification,
             ICAOAnnex14RunwayCategories category,
             ICAOAnnex14RunwayCodeNumbers number,
@@ -176,7 +180,7 @@ public class OlsRuleICAOAnnex14Service extends SigoService<OlsRuleICAOAnnex14, O
                 category
         );
 
-        return ICAOAnnex14SurfacesFactory.createConicalSurface(rules);
+        return new ICAOAnnex14SurfaceDefinitionsHelper().createConicalSurface(rules);
     }
 
     public ICAOAnnex14SurfaceApproach getICAOAnnex14SurfaceApproach(
@@ -191,7 +195,7 @@ public class OlsRuleICAOAnnex14Service extends SigoService<OlsRuleICAOAnnex14, O
                 category
         );
 
-        return ICAOAnnex14SurfacesFactory.createApproachSurface(rules);
+        return new ICAOAnnex14SurfaceDefinitionsHelper().createApproachSurface(rules);
     }
 
     public ICAOAnnex14SurfaceInnerApproach getICAOAnnex14SurfaceInnerApproach(
@@ -206,7 +210,7 @@ public class OlsRuleICAOAnnex14Service extends SigoService<OlsRuleICAOAnnex14, O
                 category
         );
 
-        return ICAOAnnex14SurfacesFactory.createInnerApproachSurface(rules);
+        return new ICAOAnnex14SurfaceDefinitionsHelper().createInnerApproachSurface(rules);
     }
 
     public ICAOAnnex14SurfaceInnerHorizontal getICAOAnnex14SurfaceInnerHorizontal(
@@ -221,7 +225,7 @@ public class OlsRuleICAOAnnex14Service extends SigoService<OlsRuleICAOAnnex14, O
                 category
         );
 
-        return ICAOAnnex14SurfacesFactory.createInnerHorizontalSurface(rules);
+        return new ICAOAnnex14SurfaceDefinitionsHelper().createInnerHorizontalSurface(rules);
     }
 
 
@@ -237,7 +241,7 @@ public class OlsRuleICAOAnnex14Service extends SigoService<OlsRuleICAOAnnex14, O
                 category
         );
 
-        return ICAOAnnex14SurfacesFactory.createApproachFirstSectionSurface(rules);
+        return new ICAOAnnex14SurfaceDefinitionsHelper().createApproachFirstSectionSurface(rules);
     }
 
     public ICAOAnnex14SurfaceApproachSecondSection getICAOAnnex14SurfaceApproachSecondSection(
@@ -252,7 +256,7 @@ public class OlsRuleICAOAnnex14Service extends SigoService<OlsRuleICAOAnnex14, O
                 category
         );
 
-        return ICAOAnnex14SurfacesFactory.createApproachSecondSectionSurface(rules);
+        return new ICAOAnnex14SurfaceDefinitionsHelper().createApproachSecondSectionSurface(rules);
     }
 
     public ICAOAnnex14SurfaceApproachHorizontalSection getICAOAnnex14SurfaceApproachHorizontalSection(
@@ -267,7 +271,7 @@ public class OlsRuleICAOAnnex14Service extends SigoService<OlsRuleICAOAnnex14, O
                 category
         );
 
-        return ICAOAnnex14SurfacesFactory.createApproachHorizontalSectionSurface(rules);
+        return new ICAOAnnex14SurfaceDefinitionsHelper().createApproachHorizontalSectionSurface(rules);
     }
 
     public ICAOAnnex14SurfaceTransitional getICAOAnnex14SurfaceTransitional(
@@ -282,7 +286,7 @@ public class OlsRuleICAOAnnex14Service extends SigoService<OlsRuleICAOAnnex14, O
                 category
         );
 
-        return ICAOAnnex14SurfacesFactory.createTransitionalSurface(rules);
+        return new ICAOAnnex14SurfaceDefinitionsHelper().createTransitionalSurface(rules);
     }
 
     public ICAOAnnex14SurfaceInnerTransitional getICAOAnnex14SurfaceInnerTransitional(
@@ -297,7 +301,7 @@ public class OlsRuleICAOAnnex14Service extends SigoService<OlsRuleICAOAnnex14, O
                 category
         );
 
-        return ICAOAnnex14SurfacesFactory.createInnerTransitionalSurface(rules);
+        return new ICAOAnnex14SurfaceDefinitionsHelper().createInnerTransitionalSurface(rules);
     }
 
     public ICAOAnnex14SurfaceBalkedLanding getICAOAnnex14SurfaceBalkedLanding(
@@ -312,7 +316,7 @@ public class OlsRuleICAOAnnex14Service extends SigoService<OlsRuleICAOAnnex14, O
                 category
         );
 
-        return ICAOAnnex14SurfacesFactory.createBalkedLandingSurface(rules);
+        return new ICAOAnnex14SurfaceDefinitionsHelper().createBalkedLandingSurface(rules);
     }
 
     public ICAOAnnex14SurfaceTakeoffClimb getICAOAnnex14SurfaceTakeoffClimb(
@@ -327,7 +331,7 @@ public class OlsRuleICAOAnnex14Service extends SigoService<OlsRuleICAOAnnex14, O
                 category
         );
 
-        return ICAOAnnex14SurfacesFactory.createTakeoffClimbSurface(rules);
+        return new ICAOAnnex14SurfaceDefinitionsHelper().createTakeoffClimbSurface(rules);
     }
 
     public ICAOAnnex14SurfaceStrip getICAOAnnex14SurfaceStrip(
@@ -342,7 +346,19 @@ public class OlsRuleICAOAnnex14Service extends SigoService<OlsRuleICAOAnnex14, O
                 category
         );
 
-        return ICAOAnnex14SurfacesFactory.createStripSurface(rules);
+        return new ICAOAnnex14SurfaceDefinitionsHelper().createStripSurface(rules);
+    }
+
+    public List<ICAOAnnex14Surface> getSurfaces(
+            ICAOAnnex14RunwayClassifications classification,
+            ICAOAnnex14RunwayCategories category,
+            ICAOAnnex14RunwayCodeNumbers number,
+            Boolean withRecommendations
+    ){
+        return this.getCatalogOfSurfaces(classification,category,number, withRecommendations)
+                .stream()
+                .map(c -> getSurface(c, number, classification, category))
+                .collect(Collectors.toList());
     }
 
     public ICAOAnnex14Surface getSurface(ICAOAnnex14Surfaces paramSurface, ICAOAnnex14RunwayCodeNumbers paramNumberCode, ICAOAnnex14RunwayClassifications paramClassification, ICAOAnnex14RunwayCategories paramCategory) {

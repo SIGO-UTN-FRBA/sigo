@@ -1,10 +1,12 @@
 package ar.edu.utn.frba.proyecto.sigo.router.airport;
 
+import ar.edu.utn.frba.proyecto.sigo.domain.airport.RunwayStrip;
 import ar.edu.utn.frba.proyecto.sigo.persistence.HibernateUtil;
 import ar.edu.utn.frba.proyecto.sigo.domain.airport.Airport;
 import ar.edu.utn.frba.proyecto.sigo.domain.airport.Runway;
 import ar.edu.utn.frba.proyecto.sigo.dto.airport.RunwayDTO;
 import ar.edu.utn.frba.proyecto.sigo.router.SigoRouter;
+import ar.edu.utn.frba.proyecto.sigo.service.airport.RunwayStripService;
 import ar.edu.utn.frba.proyecto.sigo.service.airport.RunwayTranslator;
 import ar.edu.utn.frba.proyecto.sigo.service.airport.AirportService;
 import ar.edu.utn.frba.proyecto.sigo.service.airport.RunwayService;
@@ -30,6 +32,7 @@ public class RunwayRouter extends SigoRouter {
     private RunwayService runwayService;
     private AirportService airportService;
     private RunwayTranslator translator;
+    private RunwayStripService stripService;
 
     @Inject
     public RunwayRouter(
@@ -38,7 +41,8 @@ public class RunwayRouter extends SigoRouter {
         JsonTransformer jsonTransformer,
         RunwayService runwayService,
         AirportService airportService,
-        RunwayTranslator runwayTranslator
+        RunwayTranslator runwayTranslator,
+        RunwayStripService stripService
     ){
         super(objectMapper, hibernateUtil);
 
@@ -46,6 +50,7 @@ public class RunwayRouter extends SigoRouter {
         this.runwayService = runwayService;
         this.airportService = airportService;
         this.translator = runwayTranslator;
+        this.stripService = stripService;
     }
 
     /**
@@ -137,6 +142,21 @@ public class RunwayRouter extends SigoRouter {
         return response.body();
     });
 
+    private final Route fetchStrip = doInTransaction(false, (request, response) -> {
+        Runway runway = this.runwayService.get(getParamRunwayId(request));
+
+        return runway.getStrip();
+    });
+
+    private final Route updateStrip = doInTransaction(true, (request, response) -> {
+
+        RunwayStrip strip = objectMapper.fromJson(request.body(), RunwayStrip.class);
+
+        stripService.update(strip);
+
+        return strip;
+    });
+
     @SuppressWarnings("Duplicates")
     @Override
     public RouteGroup routes() {
@@ -150,6 +170,9 @@ public class RunwayRouter extends SigoRouter {
 
             get(format("/:%s/feature", RUNWAY_ID_PARAM), fetchFeature, jsonTransformer);
             patch(format("/:%s/feature", RUNWAY_ID_PARAM), updateFeature, jsonTransformer);
+
+            get(format("/:%s/strip", RUNWAY_ID_PARAM), fetchStrip, jsonTransformer);
+            put(format("/:%s/strip", RUNWAY_ID_PARAM), updateStrip, jsonTransformer);
         };
     }
 

@@ -32,22 +32,14 @@ public class AnalysisExceptionSurface extends AnalysisException {
             String name,
             AnalysisExceptions type,
             AnalysisCase analysisCase,
-            Map<String, Double> properties
+            Double heightAgl
     ){
         super(id, name, type, analysisCase);
-        this.properties = properties;
+        this.heightAgl = heightAgl;
     }
 
-    @Id
-    @SequenceGenerator(name = "exceptionSurfaceGenerator", sequenceName = "EXCEPTION_SURFACE_SEQUENCE", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "exceptionSurfaceGenerator")
-    @Column(name = "exception_surface_id")
-    private Long id;
-
-    @ElementCollection
-    @MapKeyColumn(name = "property")
-    @Column(name = "value")
-    private Map<String, Double> properties =new HashMap<>();
+    @Column(name = "height_AGL")
+    private Double heightAgl;
 
     @Column(name = "geom")
     private Polygon geom;

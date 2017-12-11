@@ -4,4 +4,5 @@ public interface AnalysisExceptionVisitor<T> {
 
     T visitAnalysisExceptionRule(AnalysisExceptionRule exception);
     T visitAnalysisExceptionSurface (AnalysisExceptionSurface exception);
+    T visitAnalysisExceptionDynamicSurface (AnalysisExceptionDynamicSurface exception);
 }

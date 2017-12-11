@@ -12,6 +12,7 @@ import ar.edu.utn.frba.proyecto.sigo.router.object.PlacedObjectRouter;
 import ar.edu.utn.frba.proyecto.sigo.router.regulation.RegulationFAARouter;
 import ar.edu.utn.frba.proyecto.sigo.router.regulation.RegulationICAOAnnex14Router;
 import ar.edu.utn.frba.proyecto.sigo.router.regulation.RegulationRouter;
+import ar.edu.utn.frba.proyecto.sigo.router.wizard.WizardAnalysisRouter;
 import ar.edu.utn.frba.proyecto.sigo.spark.Router;
 import com.google.inject.AbstractModule;
 import com.google.inject.multibindings.Multibinder;
@@ -39,5 +40,6 @@ public class RouterModule extends AbstractModule {
         routerBinder.addBinding().to(AnalysisCaseRouter.class);
         routerBinder.addBinding().to(AnalysisExceptionRouter.class);
         routerBinder.addBinding().to(AnalysisObjectRouter.class);
+        routerBinder.addBinding().to(WizardAnalysisRouter.class);
     }
 }

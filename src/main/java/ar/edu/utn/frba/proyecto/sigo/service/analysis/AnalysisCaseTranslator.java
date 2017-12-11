@@ -29,8 +29,6 @@ public class AnalysisCaseTranslator extends Translator<AnalysisCase, AnalysisCas
                 .regulationId(domain.getRegulation().ordinal())
                 .searchRadius(domain.getSearchRadius());
 
-        Optional.ofNullable(domain.getArea()).ifPresent(a -> builder.areaId(a.getId()));
-
         return builder.build();
     }
 

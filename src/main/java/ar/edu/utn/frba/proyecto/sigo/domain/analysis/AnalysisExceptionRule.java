@@ -44,12 +44,6 @@ public class AnalysisExceptionRule extends AnalysisException {
         this.regulation = regulation;
     }
 
-    @Id
-    @SequenceGenerator(name = "exceptionRuleGenerator", sequenceName = "EXCEPTION_RULE_SEQUENCE", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "exceptionRuleGenerator")
-    @Column(name = "exception_rule_id")
-    private Long id;
-
     @Column(name = "ols_rule_id")
     private Long olsRuleId;
 
