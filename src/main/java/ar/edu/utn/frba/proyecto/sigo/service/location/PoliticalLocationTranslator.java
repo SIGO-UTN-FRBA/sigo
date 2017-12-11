@@ -5,6 +5,9 @@ import ar.edu.utn.frba.proyecto.sigo.dto.location.PoliticalLocationDTO;
 import ar.edu.utn.frba.proyecto.sigo.service.Translator;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
+import javax.inject.Singleton;
+
+@Singleton
 public class PoliticalLocationTranslator extends Translator<PoliticalLocation, PoliticalLocationDTO>{
     @Override
     public PoliticalLocationDTO getAsDTO(PoliticalLocation domain) {

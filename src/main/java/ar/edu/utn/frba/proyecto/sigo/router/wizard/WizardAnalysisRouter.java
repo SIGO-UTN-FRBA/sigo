@@ -8,7 +8,7 @@ import ar.edu.utn.frba.proyecto.sigo.router.SigoRouter;
 import ar.edu.utn.frba.proyecto.sigo.service.analysis.AnalysisService;
 import ar.edu.utn.frba.proyecto.sigo.service.analysis.AnalysisTranslator;
 import ar.edu.utn.frba.proyecto.sigo.spark.JsonTransformer;
-import ar.edu.utn.frba.proyecto.sigo.wizard.WizardAnalysis;
+import ar.edu.utn.frba.proyecto.sigo.service.wizard.WizardAnalysis;
 import com.google.gson.Gson;
 import spark.Route;
 import spark.RouteGroup;
@@ -50,10 +50,10 @@ public class WizardAnalysisRouter extends SigoRouter {
 
         switch (request.queryMap().get("action").value()){
             case "next":
-                wizard.next(analysis);
+                wizard.goNext(analysis);
                 break;
             case "previous":
-                wizard.previous(analysis);
+                wizard.goPrevious(analysis);
                 break;
             case "finish":
                 wizard.finish(analysis);

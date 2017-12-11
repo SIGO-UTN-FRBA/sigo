@@ -1,16 +1,28 @@
-package ar.edu.utn.frba.proyecto.sigo.wizard;
+package ar.edu.utn.frba.proyecto.sigo.service.wizard;
 
 import ar.edu.utn.frba.proyecto.sigo.domain.analysis.Analysis;
+import ar.edu.utn.frba.proyecto.sigo.exception.SigoException;
+import com.google.common.collect.Sets;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
+import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.Set;
 
-@Singleton
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 public class WizardAnalysis {
 
-    public void next(Analysis analysis){
+    private Set<WizardAnalysisStage> stages;
+
+    @Inject
+    public WizardAnalysis(
+        Set<WizardAnalysisStage> stages
+    ) {
+        this.stages = stages;
+    }
+
+    public void goNext(Analysis analysis){
         WizardAnalysisStage currentStage = getCurrentStage(analysis);
 
         WizardAnalysisStage nextStage = currentStage.next().orElseThrow(()-> new RuntimeException("Invalid wizard stage transition"));
@@ -22,7 +34,7 @@ public class WizardAnalysis {
         nextStage.enter(analysis);
     }
 
-    public void previous(Analysis analysis){
+    public void goPrevious(Analysis analysis){
         WizardAnalysisStage currentStage = getCurrentStage(analysis);
 
         WizardAnalysisStage previousStage = currentStage.previous().orElseThrow(()-> new RuntimeException("Invalid wizard stage transition"));
@@ -43,6 +55,11 @@ public class WizardAnalysis {
     }
 
     private WizardAnalysisStage getCurrentStage(Analysis analysis) {
-        return WizardAnalysisStage.of(analysis.getStage());
+
+        return stages
+                .stream()
+                .filter(s -> analysis.getStage().equals(s.identifier()))
+                .findFirst()
+                .orElseThrow(()-> new SigoException("Invalid wizard stage"));
     }
 }

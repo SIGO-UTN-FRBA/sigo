@@ -3,20 +3,15 @@ package ar.edu.utn.frba.proyecto.sigo.domain.analysis;
 import ar.edu.utn.frba.proyecto.sigo.domain.SigoDomain;
 import ar.edu.utn.frba.proyecto.sigo.domain.airport.Airport;
 import ar.edu.utn.frba.proyecto.sigo.domain.object.PlacedObject;
-import ar.edu.utn.frba.proyecto.sigo.domain.regulation.Regulation;
 import ar.edu.utn.frba.proyecto.sigo.domain.regulation.Regulations;
 import com.google.common.base.MoreObjects;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import lombok.*;
-import org.hibernate.annotations.LazyToOne;
-import org.hibernate.annotations.LazyToOneOption;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.Set;
 
 @Entity
@@ -38,15 +33,6 @@ public class AnalysisCase extends SigoDomain {
     @JoinColumn(name = "aerodrome_id")
     private Airport aerodrome;
 
-    @OneToOne(
-            mappedBy = "analysisCase",
-            cascade = CascadeType.REMOVE,
-            orphanRemoval = true,
-            fetch = FetchType.LAZY
-    )
-    @LazyToOne( LazyToOneOption.NO_PROXY )
-    private AnalysisArea area;
-
     @OneToMany(mappedBy = "analysisCase", cascade = CascadeType.REMOVE)
     private List<AnalysisObject> objects = Lists.newArrayList();
 
@@ -55,6 +41,12 @@ public class AnalysisCase extends SigoDomain {
 
     @Column(name="search_radius")
     private Double searchRadius;
+
+    @OneToMany(mappedBy = "analysisCase", cascade = CascadeType.REMOVE)
+    private List<AnalysisSurface> surfaces = Lists.newArrayList();
+
+    @OneToMany(mappedBy = "analysisCase", cascade = CascadeType.REMOVE)
+    private Set<AnalysisObstacle> obstacles = Sets.newHashSet();
 
 
     public String toString(){

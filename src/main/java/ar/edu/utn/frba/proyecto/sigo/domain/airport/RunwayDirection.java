@@ -52,6 +52,11 @@ public class RunwayDirection extends SigoDomain implements Spatial<Point> {
     @Column(name = "height")
     private Double height;
 
+    @OneToOne
+    @JoinColumn(name = "strip_id")
+    private RunwayStrip strip;
+
+
     public String getIdentifier(){
 
         return String.format(

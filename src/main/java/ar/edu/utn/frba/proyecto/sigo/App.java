@@ -4,6 +4,7 @@ import ar.edu.utn.frba.proyecto.sigo.router.RouterModule;
 import ar.edu.utn.frba.proyecto.sigo.persistence.PersistenceModule;
 import ar.edu.utn.frba.proyecto.sigo.main.MainModule;
 import ar.edu.utn.frba.proyecto.sigo.parameters.ParametersModuleProvider;
+import ar.edu.utn.frba.proyecto.sigo.service.ServiceModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import lombok.extern.slf4j.Slf4j;
@@ -19,6 +20,7 @@ public class App
                 ParametersModuleProvider.get(),
                 new MainModule(),
                 new PersistenceModule(),
+                new ServiceModule(),
                 new RouterModule()
         );
 

@@ -1,20 +1,28 @@
-package ar.edu.utn.frba.proyecto.sigo.wizard;
+package ar.edu.utn.frba.proyecto.sigo.service.wizard;
 
 import ar.edu.utn.frba.proyecto.sigo.domain.analysis.Analysis;
 import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisStages;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
 
+import javax.inject.Inject;
+import javax.inject.Provider;
 import javax.inject.Singleton;
 import java.util.Optional;
 
 @Singleton
-@NoArgsConstructor(access = AccessLevel.PUBLIC)
 public class WizardAnalysisStageObject extends WizardAnalysisStage {
+
+    Provider<WizardAnalysisStageException> next;
+
+    @Inject
+    public WizardAnalysisStageObject(
+            Provider<WizardAnalysisStageException> next
+    ){
+        this.next = next;
+    }
 
     @Override
     protected Optional<WizardAnalysisStage> next() {
-        return Optional.of(WizardAnalysisStage.of(AnalysisStages.EXCEPTION));
+        return Optional.of(next.get());
     }
 
     @Override

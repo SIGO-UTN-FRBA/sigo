@@ -4,6 +4,9 @@ import ar.edu.utn.frba.proyecto.sigo.domain.object.LightingTypes;
 import ar.edu.utn.frba.proyecto.sigo.domain.object.MarkIndicatorTypes;
 import ar.edu.utn.frba.proyecto.sigo.domain.object.PlacedObjectTypes;
 
+import javax.inject.Singleton;
+
+@Singleton
 public class CatalogObjectService {
 
     public LightingTypes[] listLightingTypes() {

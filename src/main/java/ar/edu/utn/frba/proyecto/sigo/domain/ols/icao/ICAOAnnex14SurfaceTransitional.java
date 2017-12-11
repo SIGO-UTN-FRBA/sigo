@@ -1,4 +1,4 @@
-package ar.edu.utn.frba.proyecto.sigo.domain.regulation.icao;
+package ar.edu.utn.frba.proyecto.sigo.domain.ols.icao;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
