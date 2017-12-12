@@ -40,6 +40,10 @@ public class Airport extends SigoDomain implements Spatial<Point> {
     @Column(name = "geom")
     private Point geom;
 
+    @Column(name = "height")
+    private Double height;
+
+
     @OneToMany(mappedBy = "airport", cascade = CascadeType.REMOVE)
     private List<Runway> runways;
 
