@@ -33,6 +33,8 @@ public class RunwayDirectionService extends SigoService<RunwayDirection, Runway>
         createTakeoffSection(direction, runway);
 
         createClassification(direction, runway);
+
+        createStrip(direction);
     }
 
     @Override
@@ -103,5 +105,13 @@ public class RunwayDirectionService extends SigoService<RunwayDirection, Runway>
         tb.add("height", Double.class);
 
         return tb.buildFeatureType();
+    }
+
+    private void createStrip(RunwayDirection direction) {
+        RunwayStrip strip = RunwayStrip.builder().build();
+
+        direction.setStrip(strip);
+
+        currentSession().persist(strip);
     }
 }

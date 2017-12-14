@@ -110,6 +110,7 @@ public class OlsRuleICAOAnnex14Service
     ){
 
         ArrayList<ICAOAnnex14Surfaces> surfaces = Lists.newArrayList(
+                ICAOAnnex14Surfaces.STRIP,
                 ICAOAnnex14Surfaces.CONICAL,
                 ICAOAnnex14Surfaces.INNER_HORIZONTAL,
                 ICAOAnnex14Surfaces.APPROACH,

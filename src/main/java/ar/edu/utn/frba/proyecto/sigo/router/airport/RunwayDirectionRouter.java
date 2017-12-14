@@ -38,6 +38,7 @@ public class RunwayDirectionRouter extends SigoRouter {
     private RunwayTakeoffSectionService takeoffService;
     private RunwayClassificationService classificationService;
     private RunwayClassificationTranslator classificationTranslator;
+    private RunwayStripService stripService;
 
     @Inject
     public RunwayDirectionRouter(
@@ -52,7 +53,8 @@ public class RunwayDirectionRouter extends SigoRouter {
         RunwayApproachSectionService approachService,
         RunwayTakeoffSectionService takeoffService,
         RunwayClassificationService classificationService,
-        RunwayClassificationTranslator classificationTranslator
+        RunwayClassificationTranslator classificationTranslator,
+        RunwayStripService stripService
     ){
         super(objectMapper, hibernateUtil);
 
@@ -66,6 +68,7 @@ public class RunwayDirectionRouter extends SigoRouter {
         this.takeoffService = takeoffService;
         this.classificationService = classificationService;
         this.classificationTranslator = classificationTranslator;
+        this.stripService = stripService;
     }
 
     /**
@@ -288,6 +291,21 @@ public class RunwayDirectionRouter extends SigoRouter {
         return classificationTranslator.getAsDTO(domain);
     });
 
+    private final Route fetchStrip = doInTransaction(false, (request, response) -> {
+        RunwayDirection direction = this.directionService.get(getParamDirectionId(request));
+
+        return direction.getStrip();
+    });
+
+    private final Route updateStrip = doInTransaction(true, (request, response) -> {
+
+        RunwayStrip strip = objectMapper.fromJson(request.body(), RunwayStrip.class);
+
+        stripService.update(strip);
+
+        return strip;
+    });
+
     @Override
     public RouteGroup routes() {
         return () -> {
@@ -303,6 +321,9 @@ public class RunwayDirectionRouter extends SigoRouter {
 
             get(format("/:%s/feature", RUNWAY_DIRECTION_ID_PARAM), fetchFeature, jsonTransformer);
             patch(format("/:%s/feature", RUNWAY_DIRECTION_ID_PARAM), updateFeature, jsonTransformer);
+
+            get(format("/:%s/strip", RUNWAY_DIRECTION_ID_PARAM), fetchStrip, jsonTransformer);
+            put(format("/:%s/strip", RUNWAY_DIRECTION_ID_PARAM), updateStrip, jsonTransformer);
 
             get(format("/:%s/distances", RUNWAY_DIRECTION_ID_PARAM), calculateDistances, jsonTransformer);
 
