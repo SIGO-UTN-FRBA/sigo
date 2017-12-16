@@ -1,14 +1,22 @@
 package ar.edu.utn.frba.proyecto.sigo.domain.analysis;
 
+import ar.edu.utn.frba.proyecto.sigo.domain.SigoDomain;
 import ar.edu.utn.frba.proyecto.sigo.domain.airport.RunwayDirection;
 import ar.edu.utn.frba.proyecto.sigo.domain.ols.ObstacleLimitationSurface;
+import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceInnerHorizontal;
+import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceStrip;
+import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14Surfaces;
 import com.google.common.collect.Lists;
+import com.google.gson.JsonObject;
 import com.vividsolutions.jts.geom.Geometry;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Any;
+import org.hibernate.annotations.AnyMetaDef;
+import org.hibernate.annotations.MetaValue;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -30,15 +38,28 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 @Data
 @Builder
-public class AnalysisSurface {
+public class AnalysisSurface extends SigoDomain {
 
     @Id
     @SequenceGenerator(name = "analysisSurfaceGenerator", sequenceName = "ANALYSIS_SURFACE_SEQUENCE", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "analysisSurfaceGenerator")
-    @Column(name = "surface_id")
+    @Column(name = "analysis_surface_id")
     private Long id;
 
-    private transient ObstacleLimitationSurface surface;
+
+    @AnyMetaDef( name= "SurfaceMetaDef", metaType = "string", idType = "long",
+            metaValues = {
+                    @MetaValue(value = "ICAOAnnex14SurfaceStrip", targetEntity = ICAOAnnex14SurfaceStrip.class),
+                    @MetaValue(value = "ICAOAnnex14SurfaceInnerHorizontal", targetEntity = ICAOAnnex14SurfaceInnerHorizontal.class)
+            }
+    )
+    
+    @Any(
+            metaDef = "SurfaceMetaDef",
+            metaColumn = @Column( name = "surface_type" )
+    )
+    @JoinColumn( name = "surface_id" )
+    private ObstacleLimitationSurface surface;
 
     @ManyToOne
     @JoinColumn(name = "case_id")
@@ -53,4 +74,6 @@ public class AnalysisSurface {
 
     @Column(name="geom")
     private Geometry geometry;
+
+
 }

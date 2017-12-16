@@ -20,6 +20,7 @@ import javax.persistence.criteria.*;
 import java.awt.*;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toList;
 
@@ -39,7 +40,7 @@ public class AirportService extends SigoService<Airport, Airport> {
         newInstance.setGeom(oldInstance.getGeom());
     }
 
-    public List<Airport> find(QueryParamsMap parameters){
+    public Stream<Airport> find(QueryParamsMap parameters){
 
         CriteriaBuilder builder = currentSession().getCriteriaBuilder();
 
@@ -71,7 +72,7 @@ public class AirportService extends SigoService<Airport, Airport> {
 
         criteria.where(builder.and(collect.toArray(new Predicate[collect.size()])));
 
-        return currentSession().createQuery(criteria).getResultList();
+        return currentSession().createQuery(criteria).getResultStream();
     }
 
     public SimpleFeature getFeature(Airport airport){

@@ -52,7 +52,6 @@ public class AirportRouter extends SigoRouter {
     private final Route fetchAirports = doInTransaction(false, (Request request, Response response) -> {
 
         return airportService.find(request.queryMap())
-                .stream()
                 .map(translator::getAsDTO)
                 .collect(toList());
     });
