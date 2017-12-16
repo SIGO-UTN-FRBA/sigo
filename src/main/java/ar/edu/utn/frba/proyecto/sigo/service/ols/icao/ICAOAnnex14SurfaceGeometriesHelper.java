@@ -10,9 +10,11 @@ import ar.edu.utn.frba.proyecto.sigo.utils.geom.GeometryHelper;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
+import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.geom.Polygon;
 import com.vividsolutions.jts.geomgraph.GeometryGraph;
+import com.vividsolutions.jts.operation.buffer.BufferOp;
 import org.geotools.geojson.geom.GeometryJSON;
 import org.geotools.referencing.GeodeticCalculator;
 
@@ -42,53 +44,62 @@ public class ICAOAnnex14SurfaceGeometriesHelper {
                     .map(l -> (l - direction.getRunway().getLength())/2)
                     .orElse(stripDefinition.getLength());
 
+        List<Coordinate> directionCoordinates = direction.getRunway().getDirections().stream().map(d -> d.getGeom().getCoordinate()).collect(Collectors.toList());
+
+        double azimuth = GeometryHelper.getAzimuth(directionCoordinates.get(0), directionCoordinates.get(1));
+
         //2. create geom
 
         //TODO incluir en calculo de longitud: 'antes del umbral THR', 'mas alla del extremo o SWY'
         Coordinate[] baseCoordinates = direction.getRunway().getGeom().getExteriorRing().norm().getCoordinates();
 
-        double azimuth = GeometryHelper.getAzimuth(baseCoordinates[0], baseCoordinates[3]);
-
-        Coordinate newCoordinate1 = GeometryHelper.move(baseCoordinates[0], azimuth, -extraLength);
+        Coordinate newCoordinate1 = GeometryHelper.move(baseCoordinates[0], azimuth, extraLength);
         newCoordinate1 = GeometryHelper.move(newCoordinate1, azimuth+90, extraWidth);
 
-        Coordinate newCoordinate2 = GeometryHelper.move(baseCoordinates[1], azimuth, -extraLength);
+        Coordinate newCoordinate2 = GeometryHelper.move(baseCoordinates[1], azimuth, extraLength);
         newCoordinate2 = GeometryHelper.move(newCoordinate2, azimuth-90, extraWidth);
 
-        Coordinate newCoordinate3 = GeometryHelper.move(baseCoordinates[2], azimuth, extraLength);
+        Coordinate newCoordinate3 = GeometryHelper.move(baseCoordinates[2], azimuth, -extraLength);
         newCoordinate3 = GeometryHelper.move(newCoordinate3, azimuth-90, extraWidth);
 
-        Coordinate newCoordinate4 = GeometryHelper.move(baseCoordinates[3], azimuth, extraLength);
+        Coordinate newCoordinate4 = GeometryHelper.move(baseCoordinates[3], azimuth, -extraLength);
         newCoordinate4 = GeometryHelper.move(newCoordinate4, azimuth+90, extraWidth);
 
         Polygon stripGeometry = new GeometryFactory().createPolygon(new Coordinate[]{newCoordinate1, newCoordinate2, newCoordinate3, newCoordinate4, newCoordinate1});
-        /*
+/*
         OutputStream out = new ByteArrayOutputStream();
         try {
             new GeometryJSON().write(stripGeometry, out);
         } catch (IOException e) {
             e.printStackTrace();
         }
-        */
+        out.toString();
+*/
         return stripGeometry;
     }
 
     public Geometry createInnerHorizontalSurfaceGeometry(RunwayDirection direction, ICAOAnnex14SurfaceInnerHorizontal innerHorizontalDefinition) {
 
         double radius = innerHorizontalDefinition.getRadius() / 100000;
-        Geometry bufferInteriorPoint = direction.getRunway().getGeom().getInteriorPoint().buffer(radius,20);
 
-        List<Geometry> bufferEdgePoints = direction.getRunway().getDirections().stream().map(d -> d.getGeom().buffer(radius,20)).collect(Collectors.toList());
+        List<Point> directionPoints = direction.getRunway().getDirections().stream().map(RunwayDirection::getGeom).collect(Collectors.toList());
 
-        Geometry union = bufferInteriorPoint.union(bufferEdgePoints.get(0)).union(bufferEdgePoints.get(1));
-        /*
+        LineString centerLine = new GeometryFactory().createLineString(new Coordinate[]{directionPoints.get(0).getCoordinate(), directionPoints.get(1).getCoordinate()});
+
+        Geometry bufferCenterLine = centerLine.buffer(radius,20);
+
+        List<Geometry> bufferEdgePoints = directionPoints.stream().map(d -> d.buffer(radius,20)).collect(Collectors.toList());
+
+        Geometry union = bufferCenterLine.union(bufferEdgePoints.get(0)).union(bufferEdgePoints.get(1));
+/*
         OutputStream out = new ByteArrayOutputStream();
         try {
             new GeometryJSON().write(union, out);
         } catch (IOException e) {
             e.printStackTrace();
         }
-        */
+        out.toString();
+*/
         return union;
     }
 }
