@@ -22,10 +22,10 @@ public class AnalysisExceptionDTO {
     private Long caseId;
 
     //AnalysisExceptionRule
-    private Long olsRuleId;
-    private String property;
+    private Long ruleId;
     private Double value;
     private Integer regulationId;
+    private Long directionId;
 
     //AnalysisExceptionSurface
     private Double heightAgl;

@@ -1,5 +1,6 @@
 package ar.edu.utn.frba.proyecto.sigo.service.analysis;
 
+import ar.edu.utn.frba.proyecto.sigo.domain.airport.RunwayDirection;
 import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisCase;
 import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisException;
 import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisExceptionDynamicSurface;
@@ -8,9 +9,12 @@ import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisExceptionSurface;
 import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisExceptionVisitor;
 import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisExceptions;
 import ar.edu.utn.frba.proyecto.sigo.domain.regulation.Regulations;
+import ar.edu.utn.frba.proyecto.sigo.domain.regulation.icao.OlsRuleICAOAnnex14;
 import ar.edu.utn.frba.proyecto.sigo.dto.analysis.AnalysisExceptionDTO;
 import ar.edu.utn.frba.proyecto.sigo.exception.InvalidParameterException;
 import ar.edu.utn.frba.proyecto.sigo.service.Translator;
+import ar.edu.utn.frba.proyecto.sigo.service.airport.RunwayDirectionService;
+import ar.edu.utn.frba.proyecto.sigo.service.regulation.OlsRuleICAOAnnex14Service;
 import com.google.gson.Gson;
 
 import javax.inject.Inject;
@@ -19,13 +23,19 @@ import java.util.Optional;
 public class AnalysisExceptionTranslator extends Translator<AnalysisException, AnalysisExceptionDTO>{
 
     private AnalysisCaseService caseService;
+    private OlsRuleICAOAnnex14Service ruleIcaoService;
+    private RunwayDirectionService directionService;
 
     @Inject
     public AnalysisExceptionTranslator(
         Gson objectMapper,
-        AnalysisCaseService caseService
+        AnalysisCaseService caseService,
+        OlsRuleICAOAnnex14Service ruleIcaoService,
+        RunwayDirectionService directionService
     ){
         this.caseService = caseService;
+        this.ruleIcaoService = ruleIcaoService;
+        this.directionService = directionService;
         this.objectMapper = objectMapper;
         this.dtoClass = AnalysisExceptionDTO.class;
         this.domainClass = AnalysisException.class;
@@ -68,10 +78,10 @@ public class AnalysisExceptionTranslator extends Translator<AnalysisException, A
                     .id(exception.getId())
                     .name(exception.getName())
                     .caseId(exception.getAnalysisCase().getId())
-                    .olsRuleId(exception.getOlsRuleId())
-                    .property(exception.getProperty())
+                    .ruleId(exception.getRule().getId())
                     .value(exception.getValue())
                     .regulationId(exception.getRegulation().ordinal())
+                    .directionId(exception.getDirection().getId())
                     .build();
         }
 
@@ -145,9 +155,7 @@ public class AnalysisExceptionTranslator extends Translator<AnalysisException, A
                 .id(dto.getId())
                 .name(dto.getName())
                 .type(AnalysisExceptions.RULE)
-                .property(dto.getProperty())
                 .value(dto.getValue())
-                .olsRuleId(dto.getOlsRuleId())
                 .regulation(Regulations.values()[dto.getRegulationId()]);
 
         // relation: case
@@ -155,6 +163,19 @@ public class AnalysisExceptionTranslator extends Translator<AnalysisException, A
         if(!Optional.ofNullable(analysisCase).isPresent())
             throw new InvalidParameterException("caseId == " + dto.getCaseId());
         builder.analysisCase(analysisCase);
+
+        // relation: rule
+        OlsRuleICAOAnnex14 rule = ruleIcaoService.get(dto.getRuleId());
+        if(!Optional.ofNullable(rule).isPresent())
+            throw new InvalidParameterException("ruleId == " + dto.getRuleId());
+        builder.rule(rule);
+
+        // relation: direction
+        RunwayDirection runwayDirection = directionService.get(dto.getDirectionId());
+        if(!Optional.ofNullable(runwayDirection).isPresent())
+            throw new InvalidParameterException("directionId == " + dto.getDirectionId());
+        builder.direction(runwayDirection);
+
 
         return builder.build();
     }

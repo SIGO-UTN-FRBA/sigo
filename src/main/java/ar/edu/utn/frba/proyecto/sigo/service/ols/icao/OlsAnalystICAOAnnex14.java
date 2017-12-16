@@ -4,6 +4,7 @@ import ar.edu.utn.frba.proyecto.sigo.domain.airport.Runway;
 import ar.edu.utn.frba.proyecto.sigo.domain.airport.RunwayDirection;
 import ar.edu.utn.frba.proyecto.sigo.domain.airport.icao.RunwayClassificationICAOAnnex14;
 import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisCase;
+import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisExceptionRule;
 import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisObject;
 import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisObstacle;
 import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisSurface;
@@ -11,13 +12,17 @@ import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14Surface;
 import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceInnerHorizontal;
 import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceStrip;
 import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14Surfaces;
+import ar.edu.utn.frba.proyecto.sigo.domain.regulation.icao.OlsRuleICAOAnnex14;
 import ar.edu.utn.frba.proyecto.sigo.exception.SigoException;
+import ar.edu.utn.frba.proyecto.sigo.persistence.HibernateUtil;
 import ar.edu.utn.frba.proyecto.sigo.service.ols.OlsAnalyst;
 import ar.edu.utn.frba.proyecto.sigo.service.regulation.OlsRuleICAOAnnex14Service;
 import com.google.common.collect.Lists;
 import com.google.inject.assistedinject.Assisted;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.inject.Inject;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
@@ -32,9 +37,10 @@ public class OlsAnalystICAOAnnex14 extends OlsAnalyst {
     public OlsAnalystICAOAnnex14(
             OlsRuleICAOAnnex14Service service,
             ICAOAnnex14SurfaceGeometriesHelper geometryHelper,
+            HibernateUtil hibernateUtil,
             @Assisted AnalysisCase analysisCase
     ) {
-        super(analysisCase);
+        super(analysisCase, hibernateUtil.getSessionFactory());
 
         this.definitionService = service;
         this.geometryHelper = geometryHelper;
@@ -117,12 +123,12 @@ public class OlsAnalystICAOAnnex14 extends OlsAnalyst {
         List<AnalysisSurface> analysisSurfaces = Lists.newArrayList();
 
         //1. franja
-        ICAOAnnex14SurfaceStrip stripDefinition = (ICAOAnnex14SurfaceStrip) surfacesDefinitions.stream().filter(d -> d.getId().intValue() == ICAOAnnex14Surfaces.STRIP.ordinal()).findFirst().get();
+        ICAOAnnex14SurfaceStrip stripDefinition = (ICAOAnnex14SurfaceStrip) surfacesDefinitions.stream().filter(d -> d.getEnum() == ICAOAnnex14Surfaces.STRIP).findFirst().get();
         AnalysisSurface stripAnalysisSurface = createStripAnalysisSurface(direction, stripDefinition);
         analysisSurfaces.add(stripAnalysisSurface);
 
         //2. horizontal interna
-        ICAOAnnex14SurfaceInnerHorizontal innerHorizontalDefinition = (ICAOAnnex14SurfaceInnerHorizontal) surfacesDefinitions.stream().filter(d -> d.getId().intValue() == ICAOAnnex14Surfaces.INNER_HORIZONTAL.ordinal()).findFirst().get();
+        ICAOAnnex14SurfaceInnerHorizontal innerHorizontalDefinition = (ICAOAnnex14SurfaceInnerHorizontal) surfacesDefinitions.stream().filter(d -> d.getEnum() == ICAOAnnex14Surfaces.INNER_HORIZONTAL).findFirst().get();
         AnalysisSurface analysisSurfaceForInnerHorizontal = createInnerHorizontalAnalysisSurface(direction,innerHorizontalDefinition);
         analysisSurfaces.add(analysisSurfaceForInnerHorizontal);
 
@@ -136,21 +142,46 @@ public class OlsAnalystICAOAnnex14 extends OlsAnalyst {
     }
 
     private AnalysisSurface createInnerHorizontalAnalysisSurface(RunwayDirection direction, ICAOAnnex14SurfaceInnerHorizontal innerHorizontalDefinition) {
-        return AnalysisSurface.builder()
+        AnalysisSurface analysisSurface = AnalysisSurface.builder()
                 .analysisCase(this.analysisCase)
-                .surface(innerHorizontalDefinition)
+                .surface(applyRuleException(innerHorizontalDefinition))
                 .geometry(geometryHelper.createInnerHorizontalSurfaceGeometry(direction, innerHorizontalDefinition))
                 .direction(direction)
                 .build();
+
+        return analysisSurface;
     }
 
     private AnalysisSurface createStripAnalysisSurface(RunwayDirection direction, ICAOAnnex14SurfaceStrip stripDefinition) {
-        return AnalysisSurface.builder()
+        AnalysisSurface analysisSurface = AnalysisSurface.builder()
                 .analysisCase(this.analysisCase)
-                .surface(stripDefinition)
+                .surface(applyRuleException(stripDefinition))
                 .geometry(geometryHelper.createStripSurfaceGeometry(direction, stripDefinition))
                 .direction(direction)
                 .build();
+
+        return analysisSurface;
     }
 
+    private ICAOAnnex14Surface applyRuleException(ICAOAnnex14Surface surface) {
+
+        this.analysisCase.getRuleExceptions()
+                .filter( s -> ((OlsRuleICAOAnnex14)s.getRule()).getSurface().equals(surface.getEnum()))
+                .findFirst()
+                .ifPresent(s -> applyRuleException(surface, s));
+
+        return surface;
+    }
+
+    private void applyRuleException(ICAOAnnex14Surface surface, AnalysisExceptionRule exception) {
+
+        String setter = String.format("set%s", StringUtils.capitalize(((OlsRuleICAOAnnex14)exception.getRule()).getPropertyCode()));
+
+        try {
+            surface.getClass().getMethod(setter,Double.class).invoke(surface,exception.getValue());
+
+        } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
+            e.printStackTrace();
+        }
+    }
 }

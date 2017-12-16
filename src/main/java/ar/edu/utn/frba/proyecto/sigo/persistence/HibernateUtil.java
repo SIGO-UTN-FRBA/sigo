@@ -9,6 +9,19 @@ import ar.edu.utn.frba.proyecto.sigo.domain.location.PoliticalLocationType;
 import ar.edu.utn.frba.proyecto.sigo.domain.analysis.Region;
 import ar.edu.utn.frba.proyecto.sigo.domain.analysis.State;
 import ar.edu.utn.frba.proyecto.sigo.domain.object.*;
+import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14Surface;
+import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceApproach;
+import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceApproachFirstSection;
+import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceApproachHorizontalSection;
+import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceApproachSecondSection;
+import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceBalkedLanding;
+import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceConical;
+import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceInnerApproach;
+import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceInnerHorizontal;
+import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceInnerTransitional;
+import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceStrip;
+import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceTakeoffClimb;
+import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceTransitional;
 import ar.edu.utn.frba.proyecto.sigo.domain.regulation.OlsRule;
 import ar.edu.utn.frba.proyecto.sigo.domain.regulation.faa.OlsRulesFAA;
 import ar.edu.utn.frba.proyecto.sigo.domain.regulation.icao.OlsRuleICAOAnnex14;
@@ -104,7 +117,20 @@ public class HibernateUtil {
                 .addAnnotatedClass(AnalysisExceptionSurface.class)
                 .addAnnotatedClass(AnalysisExceptionDynamicSurface.class)
                 .addAnnotatedClass(AnalysisObject.class)
-                .addAnnotatedClass(Region.class);
+                .addAnnotatedClass(Region.class)
+                .addAnnotatedClass(ICAOAnnex14Surface.class)
+                .addAnnotatedClass(ICAOAnnex14SurfaceTransitional.class)
+                .addAnnotatedClass(ICAOAnnex14SurfaceTakeoffClimb.class)
+                .addAnnotatedClass(ICAOAnnex14SurfaceStrip.class)
+                .addAnnotatedClass(ICAOAnnex14SurfaceInnerTransitional.class)
+                .addAnnotatedClass(ICAOAnnex14SurfaceInnerHorizontal.class)
+                .addAnnotatedClass(ICAOAnnex14SurfaceInnerApproach.class)
+                .addAnnotatedClass(ICAOAnnex14SurfaceConical.class)
+                .addAnnotatedClass(ICAOAnnex14SurfaceBalkedLanding.class)
+                .addAnnotatedClass(ICAOAnnex14SurfaceApproachSecondSection.class)
+                .addAnnotatedClass(ICAOAnnex14SurfaceApproachHorizontalSection.class)
+                .addAnnotatedClass(ICAOAnnex14SurfaceApproachFirstSection.class)
+                .addAnnotatedClass(ICAOAnnex14SurfaceApproach.class);
 
         Metadata metadata = sources.getMetadataBuilder().build();
 

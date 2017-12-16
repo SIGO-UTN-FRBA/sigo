@@ -5,6 +5,7 @@ import ar.edu.utn.frba.proyecto.sigo.router.analysis.AnalysisCaseRouter;
 import ar.edu.utn.frba.proyecto.sigo.router.analysis.AnalysisExceptionRouter;
 import ar.edu.utn.frba.proyecto.sigo.router.analysis.AnalysisObjectRouter;
 import ar.edu.utn.frba.proyecto.sigo.router.analysis.AnalysisRouter;
+import ar.edu.utn.frba.proyecto.sigo.router.analysis.AnalysisSurfaceRouter;
 import ar.edu.utn.frba.proyecto.sigo.router.location.LocationRouter;
 import ar.edu.utn.frba.proyecto.sigo.router.object.CatalogObjectRouter;
 import ar.edu.utn.frba.proyecto.sigo.router.object.ObjectOwnerRouter;
@@ -41,5 +42,6 @@ public class RouterModule extends AbstractModule {
         routerBinder.addBinding().to(AnalysisExceptionRouter.class);
         routerBinder.addBinding().to(AnalysisObjectRouter.class);
         routerBinder.addBinding().to(WizardAnalysisRouter.class);
+        routerBinder.addBinding().to(AnalysisSurfaceRouter.class);
     }
 }

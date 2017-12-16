@@ -33,7 +33,8 @@ public class OlsRuleTranslator
                 .runwayClassification(rule.getRunwayClassification().ordinal())
                 .runwayCategory(rule.getRunwayCategory().ordinal())
                 .runwayCodeNumber(rule.getRunwayCodeNumber().ordinal())
-                .property(rule.getProperty())
+                .propertyName(rule.getPropertyName())
+                .propertyCode(rule.getPropertyCode())
                 .value(rule.getValue())
                 .build();
     }

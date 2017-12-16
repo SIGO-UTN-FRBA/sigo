@@ -9,6 +9,7 @@ import org.apache.commons.lang3.StringUtils;
 import javax.persistence.*;
 import java.util.Optional;
 
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "public.tbl_runway_directions")
 @AllArgsConstructor
@@ -40,13 +41,13 @@ public class RunwayDirection extends SigoDomain implements Spatial<Point> {
     @Column(name = "geom")
     private Point geom;
 
-    @OneToOne(mappedBy = "runwayDirection", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "runwayDirection", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch = FetchType.LAZY)
     private RunwayTakeoffSection takeoffSection;
 
-    @OneToOne(mappedBy = "runwayDirection", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "runwayDirection", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch = FetchType.LAZY)
     private RunwayApproachSection approachSection;
 
-    @OneToOne(mappedBy = "runwayDirection", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "runwayDirection", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch = FetchType.LAZY)
     private RunwayClassification classification;
 
     @Column(name = "height")
