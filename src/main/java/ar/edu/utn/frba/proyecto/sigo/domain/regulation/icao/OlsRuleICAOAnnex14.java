@@ -37,11 +37,14 @@ public class OlsRuleICAOAnnex14 extends OlsRule {
     @Column(name = "runway_code_number")
     private ICAOAnnex14RunwayCodeNumbers runwayCodeNumber;
 
-    @Column(name = "property")
-    private String property;
+    @Column(name = "property_name")
+    private String propertyName;
 
     @Column(name = "value")
     private Double value;
+
+    @Column(name = "property_code")
+    private String propertyCode;
 
     @Override
     public <T> T accept(OlsRuleVisitor<T> visitor) {

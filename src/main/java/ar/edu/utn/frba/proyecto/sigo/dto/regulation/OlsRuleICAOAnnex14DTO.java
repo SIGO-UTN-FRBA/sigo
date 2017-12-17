@@ -13,11 +13,12 @@ public class OlsRuleICAOAnnex14DTO extends OlsRuleDTO {
     private Integer runwayClassification;
     private Integer runwayCategory;
     private Integer runwayCodeNumber;
-    private String property;
+    private String propertyName;
+    private String propertyCode;
     private Double value;
 
     @Builder
-    public OlsRuleICAOAnnex14DTO(Long id, Long ruleId, Integer regulationId, Integer surface, Integer runwayClassification, Integer runwayCategory, Integer runwayCodeNumber, String property, Double value) {
+    public OlsRuleICAOAnnex14DTO(Long id, Long ruleId, Integer regulationId, Integer surface, Integer runwayClassification, Integer runwayCategory, Integer runwayCodeNumber, String propertyName, String propertyCode, Double value) {
 
         super(id, ruleId, regulationId);
 
@@ -25,7 +26,8 @@ public class OlsRuleICAOAnnex14DTO extends OlsRuleDTO {
         this.runwayClassification = runwayClassification;
         this.runwayCategory = runwayCategory;
         this.runwayCodeNumber = runwayCodeNumber;
-        this.property = property;
+        this.propertyName = propertyName;
+        this.propertyCode = propertyCode;
         this.value = value;
     }
 }

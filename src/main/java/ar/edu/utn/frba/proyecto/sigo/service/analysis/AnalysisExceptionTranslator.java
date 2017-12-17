@@ -8,9 +8,12 @@ import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisExceptionSurface;
 import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisExceptionVisitor;
 import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisExceptions;
 import ar.edu.utn.frba.proyecto.sigo.domain.regulation.Regulations;
+import ar.edu.utn.frba.proyecto.sigo.domain.regulation.icao.OlsRuleICAOAnnex14;
 import ar.edu.utn.frba.proyecto.sigo.dto.analysis.AnalysisExceptionDTO;
 import ar.edu.utn.frba.proyecto.sigo.exception.InvalidParameterException;
 import ar.edu.utn.frba.proyecto.sigo.service.Translator;
+import ar.edu.utn.frba.proyecto.sigo.service.regulation.OlsRuleICAOAnnex14Service;
+import ar.edu.utn.frba.proyecto.sigo.service.regulation.OlsRuleService;
 import com.google.gson.Gson;
 
 import javax.inject.Inject;
@@ -19,13 +22,16 @@ import java.util.Optional;
 public class AnalysisExceptionTranslator extends Translator<AnalysisException, AnalysisExceptionDTO>{
 
     private AnalysisCaseService caseService;
+    private OlsRuleICAOAnnex14Service ruleIcaoService;
 
     @Inject
     public AnalysisExceptionTranslator(
         Gson objectMapper,
-        AnalysisCaseService caseService
+        AnalysisCaseService caseService,
+        OlsRuleICAOAnnex14Service ruleIcaoService
     ){
         this.caseService = caseService;
+        this.ruleIcaoService = ruleIcaoService;
         this.objectMapper = objectMapper;
         this.dtoClass = AnalysisExceptionDTO.class;
         this.domainClass = AnalysisException.class;
@@ -68,8 +74,7 @@ public class AnalysisExceptionTranslator extends Translator<AnalysisException, A
                     .id(exception.getId())
                     .name(exception.getName())
                     .caseId(exception.getAnalysisCase().getId())
-                    .olsRuleId(exception.getOlsRuleId())
-                    .property(exception.getProperty())
+                    .ruleId(exception.getRule().getId())
                     .value(exception.getValue())
                     .regulationId(exception.getRegulation().ordinal())
                     .build();
@@ -145,9 +150,7 @@ public class AnalysisExceptionTranslator extends Translator<AnalysisException, A
                 .id(dto.getId())
                 .name(dto.getName())
                 .type(AnalysisExceptions.RULE)
-                .property(dto.getProperty())
                 .value(dto.getValue())
-                .olsRuleId(dto.getOlsRuleId())
                 .regulation(Regulations.values()[dto.getRegulationId()]);
 
         // relation: case
@@ -155,6 +158,12 @@ public class AnalysisExceptionTranslator extends Translator<AnalysisException, A
         if(!Optional.ofNullable(analysisCase).isPresent())
             throw new InvalidParameterException("caseId == " + dto.getCaseId());
         builder.analysisCase(analysisCase);
+
+        // relation: rule
+        OlsRuleICAOAnnex14 rule = ruleIcaoService.get(dto.getRuleId());
+        if(!Optional.ofNullable(rule).isPresent())
+            throw new InvalidParameterException("ruleId == " + dto.getRuleId());
+        builder.rule(rule);
 
         return builder.build();
     }

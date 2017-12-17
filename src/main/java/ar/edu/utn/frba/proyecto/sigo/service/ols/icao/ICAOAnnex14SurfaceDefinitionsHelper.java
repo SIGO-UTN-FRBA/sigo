@@ -23,7 +23,7 @@ public class ICAOAnnex14SurfaceDefinitionsHelper {
 
         rules.forEach( icaoRule ->{
 
-            switch (icaoRule.getProperty()){
+            switch (icaoRule.getPropertyName()){
                 case "Length of inner edge":
                     builder.lengthOfInnerEdge(icaoRule.getValue());
                     break;
@@ -44,7 +44,7 @@ public class ICAOAnnex14SurfaceDefinitionsHelper {
 
         rules.forEach( icaoRule ->{
 
-            switch (icaoRule.getProperty()){
+            switch (icaoRule.getPropertyName()){
                 case "Length":
                     builder.length(icaoRule.getValue());
                     break;
@@ -61,7 +61,7 @@ public class ICAOAnnex14SurfaceDefinitionsHelper {
         ICAOAnnex14SurfaceApproachSecondSection.ICAOAnnex14SurfaceApproachSecondSectionBuilder builder = ICAOAnnex14SurfaceApproachSecondSection.builder();
 
         rules.forEach( icaoRule ->{
-            switch (icaoRule.getProperty()){
+            switch (icaoRule.getPropertyName()){
                 case "Length":
                     builder.length(icaoRule.getValue());
                     break;
@@ -78,7 +78,7 @@ public class ICAOAnnex14SurfaceDefinitionsHelper {
         ICAOAnnex14SurfaceApproachHorizontalSection.ICAOAnnex14SurfaceApproachHorizontalSectionBuilder builder = ICAOAnnex14SurfaceApproachHorizontalSection.builder();
 
         rules.forEach( icaoRule ->{
-            switch (icaoRule.getProperty()){
+            switch (icaoRule.getPropertyName()){
                 case "Length":
                     builder.length(icaoRule.getValue());
                     break;
@@ -112,7 +112,7 @@ public class ICAOAnnex14SurfaceDefinitionsHelper {
 
         rules.forEach( icaoRule ->{
 
-            switch (icaoRule.getProperty()){
+            switch (icaoRule.getPropertyName()){
                 case "Distance from threshold":
                     builder.distanceFromThreshold(icaoRule.getValue());
                     break;
@@ -135,7 +135,7 @@ public class ICAOAnnex14SurfaceDefinitionsHelper {
 
         rules.forEach( icaoRule ->{
 
-            switch (icaoRule.getProperty()){
+            switch (icaoRule.getPropertyName()){
                 case "Width":
                     builder.width(icaoRule.getValue());
                     break;
@@ -153,7 +153,7 @@ public class ICAOAnnex14SurfaceDefinitionsHelper {
 
         rules.forEach( icaoRule ->{
 
-            switch (icaoRule.getProperty()){
+            switch (icaoRule.getPropertyName()){
                 case "Slope":
                     builder.slope(icaoRule.getValue());
                     break;
@@ -183,7 +183,7 @@ public class ICAOAnnex14SurfaceDefinitionsHelper {
 
         rules.forEach( icaoRule -> {
 
-            switch (icaoRule.getProperty()){
+            switch (icaoRule.getPropertyName()){
                 case "Height":
                     builder.height(icaoRule.getValue());
                     break;
@@ -201,7 +201,7 @@ public class ICAOAnnex14SurfaceDefinitionsHelper {
 
         rules.forEach( icaoRule ->{
 
-            switch (icaoRule.getProperty()){
+            switch (icaoRule.getPropertyName()){
                 case "Distance from threshold":
                     builder.distanceFromThreshold(icaoRule.getValue());
                     break;
@@ -226,7 +226,7 @@ public class ICAOAnnex14SurfaceDefinitionsHelper {
 
         rules.forEach(icaoRule -> {
 
-            switch (icaoRule.getProperty()){
+            switch (icaoRule.getPropertyName()){
                 case "Slope":
                     builder.slope(icaoRule.getValue());
                     break;

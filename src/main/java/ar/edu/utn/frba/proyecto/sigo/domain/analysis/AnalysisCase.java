@@ -13,6 +13,7 @@ import javax.persistence.*;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Stream;
 
 @Entity
 @Table(name = "public.tbl_analysis_cases")
@@ -66,5 +67,19 @@ public class AnalysisCase extends SigoDomain {
         return this.getObjects()
                 .stream()
                 .anyMatch(r -> r.getIncluded() && Objects.equals(r.getPlacedObject().getId(), o.getId()));
+    }
+
+    public Stream<AnalysisExceptionRule> getRuleExceptions(){
+        return this.getExceptions()
+                .stream()
+                .filter(s -> s.getType().equals(AnalysisExceptions.RULE))
+                .map(s -> (AnalysisExceptionRule)s);
+    }
+
+    public Stream<AnalysisExceptionSurface> getSurfaceExceptions(){
+        return this.getExceptions()
+                .stream()
+                .filter(s -> s.getType().equals(AnalysisExceptions.SURFACE))
+                .map(s -> (AnalysisExceptionSurface)s);
     }
 }
