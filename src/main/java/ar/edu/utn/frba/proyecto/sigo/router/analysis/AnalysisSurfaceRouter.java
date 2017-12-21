@@ -37,8 +37,8 @@ public class AnalysisSurfaceRouter extends SigoRouter {
      */
     private final Route fetchSurfaces = doInTransaction(false, (request, response) -> {
 
-        return this.surfaceService.find(request.queryMap())
-                .map( s -> this.surfaceService.getFeature(s))
+        return this.surfaceService.find(getParamAnalysisId(request), request.queryMap())
+                .map( s -> featureToGeoJson(this.surfaceService.getFeature(s)))
                 .collect(Collectors.toList());
     });
 

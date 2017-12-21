@@ -9,6 +9,7 @@ import ar.edu.utn.frba.proyecto.sigo.domain.location.PoliticalLocationType;
 import ar.edu.utn.frba.proyecto.sigo.domain.analysis.Region;
 import ar.edu.utn.frba.proyecto.sigo.domain.analysis.State;
 import ar.edu.utn.frba.proyecto.sigo.domain.object.*;
+import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14Surface;
 import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceApproach;
 import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceApproachFirstSection;
 import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceApproachHorizontalSection;
@@ -117,6 +118,7 @@ public class HibernateUtil {
                 .addAnnotatedClass(AnalysisExceptionDynamicSurface.class)
                 .addAnnotatedClass(AnalysisObject.class)
                 .addAnnotatedClass(Region.class)
+                .addAnnotatedClass(ICAOAnnex14Surface.class)
                 .addAnnotatedClass(ICAOAnnex14SurfaceTransitional.class)
                 .addAnnotatedClass(ICAOAnnex14SurfaceTakeoffClimb.class)
                 .addAnnotatedClass(ICAOAnnex14SurfaceStrip.class)

@@ -1,7 +1,13 @@
 package ar.edu.utn.frba.proyecto.sigo.domain.ols.icao;
 
+import ar.edu.utn.frba.proyecto.sigo.domain.regulation.icao.ICAOAnnex14RunwayCategories;
+import ar.edu.utn.frba.proyecto.sigo.domain.regulation.icao.ICAOAnnex14RunwayClassifications;
+import ar.edu.utn.frba.proyecto.sigo.domain.regulation.icao.ICAOAnnex14RunwayCodeNumbers;
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -11,24 +17,12 @@ import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "tbl_icao14_surface_approach")
+@NoArgsConstructor(access = AccessLevel.PUBLIC)
 @Data
-@Builder
 public class ICAOAnnex14SurfaceApproach extends ICAOAnnex14Surface {
-
-    @Id
-    @SequenceGenerator(
-            name = "ICAOAnnex14SurfaceApproachGenerator",
-            sequenceName = "seq_icao14_surface_approach",
-            allocationSize = 1
-    )
-    @GeneratedValue(
-            strategy = GenerationType.SEQUENCE,
-            generator = "ICAOAnnex14SurfaceApproachGenerator"
-    )
-    @Column
-    private Long id;
 
     @Column(name = "length_of_inner_edge")
     private Double lengthOfInnerEdge;
@@ -47,5 +41,13 @@ public class ICAOAnnex14SurfaceApproach extends ICAOAnnex14Surface {
     @Override
     public String getName() {
         return ICAOAnnex14Surfaces.APPROACH.description();
+    }
+
+    @Builder
+    public ICAOAnnex14SurfaceApproach(Long id, ICAOAnnex14RunwayClassifications classification, ICAOAnnex14RunwayCategories category, ICAOAnnex14RunwayCodeNumbers code, Double lengthOfInnerEdge, Double distanceFromThreshold, Double divergence) {
+        super(id, classification, category, code);
+        this.lengthOfInnerEdge = lengthOfInnerEdge;
+        this.distanceFromThreshold = distanceFromThreshold;
+        this.divergence = divergence;
     }
 }

@@ -3,6 +3,7 @@ package ar.edu.utn.frba.proyecto.sigo.service.analysis;
 import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisCase;
 import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisSurface;
 import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisSurface_;
+import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14Surface;
 import ar.edu.utn.frba.proyecto.sigo.persistence.HibernateUtil;
 import ar.edu.utn.frba.proyecto.sigo.service.SigoService;
 import com.google.common.collect.Lists;
@@ -33,17 +34,17 @@ public class AnalysisSurfaceService extends SigoService<AnalysisSurface, Analysi
         super(AnalysisSurface.class, util.getSessionFactory());
     }
 
-    public Stream<AnalysisSurface> find(QueryParamsMap parameters) {
+    public Stream<AnalysisSurface> find(Long analysisCaseId, QueryParamsMap parameters) {
         CriteriaBuilder builder = currentSession().getCriteriaBuilder();
         CriteriaQuery<AnalysisSurface> criteria = builder.createQuery(AnalysisSurface.class);
         Root<AnalysisSurface> analysisSurface = criteria.from(AnalysisSurface.class);
 
         Optional<Predicate> predicateCaseId = Optional
-                .of(parameters.get("case_id").value())
+                .of(analysisCaseId)
                 .map(v -> builder.equal(analysisSurface.get(AnalysisSurface_.analysisCase), v));
 
         Optional<Predicate> predicateDirection = Optional
-                .ofNullable(parameters.get(AnalysisSurface_.direction.getName()))
+                .ofNullable(parameters.get(AnalysisSurface_.direction.getName()).longValue())
                 .map(v -> builder.equal(analysisSurface.get(AnalysisSurface_.direction), v));
 
         List<Predicate> collect = Lists.newArrayList(predicateCaseId, predicateDirection)
@@ -58,24 +59,19 @@ public class AnalysisSurfaceService extends SigoService<AnalysisSurface, Analysi
     }
 
     public SimpleFeature getFeature(AnalysisSurface analysisSurface) {
-/*
+
         return SimpleFeatureBuilder.build(
-                getFeatureSchema(),
+                getFeatureSchema(analysisSurface),
                 new Object[]{
                         analysisSurface.getGeometry(),
-                        analysisSurface.getSurface().,
-                        airport.getNameFIR(),
-                        airport.getCodeFIR(),
-                        airport.getCodeIATA(),
-                        airport.getCodeLocal()
+                        ((ICAOAnnex14Surface)analysisSurface.getSurface()).getEnum().name(),
+                        analysisSurface.getSurface().getName()
                 },
                 analysisSurface.getId().toString()
         );
-  */
-        throw new NotImplementedException();
     }
 
-    private SimpleFeatureType getFeatureSchema() {
+    private SimpleFeatureType getFeatureSchema(AnalysisSurface analysisSurface) {
 
         SimpleFeatureTypeBuilder tb = new SimpleFeatureTypeBuilder();
 

@@ -18,6 +18,7 @@ public class AnalysisExceptionClone implements AnalysisExceptionVisitor<Analysis
                 .type(exception.getType())
                 .rule(exception.getRule())
                 .value(exception.getValue())
+                .direction(exception.getDirection())
                 .build();
     }
 

@@ -34,19 +34,19 @@ public class AnalysisCase extends SigoDomain {
     @JoinColumn(name = "aerodrome_id")
     private Airport aerodrome;
 
-    @OneToMany(mappedBy = "analysisCase", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "analysisCase", cascade = CascadeType.ALL)
     private List<AnalysisObject> objects = Lists.newArrayList();
 
-    @OneToMany(mappedBy="analysisCase", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy="analysisCase", cascade = CascadeType.ALL)
     private Set<AnalysisException> exceptions = Sets.newHashSet();
 
     @Column(name="search_radius")
     private Double searchRadius;
 
-    @OneToMany(mappedBy = "analysisCase", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "analysisCase", cascade = CascadeType.ALL)
     private List<AnalysisSurface> surfaces = Lists.newArrayList();
 
-    @OneToMany(mappedBy = "analysisCase", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "analysisCase", cascade = CascadeType.ALL)
     private Set<AnalysisObstacle> obstacles = Sets.newHashSet();
 
 

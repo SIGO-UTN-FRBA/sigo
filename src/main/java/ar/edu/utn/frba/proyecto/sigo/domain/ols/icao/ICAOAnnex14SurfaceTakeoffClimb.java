@@ -1,7 +1,13 @@
 package ar.edu.utn.frba.proyecto.sigo.domain.ols.icao;
 
+import ar.edu.utn.frba.proyecto.sigo.domain.regulation.icao.ICAOAnnex14RunwayCategories;
+import ar.edu.utn.frba.proyecto.sigo.domain.regulation.icao.ICAOAnnex14RunwayClassifications;
+import ar.edu.utn.frba.proyecto.sigo.domain.regulation.icao.ICAOAnnex14RunwayCodeNumbers;
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -11,24 +17,12 @@ import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "tbl_icao14_surface_takeoff_climb")
+@NoArgsConstructor(access = AccessLevel.PUBLIC)
 @Data
-@Builder
 public class ICAOAnnex14SurfaceTakeoffClimb extends ICAOAnnex14Surface {
-
-    @Id
-    @SequenceGenerator(
-            name = "ICAOAnnex14SurfaceTakeoffClimbGenerator",
-            sequenceName = "seq_icao14_surface_takeoff_climb",
-            allocationSize = 1
-    )
-    @GeneratedValue(
-            strategy = GenerationType.SEQUENCE,
-            generator = "ICAOAnnex14SurfaceTakeoffClimbGenerator"
-    )
-    @Column
-    private Long id;
 
     @Column
     private Double length;
@@ -58,4 +52,14 @@ public class ICAOAnnex14SurfaceTakeoffClimb extends ICAOAnnex14Surface {
         return ICAOAnnex14Surfaces.TAKEOFF_CLIMB.description();
     }
 
+    @Builder
+    public ICAOAnnex14SurfaceTakeoffClimb(Long id, ICAOAnnex14RunwayClassifications classification, ICAOAnnex14RunwayCategories category, ICAOAnnex14RunwayCodeNumbers code, Double length, Double slope, Double finalWidth, Double divergence, Double distanceFromRunwayEnds, Double lengthOfInnerEdge) {
+        super(id, classification, category, code);
+        this.length = length;
+        this.slope = slope;
+        this.finalWidth = finalWidth;
+        this.divergence = divergence;
+        this.distanceFromRunwayEnds = distanceFromRunwayEnds;
+        this.lengthOfInnerEdge = lengthOfInnerEdge;
+    }
 }

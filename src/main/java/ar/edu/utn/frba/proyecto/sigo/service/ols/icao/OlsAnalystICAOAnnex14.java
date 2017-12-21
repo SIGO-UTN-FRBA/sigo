@@ -4,13 +4,10 @@ import ar.edu.utn.frba.proyecto.sigo.domain.airport.Runway;
 import ar.edu.utn.frba.proyecto.sigo.domain.airport.RunwayDirection;
 import ar.edu.utn.frba.proyecto.sigo.domain.airport.icao.RunwayClassificationICAOAnnex14;
 import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisCase;
-import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisException;
 import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisExceptionRule;
-import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisExceptions;
 import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisObject;
 import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisObstacle;
 import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisSurface;
-import ar.edu.utn.frba.proyecto.sigo.domain.ols.ObstacleLimitationSurface;
 import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14Surface;
 import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceInnerHorizontal;
 import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceStrip;
@@ -18,14 +15,11 @@ import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14Surfaces;
 import ar.edu.utn.frba.proyecto.sigo.domain.regulation.icao.OlsRuleICAOAnnex14;
 import ar.edu.utn.frba.proyecto.sigo.exception.SigoException;
 import ar.edu.utn.frba.proyecto.sigo.persistence.HibernateUtil;
-import ar.edu.utn.frba.proyecto.sigo.service.analysis.AnalysisExceptionService;
 import ar.edu.utn.frba.proyecto.sigo.service.ols.OlsAnalyst;
 import ar.edu.utn.frba.proyecto.sigo.service.regulation.OlsRuleICAOAnnex14Service;
 import com.google.common.collect.Lists;
 import com.google.inject.assistedinject.Assisted;
 import org.apache.commons.lang3.StringUtils;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 
 import javax.inject.Inject;
 import java.lang.reflect.InvocationTargetException;
@@ -38,7 +32,6 @@ public class OlsAnalystICAOAnnex14 extends OlsAnalyst {
 
     private OlsRuleICAOAnnex14Service definitionService;
     private ICAOAnnex14SurfaceGeometriesHelper geometryHelper;
-    private SessionFactory sessionFactory;
 
     @Inject
     public OlsAnalystICAOAnnex14(
@@ -47,9 +40,8 @@ public class OlsAnalystICAOAnnex14 extends OlsAnalyst {
             HibernateUtil hibernateUtil,
             @Assisted AnalysisCase analysisCase
     ) {
-        super(analysisCase);
+        super(analysisCase, hibernateUtil.getSessionFactory());
 
-        this.sessionFactory = hibernateUtil.getSessionFactory();
         this.definitionService = service;
         this.geometryHelper = geometryHelper;
     }
@@ -157,7 +149,7 @@ public class OlsAnalystICAOAnnex14 extends OlsAnalyst {
                 .direction(direction)
                 .build();
 
-        getCurrentSession().persist(analysisSurface);
+        //getCurrentSession().save(analysisSurface);
 
         return analysisSurface;
     }
@@ -170,13 +162,9 @@ public class OlsAnalystICAOAnnex14 extends OlsAnalyst {
                 .direction(direction)
                 .build();
 
-        getCurrentSession().persist(analysisSurface);
+        //getCurrentSession().save(analysisSurface);
 
         return analysisSurface;
-    }
-
-    private Session getCurrentSession() {
-        return this.sessionFactory.getCurrentSession();
     }
 
     private ICAOAnnex14Surface applyRuleException(ICAOAnnex14Surface surface) {

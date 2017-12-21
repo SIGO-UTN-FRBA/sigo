@@ -25,6 +25,7 @@ public class AnalysisExceptionDTO {
     private Long ruleId;
     private Double value;
     private Integer regulationId;
+    private Long directionId;
 
     //AnalysisExceptionSurface
     private Double heightAgl;

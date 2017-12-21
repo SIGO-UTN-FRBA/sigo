@@ -6,6 +6,7 @@ import lombok.*;
 
 import javax.persistence.*;
 
+@EqualsAndHashCode(callSuper = true, exclude = "runwayDirection")
 @Entity
 @Table(name = "public.tbl_runway_approach_sections")
 @AllArgsConstructor

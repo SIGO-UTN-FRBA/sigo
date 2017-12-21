@@ -4,6 +4,7 @@ import ar.edu.utn.frba.proyecto.sigo.domain.SigoDomain;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.Column;
@@ -20,6 +21,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+@EqualsAndHashCode(callSuper = true, exclude = "runwayDirection")
 @Entity
 @Table(name = "public.tbl_runway_classification")
 @Inheritance(strategy = InheritanceType.JOINED)

@@ -13,9 +13,11 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Any;
 import org.hibernate.annotations.AnyMetaDef;
+import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.MetaValue;
 
 import javax.persistence.CascadeType;
@@ -27,11 +29,13 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import java.util.HashSet;
 import java.util.List;
 
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "public.tbl_analysis_surfaces")
 @AllArgsConstructor
@@ -53,12 +57,12 @@ public class AnalysisSurface extends SigoDomain {
                     @MetaValue(value = "ICAOAnnex14SurfaceInnerHorizontal", targetEntity = ICAOAnnex14SurfaceInnerHorizontal.class)
             }
     )
-    
     @Any(
             metaDef = "SurfaceMetaDef",
             metaColumn = @Column( name = "surface_type" )
     )
-    @JoinColumn( name = "surface_id" )
+    @Cascade( { org.hibernate.annotations.CascadeType.ALL })
+    @JoinColumn( name = "surface_id")
     private ObstacleLimitationSurface surface;
 
     @ManyToOne
@@ -69,7 +73,7 @@ public class AnalysisSurface extends SigoDomain {
     @JoinColumn(name = "direction_id")
     private RunwayDirection direction;
 
-    @OneToMany(mappedBy = "surface", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "surface", cascade = CascadeType.ALL)
     private List<AnalysisObstacle> obstacles = Lists.newArrayList();
 
     @Column(name="geom")

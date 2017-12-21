@@ -10,6 +10,7 @@ import com.google.common.base.MoreObjects;
 import com.vividsolutions.jts.geom.MultiPolygon;
 import lombok.*;
 
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "public.tbl_regions")
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
