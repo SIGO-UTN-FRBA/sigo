@@ -231,7 +231,7 @@ public class ICAOAnnex14SurfaceDefinitionsHelper {
                     builder.slope(icaoRule.getValue());
                     break;
                 case "Height":
-                    builder.height(icaoRule.getValue());
+                    builder.finalHeight(icaoRule.getValue());
                     break;
                 case "Radius":
                     builder.ratio(icaoRule.getValue());

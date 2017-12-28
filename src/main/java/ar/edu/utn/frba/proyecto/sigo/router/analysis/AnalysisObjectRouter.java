@@ -46,7 +46,7 @@ public class AnalysisObjectRouter extends SigoRouter {
     }
 
     /**
-     * Get calculated objects (static)
+     * List calculated objects (static)
      */
     private final Route fetchObjects = doInTransaction(true, (request, response) -> {
 
@@ -58,10 +58,19 @@ public class AnalysisObjectRouter extends SigoRouter {
                 .collect(Collectors.toList());
     });
 
+    private final Route fetchObject = doInTransaction(false, (request, response) -> {
+
+        AnalysisObject domain = this.objectService.get(getParamObjectId(request));
+
+        return objectTranslator.getAsDTO(domain);
+    });
+
     /**
      * Set analysis object as included/excluded given its identifier
      */
     private final Route includeObject = doInTransaction(true, (request, response) -> {
+
+        //TODO validar que se encuentre en stage correcto para modificar
 
         AnalysisObject domain = objectService.get(getParamObjectId(request));
 
@@ -78,10 +87,9 @@ public class AnalysisObjectRouter extends SigoRouter {
     @Override
     public RouteGroup routes() {
 
-        //TODO validar que se encuentre en stage correcto
-
         return ()->{
             get("", fetchObjects, jsonTransformer);
+            get("/:"+ OBJECT_ID_PARAM, fetchObject, jsonTransformer);
             patch("/:" + OBJECT_ID_PARAM, includeObject, jsonTransformer);
         };
     }

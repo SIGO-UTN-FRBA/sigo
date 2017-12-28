@@ -8,6 +8,7 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.CascadeType;
@@ -27,6 +28,7 @@ import javax.persistence.Table;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
+@EqualsAndHashCode(callSuper = true, exclude = "analysisCase")
 @Entity
 @Table(name = "public.tbl_analysis")
 @AllArgsConstructor

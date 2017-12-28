@@ -1,11 +1,9 @@
 package ar.edu.utn.frba.proyecto.sigo.service.ols.icao;
 
 import ar.edu.utn.frba.proyecto.sigo.domain.airport.RunwayDirection;
-import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisSurface;
-import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14Surface;
+import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceConical;
 import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceInnerHorizontal;
 import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceStrip;
-import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14Surfaces;
 import ar.edu.utn.frba.proyecto.sigo.utils.geom.GeometryHelper;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
@@ -13,10 +11,7 @@ import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.geom.Polygon;
-import com.vividsolutions.jts.geomgraph.GeometryGraph;
-import com.vividsolutions.jts.operation.buffer.BufferOp;
 import org.geotools.geojson.geom.GeometryJSON;
-import org.geotools.referencing.GeodeticCalculator;
 
 import javax.inject.Singleton;
 import java.io.ByteArrayOutputStream;
@@ -78,7 +73,7 @@ public class ICAOAnnex14SurfaceGeometriesHelper {
         return stripGeometry;
     }
 
-    public Geometry createInnerHorizontalSurfaceGeometry(RunwayDirection direction, ICAOAnnex14SurfaceInnerHorizontal innerHorizontalDefinition) {
+    public Geometry createInnerHorizontalSurfaceGeometry(RunwayDirection direction, ICAOAnnex14SurfaceInnerHorizontal innerHorizontalDefinition, ICAOAnnex14SurfaceStrip stripSurface) {
 
         double radius = innerHorizontalDefinition.getRadius() / 100000;
 
@@ -91,6 +86,8 @@ public class ICAOAnnex14SurfaceGeometriesHelper {
         List<Geometry> bufferEdgePoints = directionPoints.stream().map(d -> d.buffer(radius,20)).collect(Collectors.toList());
 
         Geometry union = bufferCenterLine.union(bufferEdgePoints.get(0)).union(bufferEdgePoints.get(1));
+
+        Geometry difference = union.difference(stripSurface.getGeometry());
 /*
         OutputStream out = new ByteArrayOutputStream();
         try {
@@ -100,6 +97,25 @@ public class ICAOAnnex14SurfaceGeometriesHelper {
         }
         out.toString();
 */
-        return union;
+        return difference;
+    }
+
+    public Geometry createConicalSurfaceGeometry(RunwayDirection direction, ICAOAnnex14SurfaceConical conicalDefinition, ICAOAnnex14SurfaceInnerHorizontal innerHorizontalSurface, ICAOAnnex14SurfaceStrip stripSurface) {
+
+        Geometry baseGeometry = innerHorizontalSurface.getGeometry().union(stripSurface.getGeometry());
+
+        Geometry buffer = baseGeometry.buffer(conicalDefinition.getRatio() / 100000, 25);
+
+        Geometry difference = buffer.difference(baseGeometry);
+/*
+        OutputStream out = new ByteArrayOutputStream();
+        try {
+            new GeometryJSON().write(difference, out);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        out.toString();
+*/
+        return difference;
     }
 }

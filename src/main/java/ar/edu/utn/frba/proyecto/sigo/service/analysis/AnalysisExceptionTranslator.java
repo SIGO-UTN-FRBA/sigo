@@ -18,8 +18,10 @@ import ar.edu.utn.frba.proyecto.sigo.service.regulation.OlsRuleICAOAnnex14Servic
 import com.google.gson.Gson;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.Optional;
 
+@Singleton
 public class AnalysisExceptionTranslator extends Translator<AnalysisException, AnalysisExceptionDTO>{
 
     private AnalysisCaseService caseService;

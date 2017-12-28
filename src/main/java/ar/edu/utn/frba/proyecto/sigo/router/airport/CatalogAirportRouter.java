@@ -49,7 +49,9 @@ public class CatalogAirportRouter extends SigoRouter {
                 .collect(Collectors.toList());
     };
 
-    private final Route fetchAirportRegulations = doInTransaction(false, (Request request, Response response) -> catalogService.findAllAirportRegulations());
+    private final Route fetchAirportRegulations = doInTransaction(false, (Request request, Response response) ->
+            catalogService.findAllAirportRegulations().collect(Collectors.toList())
+    );
 
     @Override
     public RouteGroup routes() {

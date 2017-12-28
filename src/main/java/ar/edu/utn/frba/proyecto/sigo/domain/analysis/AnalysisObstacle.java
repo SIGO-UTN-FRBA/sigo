@@ -1,9 +1,11 @@
 package ar.edu.utn.frba.proyecto.sigo.domain.analysis;
 
+import ar.edu.utn.frba.proyecto.sigo.domain.SigoDomain;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.Column;
@@ -17,13 +19,14 @@ import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+@EqualsAndHashCode(callSuper = true, exclude = "analysisCase")
 @Entity
 @Table(name = "public.tbl_analysis_obstacles")
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 @Data
 @Builder
-public class AnalysisObstacle {
+public class AnalysisObstacle extends SigoDomain {
 
     @Id
     @SequenceGenerator(name = "analysisObstacleGenerator", sequenceName = "ANALYSIS_OBSTACLE_SEQUENCE", allocationSize = 1)
@@ -47,5 +50,19 @@ public class AnalysisObstacle {
     @JoinColumn(name="exception_id")
     private AnalysisException exception;
 
-    //TODO mas atributos q describan el contexto del obtaculo
+    @Column(name = "object_height")
+    private Double objectHeight;
+
+    @Column(name = "surface_height")
+    private Double surfaceHeight;
+
+    @Column
+    private Boolean excluded = false;
+
+    @Column
+    private String justification;
+
+    public Double getPenetration(){
+        return objectHeight - surfaceHeight;
+    }
 }

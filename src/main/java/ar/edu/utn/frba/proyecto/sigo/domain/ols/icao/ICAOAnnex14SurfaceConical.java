@@ -3,6 +3,7 @@ package ar.edu.utn.frba.proyecto.sigo.domain.ols.icao;
 import ar.edu.utn.frba.proyecto.sigo.domain.regulation.icao.ICAOAnnex14RunwayCategories;
 import ar.edu.utn.frba.proyecto.sigo.domain.regulation.icao.ICAOAnnex14RunwayClassifications;
 import ar.edu.utn.frba.proyecto.sigo.domain.regulation.icao.ICAOAnnex14RunwayCodeNumbers;
+import com.vividsolutions.jts.geom.Polygon;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Data;
@@ -27,8 +28,8 @@ public class ICAOAnnex14SurfaceConical extends ICAOAnnex14Surface {
     @Column
     private Double slope;
 
-    @Column
-    private Double height;
+    @Column(name = "final_height")
+    private Double finalHeight;
 
     @Column
     private Double ratio;
@@ -44,10 +45,10 @@ public class ICAOAnnex14SurfaceConical extends ICAOAnnex14Surface {
     }
 
     @Builder
-    public ICAOAnnex14SurfaceConical(Long id, ICAOAnnex14RunwayClassifications classification, ICAOAnnex14RunwayCategories category, ICAOAnnex14RunwayCodeNumbers code, Double slope, Double height, Double ratio) {
-        super(id, classification, category, code);
+    public ICAOAnnex14SurfaceConical(Long id, ICAOAnnex14RunwayClassifications classification, ICAOAnnex14RunwayCategories category, ICAOAnnex14RunwayCodeNumbers code, Polygon geometry, Double slope, Double finalHeight, Double ratio) {
+        super(id, classification, category, code, geometry);
         this.slope = slope;
-        this.height = height;
+        this.finalHeight = finalHeight;
         this.ratio = ratio;
     }
 }
