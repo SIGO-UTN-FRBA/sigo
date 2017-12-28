@@ -18,11 +18,13 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Any;
 import org.hibernate.annotations.AnyMetaDef;
 import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.MetaValue;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -59,7 +61,8 @@ public class AnalysisSurface extends SigoDomain {
     )
     @Any(
             metaDef = "SurfaceMetaDef",
-            metaColumn = @Column( name = "surface_type" )
+            metaColumn = @Column( name = "surface_type" ),
+            fetch = FetchType.EAGER
     )
     @Cascade( { org.hibernate.annotations.CascadeType.ALL })
     @JoinColumn( name = "surface_id")

@@ -3,17 +3,20 @@ package ar.edu.utn.frba.proyecto.sigo.service.analysis;
 import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisCase;
 import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisSurface;
 import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisSurface_;
+import ar.edu.utn.frba.proyecto.sigo.domain.ols.ObstacleLimitationSurface;
 import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14Surface;
 import ar.edu.utn.frba.proyecto.sigo.persistence.HibernateUtil;
 import ar.edu.utn.frba.proyecto.sigo.service.SigoService;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Streams;
+import org.apache.commons.lang3.reflect.FieldUtils;
 import org.geotools.feature.simple.SimpleFeatureBuilder;
 import org.geotools.feature.simple.SimpleFeatureTypeBuilder;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
+import org.hibernate.Hibernate;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
 import spark.QueryParamsMap;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import javax.inject.Inject;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -21,6 +24,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.awt.*;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -62,13 +66,33 @@ public class AnalysisSurfaceService extends SigoService<AnalysisSurface, Analysi
 
         return SimpleFeatureBuilder.build(
                 getFeatureSchema(analysisSurface),
-                new Object[]{
-                        analysisSurface.getGeometry(),
-                        ((ICAOAnnex14Surface)analysisSurface.getSurface()).getEnum().name(),
-                        analysisSurface.getSurface().getName()
-                },
+                getValuesOfFeatureProperties(analysisSurface),
                 analysisSurface.getId().toString()
         );
+    }
+
+    private Object[] getValuesOfFeatureProperties(AnalysisSurface analysisSurface) {
+
+        ObstacleLimitationSurface surface = (ObstacleLimitationSurface) Hibernate.unproxy(analysisSurface.getSurface());
+
+        Class surfaceClass = Hibernate.getClass(surface);
+
+        Stream<Object> tail = Arrays.stream(surfaceClass.getDeclaredFields())
+                .map(f -> {
+                    try {
+                        return FieldUtils.readDeclaredField(surface, f.getName(), true);
+                    } catch (IllegalAccessException e) {
+                        return null;
+                    }
+                });
+
+        Stream<Object> head = Arrays.stream(new Object[]{
+                analysisSurface.getGeometry(),
+                surfaceClass.getSimpleName(),
+                surface.getName()
+        });
+
+        return Streams.concat(head, tail).toArray();
     }
 
     private SimpleFeatureType getFeatureSchema(AnalysisSurface analysisSurface) {
@@ -80,7 +104,8 @@ public class AnalysisSurfaceService extends SigoService<AnalysisSurface, Analysi
         tb.add("class", String.class);
         tb.add("name", String.class);
 
-        //TODO agregar dinamicamente propiedades dependiendo del tipo de superficie
+        Arrays.stream(Hibernate.getClass(analysisSurface.getSurface()).getDeclaredFields())
+                .forEach( f -> tb.add(f.getName(),f.getType()));
 
         return tb.buildFeatureType();
     }

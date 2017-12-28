@@ -149,8 +149,6 @@ public class OlsAnalystICAOAnnex14 extends OlsAnalyst {
                 .direction(direction)
                 .build();
 
-        //getCurrentSession().save(analysisSurface);
-
         return analysisSurface;
     }
 
@@ -161,8 +159,6 @@ public class OlsAnalystICAOAnnex14 extends OlsAnalyst {
                 .geometry(geometryHelper.createStripSurfaceGeometry(direction, stripDefinition))
                 .direction(direction)
                 .build();
-
-        //getCurrentSession().save(analysisSurface);
 
         return analysisSurface;
     }
