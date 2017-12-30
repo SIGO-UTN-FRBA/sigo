@@ -46,7 +46,6 @@ public class PlacedObjectRouter extends SigoRouter {
 
     private final Route fetchObjects = doInTransaction(false, (request, response) -> {
         return objectService.find(request.queryMap())
-                .stream()
                 .map(translator::getAsDTO)
                 .collect(toList());
     });

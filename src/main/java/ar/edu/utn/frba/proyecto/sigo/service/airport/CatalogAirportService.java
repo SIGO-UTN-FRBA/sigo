@@ -13,7 +13,7 @@ import javax.inject.Singleton;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-import java.util.List;
+import java.util.stream.Stream;
 
 @Singleton
 public class CatalogAirportService {
@@ -31,7 +31,7 @@ public class CatalogAirportService {
         return RunwaySurfaces.values();
     }
 
-    public List<Regulation> findAllAirportRegulations() {
+    public Stream<Regulation> findAllAirportRegulations() {
         return this.findAll(Regulation.class);
     }
 
@@ -43,7 +43,7 @@ public class CatalogAirportService {
         return ICAOAnnex14RunwayCodeNumbers.values();
     }
 
-    private <T> List<T> findAll(Class<T> clazz){
+    private <T> Stream<T> findAll(Class<T> clazz){
 
         Session currentSession = this.sessionFactory.getCurrentSession();
 
@@ -53,6 +53,6 @@ public class CatalogAirportService {
         Root<T> root = criteria.from(clazz);
         criteria.select(root);
 
-        return currentSession.createQuery(criteria).getResultList();
+        return currentSession.createQuery(criteria).getResultStream();
     }
 }

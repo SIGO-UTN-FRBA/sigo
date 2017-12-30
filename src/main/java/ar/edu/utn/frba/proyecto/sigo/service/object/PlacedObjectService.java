@@ -2,12 +2,10 @@ package ar.edu.utn.frba.proyecto.sigo.service.object;
 
 import ar.edu.utn.frba.proyecto.sigo.domain.analysis.Region;
 import ar.edu.utn.frba.proyecto.sigo.domain.object.PlacedObject;
-import ar.edu.utn.frba.proyecto.sigo.domain.object.PlacedObjectVisitor;
 import ar.edu.utn.frba.proyecto.sigo.domain.object.PlacedObject_;
 import ar.edu.utn.frba.proyecto.sigo.persistence.HibernateUtil;
 import ar.edu.utn.frba.proyecto.sigo.service.SigoService;
 import com.google.common.collect.Lists;
-import org.opengis.feature.simple.SimpleFeature;
 import spark.QueryParamsMap;
 
 import javax.inject.Inject;
@@ -18,6 +16,7 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toList;
 
@@ -29,7 +28,7 @@ public class PlacedObjectService extends SigoService<PlacedObject, Region> {
         super(PlacedObject.class, hibernateUtil.getSessionFactory());
     }
 
-    public List<PlacedObject> find(QueryParamsMap parameters){
+    public Stream<PlacedObject> find(QueryParamsMap parameters){
 
         CriteriaBuilder builder = currentSession().getCriteriaBuilder();
 
@@ -53,6 +52,6 @@ public class PlacedObjectService extends SigoService<PlacedObject, Region> {
 
         criteria.where(builder.and(collect.toArray(new Predicate[collect.size()])));
 
-        return currentSession().createQuery(criteria).getResultList();
+        return currentSession().createQuery(criteria).getResultStream();
     }
 }
