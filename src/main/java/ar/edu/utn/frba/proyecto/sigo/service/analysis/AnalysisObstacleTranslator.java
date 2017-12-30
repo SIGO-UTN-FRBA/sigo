@@ -1,8 +1,13 @@
 package ar.edu.utn.frba.proyecto.sigo.service.analysis;
 
+import ar.edu.utn.frba.proyecto.sigo.domain.airport.RunwayDirection;
 import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisObstacle;
+import ar.edu.utn.frba.proyecto.sigo.domain.object.PlacedObject;
+import ar.edu.utn.frba.proyecto.sigo.domain.ols.ObstacleLimitationSurface;
 import ar.edu.utn.frba.proyecto.sigo.dto.analysis.AnalysisObstacleDTO;
 import ar.edu.utn.frba.proyecto.sigo.service.Translator;
+import com.google.common.collect.Lists;
+import com.vividsolutions.jts.geom.Coordinate;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.Optional;
@@ -13,13 +18,28 @@ public class AnalysisObstacleTranslator extends Translator<AnalysisObstacle, Ana
     public AnalysisObstacleDTO getAsDTO(AnalysisObstacle domain) {
         AnalysisObstacleDTO.AnalysisObstacleDTOBuilder builder = AnalysisObstacleDTO.builder();
 
+        PlacedObject placedObject = domain.getObject().getPlacedObject();
+        ObstacleLimitationSurface surface = domain.getSurface().getSurface();
+        Coordinate objectCoordinate = placedObject.getGeom().getCoordinate();
+
+        RunwayDirection direction = domain.getSurface().getDirection();
+
         builder
             .id(domain.getId())
             .caseId(domain.getAnalysisCase().getId())
-            .objectId(domain.getObject().getId());
-
-        Optional.ofNullable(domain.getSurface())
-                .ifPresent(s -> builder.surfaceId(s.getId()));
+            .objectId(placedObject.getId())
+            .objectName(placedObject.getName())
+            .objectType(placedObject.getType().ordinal())
+            .coordinate(Lists.newArrayList(objectCoordinate.x, objectCoordinate.y))
+            .objectHeight(domain.getObjectHeight())
+            .surfaceHeight(domain.getSurfaceHeight())
+            .penetration(domain.getPenetration())
+            .surfaceId(surface.getId())
+            .surfaceName(surface.getName())
+            .directionId(direction.getId())
+            .directionName(direction.getIdentifier())
+            .excluded(domain.getExcluded())
+            .justification(domain.getJustification());
 
         Optional.ofNullable(domain.getException())
                 .ifPresent(e -> builder.exceptionId(e.getId()));

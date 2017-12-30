@@ -50,5 +50,19 @@ public class AnalysisObstacle extends SigoDomain {
     @JoinColumn(name="exception_id")
     private AnalysisException exception;
 
-    //TODO mas atributos q describan el contexto del obtaculo
+    @Column(name = "object_height")
+    private Double objectHeight;
+
+    @Column(name = "surface_height")
+    private Double surfaceHeight;
+
+    @Column
+    private Boolean excluded = false;
+
+    @Column
+    private String justification;
+
+    public Double getPenetration(){
+        return objectHeight - surfaceHeight;
+    }
 }

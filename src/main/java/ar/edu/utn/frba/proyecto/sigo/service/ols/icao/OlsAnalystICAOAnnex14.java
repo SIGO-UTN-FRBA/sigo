@@ -71,6 +71,10 @@ public class OlsAnalystICAOAnnex14 extends OlsAnalyst {
                                     .object(object)
                                     .surface(surface)
                                     .analysisCase(this.getAnalysisCase())
+                                    .objectHeight(object.getPlacedObject().getHeightAmls())
+                                    //TODO .surfaceHeight()
+                                    .surfaceHeight(0D)
+                                    .excluded(false)
                                     .build()
                 )
                 .collect(Collectors.toSet());
