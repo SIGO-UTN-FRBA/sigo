@@ -8,6 +8,7 @@ import ar.edu.utn.frba.proyecto.sigo.domain.regulation.icao.OlsRuleICAOAnnex14;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Any;
 import org.hibernate.annotations.AnyMetaDef;
@@ -23,6 +24,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 
+@EqualsAndHashCode(callSuper = true, exclude = "direction")
 @Entity
 @Table(name = "public.tbl_analysis_exceptions_rule")
 @PrimaryKeyJoinColumn(name = "exception_id")

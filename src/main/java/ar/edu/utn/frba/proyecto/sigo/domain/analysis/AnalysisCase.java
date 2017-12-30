@@ -15,6 +15,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Stream;
 
+@EqualsAndHashCode(callSuper = true, exclude = {"objects","exceptions", "surfaces"})
 @Entity
 @Table(name = "public.tbl_analysis_cases")
 @AllArgsConstructor

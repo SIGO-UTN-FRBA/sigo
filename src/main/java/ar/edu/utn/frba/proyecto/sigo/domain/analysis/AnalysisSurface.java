@@ -37,7 +37,7 @@ import javax.persistence.Table;
 import java.util.HashSet;
 import java.util.List;
 
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = true, exclude = "analysisCase")
 @Entity
 @Table(name = "public.tbl_analysis_surfaces")
 @AllArgsConstructor

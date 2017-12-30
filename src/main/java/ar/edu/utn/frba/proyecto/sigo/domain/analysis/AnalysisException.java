@@ -4,6 +4,7 @@ import ar.edu.utn.frba.proyecto.sigo.domain.SigoDomain;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.Column;
@@ -21,6 +22,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 
+@EqualsAndHashCode(callSuper = true, exclude = "analysisCase")
 @Entity
 @Table(name = "public.tbl_analysis_exceptions")
 @Inheritance(strategy = InheritanceType.JOINED)

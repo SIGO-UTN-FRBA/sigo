@@ -70,6 +70,7 @@ public class OlsAnalystICAOAnnex14 extends OlsAnalyst {
                 .map( object -> AnalysisObstacle.builder()
                                     .object(object)
                                     .surface(surface)
+                                    .analysisCase(this.getAnalysisCase())
                                     .build()
                 )
                 .collect(Collectors.toSet());
