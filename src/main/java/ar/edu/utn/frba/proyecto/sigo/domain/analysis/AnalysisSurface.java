@@ -3,8 +3,18 @@ package ar.edu.utn.frba.proyecto.sigo.domain.analysis;
 import ar.edu.utn.frba.proyecto.sigo.domain.SigoDomain;
 import ar.edu.utn.frba.proyecto.sigo.domain.airport.RunwayDirection;
 import ar.edu.utn.frba.proyecto.sigo.domain.ols.ObstacleLimitationSurface;
+import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceApproach;
+import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceApproachFirstSection;
+import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceApproachHorizontalSection;
+import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceApproachSecondSection;
+import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceBalkedLanding;
+import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceConical;
+import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceInnerApproach;
 import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceInnerHorizontal;
+import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceInnerTransitional;
 import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceStrip;
+import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceTakeoffClimb;
+import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceTransitional;
 import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14Surfaces;
 import com.google.common.collect.Lists;
 import com.google.gson.JsonObject;
@@ -56,7 +66,17 @@ public class AnalysisSurface extends SigoDomain {
     @AnyMetaDef( name= "SurfaceMetaDef", metaType = "string", idType = "long",
             metaValues = {
                     @MetaValue(value = "ICAOAnnex14SurfaceStrip", targetEntity = ICAOAnnex14SurfaceStrip.class),
-                    @MetaValue(value = "ICAOAnnex14SurfaceInnerHorizontal", targetEntity = ICAOAnnex14SurfaceInnerHorizontal.class)
+                    @MetaValue(value = "ICAOAnnex14SurfaceInnerHorizontal", targetEntity = ICAOAnnex14SurfaceInnerHorizontal.class),
+                    @MetaValue(value = "ICAOAnnex14SurfaceConical", targetEntity = ICAOAnnex14SurfaceConical.class),
+                    @MetaValue(value = "ICAOAnnex14SurfaceApproach", targetEntity = ICAOAnnex14SurfaceApproach.class),
+                    @MetaValue(value = "ICAOAnnex14SurfaceApproachFirstSection", targetEntity = ICAOAnnex14SurfaceApproachFirstSection.class),
+                    @MetaValue(value = "ICAOAnnex14SurfaceApproachHorizontalSection", targetEntity = ICAOAnnex14SurfaceApproachHorizontalSection.class),
+                    @MetaValue(value = "ICAOAnnex14SurfaceApproachSecondSection", targetEntity = ICAOAnnex14SurfaceApproachSecondSection.class),
+                    @MetaValue(value = "ICAOAnnex14SurfaceBalkedLanding", targetEntity = ICAOAnnex14SurfaceBalkedLanding.class),
+                    @MetaValue(value = "ICAOAnnex14SurfaceInnerApproach", targetEntity = ICAOAnnex14SurfaceInnerApproach.class),
+                    @MetaValue(value = "ICAOAnnex14SurfaceInnerTransitional", targetEntity = ICAOAnnex14SurfaceInnerTransitional.class),
+                    @MetaValue(value = "ICAOAnnex14SurfaceTakeoffClimb", targetEntity = ICAOAnnex14SurfaceTakeoffClimb.class),
+                    @MetaValue(value = "ICAOAnnex14SurfaceTransitional", targetEntity = ICAOAnnex14SurfaceTransitional.class)
             }
     )
     @Any(

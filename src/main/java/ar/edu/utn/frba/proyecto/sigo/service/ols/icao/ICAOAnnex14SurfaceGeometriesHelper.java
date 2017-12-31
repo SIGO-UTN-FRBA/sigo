@@ -3,6 +3,7 @@ package ar.edu.utn.frba.proyecto.sigo.service.ols.icao;
 import ar.edu.utn.frba.proyecto.sigo.domain.airport.RunwayDirection;
 import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisSurface;
 import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14Surface;
+import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceConical;
 import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceInnerHorizontal;
 import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceStrip;
 import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14Surfaces;
@@ -78,7 +79,7 @@ public class ICAOAnnex14SurfaceGeometriesHelper {
         return stripGeometry;
     }
 
-    public Geometry createInnerHorizontalSurfaceGeometry(RunwayDirection direction, ICAOAnnex14SurfaceInnerHorizontal innerHorizontalDefinition) {
+    public Geometry createInnerHorizontalSurfaceGeometry(RunwayDirection direction, ICAOAnnex14SurfaceInnerHorizontal innerHorizontalDefinition, AnalysisSurface stripSurface) {
 
         double radius = innerHorizontalDefinition.getRadius() / 100000;
 
@@ -91,6 +92,8 @@ public class ICAOAnnex14SurfaceGeometriesHelper {
         List<Geometry> bufferEdgePoints = directionPoints.stream().map(d -> d.buffer(radius,20)).collect(Collectors.toList());
 
         Geometry union = bufferCenterLine.union(bufferEdgePoints.get(0)).union(bufferEdgePoints.get(1));
+
+        Geometry difference = union.difference(stripSurface.getGeometry());
 /*
         OutputStream out = new ByteArrayOutputStream();
         try {
@@ -100,6 +103,25 @@ public class ICAOAnnex14SurfaceGeometriesHelper {
         }
         out.toString();
 */
-        return union;
+        return difference;
+    }
+
+    public Geometry createConicalSurfaceGeometry(RunwayDirection direction, ICAOAnnex14SurfaceConical conicalDefinition, AnalysisSurface innerHorizontalSurface) {
+
+        Geometry baseGeometry = innerHorizontalSurface.getGeometry();
+
+        Geometry buffer = baseGeometry.buffer(conicalDefinition.getRatio() / 100000, 25);
+
+        Geometry difference = buffer.difference(baseGeometry);
+/*
+        OutputStream out = new ByteArrayOutputStream();
+        try {
+            new GeometryJSON().write(difference, out);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        out.toString();
+*/
+        return difference;
     }
 }
