@@ -87,7 +87,7 @@ public class AnalysisSurfaceService extends SigoService<AnalysisSurface, Analysi
                 });
 
         Stream<Object> head = Arrays.stream(new Object[]{
-                analysisSurface.getGeometry(),
+                surface.getGeometry(),
                 surfaceClass.getSimpleName(),
                 surface.getName()
         });

@@ -98,9 +98,4 @@ public class AnalysisSurface extends SigoDomain {
 
     @OneToMany(mappedBy = "surface", cascade = CascadeType.ALL)
     private List<AnalysisObstacle> obstacles = Lists.newArrayList();
-
-    @Column(name="geom")
-    private Geometry geometry;
-
-
 }

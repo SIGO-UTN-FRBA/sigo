@@ -70,7 +70,7 @@ public class OlsAnalystICAOAnnex14 extends OlsAnalyst {
         return this.getAnalysisCase().getObjects()
                 .stream()
                 .filter(object -> isObstacle(surface, object))
-                .map( object -> AnalysisObstacle.builder()
+                .map(object -> AnalysisObstacle.builder()
                                     .object(object)
                                     .surface(surface)
                                     .analysisCase(this.getAnalysisCase())
@@ -84,10 +84,7 @@ public class OlsAnalystICAOAnnex14 extends OlsAnalyst {
     }
 
     private boolean isObstacle(AnalysisSurface surface, AnalysisObject object) {
-
-        //TODO intersectar en altura (evaluando propiedades)
-
-        return surface.getGeometry().covers(object.getPlacedObject().getGeom());
+        return surface.getSurface().getGeometry().covers(object.getPlacedObject().getGeom());
     }
 
     @Override
@@ -137,14 +134,14 @@ public class OlsAnalystICAOAnnex14 extends OlsAnalyst {
 
         //2. horizontal interna
         ICAOAnnex14SurfaceInnerHorizontal innerHorizontalDefinition = (ICAOAnnex14SurfaceInnerHorizontal) surfacesDefinitions.stream().filter(d -> d.getEnum() == ICAOAnnex14Surfaces.INNER_HORIZONTAL).findFirst().get();
-        AnalysisSurface analysisSurfaceForInnerHorizontal = createInnerHorizontalAnalysisSurface(direction,innerHorizontalDefinition, stripAnalysisSurface);
+        AnalysisSurface analysisSurfaceForInnerHorizontal = createInnerHorizontalAnalysisSurface(direction,innerHorizontalDefinition, (ICAOAnnex14SurfaceStrip) stripAnalysisSurface.getSurface());
         analysisSurfaces.add(analysisSurfaceForInnerHorizontal);
 
         //3. transicion
 
         //4. conica
         ICAOAnnex14SurfaceConical conicalDefinition = (ICAOAnnex14SurfaceConical) surfacesDefinitions.stream().filter(d -> d.getEnum() == ICAOAnnex14Surfaces.CONICAL).findFirst().get();
-        AnalysisSurface conicalAnalysisSurface = createConicalAnalysisSurface(direction, conicalDefinition, analysisSurfaceForInnerHorizontal);
+        AnalysisSurface conicalAnalysisSurface = createConicalAnalysisSurface(direction, conicalDefinition, (ICAOAnnex14SurfaceInnerHorizontal) analysisSurfaceForInnerHorizontal.getSurface(), (ICAOAnnex14SurfaceStrip) stripAnalysisSurface.getSurface());
         analysisSurfaces.add(conicalAnalysisSurface);
 
         //5. aprox
@@ -156,29 +153,44 @@ public class OlsAnalystICAOAnnex14 extends OlsAnalyst {
 
     private AnalysisSurface createStripAnalysisSurface(RunwayDirection direction, ICAOAnnex14SurfaceStrip stripDefinition) {
 
+        ICAOAnnex14Surface surface = applyRuleException(stripDefinition);
+
+        surface.setGeometry(geometryHelper.createStripSurfaceGeometry(direction, stripDefinition));
+
         return AnalysisSurface.builder()
                 .analysisCase(this.analysisCase)
-                .surface(applyRuleException(stripDefinition))
-                .geometry(geometryHelper.createStripSurfaceGeometry(direction, stripDefinition))
+                .surface(surface)
                 .direction(direction)
                 .build();
     }
 
-    private AnalysisSurface createInnerHorizontalAnalysisSurface(RunwayDirection direction, ICAOAnnex14SurfaceInnerHorizontal innerHorizontalDefinition, AnalysisSurface stripSurface) {
+    private AnalysisSurface createInnerHorizontalAnalysisSurface(RunwayDirection direction, ICAOAnnex14SurfaceInnerHorizontal innerHorizontalDefinition, ICAOAnnex14SurfaceStrip stripSurface) {
+
+        ICAOAnnex14Surface surface = applyRuleException(innerHorizontalDefinition);
+
+        surface.setGeometry(geometryHelper.createInnerHorizontalSurfaceGeometry(direction, innerHorizontalDefinition, stripSurface));
 
         return AnalysisSurface.builder()
                 .analysisCase(this.analysisCase)
-                .surface(applyRuleException(innerHorizontalDefinition))
-                .geometry(geometryHelper.createInnerHorizontalSurfaceGeometry(direction, innerHorizontalDefinition, stripSurface))
+                .surface(surface)
                 .direction(direction)
                 .build();
     }
 
-    private AnalysisSurface createConicalAnalysisSurface(RunwayDirection direction, ICAOAnnex14SurfaceConical conicalDefinition, AnalysisSurface innerHorizontalSurface){
+    private AnalysisSurface createConicalAnalysisSurface(
+            RunwayDirection direction,
+            ICAOAnnex14SurfaceConical conicalDefinition,
+            ICAOAnnex14SurfaceInnerHorizontal innerHorizontalSurface,
+            ICAOAnnex14SurfaceStrip stripSurface
+    ){
+
+        ICAOAnnex14Surface surface = applyRuleException(conicalDefinition);
+
+        surface.setGeometry(geometryHelper.createConicalSurfaceGeometry(direction, conicalDefinition, innerHorizontalSurface, stripSurface));
+
         return AnalysisSurface.builder()
                 .analysisCase(this.analysisCase)
-                .surface(applyRuleException(conicalDefinition))
-                .geometry(geometryHelper.createConicalSurfaceGeometry(direction, conicalDefinition, innerHorizontalSurface))
+                .surface(surface)
                 .direction(direction)
                 .build();
     }
