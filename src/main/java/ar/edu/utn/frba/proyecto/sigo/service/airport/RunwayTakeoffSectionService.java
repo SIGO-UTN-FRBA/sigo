@@ -44,27 +44,8 @@ public class RunwayTakeoffSectionService extends SigoService<RunwayTakeoffSectio
         );
     }
 
-    private Polygon calculateStopwayGeometry(RunwayDirection runwayDirection) {
+    private Geometry calculateStopwayGeometry(RunwayDirection runwayDirection) {
 
-        final Coordinate[] runwayCoordinates = runwayDirection.getRunway().getGeom().getCoordinates();
-
-        /*List<Coordinate> extremes = Arrays.stream(runwayCoordinates)
-                .distinct()
-                .sorted((i, j) -> {
-                    if (runwayDirection.getGeom().getCoordinate().distance(i) > runwayDirection.getGeom().getCoordinate().distance(j))
-                        return 1;
-                    else
-                        return -1;
-                })
-                .collect(Collectors.toList());*/
-
-        /*  ARRAY[(st_project(trd.end_point::geography, 50, st_azimuth(trd.start_point::geography, trd.end_point::geography)+ (pi()/2)))::geometry,
-  (st_project(trd.end_point::geography, 50, st_azimuth(trd.start_point::geography, trd.end_point::geography)- (pi()/2)))::geometry,
-  (st_project(st_project(trd.end_point::geography, 50, st_azimuth(trd.start_point::geography, trd.end_point::geography)- (pi()/2)), 50, st_azimuth(trd.start_point::geography, trd.end_point::geography)))::geometry,
-  (st_project(st_project(trd.end_point::geography, 50, st_azimuth(trd.start_point::geography, trd.end_point::geography)+ (pi()/2)), 50, st_azimuth(trd.start_point::geography, trd.end_point::geography)))::geometry,
-  (st_project(trd.end_point::geography, 50, st_azimuth(trd.start_point::geography, trd.end_point::geography)+ (pi()/2)))::geometry])))
-*/
-        List<Coordinate> extremes;
         double azimuth = getAzimuth(runwayDirection.getStartPoint().getCoordinate(), runwayDirection.getEndPoint().getCoordinate());
 
         Coordinate extreme1 = move(runwayDirection.getEndPoint().getCoordinate(),azimuth + 90, runwayDirection.getRunway().getWidth()/2);
@@ -103,26 +84,16 @@ public class RunwayTakeoffSectionService extends SigoService<RunwayTakeoffSectio
 
     private Geometry calculateClearwayGeometry(RunwayDirection runwayDirection) {
 
-        final Coordinate[] runwayCoordinates = runwayDirection.getRunway().getGeom().getCoordinates();
+        double azimuth = getAzimuth(runwayDirection.getStartPoint().getCoordinate(), runwayDirection.getEndPoint().getCoordinate());
 
-        List<Coordinate> extremes = Arrays.stream(runwayCoordinates)
-                .distinct()
-                .sorted((i, j) -> {
-                    if (runwayDirection.getGeom().getCoordinate().distance(i) > runwayDirection.getGeom().getCoordinate().distance(j))
-                        return 1;
-                    else
-                        return -1;
-                })
-                .collect(Collectors.toList());
+        Coordinate extreme1 = move(runwayDirection.getEndPoint().getCoordinate(),azimuth + 90, runwayDirection.getTakeoffSection().getClearwayWidth()/2);
+        Coordinate extreme2 = move(runwayDirection.getEndPoint().getCoordinate(),azimuth - 90, runwayDirection.getTakeoffSection().getClearwayWidth()/2);
+        Coordinate extreme3 = move(extreme2,azimuth, runwayDirection.getTakeoffSection().getClearwayLength());
+        Coordinate extreme4 = move(extreme1,azimuth, runwayDirection.getTakeoffSection().getClearwayLength());
 
-        double azimuth = runwayDirection.getAzimuth() + 180;
-
-        Coordinate extreme1= move(extremes.get(2), azimuth+90, runwayDirection.getTakeoffSection().getClearwayWidth());
-        Coordinate extreme4= move(extremes.get(3), azimuth-90, runwayDirection.getTakeoffSection().getClearwayWidth());
-        Coordinate extreme2= move(extreme1, azimuth, -1*runwayDirection.getTakeoffSection().getClearwayLength());
-        Coordinate extreme3= move(extreme4, azimuth, -1*runwayDirection.getTakeoffSection().getClearwayLength());
 
         return new GeometryFactory().createPolygon(new Coordinate[]{extreme1, extreme2, extreme3, extreme4, extreme1});
+
     }
 
     private SimpleFeatureType getClearwayFeatureSchema() {

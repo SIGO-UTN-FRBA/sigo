@@ -9,6 +9,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import lombok.Getter;
 import org.geotools.geojson.feature.FeatureJSON;
+import org.geotools.geojson.geom.GeometryJSON;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -173,8 +174,10 @@ public abstract class SigoRouter extends Router {
     protected JsonObject featureToGeoJson(SimpleFeature feature) {
 
         try(OutputStream outputStream = new ByteArrayOutputStream()) {
+            int decimals = 14;
+            GeometryJSON gjson = new GeometryJSON(decimals);
 
-            new FeatureJSON().writeFeature(feature, outputStream);
+            new FeatureJSON(gjson).writeFeature(feature, outputStream);
 
             return objectMapper.fromJson(outputStream.toString(),JsonObject.class);
 
@@ -187,8 +190,10 @@ public abstract class SigoRouter extends Router {
     protected SimpleFeature featureFromGeoJson(String json) {
 
         try (InputStream stream = new ByteArrayInputStream(json.getBytes(StandardCharsets.UTF_8.name()))){
+            int decimals = 14;
+            GeometryJSON gjson = new GeometryJSON(decimals);
 
-            return new FeatureJSON().readFeature(stream);
+            return new FeatureJSON(gjson).readFeature(stream);
 
         } catch (IOException e) {
             e.printStackTrace();
