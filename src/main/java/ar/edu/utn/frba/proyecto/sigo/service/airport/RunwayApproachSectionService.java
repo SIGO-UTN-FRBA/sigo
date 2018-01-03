@@ -5,6 +5,7 @@ import ar.edu.utn.frba.proyecto.sigo.domain.airport.RunwayDirection;
 import ar.edu.utn.frba.proyecto.sigo.persistence.HibernateUtil;
 import ar.edu.utn.frba.proyecto.sigo.service.SigoService;
 import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.Polygon;
 import org.geotools.feature.simple.SimpleFeatureBuilder;
@@ -18,6 +19,8 @@ import javax.inject.Singleton;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static ar.edu.utn.frba.proyecto.sigo.utils.geom.GeometryHelper.getAzimuth;
 import static ar.edu.utn.frba.proyecto.sigo.utils.geom.GeometryHelper.move;
 
 @Singleton
@@ -41,26 +44,16 @@ public class RunwayApproachSectionService extends SigoService<RunwayApproachSect
         );
     }
 
-    private Polygon calculateThresholdGeometry(RunwayDirection runwayDirection) {
-        final Coordinate[] runwayCoordinates = runwayDirection.getRunway().getGeom().getCoordinates();
+    private Geometry calculateThresholdGeometry(RunwayDirection runwayDirection) {
 
-        List<Coordinate> extremes = Arrays.stream(runwayCoordinates)
-                .distinct()
-                .sorted((i, j) -> {
-                    if (runwayDirection.getGeom().getCoordinate().distance(i) > runwayDirection.getGeom().getCoordinate().distance(j))
-                        return 1;
-                    else
-                        return -1;
-                })
-                .limit(2)
-                .collect(Collectors.toList());
+        double azimuth = getAzimuth(runwayDirection.getStartPoint().getCoordinate(), runwayDirection.getEndPoint().getCoordinate());
+        double azimuthInv = getAzimuth(runwayDirection.getEndPoint().getCoordinate(), runwayDirection.getStartPoint().getCoordinate());
 
-        double azimuth = runwayDirection.getAzimuth();
+        Coordinate extreme1 = move(runwayDirection.getStartPoint().getCoordinate(),azimuth + 90, runwayDirection.getRunway().getWidth()/2);
+        Coordinate extreme2 = move(runwayDirection.getStartPoint().getCoordinate(),azimuth - 90, runwayDirection.getRunway().getWidth()/2);
+        Coordinate extreme3 = move(extreme2,azimuthInv, runwayDirection.getApproachSection().getThresholdLength());
+        Coordinate extreme4 = move(extreme1,azimuthInv, runwayDirection.getApproachSection().getThresholdLength());
 
-        Coordinate extreme1 = extremes.get(0);
-        Coordinate extreme4 = extremes.get(1);
-        Coordinate extreme2 = move(extreme1, azimuth, -1 * runwayDirection.getApproachSection().getThresholdLength());
-        Coordinate extreme3 = move(extreme4, azimuth, -1 * runwayDirection.getApproachSection().getThresholdLength());
 
         return new GeometryFactory().createPolygon(new Coordinate[]{extreme1, extreme2, extreme3, extreme4, extreme1});
     }
