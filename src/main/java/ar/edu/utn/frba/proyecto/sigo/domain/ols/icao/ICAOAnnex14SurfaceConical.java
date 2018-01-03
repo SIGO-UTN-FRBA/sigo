@@ -3,6 +3,7 @@ package ar.edu.utn.frba.proyecto.sigo.domain.ols.icao;
 import ar.edu.utn.frba.proyecto.sigo.domain.regulation.icao.ICAOAnnex14RunwayCategories;
 import ar.edu.utn.frba.proyecto.sigo.domain.regulation.icao.ICAOAnnex14RunwayClassifications;
 import ar.edu.utn.frba.proyecto.sigo.domain.regulation.icao.ICAOAnnex14RunwayCodeNumbers;
+import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Polygon;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -30,6 +31,9 @@ public class ICAOAnnex14SurfaceConical extends ICAOAnnex14Surface {
 
     @Column(name = "final_height")
     private Double finalHeight;
+
+    @Column(name = "initial_height")
+    private Double initialHeight;
 
     @Column
     private Double ratio;

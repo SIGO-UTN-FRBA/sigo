@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 @Singleton
 public class ICAOAnnex14SurfaceGeometriesHelper {
 
-    public Geometry createStripSurfaceGeometry(RunwayDirection direction, ICAOAnnex14SurfaceStrip stripDefinition) {
+    public Polygon createStripSurfaceGeometry(RunwayDirection direction, ICAOAnnex14SurfaceStrip stripDefinition) {
 
         Double extraWidth, extraLength;
 
@@ -73,7 +73,7 @@ public class ICAOAnnex14SurfaceGeometriesHelper {
         return stripGeometry;
     }
 
-    public Geometry createInnerHorizontalSurfaceGeometry(RunwayDirection direction, ICAOAnnex14SurfaceInnerHorizontal innerHorizontalDefinition, ICAOAnnex14SurfaceStrip stripSurface) {
+    public Polygon createInnerHorizontalSurfaceGeometry(RunwayDirection direction, ICAOAnnex14SurfaceInnerHorizontal innerHorizontalDefinition, ICAOAnnex14SurfaceStrip stripSurface) {
 
         double radius = innerHorizontalDefinition.getRadius() / 100000;
 
@@ -97,10 +97,10 @@ public class ICAOAnnex14SurfaceGeometriesHelper {
         }
         out.toString();
 */
-        return difference;
+        return (Polygon) difference;
     }
 
-    public Geometry createConicalSurfaceGeometry(RunwayDirection direction, ICAOAnnex14SurfaceConical conicalDefinition, ICAOAnnex14SurfaceInnerHorizontal innerHorizontalSurface, ICAOAnnex14SurfaceStrip stripSurface) {
+    public Polygon createConicalSurfaceGeometry(RunwayDirection direction, ICAOAnnex14SurfaceConical conicalDefinition, ICAOAnnex14SurfaceInnerHorizontal innerHorizontalSurface, ICAOAnnex14SurfaceStrip stripSurface) {
 
         Geometry baseGeometry = innerHorizontalSurface.getGeometry().union(stripSurface.getGeometry());
 
@@ -116,6 +116,6 @@ public class ICAOAnnex14SurfaceGeometriesHelper {
         }
         out.toString();
 */
-        return difference;
+        return (Polygon) difference;
     }
 }

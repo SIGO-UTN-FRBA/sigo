@@ -4,8 +4,12 @@ import ar.edu.utn.frba.proyecto.sigo.domain.SigoDomain;
 import ar.edu.utn.frba.proyecto.sigo.domain.Spatial;
 import ar.edu.utn.frba.proyecto.sigo.exception.ResourceNotFoundException;
 import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.GeometryFactory;
+import org.geolatte.geom.JTSGeometryOperations;
+import org.geotools.referencing.CRS;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.opengis.referencing.SpatialReferenceSystemUsingGeographicIdentifier;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -114,6 +118,8 @@ public abstract class SigoService<ENTITY extends SigoDomain, PARENT_ENTITY exten
     }
 
     public void updateGeometry(Geometry geom, Spatial domain) {
+
+        geom.setSRID(4326);
 
         domain.setGeom(geom);
 

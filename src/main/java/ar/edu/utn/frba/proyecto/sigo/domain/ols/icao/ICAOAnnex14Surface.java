@@ -61,6 +61,6 @@ public abstract class ICAOAnnex14Surface
     private ICAOAnnex14RunwayCodeNumbers code;
 
     @Column(name="geom")
-    private Geometry geometry;
+    private Polygon geometry;
 
 }
