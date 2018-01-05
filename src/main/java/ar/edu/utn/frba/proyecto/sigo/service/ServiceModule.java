@@ -76,6 +76,7 @@ public class ServiceModule extends AbstractModule {
         bind(RunwayStripService.class);
         bind(AnalysisSurfaceService.class);
         bind(AnalysisObstacleService.class);
+        bind(SimpleFeatureTranslator.class);
 
         install(new FactoryModuleBuilder()
                 .implement(OlsRuleService.class, OlsRuleICAOAnnex14Service.class)
