@@ -2,6 +2,7 @@ package ar.edu.utn.frba.proyecto.sigo.router.airport;
 
 import ar.edu.utn.frba.proyecto.sigo.persistence.HibernateUtil;
 import ar.edu.utn.frba.proyecto.sigo.router.SigoRouter;
+import ar.edu.utn.frba.proyecto.sigo.service.SimpleFeatureTranslator;
 import ar.edu.utn.frba.proyecto.sigo.service.airport.AirportTranslator;
 import ar.edu.utn.frba.proyecto.sigo.service.airport.AirportService;
 import ar.edu.utn.frba.proyecto.sigo.domain.airport.Airport;
@@ -30,6 +31,7 @@ public class AirportRouter extends SigoRouter {
     private JsonTransformer jsonTransformer;
     private AirportService airportService;
     private AirportTranslator translator;
+    private SimpleFeatureTranslator featureTranslator;
 
     @Inject
     public AirportRouter(
@@ -37,13 +39,15 @@ public class AirportRouter extends SigoRouter {
             Gson objectMapper,
             JsonTransformer jsonTransformer,
             AirportService airportService,
-            AirportTranslator translator
+            AirportTranslator translator,
+            SimpleFeatureTranslator featureTranslator
     ) {
         super(objectMapper, hibernateUtil);
 
         this.jsonTransformer = jsonTransformer;
         this.airportService = airportService;
         this.translator = translator;
+        this.featureTranslator = featureTranslator;
     }
 
     /**
@@ -113,7 +117,7 @@ public class AirportRouter extends SigoRouter {
 
         Airport airport = airportService.get(getParamAirportId(request));
 
-        return featureToGeoJson(airportService.getFeature(airport));
+        return featureTranslator.getAsDTO(airportService.getFeature(airport));
 
     });
 
@@ -124,7 +128,7 @@ public class AirportRouter extends SigoRouter {
 
         Airport airport = airportService.get(getParamAirportId(request));
 
-        SimpleFeature feature = featureFromGeoJson(request.body());
+        SimpleFeature feature = featureTranslator.getAsDomain(objectMapper.fromJson(request.body(), JsonObject.class));
 
         airportService.updateGeometry((Point)feature.getDefaultGeometry(), airport);
 

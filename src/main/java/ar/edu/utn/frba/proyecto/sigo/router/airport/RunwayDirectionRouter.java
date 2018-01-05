@@ -8,10 +8,12 @@ import ar.edu.utn.frba.proyecto.sigo.dto.airport.RunwayTakeoffSectionDTO;
 import ar.edu.utn.frba.proyecto.sigo.persistence.HibernateUtil;
 import ar.edu.utn.frba.proyecto.sigo.dto.airport.RunwayDirectionDTO;
 import ar.edu.utn.frba.proyecto.sigo.router.SigoRouter;
+import ar.edu.utn.frba.proyecto.sigo.service.SimpleFeatureTranslator;
 import ar.edu.utn.frba.proyecto.sigo.service.airport.*;
 import ar.edu.utn.frba.proyecto.sigo.spark.JsonTransformer;
 import com.google.common.collect.Lists;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.vividsolutions.jts.geom.Point;
 import org.eclipse.jetty.http.HttpStatus;
 import org.opengis.feature.simple.SimpleFeature;
@@ -39,6 +41,7 @@ public class RunwayDirectionRouter extends SigoRouter {
     private RunwayClassificationService classificationService;
     private RunwayClassificationTranslator classificationTranslator;
     private RunwayStripService stripService;
+    private SimpleFeatureTranslator featureTranslator;
 
     @Inject
     public RunwayDirectionRouter(
@@ -54,7 +57,8 @@ public class RunwayDirectionRouter extends SigoRouter {
         RunwayTakeoffSectionService takeoffService,
         RunwayClassificationService classificationService,
         RunwayClassificationTranslator classificationTranslator,
-        RunwayStripService stripService
+        RunwayStripService stripService,
+        SimpleFeatureTranslator featureTranslator
     ){
         super(objectMapper, hibernateUtil);
 
@@ -69,6 +73,7 @@ public class RunwayDirectionRouter extends SigoRouter {
         this.classificationService = classificationService;
         this.classificationTranslator = classificationTranslator;
         this.stripService = stripService;
+        this.featureTranslator = featureTranslator;
     }
 
     /**
@@ -144,7 +149,7 @@ public class RunwayDirectionRouter extends SigoRouter {
 
         RunwayDirection direction = directionService.get(getParamDirectionId(request));
 
-        SimpleFeature feature = featureFromGeoJson(request.body());
+        SimpleFeature feature = featureTranslator.getAsDomain(objectMapper.fromJson(request.body(), JsonObject.class));
 
         directionService.updateGeometry((Point)feature.getDefaultGeometry(), direction);
 
@@ -159,7 +164,7 @@ public class RunwayDirectionRouter extends SigoRouter {
 
         RunwayDirection direction = directionService.get(getParamDirectionId(request));
 
-        return featureToGeoJson(directionService.getFeature(direction));
+        return featureTranslator.getAsDTO(directionService.getFeature(direction));
     });
 
     /**
@@ -257,21 +262,21 @@ public class RunwayDirectionRouter extends SigoRouter {
 
         RunwayDirection direction = directionService.get(getParamDirectionId(request));
 
-        return featureToGeoJson(approachService.getThresholdFeature(direction));
+        return featureTranslator.getAsDTO(approachService.getThresholdFeature(direction));
     });
 
     private final Route getClearwayFeature = doInTransaction(false, (request, response) -> {
 
         RunwayDirection direction = directionService.get(getParamDirectionId(request));
 
-        return featureToGeoJson(takeoffService.getClearwayFeature(direction));
+        return featureTranslator.getAsDTO(takeoffService.getClearwayFeature(direction));
     });
 
     private final Route getStopwayFeature = doInTransaction(false, (request, response) -> {
 
         RunwayDirection direction = directionService.get(getParamDirectionId(request));
 
-        return featureToGeoJson(takeoffService.getStopwayFeature(direction));
+        return featureTranslator.getAsDTO(takeoffService.getStopwayFeature(direction));
     });
 
     private final Route fetchClassification = doInTransaction(false, (request, response) -> {
