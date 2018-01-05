@@ -12,7 +12,6 @@ import org.geotools.feature.simple.SimpleFeatureTypeBuilder;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -20,6 +19,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static ar.edu.utn.frba.proyecto.sigo.utils.geom.GeometryHelper.azimuth;
 import static ar.edu.utn.frba.proyecto.sigo.utils.geom.GeometryHelper.move;
 
 @Singleton
@@ -45,24 +45,26 @@ public class RunwayTakeoffSectionService extends SigoService<RunwayTakeoffSectio
 
     private Polygon calculateStopwayGeometry(RunwayDirection runwayDirection) {
 
-        final Coordinate[] runwayCoordinates = runwayDirection.getRunway().getGeom().getCoordinates();
+        Coordinate[] extremes = runwayDirection.getRunway().getGeom().norm().getCoordinates();
 
-        List<Coordinate> extremes = Arrays.stream(runwayCoordinates)
-                .distinct()
-                .sorted((i, j) -> {
-                    if (runwayDirection.getGeom().getCoordinate().distance(i) > runwayDirection.getGeom().getCoordinate().distance(j))
-                        return 1;
-                    else
-                        return -1;
-                })
-                .collect(Collectors.toList());
+        double azimuth = azimuth(extremes[0],extremes[3]);
 
-        double azimuth = runwayDirection.getAzimuth() + 180;
+        Coordinate extreme1;
+        Coordinate extreme4;
+        Coordinate extreme2;
+        Coordinate extreme3;
 
-        Coordinate extreme1 = extremes.get(2);
-        Coordinate extreme4 = extremes.get(3);
-        Coordinate extreme2= move(extreme1, azimuth, -1 *runwayDirection.getTakeoffSection().getStopwayLength());
-        Coordinate extreme3= move(extreme4, azimuth, -1 *runwayDirection.getTakeoffSection().getStopwayLength());
+        if(runwayDirection.getNumber()<18){
+            extreme1 = extremes[0];
+            extreme4 = extremes[1];
+            extreme2 = move(extreme1, azimuth, -1 *runwayDirection.getTakeoffSection().getStopwayLength());
+            extreme3 = move(extreme4, azimuth, -1 *runwayDirection.getTakeoffSection().getStopwayLength());
+        } else {
+            extreme1 = extremes[2];
+            extreme4 = extremes[3];
+            extreme2 = move(extreme1, azimuth, runwayDirection.getTakeoffSection().getStopwayLength());
+            extreme3 = move(extreme4, azimuth, runwayDirection.getTakeoffSection().getStopwayLength());
+        }
 
         return new GeometryFactory().createPolygon(new Coordinate[]{extreme1, extreme2, extreme3, extreme4, extreme1});
     }
@@ -94,24 +96,26 @@ public class RunwayTakeoffSectionService extends SigoService<RunwayTakeoffSectio
 
     private Polygon calculateClearwayGeometry(RunwayDirection runwayDirection) {
 
-        final Coordinate[] runwayCoordinates = runwayDirection.getRunway().getGeom().getCoordinates();
+        Coordinate[] extremes = runwayDirection.getRunway().getGeom().norm().getCoordinates();
 
-        List<Coordinate> extremes = Arrays.stream(runwayCoordinates)
-                .distinct()
-                .sorted((i, j) -> {
-                    if (runwayDirection.getGeom().getCoordinate().distance(i) > runwayDirection.getGeom().getCoordinate().distance(j))
-                        return 1;
-                    else
-                        return -1;
-                })
-                .collect(Collectors.toList());
+        double azimuth = azimuth(extremes[0],extremes[3]);
 
-        double azimuth = runwayDirection.getAzimuth() + 180;
+        Coordinate extreme1;
+        Coordinate extreme4;
+        Coordinate extreme2;
+        Coordinate extreme3;
 
-        Coordinate extreme1= move(extremes.get(2), azimuth+90, runwayDirection.getTakeoffSection().getClearwayWidth());
-        Coordinate extreme4= move(extremes.get(3), azimuth-90, runwayDirection.getTakeoffSection().getClearwayWidth());
-        Coordinate extreme2= move(extreme1, azimuth, -1*runwayDirection.getTakeoffSection().getClearwayLength());
-        Coordinate extreme3= move(extreme4, azimuth, -1*runwayDirection.getTakeoffSection().getClearwayLength());
+        if(runwayDirection.getNumber()<18){
+            extreme1= move(extremes[0], azimuth+90, runwayDirection.getTakeoffSection().getClearwayWidth());
+            extreme4= move(extremes[1], azimuth-90, runwayDirection.getTakeoffSection().getClearwayWidth());
+            extreme2= move(extreme1, azimuth, -1*runwayDirection.getTakeoffSection().getClearwayLength());
+            extreme3= move(extreme4, azimuth, -1*runwayDirection.getTakeoffSection().getClearwayLength());
+        } else {
+            extreme1= move(extremes[2], azimuth-90, runwayDirection.getTakeoffSection().getClearwayWidth());
+            extreme4= move(extremes[3], azimuth+90, runwayDirection.getTakeoffSection().getClearwayWidth());
+            extreme2= move(extreme1, azimuth, 1*runwayDirection.getTakeoffSection().getClearwayLength());
+            extreme3= move(extreme4, azimuth, 1*runwayDirection.getTakeoffSection().getClearwayLength());
+        }
 
         return new GeometryFactory().createPolygon(new Coordinate[]{extreme1, extreme2, extreme3, extreme4, extreme1});
     }

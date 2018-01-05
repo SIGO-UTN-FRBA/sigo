@@ -11,12 +11,8 @@ import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.geom.Polygon;
-import org.geotools.geojson.geom.GeometryJSON;
 
 import javax.inject.Singleton;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -41,7 +37,7 @@ public class ICAOAnnex14SurfaceGeometriesHelper {
 
         List<Coordinate> directionCoordinates = direction.getRunway().getDirections().stream().map(d -> d.getGeom().getCoordinate()).collect(Collectors.toList());
 
-        double azimuth = GeometryHelper.getAzimuth(directionCoordinates.get(0), directionCoordinates.get(1));
+        double azimuth = GeometryHelper.azimuth(directionCoordinates.get(0), directionCoordinates.get(1));
 
         //2. create geom
 
