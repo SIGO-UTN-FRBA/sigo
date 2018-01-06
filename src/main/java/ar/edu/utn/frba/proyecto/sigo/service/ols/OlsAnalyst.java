@@ -20,7 +20,7 @@ public abstract class OlsAnalyst {
 
         initializeSurfaces();
 
-8        defineObstacles();
+        defineObstacles();
 
         //applyExceptions();
 
