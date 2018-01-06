@@ -25,11 +25,14 @@ import javax.persistence.Table;
 @Data
 public class ICAOAnnex14SurfaceApproachFirstSection extends ICAOAnnex14Surface {
 
-    @Column()
+    @Column
     private Double length;
 
-    @Column()
+    @Column
     private Double slope;
+
+    @Column(name = "initial_height")
+    private Double initialHeight;
 
     @Override
     public ICAOAnnex14Surfaces getEnum() {

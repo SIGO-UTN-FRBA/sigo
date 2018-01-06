@@ -11,6 +11,8 @@ import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisObstacle;
 import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisSurface;
 import ar.edu.utn.frba.proyecto.sigo.domain.ols.ObstacleLimitationSurface;
 import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14Surface;
+import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceApproach;
+import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceApproachFirstSection;
 import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceConical;
 import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceInnerHorizontal;
 import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceStrip;
@@ -157,14 +159,18 @@ public class OlsAnalystICAOAnnex14 extends OlsAnalyst {
         AnalysisSurface analysisSurfaceForInnerHorizontal = createInnerHorizontalAnalysisSurface(direction,innerHorizontalDefinition, (ICAOAnnex14SurfaceStrip) stripAnalysisSurface.getSurface());
         analysisSurfaces.add(analysisSurfaceForInnerHorizontal);
 
-        //3. transicion
-
-        //4. conica
+        //3. conica
         ICAOAnnex14SurfaceConical conicalDefinition = (ICAOAnnex14SurfaceConical) surfacesDefinitions.stream().filter(d -> d.getEnum() == ICAOAnnex14Surfaces.CONICAL).findFirst().get();
         AnalysisSurface conicalAnalysisSurface = createConicalAnalysisSurface(direction, conicalDefinition, (ICAOAnnex14SurfaceInnerHorizontal) analysisSurfaceForInnerHorizontal.getSurface(), (ICAOAnnex14SurfaceStrip) stripAnalysisSurface.getSurface());
         analysisSurfaces.add(conicalAnalysisSurface);
 
-        //5. aprox
+        //4. aprox
+        ICAOAnnex14SurfaceApproach approachDefinition = (ICAOAnnex14SurfaceApproach) surfacesDefinitions.stream().filter(d -> d.getEnum() == ICAOAnnex14Surfaces.APPROACH).findFirst().get();
+        ICAOAnnex14SurfaceApproachFirstSection approachFirstSectionDefinition = (ICAOAnnex14SurfaceApproachFirstSection) surfacesDefinitions.stream().filter(d -> d.getEnum() == ICAOAnnex14Surfaces.APPROACH_FIRST_SECTION).findFirst().get();
+        AnalysisSurface approachFirstSectionAnalysisSurface = createApproachFirstSectionAnalysisSurface(direction, approachDefinition, approachFirstSectionDefinition, (ICAOAnnex14SurfaceStrip) stripAnalysisSurface.getSurface());
+        analysisSurfaces.add(approachFirstSectionAnalysisSurface);
+
+        //5. transicion
         //6. despegue
         //7. horizontal externa
 
@@ -219,6 +225,24 @@ public class OlsAnalystICAOAnnex14 extends OlsAnalyst {
         return AnalysisSurface.builder()
                 .analysisCase(this.analysisCase)
                 .surface(conicalSurface)
+                .direction(direction)
+                .build();
+    }
+
+    private AnalysisSurface createApproachFirstSectionAnalysisSurface(
+            RunwayDirection direction,
+            ICAOAnnex14SurfaceApproach approach,
+            ICAOAnnex14SurfaceApproachFirstSection approachFirstSection,
+            ICAOAnnex14SurfaceStrip strip
+    ) {
+
+        approachFirstSection.setInitialHeight(direction.getHeight());
+
+        approachFirstSection.setGeometry(geometryHelper.createApproachFirstSectionSurfaceGeometry(direction,approach, approachFirstSection, strip));
+
+        return AnalysisSurface.builder()
+                .analysisCase(this.analysisCase)
+                .surface(approachFirstSection)
                 .direction(direction)
                 .build();
     }

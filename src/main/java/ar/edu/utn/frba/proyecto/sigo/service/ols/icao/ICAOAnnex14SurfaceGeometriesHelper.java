@@ -1,9 +1,12 @@
 package ar.edu.utn.frba.proyecto.sigo.service.ols.icao;
 
 import ar.edu.utn.frba.proyecto.sigo.domain.airport.RunwayDirection;
+import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceApproach;
+import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceApproachFirstSection;
 import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceConical;
 import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceInnerHorizontal;
 import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceStrip;
+import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceTransitional;
 import ar.edu.utn.frba.proyecto.sigo.utils.geom.GeometryHelper;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
@@ -11,11 +14,18 @@ import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.geom.Polygon;
+import org.geotools.geojson.geom.GeometryJSON;
 
 import javax.inject.Singleton;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import static ar.edu.utn.frba.proyecto.sigo.utils.geom.GeometryHelper.azimuth;
+import static ar.edu.utn.frba.proyecto.sigo.utils.geom.GeometryHelper.move;
 
 @Singleton
 public class ICAOAnnex14SurfaceGeometriesHelper {
@@ -60,7 +70,7 @@ public class ICAOAnnex14SurfaceGeometriesHelper {
 /*
         OutputStream out = new ByteArrayOutputStream();
         try {
-            new GeometryJSON().write(stripGeometry, out);
+            new GeometryJSON(14).write(stripGeometry, out);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -87,7 +97,7 @@ public class ICAOAnnex14SurfaceGeometriesHelper {
 /*
         OutputStream out = new ByteArrayOutputStream();
         try {
-            new GeometryJSON().write(union, out);
+            new GeometryJSON(14).write(union, out);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -106,12 +116,61 @@ public class ICAOAnnex14SurfaceGeometriesHelper {
 /*
         OutputStream out = new ByteArrayOutputStream();
         try {
-            new GeometryJSON().write(difference, out);
+            new GeometryJSON(14).write(difference, out);
         } catch (IOException e) {
             e.printStackTrace();
         }
         out.toString();
 */
         return (Polygon) difference;
+    }
+
+    public Polygon createApproachFirstSectionSurfaceGeometry(RunwayDirection direction, ICAOAnnex14SurfaceApproach approach, ICAOAnnex14SurfaceApproachFirstSection approachFirstSection, ICAOAnnex14SurfaceStrip strip){
+
+        Polygon approachGeometry;
+        Coordinate extreme1;
+        Coordinate extreme2;
+        Coordinate extreme3;
+        Coordinate extreme4;
+
+        //1. inner edge
+        Coordinate[] extremes = direction.getRunway().getGeom().norm().getCoordinates();
+
+        Double azimuth = azimuth( extremes[0],  extremes[3]);
+
+        int orientation;
+
+        if(direction.getNumber()<18){
+            extreme1 = extremes[0];
+            extreme2 = extremes[1];
+            orientation = -1;
+        }else{
+            extreme1 = extremes[2];
+            extreme2 = extremes[3];
+            orientation = 1;
+        }
+
+        extreme1 = move(extreme1, azimuth, orientation * approach.getDistanceFromThreshold());
+        extreme2 = move(extreme2, azimuth, orientation * approach.getDistanceFromThreshold());
+
+        //2. outer edge
+        double divergence = Math.atan(approach.getDivergence() / 100);
+
+        extreme3 = move(extreme2, azimuth+divergence, orientation * approachFirstSection.getLength());
+        extreme4 = move(extreme1, azimuth-divergence, orientation * approachFirstSection.getLength());
+
+        //3. create polygon
+        approachGeometry = new GeometryFactory().createPolygon(new Coordinate[]{extreme1, extreme2, extreme3, extreme4, extreme1});
+
+/*
+        OutputStream out = new ByteArrayOutputStream();
+        try {
+            new GeometryJSON(14).write(approachGeometry, out);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        out.toString();
+*/
+        return approachGeometry;
     }
 }
