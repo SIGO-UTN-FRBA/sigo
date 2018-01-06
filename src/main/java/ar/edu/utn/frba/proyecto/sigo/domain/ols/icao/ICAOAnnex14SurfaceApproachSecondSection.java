@@ -31,6 +31,9 @@ public class ICAOAnnex14SurfaceApproachSecondSection extends ICAOAnnex14Surface 
     @Column
     private Double slope;
 
+    @Column(name = "initial_height")
+    private Double initialHeight;
+
     @Override
     public ICAOAnnex14Surfaces getEnum() {
         return ICAOAnnex14Surfaces.APPROACH_SECOND_SECTION;

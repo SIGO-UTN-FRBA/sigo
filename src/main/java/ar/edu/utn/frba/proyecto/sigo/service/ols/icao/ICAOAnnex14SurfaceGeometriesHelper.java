@@ -3,6 +3,7 @@ package ar.edu.utn.frba.proyecto.sigo.service.ols.icao;
 import ar.edu.utn.frba.proyecto.sigo.domain.airport.RunwayDirection;
 import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceApproach;
 import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceApproachFirstSection;
+import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceApproachSecondSection;
 import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceConical;
 import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceInnerHorizontal;
 import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceStrip;
@@ -171,6 +172,48 @@ public class ICAOAnnex14SurfaceGeometriesHelper {
         }
         out.toString();
 */
+        return approachGeometry;
+    }
+
+    public Polygon createApproachSecondSectionSurfaceGeometry(RunwayDirection direction, ICAOAnnex14SurfaceApproachSecondSection approachSecondSection, ICAOAnnex14SurfaceApproachFirstSection approachFirstSection) {
+
+        Polygon approachGeometry;
+        Coordinate extreme1;
+        Coordinate extreme2;
+        Coordinate extreme3;
+        Coordinate extreme4;
+
+        int orientation;
+
+        Coordinate[] extremes = approachFirstSection.getGeometry().norm().getCoordinates();
+
+        Double azimuth = azimuth( extremes[0],  extremes[3]);
+
+        if(direction.getNumber()<18){
+            extreme1 = extremes[2];
+            extreme2 = extremes[3];
+            orientation = 1;
+        }else{
+            extreme1 = extremes[0];
+            extreme2 = extremes[1];
+            orientation = -1;
+        }
+
+        extreme3 = move(extreme2, azimuth, orientation * approachSecondSection.getLength());
+        extreme4 = move(extreme1, azimuth, orientation * approachSecondSection.getLength());
+
+        approachGeometry = new GeometryFactory().createPolygon(new Coordinate[]{extreme1, extreme2, extreme3, extreme4, extreme1});
+
+/*
+        OutputStream out = new ByteArrayOutputStream();
+        try {
+            new GeometryJSON(14).write(approachGeometry, out);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        out.toString();
+*/
+
         return approachGeometry;
     }
 }

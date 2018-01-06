@@ -13,6 +13,7 @@ import ar.edu.utn.frba.proyecto.sigo.domain.ols.ObstacleLimitationSurface;
 import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14Surface;
 import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceApproach;
 import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceApproachFirstSection;
+import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceApproachSecondSection;
 import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceConical;
 import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceInnerHorizontal;
 import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceStrip;
@@ -164,11 +165,16 @@ public class OlsAnalystICAOAnnex14 extends OlsAnalyst {
         AnalysisSurface conicalAnalysisSurface = createConicalAnalysisSurface(direction, conicalDefinition, (ICAOAnnex14SurfaceInnerHorizontal) analysisSurfaceForInnerHorizontal.getSurface(), (ICAOAnnex14SurfaceStrip) stripAnalysisSurface.getSurface());
         analysisSurfaces.add(conicalAnalysisSurface);
 
-        //4. aprox
+        //4. aprox 1
         ICAOAnnex14SurfaceApproach approachDefinition = (ICAOAnnex14SurfaceApproach) surfacesDefinitions.stream().filter(d -> d.getEnum() == ICAOAnnex14Surfaces.APPROACH).findFirst().get();
         ICAOAnnex14SurfaceApproachFirstSection approachFirstSectionDefinition = (ICAOAnnex14SurfaceApproachFirstSection) surfacesDefinitions.stream().filter(d -> d.getEnum() == ICAOAnnex14Surfaces.APPROACH_FIRST_SECTION).findFirst().get();
         AnalysisSurface approachFirstSectionAnalysisSurface = createApproachFirstSectionAnalysisSurface(direction, approachDefinition, approachFirstSectionDefinition, (ICAOAnnex14SurfaceStrip) stripAnalysisSurface.getSurface());
         analysisSurfaces.add(approachFirstSectionAnalysisSurface);
+
+        //4. aprox 2 TODO sacar porque solo va para precision
+        ICAOAnnex14SurfaceApproachSecondSection approachSecondSectionDefinition = (ICAOAnnex14SurfaceApproachSecondSection) surfacesDefinitions.stream().filter(d -> d.getEnum() == ICAOAnnex14Surfaces.APPROACH_SECOND_SECTION).findFirst().get();
+        AnalysisSurface approachSecondSectionAnalysisSurface = createApproachSecondSectionAnalysisSurface(direction, approachSecondSectionDefinition, (ICAOAnnex14SurfaceApproachFirstSection) approachFirstSectionAnalysisSurface.getSurface());
+        analysisSurfaces.add(approachSecondSectionAnalysisSurface);
 
         //5. transicion
         //6. despegue
@@ -236,13 +242,30 @@ public class OlsAnalystICAOAnnex14 extends OlsAnalyst {
             ICAOAnnex14SurfaceStrip strip
     ) {
 
-        approachFirstSection.setInitialHeight(direction.getHeight());
+        approachFirstSection.setInitialHeight(direction.getApproachSection().getThresholdElevation());
 
         approachFirstSection.setGeometry(geometryHelper.createApproachFirstSectionSurfaceGeometry(direction,approach, approachFirstSection, strip));
 
         return AnalysisSurface.builder()
                 .analysisCase(this.analysisCase)
                 .surface(approachFirstSection)
+                .direction(direction)
+                .build();
+    }
+
+    private AnalysisSurface createApproachSecondSectionAnalysisSurface(RunwayDirection direction, ICAOAnnex14SurfaceApproachSecondSection approachSecondSection, ICAOAnnex14SurfaceApproachFirstSection approachFirstSection) {
+
+        double adjacent = approachFirstSection.getLength();
+        double degrees = Math.atan(approachFirstSection.getSlope() / 100);
+        double hypotenuse = adjacent / Math.cos(degrees);
+        double opposite = Math.sqrt(Math.pow(hypotenuse,2) - Math.pow(adjacent,2));
+        approachSecondSection.setInitialHeight(approachFirstSection.getInitialHeight() + opposite);
+
+        approachSecondSection.setGeometry(geometryHelper.createApproachSecondSectionSurfaceGeometry(direction, approachSecondSection, approachFirstSection));
+
+        return AnalysisSurface.builder()
+                .analysisCase(this.analysisCase)
+                .surface(approachSecondSection)
                 .direction(direction)
                 .build();
     }
