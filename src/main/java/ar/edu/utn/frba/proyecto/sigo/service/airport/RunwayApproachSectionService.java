@@ -18,6 +18,8 @@ import javax.inject.Singleton;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static ar.edu.utn.frba.proyecto.sigo.utils.geom.GeometryHelper.azimuth;
 import static ar.edu.utn.frba.proyecto.sigo.utils.geom.GeometryHelper.move;
 
 @Singleton
@@ -42,25 +44,27 @@ public class RunwayApproachSectionService extends SigoService<RunwayApproachSect
     }
 
     private Polygon calculateThresholdGeometry(RunwayDirection runwayDirection) {
-        final Coordinate[] runwayCoordinates = runwayDirection.getRunway().getGeom().getCoordinates();
 
-        List<Coordinate> extremes = Arrays.stream(runwayCoordinates)
-                .distinct()
-                .sorted((i, j) -> {
-                    if (runwayDirection.getGeom().getCoordinate().distance(i) > runwayDirection.getGeom().getCoordinate().distance(j))
-                        return 1;
-                    else
-                        return -1;
-                })
-                .limit(2)
-                .collect(Collectors.toList());
+        Coordinate[] extremes = runwayDirection.getRunway().getGeom().norm().getCoordinates();
 
-        double azimuth = runwayDirection.getAzimuth();
+        double azimuth = azimuth(extremes[0],extremes[3]);
 
-        Coordinate extreme1 = extremes.get(0);
-        Coordinate extreme4 = extremes.get(1);
-        Coordinate extreme2 = move(extreme1, azimuth, -1 * runwayDirection.getApproachSection().getThresholdLength());
-        Coordinate extreme3 = move(extreme4, azimuth, -1 * runwayDirection.getApproachSection().getThresholdLength());
+        Coordinate extreme1;
+        Coordinate extreme4;
+        Coordinate extreme2;
+        Coordinate extreme3;
+
+        if(runwayDirection.getNumber()<18){
+            extreme1 = extremes[2];
+            extreme4 = extremes[3];
+            extreme2 = move(extreme1, azimuth, -1 * runwayDirection.getApproachSection().getThresholdLength());
+            extreme3 = move(extreme4, azimuth, -1 * runwayDirection.getApproachSection().getThresholdLength());
+        } else {
+            extreme1 = extremes[0];
+            extreme4 = extremes[1];
+            extreme2 = move(extreme1, azimuth, runwayDirection.getApproachSection().getThresholdLength());
+            extreme3 = move(extreme4, azimuth, runwayDirection.getApproachSection().getThresholdLength());
+        }
 
         return new GeometryFactory().createPolygon(new Coordinate[]{extreme1, extreme2, extreme3, extreme4, extreme1});
     }
