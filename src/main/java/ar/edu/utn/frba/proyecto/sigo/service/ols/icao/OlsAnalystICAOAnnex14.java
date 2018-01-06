@@ -89,13 +89,17 @@ public class OlsAnalystICAOAnnex14 extends OlsAnalyst {
 
     private AnalysisObstacle createAnalysisObstacle(AnalysisSurface surface, AnalysisObject object) {
 
+        Double surfaceHeight = determineSurfaceHeight(surface, object);
+
+        Double objectHeight = object.getPlacedObject().getHeightAmls();
+
         return AnalysisObstacle.builder()
                             .object(object)
                             .surface(surface)
                             .analysisCase(this.getAnalysisCase())
-                            .objectHeight(object.getPlacedObject().getHeightAmls())
-                            .surfaceHeight(determineSurfaceHeight(surface, object))
-                            .excluded(false)
+                            .objectHeight(objectHeight)
+                            .surfaceHeight(surfaceHeight)
+                            .excluded((surfaceHeight - objectHeight) > 0)
                             .build();
     }
 
