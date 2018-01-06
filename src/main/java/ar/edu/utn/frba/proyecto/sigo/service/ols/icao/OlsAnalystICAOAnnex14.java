@@ -156,34 +156,34 @@ public class OlsAnalystICAOAnnex14 extends OlsAnalyst {
         List<AnalysisSurface> analysisSurfaces = Lists.newArrayList();
 
         //1. franja
-        ICAOAnnex14SurfaceStrip stripDefinition = (ICAOAnnex14SurfaceStrip) surfacesDefinitions.stream().filter(d -> d.getEnum() == ICAOAnnex14Surfaces.STRIP).findFirst().get();
-        AnalysisSurface stripAnalysisSurface = createStripAnalysisSurface(direction, stripDefinition);
+        ICAOAnnex14SurfaceStrip strip = (ICAOAnnex14SurfaceStrip) surfacesDefinitions.stream().filter(d -> d.getEnum() == ICAOAnnex14Surfaces.STRIP).findFirst().get();
+        AnalysisSurface stripAnalysisSurface = createStripAnalysisSurface(direction, strip);
         analysisSurfaces.add(stripAnalysisSurface);
 
         //2. horizontal interna
-        ICAOAnnex14SurfaceInnerHorizontal innerHorizontalDefinition = (ICAOAnnex14SurfaceInnerHorizontal) surfacesDefinitions.stream().filter(d -> d.getEnum() == ICAOAnnex14Surfaces.INNER_HORIZONTAL).findFirst().get();
-        AnalysisSurface analysisSurfaceForInnerHorizontal = createInnerHorizontalAnalysisSurface(direction,innerHorizontalDefinition, (ICAOAnnex14SurfaceStrip) stripAnalysisSurface.getSurface());
+        ICAOAnnex14SurfaceInnerHorizontal innerHorizontal = (ICAOAnnex14SurfaceInnerHorizontal) surfacesDefinitions.stream().filter(d -> d.getEnum() == ICAOAnnex14Surfaces.INNER_HORIZONTAL).findFirst().get();
+        AnalysisSurface analysisSurfaceForInnerHorizontal = createInnerHorizontalAnalysisSurface(direction,innerHorizontal, strip);
         analysisSurfaces.add(analysisSurfaceForInnerHorizontal);
 
         //3. conica
-        ICAOAnnex14SurfaceConical conicalDefinition = (ICAOAnnex14SurfaceConical) surfacesDefinitions.stream().filter(d -> d.getEnum() == ICAOAnnex14Surfaces.CONICAL).findFirst().get();
-        AnalysisSurface conicalAnalysisSurface = createConicalAnalysisSurface(direction, conicalDefinition, (ICAOAnnex14SurfaceInnerHorizontal) analysisSurfaceForInnerHorizontal.getSurface(), (ICAOAnnex14SurfaceStrip) stripAnalysisSurface.getSurface());
+        ICAOAnnex14SurfaceConical conical = (ICAOAnnex14SurfaceConical) surfacesDefinitions.stream().filter(d -> d.getEnum() == ICAOAnnex14Surfaces.CONICAL).findFirst().get();
+        AnalysisSurface conicalAnalysisSurface = createConicalAnalysisSurface(direction, conical, innerHorizontal, strip);
         analysisSurfaces.add(conicalAnalysisSurface);
 
         //4. aprox 1
-        ICAOAnnex14SurfaceApproach approachDefinition = (ICAOAnnex14SurfaceApproach) surfacesDefinitions.stream().filter(d -> d.getEnum() == ICAOAnnex14Surfaces.APPROACH).findFirst().get();
-        ICAOAnnex14SurfaceApproachFirstSection approachFirstSectionDefinition = (ICAOAnnex14SurfaceApproachFirstSection) surfacesDefinitions.stream().filter(d -> d.getEnum() == ICAOAnnex14Surfaces.APPROACH_FIRST_SECTION).findFirst().get();
-        AnalysisSurface approachFirstSectionAnalysisSurface = createApproachFirstSectionAnalysisSurface(direction, approachDefinition, approachFirstSectionDefinition, (ICAOAnnex14SurfaceStrip) stripAnalysisSurface.getSurface());
+        ICAOAnnex14SurfaceApproach approach = (ICAOAnnex14SurfaceApproach) surfacesDefinitions.stream().filter(d -> d.getEnum() == ICAOAnnex14Surfaces.APPROACH).findFirst().get();
+        ICAOAnnex14SurfaceApproachFirstSection approachFirstSection = (ICAOAnnex14SurfaceApproachFirstSection) surfacesDefinitions.stream().filter(d -> d.getEnum() == ICAOAnnex14Surfaces.APPROACH_FIRST_SECTION).findFirst().get();
+        AnalysisSurface approachFirstSectionAnalysisSurface = createApproachFirstSectionAnalysisSurface(direction, approach, approachFirstSection, strip);
         analysisSurfaces.add(approachFirstSectionAnalysisSurface);
 
         //4. aprox 2
-        ICAOAnnex14SurfaceApproachSecondSection approachSecondSectionDefinition = (ICAOAnnex14SurfaceApproachSecondSection) surfacesDefinitions.stream().filter(d -> d.getEnum() == ICAOAnnex14Surfaces.APPROACH_SECOND_SECTION).findFirst().get();
-        AnalysisSurface approachSecondSectionAnalysisSurface = createApproachSecondSectionAnalysisSurface(direction, approachSecondSectionDefinition, approachDefinition, (ICAOAnnex14SurfaceApproachFirstSection) approachFirstSectionAnalysisSurface.getSurface());
+        ICAOAnnex14SurfaceApproachSecondSection approachSecondSection = (ICAOAnnex14SurfaceApproachSecondSection) surfacesDefinitions.stream().filter(d -> d.getEnum() == ICAOAnnex14Surfaces.APPROACH_SECOND_SECTION).findFirst().get();
+        AnalysisSurface approachSecondSectionAnalysisSurface = createApproachSecondSectionAnalysisSurface(direction, approachSecondSection, approach, approachFirstSection);
         analysisSurfaces.add(approachSecondSectionAnalysisSurface);
 
         //5. transicion
-        ICAOAnnex14SurfaceTransitional transitionalDefinition = (ICAOAnnex14SurfaceTransitional) surfacesDefinitions.stream().filter(d -> d.getEnum() == ICAOAnnex14Surfaces.TRANSITIONAL).findFirst().get();
-        AnalysisSurface transitionalAnalysisSurface =  createTransitionalAnalysisSurface(direction, transitionalDefinition, stripDefinition, approachFirstSectionDefinition, innerHorizontalDefinition);
+        ICAOAnnex14SurfaceTransitional transitional = (ICAOAnnex14SurfaceTransitional) surfacesDefinitions.stream().filter(d -> d.getEnum() == ICAOAnnex14Surfaces.TRANSITIONAL).findFirst().get();
+        AnalysisSurface transitionalAnalysisSurface =  createTransitionalAnalysisSurface(direction, transitional, strip, approachFirstSection, innerHorizontal);
         analysisSurfaces.add(transitionalAnalysisSurface);
 
         //6. despegue
