@@ -1,5 +1,6 @@
 package ar.edu.utn.frba.proyecto.sigo.router.regulation;
 
+import ar.edu.utn.frba.proyecto.sigo.domain.ols.ObstacleLimitationSurface;
 import ar.edu.utn.frba.proyecto.sigo.domain.regulation.OlsRule;
 import ar.edu.utn.frba.proyecto.sigo.domain.regulation.icao.ICAOAnnex14RunwayCategories;
 import ar.edu.utn.frba.proyecto.sigo.domain.regulation.icao.ICAOAnnex14RunwayClassifications;
@@ -178,7 +179,7 @@ public class RegulationICAOAnnex14Router extends SigoRouter {
 
         JsonObject jsonObject = objectMapper.toJsonTree(surface).getAsJsonObject();
 
-        jsonObject.addProperty("name", surface.getName());
+        jsonObject.addProperty("name", surface.getEnum().description());
 
         jsonObject.addProperty("id", surface.getId());
 

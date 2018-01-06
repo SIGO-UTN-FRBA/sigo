@@ -17,6 +17,7 @@ import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceApproachS
 import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceConical;
 import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceInnerHorizontal;
 import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceStrip;
+import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceTransitional;
 import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14Surfaces;
 import ar.edu.utn.frba.proyecto.sigo.domain.regulation.icao.OlsRuleICAOAnnex14;
 import ar.edu.utn.frba.proyecto.sigo.exception.SigoException;
@@ -171,12 +172,16 @@ public class OlsAnalystICAOAnnex14 extends OlsAnalyst {
         AnalysisSurface approachFirstSectionAnalysisSurface = createApproachFirstSectionAnalysisSurface(direction, approachDefinition, approachFirstSectionDefinition, (ICAOAnnex14SurfaceStrip) stripAnalysisSurface.getSurface());
         analysisSurfaces.add(approachFirstSectionAnalysisSurface);
 
-        //4. aprox 2 TODO sacar porque solo va para precision
+        //4. aprox 2
         ICAOAnnex14SurfaceApproachSecondSection approachSecondSectionDefinition = (ICAOAnnex14SurfaceApproachSecondSection) surfacesDefinitions.stream().filter(d -> d.getEnum() == ICAOAnnex14Surfaces.APPROACH_SECOND_SECTION).findFirst().get();
         AnalysisSurface approachSecondSectionAnalysisSurface = createApproachSecondSectionAnalysisSurface(direction, approachSecondSectionDefinition, (ICAOAnnex14SurfaceApproachFirstSection) approachFirstSectionAnalysisSurface.getSurface());
         analysisSurfaces.add(approachSecondSectionAnalysisSurface);
 
         //5. transicion
+        ICAOAnnex14SurfaceTransitional transitionalDefinition = (ICAOAnnex14SurfaceTransitional) surfacesDefinitions.stream().filter(d -> d.getEnum() == ICAOAnnex14Surfaces.TRANSITIONAL).findFirst().get();
+        AnalysisSurface transitionalAnalysisSurface =  createTransitionalAnalysisSurface(direction, transitionalDefinition, stripDefinition, approachFirstSectionDefinition, innerHorizontalDefinition);
+        analysisSurfaces.add(transitionalAnalysisSurface);
+
         //6. despegue
         //7. horizontal externa
 
@@ -253,7 +258,10 @@ public class OlsAnalystICAOAnnex14 extends OlsAnalyst {
                 .build();
     }
 
-    private AnalysisSurface createApproachSecondSectionAnalysisSurface(RunwayDirection direction, ICAOAnnex14SurfaceApproachSecondSection approachSecondSection, ICAOAnnex14SurfaceApproachFirstSection approachFirstSection) {
+    private AnalysisSurface createApproachSecondSectionAnalysisSurface(
+            RunwayDirection direction,
+            ICAOAnnex14SurfaceApproachSecondSection approachSecondSection,
+            ICAOAnnex14SurfaceApproachFirstSection approachFirstSection) {
 
         double adjacent = approachFirstSection.getLength();
         double degrees = Math.atan(approachFirstSection.getSlope() / 100);
@@ -266,6 +274,30 @@ public class OlsAnalystICAOAnnex14 extends OlsAnalyst {
         return AnalysisSurface.builder()
                 .analysisCase(this.analysisCase)
                 .surface(approachSecondSection)
+                .direction(direction)
+                .build();
+    }
+
+    private AnalysisSurface createTransitionalAnalysisSurface(
+            RunwayDirection direction,
+            ICAOAnnex14SurfaceTransitional transitional,
+            ICAOAnnex14SurfaceStrip strip,
+            ICAOAnnex14SurfaceApproachFirstSection approach,
+            ICAOAnnex14SurfaceInnerHorizontal innerHorizontal)
+    {
+        transitional.setInitialHeight(direction.getHeight());
+
+        double opposite = innerHorizontal.getHeight();
+        double angle = Math.atan(transitional.getSlope()/100);
+        double hypotenuse = opposite / Math.sin(angle);
+        double adjacent = Math.sqrt(Math.pow(hypotenuse,2)-Math.pow(opposite,2));
+        transitional.setWidth(adjacent);
+
+        transitional.setGeometry(geometryHelper.createTransitionalSurfaceGeometry(direction, transitional, strip, approach, innerHorizontal));
+
+        return AnalysisSurface.builder()
+                .analysisCase(this.analysisCase)
+                .surface(transitional)
                 .direction(direction)
                 .build();
     }

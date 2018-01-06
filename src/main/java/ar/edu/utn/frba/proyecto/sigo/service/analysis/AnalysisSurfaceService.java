@@ -78,6 +78,7 @@ public class AnalysisSurfaceService extends SigoService<AnalysisSurface, Analysi
         Class surfaceClass = Hibernate.getClass(surface);
 
         Stream<Object> tail = Arrays.stream(surfaceClass.getDeclaredFields())
+                .filter(f -> !f.getName().endsWith("geometry"))
                 .map(f -> {
                     try {
                         return FieldUtils.readDeclaredField(surface, f.getName(), true);
@@ -105,6 +106,7 @@ public class AnalysisSurfaceService extends SigoService<AnalysisSurface, Analysi
         tb.add("name", String.class);
 
         Arrays.stream(Hibernate.getClass(analysisSurface.getSurface()).getDeclaredFields())
+                .filter(f -> !f.getName().endsWith("geometry"))
                 .forEach( f -> tb.add(f.getName(),f.getType()));
 
         return tb.buildFeatureType();

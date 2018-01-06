@@ -1,5 +1,6 @@
 package ar.edu.utn.frba.proyecto.sigo.domain.ols.icao;
 
+import ar.edu.utn.frba.proyecto.sigo.domain.ols.ObstacleLimitationSurface;
 import ar.edu.utn.frba.proyecto.sigo.domain.regulation.icao.ICAOAnnex14RunwayCategories;
 import ar.edu.utn.frba.proyecto.sigo.domain.regulation.icao.ICAOAnnex14RunwayClassifications;
 import ar.edu.utn.frba.proyecto.sigo.domain.regulation.icao.ICAOAnnex14RunwayCodeNumbers;
@@ -23,7 +24,10 @@ import javax.persistence.Table;
 @Table(name = "tbl_icao14_surface_approach_first")
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 @Data
-public class ICAOAnnex14SurfaceApproachFirstSection extends ICAOAnnex14Surface {
+public class ICAOAnnex14SurfaceApproachFirstSection
+    extends ICAOAnnex14Surface
+    implements ObstacleLimitationSurface<Polygon>
+{
 
     @Column
     private Double length;
@@ -33,6 +37,9 @@ public class ICAOAnnex14SurfaceApproachFirstSection extends ICAOAnnex14Surface {
 
     @Column(name = "initial_height")
     private Double initialHeight;
+
+    @Column(name="geom")
+    private Polygon geometry;
 
     @Override
     public ICAOAnnex14Surfaces getEnum() {
@@ -46,7 +53,7 @@ public class ICAOAnnex14SurfaceApproachFirstSection extends ICAOAnnex14Surface {
 
     @Builder
     public ICAOAnnex14SurfaceApproachFirstSection(Long id, ICAOAnnex14RunwayClassifications classification, ICAOAnnex14RunwayCategories category, ICAOAnnex14RunwayCodeNumbers code, Polygon geometry, Double length, Double slope) {
-        super(id, classification, category, code, geometry);
+        super(id, classification, category, code);
         this.length = length;
         this.slope = slope;
     }

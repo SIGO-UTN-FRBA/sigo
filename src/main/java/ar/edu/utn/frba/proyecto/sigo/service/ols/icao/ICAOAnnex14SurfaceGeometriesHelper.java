@@ -1,5 +1,6 @@
 package ar.edu.utn.frba.proyecto.sigo.service.ols.icao;
 
+import ar.edu.utn.frba.proyecto.sigo.domain.airport.Runway;
 import ar.edu.utn.frba.proyecto.sigo.domain.airport.RunwayDirection;
 import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceApproach;
 import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceApproachFirstSection;
@@ -10,11 +11,20 @@ import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceStrip;
 import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceTransitional;
 import ar.edu.utn.frba.proyecto.sigo.utils.geom.GeometryHelper;
 import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.CoordinateArrays;
+import com.vividsolutions.jts.geom.CoordinateSequence;
+import com.vividsolutions.jts.geom.CoordinateSequenceFactory;
+import com.vividsolutions.jts.geom.CoordinateSequences;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.LineString;
+import com.vividsolutions.jts.geom.MultiPolygon;
 import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.geom.Polygon;
+import com.vividsolutions.jts.geom.impl.CoordinateArraySequenceFactory;
+import com.vividsolutions.jts.operation.buffer.BufferOp;
+import com.vividsolutions.jts.operation.buffer.BufferParameters;
+import com.vividsolutions.jtsexample.geom.ExtendedCoordinateSequenceFactory;
 import org.geotools.geojson.geom.GeometryJSON;
 
 import javax.inject.Singleton;
@@ -215,5 +225,38 @@ public class ICAOAnnex14SurfaceGeometriesHelper {
 */
 
         return approachGeometry;
+    }
+
+    public MultiPolygon createTransitionalSurfaceGeometry(RunwayDirection direction, ICAOAnnex14SurfaceTransitional transitional, ICAOAnnex14SurfaceStrip strip, ICAOAnnex14SurfaceApproachFirstSection approach, ICAOAnnex14SurfaceInnerHorizontal innerHorizontal) {
+
+        MultiPolygon centerPart;
+
+        //1. calcular parte central
+        LineString centerline = centerline(direction.getRunway());
+
+        centerPart = (MultiPolygon) centerline
+                .buffer(transitional.getWidth() / 100000, 1, BufferParameters.CAP_FLAT)
+                .difference(strip.getGeometry());
+
+        //2. calcular parte borde
+
+        //3. unir partes
+/*
+        OutputStream out = new ByteArrayOutputStream();
+        try {
+            new GeometryJSON(14).write(centerPart, out);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        out.toString();
+*/
+        return centerPart;
+    }
+
+    private LineString centerline(Runway runway) {
+
+        List<Coordinate> directionCoordinates = runway.getDirections().stream().map(d -> d.getGeom().getCoordinate()).collect(Collectors.toList());
+
+        return new GeometryFactory().createLineString(new Coordinate[]{directionCoordinates.get(0), directionCoordinates.get(1)});
     }
 }

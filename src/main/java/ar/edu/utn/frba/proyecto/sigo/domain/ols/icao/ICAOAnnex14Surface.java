@@ -6,12 +6,12 @@ import ar.edu.utn.frba.proyecto.sigo.domain.regulation.icao.ICAOAnnex14RunwayCat
 import ar.edu.utn.frba.proyecto.sigo.domain.regulation.icao.ICAOAnnex14RunwayClassifications;
 import ar.edu.utn.frba.proyecto.sigo.domain.regulation.icao.ICAOAnnex14RunwayCodeNumbers;
 import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.Polygon;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -31,9 +31,7 @@ import javax.persistence.Transient;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 @Data
-public abstract class ICAOAnnex14Surface
-        extends SigoDomain
-        implements ObstacleLimitationSurface {
+public abstract class ICAOAnnex14Surface extends SigoDomain {
 
     @Id
     @SequenceGenerator(
@@ -59,8 +57,4 @@ public abstract class ICAOAnnex14Surface
 
     @Column
     private ICAOAnnex14RunwayCodeNumbers code;
-
-    @Column(name="geom")
-    private Polygon geometry;
-
 }
