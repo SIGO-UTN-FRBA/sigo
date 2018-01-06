@@ -165,7 +165,7 @@ public class ICAOAnnex14SurfaceGeometriesHelper {
         extreme2 = move(extreme2, azimuth, orientation * approach.getDistanceFromThreshold());
 
         //2. outer edge
-        double divergence = Math.atan(approach.getDivergence() / 100);
+        double divergence = Math.atan(approach.getDivergence() / 100) * Math.PI;
 
         extreme3 = move(extreme2, azimuth+divergence, orientation * approachFirstSection.getLength());
         extreme4 = move(extreme1, azimuth-divergence, orientation * approachFirstSection.getLength());
@@ -185,7 +185,11 @@ public class ICAOAnnex14SurfaceGeometriesHelper {
         return approachGeometry;
     }
 
-    public Polygon createApproachSecondSectionSurfaceGeometry(RunwayDirection direction, ICAOAnnex14SurfaceApproachSecondSection approachSecondSection, ICAOAnnex14SurfaceApproachFirstSection approachFirstSection) {
+    public Polygon createApproachSecondSectionSurfaceGeometry(
+            RunwayDirection direction,
+            ICAOAnnex14SurfaceApproachSecondSection approachSecondSection,
+            ICAOAnnex14SurfaceApproach approach,
+            ICAOAnnex14SurfaceApproachFirstSection approachFirstSection) {
 
         Polygon approachGeometry;
         Coordinate extreme1;
@@ -209,8 +213,10 @@ public class ICAOAnnex14SurfaceGeometriesHelper {
             orientation = -1;
         }
 
-        extreme3 = move(extreme2, azimuth, orientation * approachSecondSection.getLength());
-        extreme4 = move(extreme1, azimuth, orientation * approachSecondSection.getLength());
+        double divergence = Math.atan(approach.getDivergence() / 100) * Math.PI;
+
+        extreme3 = move(extreme2, azimuth+divergence, orientation * approachSecondSection.getLength());
+        extreme4 = move(extreme1, azimuth-divergence, orientation * approachSecondSection.getLength());
 
         approachGeometry = new GeometryFactory().createPolygon(new Coordinate[]{extreme1, extreme2, extreme3, extreme4, extreme1});
 

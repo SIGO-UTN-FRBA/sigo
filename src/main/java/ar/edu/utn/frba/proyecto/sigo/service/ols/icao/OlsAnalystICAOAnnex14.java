@@ -178,7 +178,7 @@ public class OlsAnalystICAOAnnex14 extends OlsAnalyst {
 
         //4. aprox 2
         ICAOAnnex14SurfaceApproachSecondSection approachSecondSectionDefinition = (ICAOAnnex14SurfaceApproachSecondSection) surfacesDefinitions.stream().filter(d -> d.getEnum() == ICAOAnnex14Surfaces.APPROACH_SECOND_SECTION).findFirst().get();
-        AnalysisSurface approachSecondSectionAnalysisSurface = createApproachSecondSectionAnalysisSurface(direction, approachSecondSectionDefinition, (ICAOAnnex14SurfaceApproachFirstSection) approachFirstSectionAnalysisSurface.getSurface());
+        AnalysisSurface approachSecondSectionAnalysisSurface = createApproachSecondSectionAnalysisSurface(direction, approachSecondSectionDefinition, approachDefinition, (ICAOAnnex14SurfaceApproachFirstSection) approachFirstSectionAnalysisSurface.getSurface());
         analysisSurfaces.add(approachSecondSectionAnalysisSurface);
 
         //5. transicion
@@ -265,6 +265,7 @@ public class OlsAnalystICAOAnnex14 extends OlsAnalyst {
     private AnalysisSurface createApproachSecondSectionAnalysisSurface(
             RunwayDirection direction,
             ICAOAnnex14SurfaceApproachSecondSection approachSecondSection,
+            ICAOAnnex14SurfaceApproach approach,
             ICAOAnnex14SurfaceApproachFirstSection approachFirstSection) {
 
         double adjacent = approachFirstSection.getLength();
@@ -273,7 +274,7 @@ public class OlsAnalystICAOAnnex14 extends OlsAnalyst {
         double opposite = Math.sqrt(Math.pow(hypotenuse,2) - Math.pow(adjacent,2));
         approachSecondSection.setInitialHeight(approachFirstSection.getInitialHeight() + opposite);
 
-        approachSecondSection.setGeometry(geometryHelper.createApproachSecondSectionSurfaceGeometry(direction, approachSecondSection, approachFirstSection));
+        approachSecondSection.setGeometry(geometryHelper.createApproachSecondSectionSurfaceGeometry(direction, approachSecondSection, approach, approachFirstSection));
 
         return AnalysisSurface.builder()
                 .analysisCase(this.analysisCase)
