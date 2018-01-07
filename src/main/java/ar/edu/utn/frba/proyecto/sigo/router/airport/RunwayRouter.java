@@ -6,12 +6,14 @@ import ar.edu.utn.frba.proyecto.sigo.domain.airport.Airport;
 import ar.edu.utn.frba.proyecto.sigo.domain.airport.Runway;
 import ar.edu.utn.frba.proyecto.sigo.dto.airport.RunwayDTO;
 import ar.edu.utn.frba.proyecto.sigo.router.SigoRouter;
+import ar.edu.utn.frba.proyecto.sigo.service.SimpleFeatureTranslator;
 import ar.edu.utn.frba.proyecto.sigo.service.airport.RunwayStripService;
 import ar.edu.utn.frba.proyecto.sigo.service.airport.RunwayTranslator;
 import ar.edu.utn.frba.proyecto.sigo.service.airport.AirportService;
 import ar.edu.utn.frba.proyecto.sigo.service.airport.RunwayService;
 import ar.edu.utn.frba.proyecto.sigo.spark.JsonTransformer;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.vividsolutions.jts.geom.Polygon;
 import org.eclipse.jetty.http.HttpStatus;
 import org.opengis.feature.simple.SimpleFeature;
@@ -32,6 +34,7 @@ public class RunwayRouter extends SigoRouter {
     private RunwayService runwayService;
     private AirportService airportService;
     private RunwayTranslator translator;
+    private SimpleFeatureTranslator featureTranslator;
 
     @Inject
     public RunwayRouter(
@@ -40,7 +43,8 @@ public class RunwayRouter extends SigoRouter {
         JsonTransformer jsonTransformer,
         RunwayService runwayService,
         AirportService airportService,
-        RunwayTranslator runwayTranslator
+        RunwayTranslator runwayTranslator,
+        SimpleFeatureTranslator featureTranslator
     ){
         super(objectMapper, hibernateUtil);
 
@@ -48,6 +52,7 @@ public class RunwayRouter extends SigoRouter {
         this.runwayService = runwayService;
         this.airportService = airportService;
         this.translator = runwayTranslator;
+        this.featureTranslator = featureTranslator;
     }
 
     /**
@@ -96,7 +101,7 @@ public class RunwayRouter extends SigoRouter {
 
         Runway runway = runwayService.get(getParamRunwayId(request));
 
-        SimpleFeature feature = featureFromGeoJson(request.body());
+        SimpleFeature feature = featureTranslator.getAsDomain(objectMapper.fromJson(request.body(), JsonObject.class));
 
         runwayService.updateGeometry((Polygon)feature.getDefaultGeometry(), runway);
 
@@ -110,7 +115,7 @@ public class RunwayRouter extends SigoRouter {
 
         Runway runway = runwayService.get(getParamRunwayId(request));
 
-        return featureToGeoJson(runwayService.getFeature(runway));
+        return featureTranslator.getAsDTO(runwayService.getFeature(runway));
     });
 
     /**

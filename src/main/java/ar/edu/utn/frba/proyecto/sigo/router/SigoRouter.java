@@ -170,34 +170,4 @@ public abstract class SigoRouter extends Router {
             txn.commit();
         }
     }
-
-    protected JsonObject featureToGeoJson(SimpleFeature feature) {
-
-        try(OutputStream outputStream = new ByteArrayOutputStream()) {
-            int decimals = 14;
-            GeometryJSON gjson = new GeometryJSON(decimals);
-
-            new FeatureJSON(gjson).writeFeature(feature, outputStream);
-
-            return objectMapper.fromJson(outputStream.toString(),JsonObject.class);
-
-        } catch (IOException e) {
-            e.printStackTrace();
-            throw new SigoException(e);
-        }
-    }
-
-    protected SimpleFeature featureFromGeoJson(String json) {
-
-        try (InputStream stream = new ByteArrayInputStream(json.getBytes(StandardCharsets.UTF_8.name()))){
-            int decimals = 14;
-            GeometryJSON gjson = new GeometryJSON(decimals);
-
-            return new FeatureJSON(gjson).readFeature(stream);
-
-        } catch (IOException e) {
-            e.printStackTrace();
-            throw new InvalidParameterException("Malformed geometry.",e);
-        }
-    }
 }

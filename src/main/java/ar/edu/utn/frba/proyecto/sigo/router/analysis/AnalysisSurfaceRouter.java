@@ -3,6 +3,7 @@ package ar.edu.utn.frba.proyecto.sigo.router.analysis;
 import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisSurface;
 import ar.edu.utn.frba.proyecto.sigo.persistence.HibernateUtil;
 import ar.edu.utn.frba.proyecto.sigo.router.SigoRouter;
+import ar.edu.utn.frba.proyecto.sigo.service.SimpleFeatureTranslator;
 import ar.edu.utn.frba.proyecto.sigo.service.analysis.AnalysisSurfaceService;
 import ar.edu.utn.frba.proyecto.sigo.service.analysis.AnalysisSurfaceTranslator;
 import ar.edu.utn.frba.proyecto.sigo.spark.JsonTransformer;
@@ -19,6 +20,7 @@ public class AnalysisSurfaceRouter extends SigoRouter {
     private JsonTransformer jsonTransformer;
     private AnalysisSurfaceService surfaceService;
     private AnalysisSurfaceTranslator surfaceTranslator;
+    private SimpleFeatureTranslator featureTranslator;
 
     @Inject
     public AnalysisSurfaceRouter(
@@ -26,13 +28,15 @@ public class AnalysisSurfaceRouter extends SigoRouter {
             HibernateUtil hibernateUtil,
             JsonTransformer jsonTransformer,
             AnalysisSurfaceService surfaceService,
-            AnalysisSurfaceTranslator surfaceTranslator
+            AnalysisSurfaceTranslator surfaceTranslator,
+            SimpleFeatureTranslator featureTranslator
     ) {
         super(objectMapper, hibernateUtil);
 
         this.jsonTransformer = jsonTransformer;
         this.surfaceService = surfaceService;
         this.surfaceTranslator = surfaceTranslator;
+        this.featureTranslator = featureTranslator;
     }
 
     /**
@@ -41,7 +45,7 @@ public class AnalysisSurfaceRouter extends SigoRouter {
     private final Route fetchSurfacesAsFeatures = doInTransaction(false, (request, response) -> {
 
         return this.surfaceService.find(getParamAnalysisId(request), request.queryMap())
-                .map( s -> featureToGeoJson(this.surfaceService.getFeature(s)))
+                .map( s -> featureTranslator.getAsDTO(this.surfaceService.getFeature(s)))
                 .collect(Collectors.toList());
     });
 

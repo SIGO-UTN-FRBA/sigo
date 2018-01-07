@@ -1,5 +1,6 @@
 package ar.edu.utn.frba.proyecto.sigo.domain.ols.icao;
 
+import ar.edu.utn.frba.proyecto.sigo.domain.ols.ObstacleLimitationSurface;
 import ar.edu.utn.frba.proyecto.sigo.domain.regulation.icao.ICAOAnnex14RunwayCategories;
 import ar.edu.utn.frba.proyecto.sigo.domain.regulation.icao.ICAOAnnex14RunwayClassifications;
 import ar.edu.utn.frba.proyecto.sigo.domain.regulation.icao.ICAOAnnex14RunwayCodeNumbers;
@@ -23,7 +24,10 @@ import javax.persistence.Table;
 @Table(name = "tbl_icao14_surface_balked_landing")
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 @Data
-public class ICAOAnnex14SurfaceBalkedLanding extends ICAOAnnex14Surface {
+public class ICAOAnnex14SurfaceBalkedLanding
+    extends ICAOAnnex14Surface
+    implements ObstacleLimitationSurface<Polygon>
+{
 
     @Column(name = "length_of_inner_edge")
     private Double lengthOfInnerEdge;
@@ -37,6 +41,9 @@ public class ICAOAnnex14SurfaceBalkedLanding extends ICAOAnnex14Surface {
     @Column
     private Double slope;
 
+    @Column(name="geom")
+    private Polygon geometry;
+
     @Override
     public ICAOAnnex14Surfaces getEnum() {
         return ICAOAnnex14Surfaces.BALKED_LANDING_SURFACE;
@@ -49,7 +56,7 @@ public class ICAOAnnex14SurfaceBalkedLanding extends ICAOAnnex14Surface {
 
     @Builder
     public ICAOAnnex14SurfaceBalkedLanding(Long id, ICAOAnnex14RunwayClassifications classification, ICAOAnnex14RunwayCategories category, ICAOAnnex14RunwayCodeNumbers code, Polygon geometry, Double lengthOfInnerEdge, Double distanceFromThreshold, Double divergence, Double slope) {
-        super(id, classification, category, code, geometry);
+        super(id, classification, category, code);
         this.lengthOfInnerEdge = lengthOfInnerEdge;
         this.distanceFromThreshold = distanceFromThreshold;
         this.divergence = divergence;

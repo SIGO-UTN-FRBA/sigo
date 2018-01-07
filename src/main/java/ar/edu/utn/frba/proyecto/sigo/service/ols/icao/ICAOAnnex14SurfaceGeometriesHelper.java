@@ -1,16 +1,30 @@
 package ar.edu.utn.frba.proyecto.sigo.service.ols.icao;
 
+import ar.edu.utn.frba.proyecto.sigo.domain.airport.Runway;
 import ar.edu.utn.frba.proyecto.sigo.domain.airport.RunwayDirection;
+import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceApproach;
+import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceApproachFirstSection;
+import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceApproachSecondSection;
 import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceConical;
 import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceInnerHorizontal;
 import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceStrip;
+import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceTransitional;
 import ar.edu.utn.frba.proyecto.sigo.utils.geom.GeometryHelper;
 import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.CoordinateArrays;
+import com.vividsolutions.jts.geom.CoordinateSequence;
+import com.vividsolutions.jts.geom.CoordinateSequenceFactory;
+import com.vividsolutions.jts.geom.CoordinateSequences;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.LineString;
+import com.vividsolutions.jts.geom.MultiPolygon;
 import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.geom.Polygon;
+import com.vividsolutions.jts.geom.impl.CoordinateArraySequenceFactory;
+import com.vividsolutions.jts.operation.buffer.BufferOp;
+import com.vividsolutions.jts.operation.buffer.BufferParameters;
+import com.vividsolutions.jtsexample.geom.ExtendedCoordinateSequenceFactory;
 import org.geotools.geojson.geom.GeometryJSON;
 
 import javax.inject.Singleton;
@@ -21,10 +35,13 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static ar.edu.utn.frba.proyecto.sigo.utils.geom.GeometryHelper.azimuth;
+import static ar.edu.utn.frba.proyecto.sigo.utils.geom.GeometryHelper.move;
+
 @Singleton
 public class ICAOAnnex14SurfaceGeometriesHelper {
 
-    public Geometry createStripSurfaceGeometry(RunwayDirection direction, ICAOAnnex14SurfaceStrip stripDefinition) {
+    public Polygon createStripSurfaceGeometry(RunwayDirection direction, ICAOAnnex14SurfaceStrip stripDefinition) {
 
         Double extraWidth, extraLength;
 
@@ -41,7 +58,7 @@ public class ICAOAnnex14SurfaceGeometriesHelper {
 
         List<Coordinate> directionCoordinates = direction.getRunway().getDirections().stream().map(d -> d.getGeom().getCoordinate()).collect(Collectors.toList());
 
-        double azimuth = GeometryHelper.getAzimuth(directionCoordinates.get(0), directionCoordinates.get(1));
+        double azimuth = GeometryHelper.azimuth(directionCoordinates.get(0), directionCoordinates.get(1));
 
         //2. create geom
 
@@ -64,7 +81,7 @@ public class ICAOAnnex14SurfaceGeometriesHelper {
 /*
         OutputStream out = new ByteArrayOutputStream();
         try {
-            new GeometryJSON().write(stripGeometry, out);
+            new GeometryJSON(14).write(stripGeometry, out);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -73,7 +90,7 @@ public class ICAOAnnex14SurfaceGeometriesHelper {
         return stripGeometry;
     }
 
-    public Geometry createInnerHorizontalSurfaceGeometry(RunwayDirection direction, ICAOAnnex14SurfaceInnerHorizontal innerHorizontalDefinition, ICAOAnnex14SurfaceStrip stripSurface) {
+    public Polygon createInnerHorizontalSurfaceGeometry(RunwayDirection direction, ICAOAnnex14SurfaceInnerHorizontal innerHorizontalDefinition, ICAOAnnex14SurfaceStrip stripSurface) {
 
         double radius = innerHorizontalDefinition.getRadius() / 100000;
 
@@ -91,16 +108,16 @@ public class ICAOAnnex14SurfaceGeometriesHelper {
 /*
         OutputStream out = new ByteArrayOutputStream();
         try {
-            new GeometryJSON().write(union, out);
+            new GeometryJSON(14).write(union, out);
         } catch (IOException e) {
             e.printStackTrace();
         }
         out.toString();
 */
-        return difference;
+        return (Polygon) difference;
     }
 
-    public Geometry createConicalSurfaceGeometry(RunwayDirection direction, ICAOAnnex14SurfaceConical conicalDefinition, ICAOAnnex14SurfaceInnerHorizontal innerHorizontalSurface, ICAOAnnex14SurfaceStrip stripSurface) {
+    public Polygon createConicalSurfaceGeometry(RunwayDirection direction, ICAOAnnex14SurfaceConical conicalDefinition, ICAOAnnex14SurfaceInnerHorizontal innerHorizontalSurface, ICAOAnnex14SurfaceStrip stripSurface) {
 
         Geometry baseGeometry = innerHorizontalSurface.getGeometry().union(stripSurface.getGeometry());
 
@@ -110,12 +127,142 @@ public class ICAOAnnex14SurfaceGeometriesHelper {
 /*
         OutputStream out = new ByteArrayOutputStream();
         try {
-            new GeometryJSON().write(difference, out);
+            new GeometryJSON(14).write(difference, out);
         } catch (IOException e) {
             e.printStackTrace();
         }
         out.toString();
 */
-        return difference;
+        return (Polygon) difference;
+    }
+
+    public Polygon createApproachFirstSectionSurfaceGeometry(RunwayDirection direction, ICAOAnnex14SurfaceApproach approach, ICAOAnnex14SurfaceApproachFirstSection approachFirstSection, ICAOAnnex14SurfaceStrip strip){
+
+        Polygon approachGeometry;
+        Coordinate extreme1;
+        Coordinate extreme2;
+        Coordinate extreme3;
+        Coordinate extreme4;
+
+        //1. inner edge
+        Coordinate[] extremes = direction.getRunway().getGeom().norm().getCoordinates();
+
+        Double azimuth = azimuth( extremes[0],  extremes[3]);
+
+        int orientation;
+
+        if(direction.getNumber()<18){
+            extreme1 = extremes[0];
+            extreme2 = extremes[1];
+            orientation = -1;
+        }else{
+            extreme1 = extremes[2];
+            extreme2 = extremes[3];
+            orientation = 1;
+        }
+
+        extreme1 = move(extreme1, azimuth, orientation * approach.getDistanceFromThreshold());
+        extreme2 = move(extreme2, azimuth, orientation * approach.getDistanceFromThreshold());
+
+        //2. outer edge
+        double divergence = Math.atan(approach.getDivergence() / 100) * Math.PI;
+
+        extreme3 = move(extreme2, azimuth+divergence, orientation * approachFirstSection.getLength());
+        extreme4 = move(extreme1, azimuth-divergence, orientation * approachFirstSection.getLength());
+
+        //3. create polygon
+        approachGeometry = new GeometryFactory().createPolygon(new Coordinate[]{extreme1, extreme2, extreme3, extreme4, extreme1});
+
+/*
+        OutputStream out = new ByteArrayOutputStream();
+        try {
+            new GeometryJSON(14).write(approachGeometry, out);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        out.toString();
+*/
+        return approachGeometry;
+    }
+
+    public Polygon createApproachSecondSectionSurfaceGeometry(
+            RunwayDirection direction,
+            ICAOAnnex14SurfaceApproachSecondSection approachSecondSection,
+            ICAOAnnex14SurfaceApproach approach,
+            ICAOAnnex14SurfaceApproachFirstSection approachFirstSection) {
+
+        Polygon approachGeometry;
+        Coordinate extreme1;
+        Coordinate extreme2;
+        Coordinate extreme3;
+        Coordinate extreme4;
+
+        int orientation;
+
+        Coordinate[] extremes = approachFirstSection.getGeometry().norm().getCoordinates();
+
+        Double azimuth = azimuth( extremes[0],  extremes[3]);
+
+        if(direction.getNumber()<18){
+            extreme1 = extremes[2];
+            extreme2 = extremes[3];
+            orientation = 1;
+        }else{
+            extreme1 = extremes[0];
+            extreme2 = extremes[1];
+            orientation = -1;
+        }
+
+        double divergence = Math.atan(approach.getDivergence() / 100) * Math.PI;
+
+        extreme3 = move(extreme2, azimuth+divergence, orientation * approachSecondSection.getLength());
+        extreme4 = move(extreme1, azimuth-divergence, orientation * approachSecondSection.getLength());
+
+        approachGeometry = new GeometryFactory().createPolygon(new Coordinate[]{extreme1, extreme2, extreme3, extreme4, extreme1});
+
+/*
+        OutputStream out = new ByteArrayOutputStream();
+        try {
+            new GeometryJSON(14).write(approachGeometry, out);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        out.toString();
+*/
+
+        return approachGeometry;
+    }
+
+    public MultiPolygon createTransitionalSurfaceGeometry(RunwayDirection direction, ICAOAnnex14SurfaceTransitional transitional, ICAOAnnex14SurfaceStrip strip, ICAOAnnex14SurfaceApproachFirstSection approach, ICAOAnnex14SurfaceInnerHorizontal innerHorizontal) {
+
+        MultiPolygon centerPart;
+
+        //1. calcular parte central
+        LineString centerline = centerline(direction.getRunway());
+
+        centerPart = (MultiPolygon) centerline
+                .buffer(transitional.getWidth() / 100000, 1, BufferParameters.CAP_FLAT)
+                .difference(strip.getGeometry());
+
+        //2. calcular parte borde
+
+        //3. unir partes
+/*
+        OutputStream out = new ByteArrayOutputStream();
+        try {
+            new GeometryJSON(14).write(centerPart, out);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        out.toString();
+*/
+        return centerPart;
+    }
+
+    private LineString centerline(Runway runway) {
+
+        List<Coordinate> directionCoordinates = runway.getDirections().stream().map(d -> d.getGeom().getCoordinate()).collect(Collectors.toList());
+
+        return new GeometryFactory().createLineString(new Coordinate[]{directionCoordinates.get(0), directionCoordinates.get(1)});
     }
 }
