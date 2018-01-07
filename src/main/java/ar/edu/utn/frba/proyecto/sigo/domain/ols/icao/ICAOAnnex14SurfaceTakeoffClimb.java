@@ -50,6 +50,9 @@ public class ICAOAnnex14SurfaceTakeoffClimb
     @Column(name = "length_of_inner_edge")
     private Double lengthOfInnerEdge;
 
+    @Column(name = "initial_height")
+    private Double initialHeight;
+
     @Override
     public ICAOAnnex14Surfaces getEnum() {
         return ICAOAnnex14Surfaces.TAKEOFF_CLIMB;

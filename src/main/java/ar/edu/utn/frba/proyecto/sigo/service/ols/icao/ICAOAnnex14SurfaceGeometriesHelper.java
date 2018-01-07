@@ -8,6 +8,7 @@ import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceApproachS
 import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceConical;
 import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceInnerHorizontal;
 import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceStrip;
+import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceTakeoffClimb;
 import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceTransitional;
 import ar.edu.utn.frba.proyecto.sigo.utils.geom.GeometryHelper;
 import com.vividsolutions.jts.geom.Coordinate;
@@ -31,11 +32,13 @@ import javax.inject.Singleton;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static ar.edu.utn.frba.proyecto.sigo.utils.geom.GeometryHelper.azimuth;
+import static ar.edu.utn.frba.proyecto.sigo.utils.geom.GeometryHelper.distanceInMeters;
 import static ar.edu.utn.frba.proyecto.sigo.utils.geom.GeometryHelper.move;
 
 @Singleton
@@ -165,7 +168,7 @@ public class ICAOAnnex14SurfaceGeometriesHelper {
         extreme2 = move(extreme2, azimuth, orientation * approach.getDistanceFromThreshold());
 
         //2. outer edge
-        double divergence = Math.atan(approach.getDivergence() / 100) * Math.PI;
+        double divergence = Math.toDegrees(Math.atan(approach.getDivergence()/100));
 
         extreme3 = move(extreme2, azimuth+divergence, orientation * approachFirstSection.getLength());
         extreme4 = move(extreme1, azimuth-divergence, orientation * approachFirstSection.getLength());
@@ -213,7 +216,7 @@ public class ICAOAnnex14SurfaceGeometriesHelper {
             orientation = -1;
         }
 
-        double divergence = Math.atan(approach.getDivergence() / 100) * Math.PI;
+        double divergence = Math.toDegrees(Math.atan(approach.getDivergence()/100));
 
         extreme3 = move(extreme2, azimuth+divergence, orientation * approachSecondSection.getLength());
         extreme4 = move(extreme1, azimuth-divergence, orientation * approachSecondSection.getLength());
@@ -246,6 +249,8 @@ public class ICAOAnnex14SurfaceGeometriesHelper {
 
         //2. calcular parte borde
 
+        //TODO
+
         //3. unir partes
 /*
         OutputStream out = new ByteArrayOutputStream();
@@ -259,10 +264,76 @@ public class ICAOAnnex14SurfaceGeometriesHelper {
         return centerPart;
     }
 
+    public Polygon createTakeoffClimbSurfaceGeometry(RunwayDirection direction, ICAOAnnex14SurfaceTakeoffClimb takeoffClimb) {
+        //1. inner edge
+
+        Coordinate[] extremes = centerline(direction.getRunway()).getCoordinates();
+
+        double azimuth = azimuth(extremes[0],extremes[1]);
+
+        Coordinate runwayExtreme;
+        Coordinate extreme1;
+        Coordinate extreme4;
+        Coordinate extreme2;
+        Coordinate extreme3;
+
+        int orientation;
+
+        double shiftLength = Math.max(direction.getTakeoffSection().getClearwayLength(), takeoffClimb.getDistanceFromRunwayEnds());
+
+        if(direction.getNumber()<18){
+            runwayExtreme = extremes[0];
+            orientation = -1;
+        } else {
+            runwayExtreme = extremes[1];
+            orientation = 1;
+        }
+
+        double shiftWidth = takeoffClimb.getLengthOfInnerEdge()/2;
+
+        extreme1 = move(runwayExtreme,azimuth,orientation * shiftLength);
+        extreme1 = move(extreme1,azimuth+90, orientation * shiftWidth);
+
+        extreme2 = move(runwayExtreme,azimuth,orientation * shiftLength);
+        extreme2 = move(extreme2,azimuth+90, orientation * -1 * shiftWidth);
+
+
+        //2. outer edge
+        double divergence = Math.toDegrees(Math.atan(takeoffClimb.getDivergence()/100));
+
+        extreme3 = move(extreme1,azimuth+orientation*divergence,orientation*takeoffClimb.getLength());
+        extreme4 = move(extreme2,azimuth+orientation*-1*divergence,orientation*takeoffClimb.getLength());
+
+        //3. create polygon
+        Polygon geometry = new GeometryFactory().createPolygon(new Coordinate[]{extreme1, extreme2, extreme3, extreme4, extreme1});
+
+        OutputStream out = new ByteArrayOutputStream();
+        try {
+            new GeometryJSON(14).write(geometry, out);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        out.toString();
+
+        return geometry;
+    }
+
     private LineString centerline(Runway runway) {
 
-        List<Coordinate> directionCoordinates = runway.getDirections().stream().map(d -> d.getGeom().getCoordinate()).collect(Collectors.toList());
+        //List<Coordinate> directionCoordinates = runway.getDirections().stream().map(d -> d.getGeom().getCoordinate()).collect(Collectors.toList());
 
-        return new GeometryFactory().createLineString(new Coordinate[]{directionCoordinates.get(0), directionCoordinates.get(1)});
+        Coordinate[] extremes = runway.getGeom().norm().getCoordinates();
+
+        LineString lineString1 = new GeometryFactory().createLineString(new Coordinate[]{extremes[0],extremes[1]});
+        LineString lineString2 = new GeometryFactory().createLineString(new Coordinate[]{extremes[2],extremes[3]});
+
+        return (LineString) new GeometryFactory()
+                .createLineString(
+                    new Coordinate[]{
+                            lineString1.getInteriorPoint().getCoordinate(),
+                            lineString2.getInteriorPoint().getCoordinate(),
+                    }
+                )
+                .norm();
     }
 }

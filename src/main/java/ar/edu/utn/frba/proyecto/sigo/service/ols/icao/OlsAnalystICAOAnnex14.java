@@ -17,6 +17,7 @@ import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceApproachS
 import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceConical;
 import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceInnerHorizontal;
 import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceStrip;
+import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceTakeoffClimb;
 import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceTransitional;
 import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14Surfaces;
 import ar.edu.utn.frba.proyecto.sigo.domain.regulation.icao.OlsRuleICAOAnnex14;
@@ -155,38 +156,79 @@ public class OlsAnalystICAOAnnex14 extends OlsAnalyst {
 
         List<AnalysisSurface> analysisSurfaces = Lists.newArrayList();
 
-        //1. franja
+        //1. Strip
         ICAOAnnex14SurfaceStrip strip = (ICAOAnnex14SurfaceStrip) surfacesDefinitions.stream().filter(d -> d.getEnum() == ICAOAnnex14Surfaces.STRIP).findFirst().get();
-        AnalysisSurface stripAnalysisSurface = createStripAnalysisSurface(direction, strip);
-        analysisSurfaces.add(stripAnalysisSurface);
+        analysisSurfaces.add(
+                createStripAnalysisSurface(
+                        direction,
+                        strip
+                )
+        );
 
-        //2. horizontal interna
+        //2. InnerHorizontal
         ICAOAnnex14SurfaceInnerHorizontal innerHorizontal = (ICAOAnnex14SurfaceInnerHorizontal) surfacesDefinitions.stream().filter(d -> d.getEnum() == ICAOAnnex14Surfaces.INNER_HORIZONTAL).findFirst().get();
-        AnalysisSurface analysisSurfaceForInnerHorizontal = createInnerHorizontalAnalysisSurface(direction,innerHorizontal, strip);
-        analysisSurfaces.add(analysisSurfaceForInnerHorizontal);
+        analysisSurfaces.add(
+                createInnerHorizontalAnalysisSurface(
+                        direction,
+                        innerHorizontal,
+                        strip)
+        );
 
-        //3. conica
+        //3. Conical
         ICAOAnnex14SurfaceConical conical = (ICAOAnnex14SurfaceConical) surfacesDefinitions.stream().filter(d -> d.getEnum() == ICAOAnnex14Surfaces.CONICAL).findFirst().get();
-        AnalysisSurface conicalAnalysisSurface = createConicalAnalysisSurface(direction, conical, innerHorizontal, strip);
-        analysisSurfaces.add(conicalAnalysisSurface);
+        analysisSurfaces.add(
+                createConicalAnalysisSurface(
+                        direction,
+                        conical,
+                        innerHorizontal,
+                        strip
+                )
+        );
 
-        //4. aprox 1
+        //4. ApproachFirstSection
         ICAOAnnex14SurfaceApproach approach = (ICAOAnnex14SurfaceApproach) surfacesDefinitions.stream().filter(d -> d.getEnum() == ICAOAnnex14Surfaces.APPROACH).findFirst().get();
         ICAOAnnex14SurfaceApproachFirstSection approachFirstSection = (ICAOAnnex14SurfaceApproachFirstSection) surfacesDefinitions.stream().filter(d -> d.getEnum() == ICAOAnnex14Surfaces.APPROACH_FIRST_SECTION).findFirst().get();
-        AnalysisSurface approachFirstSectionAnalysisSurface = createApproachFirstSectionAnalysisSurface(direction, approach, approachFirstSection, strip);
-        analysisSurfaces.add(approachFirstSectionAnalysisSurface);
+        analysisSurfaces.add(
+                createApproachFirstSectionAnalysisSurface(
+                        direction,
+                        approach,
+                        approachFirstSection,
+                        strip
+                )
+        );
 
-        //4. aprox 2
+        //4. ApproachSecondSection
         ICAOAnnex14SurfaceApproachSecondSection approachSecondSection = (ICAOAnnex14SurfaceApproachSecondSection) surfacesDefinitions.stream().filter(d -> d.getEnum() == ICAOAnnex14Surfaces.APPROACH_SECOND_SECTION).findFirst().get();
-        AnalysisSurface approachSecondSectionAnalysisSurface = createApproachSecondSectionAnalysisSurface(direction, approachSecondSection, approach, approachFirstSection);
-        analysisSurfaces.add(approachSecondSectionAnalysisSurface);
+        analysisSurfaces.add(
+                createApproachSecondSectionAnalysisSurface(
+                        direction,
+                        approachSecondSection,
+                        approach,
+                        approachFirstSection
+                )
+        );
 
-        //5. transicion
+        //5. Transitional
         ICAOAnnex14SurfaceTransitional transitional = (ICAOAnnex14SurfaceTransitional) surfacesDefinitions.stream().filter(d -> d.getEnum() == ICAOAnnex14Surfaces.TRANSITIONAL).findFirst().get();
-        AnalysisSurface transitionalAnalysisSurface =  createTransitionalAnalysisSurface(direction, transitional, strip, approachFirstSection, innerHorizontal);
-        analysisSurfaces.add(transitionalAnalysisSurface);
+        analysisSurfaces.add(
+                createTransitionalAnalysisSurface(
+                        direction,
+                        transitional,
+                        strip,
+                        approachFirstSection,
+                        innerHorizontal
+                )
+        );
 
-        //6. despegue
+        //6. TakeoffClimb
+        ICAOAnnex14SurfaceTakeoffClimb takeoffClimb = (ICAOAnnex14SurfaceTakeoffClimb) surfacesDefinitions.stream().filter(d -> d.getEnum() == ICAOAnnex14Surfaces.TAKEOFF_CLIMB).findFirst().get();
+        analysisSurfaces.add(
+                createTakeoffClimbAnalysisSurface(
+                        direction,
+                        takeoffClimb
+                )
+        );
+
         //7. horizontal externa
 
         return analysisSurfaces;
@@ -303,6 +345,21 @@ public class OlsAnalystICAOAnnex14 extends OlsAnalyst {
         return AnalysisSurface.builder()
                 .analysisCase(this.analysisCase)
                 .surface(transitional)
+                .direction(direction)
+                .build();
+    }
+
+    private AnalysisSurface createTakeoffClimbAnalysisSurface(
+            RunwayDirection direction,
+            ICAOAnnex14SurfaceTakeoffClimb takeoffClimb)
+    {
+        takeoffClimb.setInitialHeight(direction.getHeight()); //TODO en realidad es el otro extremo
+
+        takeoffClimb.setGeometry(geometryHelper.createTakeoffClimbSurfaceGeometry(direction, takeoffClimb));
+
+        return AnalysisSurface.builder()
+                .analysisCase(this.analysisCase)
+                .surface(takeoffClimb)
                 .direction(direction)
                 .build();
     }
