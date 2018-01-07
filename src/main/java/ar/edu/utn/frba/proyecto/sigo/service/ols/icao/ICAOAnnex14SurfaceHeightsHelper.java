@@ -47,7 +47,7 @@ public class ICAOAnnex14SurfaceHeightsHelper {
                 break;
         }
 
-        throw new NotImplementedException();
+        return -1D; //TODO
     }
 
 

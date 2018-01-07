@@ -42,4 +42,8 @@ public class GeometryHelper {
         return gc.getOrthodromicDistance();
     }
 
+    public static Double slopePercentToDegrees(Double percent){
+        return Math.toDegrees(Math.atan(percent/100));
+    }
+
 }
