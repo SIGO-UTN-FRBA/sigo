@@ -32,4 +32,18 @@ public class GeometryHelper {
         return new Coordinate(destination.getX(), destination.getY());
     }
 
+    public static Double distanceInMeters(Coordinate start, Coordinate end){
+
+        GeodeticCalculator gc = new GeodeticCalculator();
+
+        gc.setStartingGeographicPoint(start.x, start.y);
+        gc.setDestinationGeographicPoint(end.x, end.y);
+
+        return gc.getOrthodromicDistance();
+    }
+
+    public static Double slopePercentToDegrees(Double percent){
+        return Math.toDegrees(Math.atan(percent/100));
+    }
+
 }

@@ -47,7 +47,7 @@ public class ICAOAnnex14SurfaceHeightsHelper {
                 break;
         }
 
-        throw new NotImplementedException();
+        return -1D; //TODO
     }
 
 
@@ -87,7 +87,7 @@ public class ICAOAnnex14SurfaceHeightsHelper {
 
         double adjacent = geometry.distance(point) * 100000;
 
-        double degrees = Math.atan(slope / 100);
+        double degrees = Math.toDegrees(Math.atan(slope / 100));
 
         double hypotenuse = adjacent / Math.cos(degrees);
 

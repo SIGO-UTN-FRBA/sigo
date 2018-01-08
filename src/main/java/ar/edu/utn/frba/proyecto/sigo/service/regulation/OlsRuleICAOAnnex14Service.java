@@ -329,7 +329,7 @@ public class OlsRuleICAOAnnex14Service
                 ICAOAnnex14Surfaces.TAKEOFF_CLIMB,
                 numberCode,
                 classification,
-                category
+                null
         );
 
         return new ICAOAnnex14SurfaceDefinitionsHelper().createTakeoffClimbSurface(rules);
