@@ -1,8 +1,8 @@
-package ar.edu.utn.frba.proyecto.sigo.service.location;
+package ar.edu.utn.frba.proyecto.sigo.translator.location;
 
 import ar.edu.utn.frba.proyecto.sigo.domain.location.PoliticalLocation;
 import ar.edu.utn.frba.proyecto.sigo.dto.location.PoliticalLocationDTO;
-import ar.edu.utn.frba.proyecto.sigo.service.Translator;
+import ar.edu.utn.frba.proyecto.sigo.translator.Translator;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import javax.inject.Singleton;

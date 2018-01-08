@@ -1,8 +1,8 @@
-package ar.edu.utn.frba.proyecto.sigo.service.airport;
+package ar.edu.utn.frba.proyecto.sigo.translator.location;
 
 import ar.edu.utn.frba.proyecto.sigo.domain.analysis.Region;
 import ar.edu.utn.frba.proyecto.sigo.dto.airport.RegionDTO;
-import ar.edu.utn.frba.proyecto.sigo.service.Translator;
+import ar.edu.utn.frba.proyecto.sigo.translator.Translator;
 
 import javax.inject.Singleton;
 

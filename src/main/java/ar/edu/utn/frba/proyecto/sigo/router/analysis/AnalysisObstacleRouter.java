@@ -3,7 +3,7 @@ package ar.edu.utn.frba.proyecto.sigo.router.analysis;
 import ar.edu.utn.frba.proyecto.sigo.persistence.HibernateUtil;
 import ar.edu.utn.frba.proyecto.sigo.router.SigoRouter;
 import ar.edu.utn.frba.proyecto.sigo.service.analysis.AnalysisObstacleService;
-import ar.edu.utn.frba.proyecto.sigo.service.analysis.AnalysisObstacleTranslator;
+import ar.edu.utn.frba.proyecto.sigo.translator.analysis.AnalysisObstacleTranslator;
 import ar.edu.utn.frba.proyecto.sigo.spark.JsonTransformer;
 import com.google.gson.Gson;
 import spark.Route;

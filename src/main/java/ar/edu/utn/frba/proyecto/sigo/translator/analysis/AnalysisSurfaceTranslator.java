@@ -1,8 +1,8 @@
-package ar.edu.utn.frba.proyecto.sigo.service.analysis;
+package ar.edu.utn.frba.proyecto.sigo.translator.analysis;
 
 import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisSurface;
 import ar.edu.utn.frba.proyecto.sigo.dto.analysis.AnalysisSurfaceDTO;
-import ar.edu.utn.frba.proyecto.sigo.service.Translator;
+import ar.edu.utn.frba.proyecto.sigo.translator.Translator;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import javax.inject.Singleton;

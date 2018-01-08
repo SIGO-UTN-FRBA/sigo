@@ -1,14 +1,12 @@
 package ar.edu.utn.frba.proyecto.sigo.router.airport;
 
-import ar.edu.utn.frba.proyecto.sigo.domain.airport.RunwayStrip;
 import ar.edu.utn.frba.proyecto.sigo.persistence.HibernateUtil;
 import ar.edu.utn.frba.proyecto.sigo.domain.airport.Airport;
 import ar.edu.utn.frba.proyecto.sigo.domain.airport.Runway;
 import ar.edu.utn.frba.proyecto.sigo.dto.airport.RunwayDTO;
 import ar.edu.utn.frba.proyecto.sigo.router.SigoRouter;
-import ar.edu.utn.frba.proyecto.sigo.service.SimpleFeatureTranslator;
-import ar.edu.utn.frba.proyecto.sigo.service.airport.RunwayStripService;
-import ar.edu.utn.frba.proyecto.sigo.service.airport.RunwayTranslator;
+import ar.edu.utn.frba.proyecto.sigo.translator.SimpleFeatureTranslator;
+import ar.edu.utn.frba.proyecto.sigo.translator.airport.RunwayTranslator;
 import ar.edu.utn.frba.proyecto.sigo.service.airport.AirportService;
 import ar.edu.utn.frba.proyecto.sigo.service.airport.RunwayService;
 import ar.edu.utn.frba.proyecto.sigo.spark.JsonTransformer;

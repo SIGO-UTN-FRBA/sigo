@@ -1,4 +1,4 @@
-package ar.edu.utn.frba.proyecto.sigo.service;
+package ar.edu.utn.frba.proyecto.sigo.translator;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;

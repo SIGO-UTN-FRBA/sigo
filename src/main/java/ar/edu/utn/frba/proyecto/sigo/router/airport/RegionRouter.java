@@ -4,7 +4,7 @@ import ar.edu.utn.frba.proyecto.sigo.domain.analysis.Region;
 import ar.edu.utn.frba.proyecto.sigo.persistence.HibernateUtil;
 import ar.edu.utn.frba.proyecto.sigo.router.SigoRouter;
 import ar.edu.utn.frba.proyecto.sigo.service.airport.RegionService;
-import ar.edu.utn.frba.proyecto.sigo.service.airport.RegionTranslator;
+import ar.edu.utn.frba.proyecto.sigo.translator.location.RegionTranslator;
 import ar.edu.utn.frba.proyecto.sigo.spark.JsonTransformer;
 import com.google.gson.Gson;
 import spark.Route;

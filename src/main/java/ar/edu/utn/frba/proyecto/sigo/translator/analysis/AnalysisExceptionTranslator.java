@@ -1,4 +1,4 @@
-package ar.edu.utn.frba.proyecto.sigo.service.analysis;
+package ar.edu.utn.frba.proyecto.sigo.translator.analysis;
 
 import ar.edu.utn.frba.proyecto.sigo.domain.airport.RunwayDirection;
 import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisCase;
@@ -12,7 +12,8 @@ import ar.edu.utn.frba.proyecto.sigo.domain.regulation.Regulations;
 import ar.edu.utn.frba.proyecto.sigo.domain.regulation.icao.OlsRuleICAOAnnex14;
 import ar.edu.utn.frba.proyecto.sigo.dto.analysis.AnalysisExceptionDTO;
 import ar.edu.utn.frba.proyecto.sigo.exception.InvalidParameterException;
-import ar.edu.utn.frba.proyecto.sigo.service.Translator;
+import ar.edu.utn.frba.proyecto.sigo.service.analysis.AnalysisCaseService;
+import ar.edu.utn.frba.proyecto.sigo.translator.Translator;
 import ar.edu.utn.frba.proyecto.sigo.service.airport.RunwayDirectionService;
 import ar.edu.utn.frba.proyecto.sigo.service.regulation.OlsRuleICAOAnnex14Service;
 import com.google.gson.Gson;

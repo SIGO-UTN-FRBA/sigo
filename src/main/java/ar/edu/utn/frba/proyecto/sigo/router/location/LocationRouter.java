@@ -6,9 +6,8 @@ import ar.edu.utn.frba.proyecto.sigo.exception.MissingParameterException;
 import ar.edu.utn.frba.proyecto.sigo.persistence.HibernateUtil;
 import ar.edu.utn.frba.proyecto.sigo.router.SigoRouter;
 import ar.edu.utn.frba.proyecto.sigo.service.location.PoliticalLocationService;
-import ar.edu.utn.frba.proyecto.sigo.service.location.PoliticalLocationTranslator;
+import ar.edu.utn.frba.proyecto.sigo.translator.location.PoliticalLocationTranslator;
 import ar.edu.utn.frba.proyecto.sigo.spark.JsonTransformer;
-import com.google.gson.Gson;
 import spark.Route;
 import spark.RouteGroup;
 

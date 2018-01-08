@@ -1,10 +1,11 @@
-package ar.edu.utn.frba.proyecto.sigo.service.airport;
+package ar.edu.utn.frba.proyecto.sigo.translator.airport;
 
 import ar.edu.utn.frba.proyecto.sigo.domain.airport.RunwayDirection;
 import ar.edu.utn.frba.proyecto.sigo.domain.airport.RunwayTakeoffSection;
 import ar.edu.utn.frba.proyecto.sigo.dto.airport.RunwayTakeoffSectionDTO;
 import ar.edu.utn.frba.proyecto.sigo.exception.InvalidParameterException;
-import ar.edu.utn.frba.proyecto.sigo.service.Translator;
+import ar.edu.utn.frba.proyecto.sigo.service.airport.RunwayDirectionService;
+import ar.edu.utn.frba.proyecto.sigo.translator.Translator;
 import com.google.gson.Gson;
 
 import javax.inject.Inject;
