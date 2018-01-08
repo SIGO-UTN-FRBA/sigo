@@ -1,7 +1,8 @@
-package ar.edu.utn.frba.proyecto.sigo.service;
+package ar.edu.utn.frba.proyecto.sigo.translator;
 
 import ar.edu.utn.frba.proyecto.sigo.exception.InvalidParameterException;
 import ar.edu.utn.frba.proyecto.sigo.exception.SigoException;
+import ar.edu.utn.frba.proyecto.sigo.translator.Translator;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import org.geotools.geojson.feature.FeatureJSON;
@@ -18,7 +19,7 @@ import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 
 @Singleton
-public class SimpleFeatureTranslator extends Translator<SimpleFeature,JsonObject>{
+public class SimpleFeatureTranslator extends Translator<SimpleFeature,JsonObject> {
     @Inject
     public SimpleFeatureTranslator(Gson gson) {
         this.objectMapper = gson;

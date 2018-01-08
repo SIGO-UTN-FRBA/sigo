@@ -1,4 +1,4 @@
-package ar.edu.utn.frba.proyecto.sigo.service.object;
+package ar.edu.utn.frba.proyecto.sigo.translator.object;
 
 import ar.edu.utn.frba.proyecto.sigo.domain.location.PoliticalLocation;
 import ar.edu.utn.frba.proyecto.sigo.domain.object.LightingTypes;
@@ -11,8 +11,8 @@ import ar.edu.utn.frba.proyecto.sigo.domain.object.PlacedObjectOwner;
 import ar.edu.utn.frba.proyecto.sigo.domain.object.PlacedObjectTypes;
 import ar.edu.utn.frba.proyecto.sigo.dto.object.PlacedObjectDTO;
 import ar.edu.utn.frba.proyecto.sigo.exception.InvalidParameterException;
-import ar.edu.utn.frba.proyecto.sigo.exception.SigoException;
-import ar.edu.utn.frba.proyecto.sigo.service.Translator;
+import ar.edu.utn.frba.proyecto.sigo.service.object.PlacedObjectOwnerService;
+import ar.edu.utn.frba.proyecto.sigo.translator.Translator;
 import ar.edu.utn.frba.proyecto.sigo.service.location.PoliticalLocationService;
 import ar.edu.utn.frba.proyecto.sigo.service.location.RegionService;
 import com.google.gson.Gson;

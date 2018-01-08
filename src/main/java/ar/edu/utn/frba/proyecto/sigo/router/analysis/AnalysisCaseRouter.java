@@ -2,13 +2,12 @@ package ar.edu.utn.frba.proyecto.sigo.router.analysis;
 
 import ar.edu.utn.frba.proyecto.sigo.domain.analysis.Analysis;
 import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisCase;
-import ar.edu.utn.frba.proyecto.sigo.dto.common.ListItemDTO;
 import ar.edu.utn.frba.proyecto.sigo.exception.MissingParameterException;
 import ar.edu.utn.frba.proyecto.sigo.persistence.HibernateUtil;
 import ar.edu.utn.frba.proyecto.sigo.router.SigoRouter;
 import ar.edu.utn.frba.proyecto.sigo.service.analysis.AnalysisCaseService;
-import ar.edu.utn.frba.proyecto.sigo.service.analysis.AnalysisCaseTranslator;
-import ar.edu.utn.frba.proyecto.sigo.service.analysis.AnalysisObjectTranslator;
+import ar.edu.utn.frba.proyecto.sigo.translator.analysis.AnalysisCaseTranslator;
+import ar.edu.utn.frba.proyecto.sigo.translator.analysis.AnalysisObjectTranslator;
 import ar.edu.utn.frba.proyecto.sigo.service.analysis.AnalysisService;
 import ar.edu.utn.frba.proyecto.sigo.spark.JsonTransformer;
 import com.google.gson.Gson;
@@ -17,8 +16,6 @@ import spark.Route;
 import spark.RouteGroup;
 
 import javax.inject.Inject;
-
-import java.util.stream.Collectors;
 
 import static java.lang.String.format;
 import static spark.Spark.get;

@@ -1,4 +1,4 @@
-package ar.edu.utn.frba.proyecto.sigo.service.regulation;
+package ar.edu.utn.frba.proyecto.sigo.translator.ols;
 
 import ar.edu.utn.frba.proyecto.sigo.domain.regulation.OlsRule;
 import ar.edu.utn.frba.proyecto.sigo.domain.regulation.OlsRuleVisitor;
@@ -6,7 +6,7 @@ import ar.edu.utn.frba.proyecto.sigo.domain.regulation.faa.OlsRulesFAA;
 import ar.edu.utn.frba.proyecto.sigo.domain.regulation.icao.OlsRuleICAOAnnex14;
 import ar.edu.utn.frba.proyecto.sigo.dto.regulation.OlsRuleDTO;
 import ar.edu.utn.frba.proyecto.sigo.dto.regulation.OlsRuleICAOAnnex14DTO;
-import ar.edu.utn.frba.proyecto.sigo.service.Translator;
+import ar.edu.utn.frba.proyecto.sigo.translator.Translator;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 public class OlsRuleTranslator

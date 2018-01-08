@@ -1,11 +1,11 @@
-package ar.edu.utn.frba.proyecto.sigo.service.analysis;
+package ar.edu.utn.frba.proyecto.sigo.translator.analysis;
 
 import ar.edu.utn.frba.proyecto.sigo.domain.airport.RunwayDirection;
 import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisObstacle;
 import ar.edu.utn.frba.proyecto.sigo.domain.object.PlacedObject;
 import ar.edu.utn.frba.proyecto.sigo.domain.ols.ObstacleLimitationSurface;
 import ar.edu.utn.frba.proyecto.sigo.dto.analysis.AnalysisObstacleDTO;
-import ar.edu.utn.frba.proyecto.sigo.service.Translator;
+import ar.edu.utn.frba.proyecto.sigo.translator.Translator;
 import com.google.common.collect.Lists;
 import com.vividsolutions.jts.geom.Coordinate;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;

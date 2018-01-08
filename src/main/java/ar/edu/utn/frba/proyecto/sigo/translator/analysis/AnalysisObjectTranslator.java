@@ -1,10 +1,11 @@
-package ar.edu.utn.frba.proyecto.sigo.service.analysis;
+package ar.edu.utn.frba.proyecto.sigo.translator.analysis;
 
 import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisCase;
 import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisObject;
 import ar.edu.utn.frba.proyecto.sigo.domain.object.PlacedObject;
 import ar.edu.utn.frba.proyecto.sigo.dto.analysis.AnalysisObjectDTO;
-import ar.edu.utn.frba.proyecto.sigo.service.Translator;
+import ar.edu.utn.frba.proyecto.sigo.service.analysis.AnalysisCaseService;
+import ar.edu.utn.frba.proyecto.sigo.translator.Translator;
 import ar.edu.utn.frba.proyecto.sigo.service.object.PlacedObjectService;
 import com.google.gson.Gson;
 import ar.edu.utn.frba.proyecto.sigo.exception.InvalidParameterException;
