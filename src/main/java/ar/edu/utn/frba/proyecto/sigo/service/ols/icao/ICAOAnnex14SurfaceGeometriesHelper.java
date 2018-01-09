@@ -10,37 +10,24 @@ import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceInnerHori
 import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceStrip;
 import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceTakeoffClimb;
 import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceTransitional;
-import ar.edu.utn.frba.proyecto.sigo.utils.geom.GeometryHelper;
+import ar.edu.utn.frba.proyecto.sigo.utils.geom.GeographicHelper;
 import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.CoordinateArrays;
-import com.vividsolutions.jts.geom.CoordinateSequence;
-import com.vividsolutions.jts.geom.CoordinateSequenceFactory;
-import com.vividsolutions.jts.geom.CoordinateSequences;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.MultiPolygon;
 import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.geom.Polygon;
-import com.vividsolutions.jts.geom.impl.CoordinateArraySequenceFactory;
-import com.vividsolutions.jts.operation.buffer.BufferOp;
 import com.vividsolutions.jts.operation.buffer.BufferParameters;
-import com.vividsolutions.jtsexample.geom.ExtendedCoordinateSequenceFactory;
-import org.geotools.geojson.geom.GeometryJSON;
 
 import javax.inject.Singleton;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static ar.edu.utn.frba.proyecto.sigo.utils.geom.GeometryHelper.azimuth;
-import static ar.edu.utn.frba.proyecto.sigo.utils.geom.GeometryHelper.distanceInMeters;
-import static ar.edu.utn.frba.proyecto.sigo.utils.geom.GeometryHelper.move;
-import static ar.edu.utn.frba.proyecto.sigo.utils.geom.GeometryHelper.slopePercentToDegrees;
+import static ar.edu.utn.frba.proyecto.sigo.utils.geom.GeographicHelper.azimuth;
+import static ar.edu.utn.frba.proyecto.sigo.utils.geom.GeographicHelper.move;
+import static ar.edu.utn.frba.proyecto.sigo.utils.geom.GeographicHelper.slopePercentToDegrees;
 
 @Singleton
 public class ICAOAnnex14SurfaceGeometriesHelper {
@@ -62,24 +49,24 @@ public class ICAOAnnex14SurfaceGeometriesHelper {
 
         List<Coordinate> directionCoordinates = direction.getRunway().getDirections().stream().map(d -> d.getGeom().getCoordinate()).collect(Collectors.toList());
 
-        double azimuth = GeometryHelper.azimuth(directionCoordinates.get(0), directionCoordinates.get(1));
+        double azimuth = GeographicHelper.azimuth(directionCoordinates.get(0), directionCoordinates.get(1));
 
         //2. create geom
 
         //TODO incluir en calculo de longitud: 'antes del umbral THR', 'mas alla del extremo o SWY'
         Coordinate[] baseCoordinates = direction.getRunway().getGeom().getExteriorRing().norm().getCoordinates();
 
-        Coordinate newCoordinate1 = GeometryHelper.move(baseCoordinates[0], azimuth, extraLength);
-        newCoordinate1 = GeometryHelper.move(newCoordinate1, azimuth+90, extraWidth);
+        Coordinate newCoordinate1 = GeographicHelper.move(baseCoordinates[0], azimuth, extraLength);
+        newCoordinate1 = GeographicHelper.move(newCoordinate1, azimuth+90, extraWidth);
 
-        Coordinate newCoordinate2 = GeometryHelper.move(baseCoordinates[1], azimuth, extraLength);
-        newCoordinate2 = GeometryHelper.move(newCoordinate2, azimuth-90, extraWidth);
+        Coordinate newCoordinate2 = GeographicHelper.move(baseCoordinates[1], azimuth, extraLength);
+        newCoordinate2 = GeographicHelper.move(newCoordinate2, azimuth-90, extraWidth);
 
-        Coordinate newCoordinate3 = GeometryHelper.move(baseCoordinates[2], azimuth, -extraLength);
-        newCoordinate3 = GeometryHelper.move(newCoordinate3, azimuth-90, extraWidth);
+        Coordinate newCoordinate3 = GeographicHelper.move(baseCoordinates[2], azimuth, -extraLength);
+        newCoordinate3 = GeographicHelper.move(newCoordinate3, azimuth-90, extraWidth);
 
-        Coordinate newCoordinate4 = GeometryHelper.move(baseCoordinates[3], azimuth, -extraLength);
-        newCoordinate4 = GeometryHelper.move(newCoordinate4, azimuth+90, extraWidth);
+        Coordinate newCoordinate4 = GeographicHelper.move(baseCoordinates[3], azimuth, -extraLength);
+        newCoordinate4 = GeographicHelper.move(newCoordinate4, azimuth+90, extraWidth);
 
         Polygon stripGeometry = new GeometryFactory().createPolygon(new Coordinate[]{newCoordinate1, newCoordinate2, newCoordinate3, newCoordinate4, newCoordinate1});
 /*

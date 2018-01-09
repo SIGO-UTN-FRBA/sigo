@@ -15,12 +15,9 @@ import org.opengis.feature.simple.SimpleFeatureType;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
 
-import static ar.edu.utn.frba.proyecto.sigo.utils.geom.GeometryHelper.azimuth;
-import static ar.edu.utn.frba.proyecto.sigo.utils.geom.GeometryHelper.move;
+import static ar.edu.utn.frba.proyecto.sigo.utils.geom.GeographicHelper.azimuth;
+import static ar.edu.utn.frba.proyecto.sigo.utils.geom.GeographicHelper.move;
 
 @Singleton
 public class RunwayTakeoffSectionService extends SigoService<RunwayTakeoffSection, RunwayDirection> {

@@ -8,7 +8,7 @@ import org.geotools.referencing.GeodeticCalculator;
 import javax.inject.Singleton;
 import java.awt.geom.Point2D;
 
-public class GeometryHelper {
+public class GeographicHelper {
 
     public static double azimuth(Coordinate a, Coordinate b) {
 
