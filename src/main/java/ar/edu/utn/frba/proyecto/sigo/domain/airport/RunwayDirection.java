@@ -3,6 +3,7 @@ package ar.edu.utn.frba.proyecto.sigo.domain.airport;
 import ar.edu.utn.frba.proyecto.sigo.domain.SigoDomain;
 import ar.edu.utn.frba.proyecto.sigo.domain.Spatial;
 import com.google.common.base.MoreObjects;
+import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Point;
 import lombok.*;
 import org.apache.commons.lang3.StringUtils;
@@ -56,7 +57,6 @@ public class RunwayDirection extends SigoDomain implements Spatial<Point> {
     @OneToOne
     @JoinColumn(name = "strip_id")
     private RunwayStrip strip;
-
 
     public String getIdentifier(){
 

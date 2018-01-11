@@ -1,6 +1,5 @@
 package ar.edu.utn.frba.proyecto.sigo.service.ols.icao;
 
-import ar.edu.utn.frba.proyecto.sigo.domain.airport.Runway;
 import ar.edu.utn.frba.proyecto.sigo.domain.airport.RunwayDirection;
 import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceApproach;
 import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceApproachFirstSection;
@@ -11,6 +10,7 @@ import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceStrip;
 import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceTakeoffClimb;
 import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceTransitional;
 import ar.edu.utn.frba.proyecto.sigo.utils.geom.GeographicHelper;
+import com.google.common.collect.Lists;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
@@ -25,8 +25,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static ar.edu.utn.frba.proyecto.sigo.utils.geom.GeographicHelper.azimuth;
 import static ar.edu.utn.frba.proyecto.sigo.utils.geom.GeographicHelper.move;
+import static ar.edu.utn.frba.proyecto.sigo.utils.geom.GeographicHelper.oppositeThreshold;
+import static ar.edu.utn.frba.proyecto.sigo.utils.geom.GeographicHelper.realAzimuth;
 import static ar.edu.utn.frba.proyecto.sigo.utils.geom.GeographicHelper.slopePercentToDegrees;
 
 @Singleton
@@ -34,41 +35,34 @@ public class ICAOAnnex14SurfaceGeometriesHelper {
 
     public Polygon createStripSurfaceGeometry(RunwayDirection direction, ICAOAnnex14SurfaceStrip stripDefinition) {
 
-        Double extraWidth, extraLength;
+        Double extraRunwayWidth, extraRunwayLength, azimuth;
 
-        //1. initialize values
-        double halfWidth = direction.getRunway().getWidth() / 2;
+        extraRunwayWidth = Optional.ofNullable(direction.getStrip().getWidth())
+                    .map(w -> w/2)
+                    .orElse(stripDefinition.getWidth());
 
-        extraWidth = Optional.ofNullable(direction.getStrip().getWidth())
-                    .map(w -> w/2 - halfWidth)
-                    .orElse(stripDefinition.getWidth() - halfWidth);
+        extraRunwayLength = Optional.ofNullable(direction.getStrip().getLength())
+                .map( l -> (l - direction.getRunway().getLength())/2)
+                .orElse(stripDefinition.getLength());
 
-        extraLength = Optional.ofNullable(direction.getStrip().getLength())
-                    .map(l -> (l - direction.getRunway().getLength())/2)
-                    .orElse(stripDefinition.getLength());
+        azimuth = realAzimuth(direction);
 
-        List<Coordinate> directionCoordinates = direction.getRunway().getDirections().stream().map(d -> d.getGeom().getCoordinate()).collect(Collectors.toList());
+        Coordinate threshold = direction.getGeom().getCoordinate();
+        Coordinate oppositeThreshold = oppositeThreshold(direction);
 
-        double azimuth = GeographicHelper.azimuth(directionCoordinates.get(0), directionCoordinates.get(1));
+        Coordinate extreme1 = GeographicHelper.move(threshold, azimuth, -1 * extraRunwayLength);
+        extreme1 = GeographicHelper.move(extreme1, azimuth+90, extraRunwayWidth);
 
-        //2. create geom
+        Coordinate extreme2 = GeographicHelper.move(threshold, azimuth, -1 * extraRunwayLength);
+        extreme2 = GeographicHelper.move(extreme2, azimuth-90, extraRunwayWidth);
 
-        //TODO incluir en calculo de longitud: 'antes del umbral THR', 'mas alla del extremo o SWY'
-        Coordinate[] baseCoordinates = direction.getRunway().getGeom().getExteriorRing().norm().getCoordinates();
+        Coordinate extreme3 = GeographicHelper.move(oppositeThreshold, azimuth, extraRunwayLength);
+        extreme3 = GeographicHelper.move(extreme3, azimuth-90, extraRunwayWidth);
 
-        Coordinate newCoordinate1 = GeographicHelper.move(baseCoordinates[0], azimuth, extraLength);
-        newCoordinate1 = GeographicHelper.move(newCoordinate1, azimuth+90, extraWidth);
+        Coordinate extreme4 = GeographicHelper.move(oppositeThreshold, azimuth, extraRunwayLength);
+        extreme4 = GeographicHelper.move(extreme4, azimuth+90, extraRunwayWidth);
 
-        Coordinate newCoordinate2 = GeographicHelper.move(baseCoordinates[1], azimuth, extraLength);
-        newCoordinate2 = GeographicHelper.move(newCoordinate2, azimuth-90, extraWidth);
-
-        Coordinate newCoordinate3 = GeographicHelper.move(baseCoordinates[2], azimuth, -extraLength);
-        newCoordinate3 = GeographicHelper.move(newCoordinate3, azimuth-90, extraWidth);
-
-        Coordinate newCoordinate4 = GeographicHelper.move(baseCoordinates[3], azimuth, -extraLength);
-        newCoordinate4 = GeographicHelper.move(newCoordinate4, azimuth+90, extraWidth);
-
-        Polygon stripGeometry = new GeometryFactory().createPolygon(new Coordinate[]{newCoordinate1, newCoordinate2, newCoordinate3, newCoordinate4, newCoordinate1});
+        Polygon stripGeometry = new GeometryFactory().createPolygon(new Coordinate[]{extreme1, extreme2, extreme3, extreme4, extreme1});
 /*
         OutputStream out = new ByteArrayOutputStream();
         try {
@@ -85,11 +79,11 @@ public class ICAOAnnex14SurfaceGeometriesHelper {
 
         double radius = innerHorizontalDefinition.getRadius() / 100000;
 
-        List<Point> directionPoints = direction.getRunway().getDirections().stream().map(RunwayDirection::getGeom).collect(Collectors.toList());
+        LineString runwayGeometry = direction.getRunway().getGeom();
 
-        LineString centerLine = new GeometryFactory().createLineString(new Coordinate[]{directionPoints.get(0).getCoordinate(), directionPoints.get(1).getCoordinate()});
+        List<Point> directionPoints = Lists.newArrayList(runwayGeometry.getStartPoint(), runwayGeometry.getEndPoint());
 
-        Geometry bufferCenterLine = centerLine.buffer(radius,20);
+        Geometry bufferCenterLine = runwayGeometry.buffer(radius,20);
 
         List<Geometry> bufferEdgePoints = directionPoints.stream().map(d -> d.buffer(radius,20)).collect(Collectors.toList());
 
@@ -130,39 +124,33 @@ public class ICAOAnnex14SurfaceGeometriesHelper {
     public Polygon createApproachFirstSectionSurfaceGeometry(RunwayDirection direction, ICAOAnnex14SurfaceApproach approach, ICAOAnnex14SurfaceApproachFirstSection approachFirstSection, ICAOAnnex14SurfaceStrip strip){
 
         Polygon approachGeometry;
-        Coordinate runwayExtreme;
+        Coordinate threshold;
         Coordinate extreme1;
         Coordinate extreme2;
         Coordinate extreme3;
         Coordinate extreme4;
         Double azimuth;
+        double divergence;
 
-        Coordinate[] extremes = centerline(direction.getRunway()).getCoordinates();
+        divergence = slopePercentToDegrees(approach.getDivergence());
 
-        if(direction.getNumber()<18){
-            azimuth = azimuth( extremes[0],  extremes[1]);
-            runwayExtreme = extremes[1];
-        }else{
-            azimuth = azimuth( extremes[1],  extremes[0]);
-            runwayExtreme = extremes[0];
-        }
+        azimuth = realAzimuth(direction);
+
+        threshold = direction.getGeom().getCoordinate();
 
         //1. inner edge
-        extreme1 = move(runwayExtreme, azimuth, approach.getDistanceFromThreshold());
-        extreme1 = move(extreme1, azimuth+90, approach.getLengthOfInnerEdge()/2);
+        extreme1 = move(threshold, azimuth, -1 * approach.getDistanceFromThreshold());
+        extreme1 = move(extreme1, azimuth-90, approach.getLengthOfInnerEdge()/2);
 
-        extreme2 = move(runwayExtreme, azimuth, approach.getDistanceFromThreshold());
-        extreme2 = move(extreme2, azimuth-90, approach.getLengthOfInnerEdge()/2);
+        extreme2 = move(threshold, azimuth, -1 * approach.getDistanceFromThreshold());
+        extreme2 = move(extreme2, azimuth+90, approach.getLengthOfInnerEdge()/2);
 
         //2. outer edge
-        double divergence = slopePercentToDegrees(approach.getDivergence());
-
-        extreme3 = move(extreme2, azimuth-divergence,  approachFirstSection.getLength());
-        extreme4 = move(extreme1, azimuth+divergence,  approachFirstSection.getLength());
+        extreme3 = move(extreme2, azimuth-divergence, -1 * approachFirstSection.getLength());
+        extreme4 = move(extreme1, azimuth+divergence, -1 * approachFirstSection.getLength());
 
         //3. create polygon
         approachGeometry = new GeometryFactory().createPolygon(new Coordinate[]{extreme1, extreme2, extreme3, extreme4, extreme1});
-
 /*
         OutputStream out = new ByteArrayOutputStream();
         try {
@@ -182,7 +170,7 @@ public class ICAOAnnex14SurfaceGeometriesHelper {
             ICAOAnnex14SurfaceApproachFirstSection approachFirstSection) {
 
         Polygon approachGeometry;
-        Coordinate runwayExtreme;
+        Coordinate threshold;
         Coordinate extreme1;
         Coordinate extreme2;
         Coordinate extreme3;
@@ -192,28 +180,22 @@ public class ICAOAnnex14SurfaceGeometriesHelper {
 
         divergence = slopePercentToDegrees(approach.getDivergence());
 
-        Coordinate[] extremes = centerline(direction.getRunway()).getCoordinates();
+        azimuth = realAzimuth(direction);
 
-        if(direction.getNumber()<18){
-            azimuth = azimuth( extremes[0],  extremes[1]);
-            runwayExtreme = extremes[1];
-        }else{
-            azimuth = azimuth( extremes[1],  extremes[0]);
-            runwayExtreme = extremes[0];
-        }
+        threshold = direction.getGeom().getCoordinate();
 
         //1. inner edge
-        extreme1 = move(runwayExtreme, azimuth, approach.getDistanceFromThreshold());
-        extreme1 = move(extreme1, azimuth+90, approach.getLengthOfInnerEdge()/2);
-        extreme1 = move(extreme1, azimuth+divergence,approachFirstSection.getLength());
+        extreme1 = move(threshold, azimuth, -1 * approach.getDistanceFromThreshold());
+        extreme1 = move(extreme1, azimuth-90, -1 * approach.getLengthOfInnerEdge()/2);
+        extreme1 = move(extreme1, azimuth-divergence,-1 * approachFirstSection.getLength());
 
-        extreme2 = move(runwayExtreme, azimuth, approach.getDistanceFromThreshold());
-        extreme2 = move(extreme2, azimuth-90, approach.getLengthOfInnerEdge()/2);
-        extreme2 = move(extreme2, azimuth-divergence,approachFirstSection.getLength());
+        extreme2 = move(threshold, azimuth, -1 * approach.getDistanceFromThreshold());
+        extreme2 = move(extreme2, azimuth+90, -1 * approach.getLengthOfInnerEdge()/2);
+        extreme2 = move(extreme2, azimuth+divergence, -1 * approachFirstSection.getLength());
 
         //2. outer edge
-        extreme3 = move(extreme2, azimuth-divergence, approachSecondSection.getLength());
-        extreme4 = move(extreme1, azimuth+divergence, approachSecondSection.getLength());
+        extreme3 = move(extreme2, azimuth+divergence, -1 * approachSecondSection.getLength());
+        extreme4 = move(extreme1, azimuth-divergence, -1 * approachSecondSection.getLength());
 
         //3. create polygon
         approachGeometry = new GeometryFactory().createPolygon(new Coordinate[]{extreme1, extreme2, extreme3, extreme4, extreme1});
@@ -234,15 +216,13 @@ public class ICAOAnnex14SurfaceGeometriesHelper {
         MultiPolygon centerPart;
 
         //1. calcular parte central
-        LineString centerline = centerline(direction.getRunway());
 
-        centerPart = (MultiPolygon) centerline
+        centerPart = (MultiPolygon) direction.getRunway()
+                .getGeom()
                 .buffer(transitional.getWidth() / 100000, 1, BufferParameters.CAP_FLAT)
                 .difference(strip.getGeometry());
 
-        //2. calcular parte borde
-
-        //TODO
+        //TODO 2. calcular parte borde extremos
 
         //3. unir partes
 /*
@@ -261,28 +241,21 @@ public class ICAOAnnex14SurfaceGeometriesHelper {
 
         double azimuth;
         double divergence;
-        double shiftLength;
+        double shiftLength, shiftWidth;
         Coordinate runwayExtreme;
         Coordinate extreme1;
         Coordinate extreme4;
         Coordinate extreme2;
         Coordinate extreme3;
-        Coordinate[] extremes;
         Polygon takeoffGeometry;
-
-        extremes = centerline(direction.getRunway()).getCoordinates();
 
         shiftLength = Math.max(direction.getTakeoffSection().getClearwayLength(), takeoffClimb.getDistanceFromRunwayEnds());
 
-        if(direction.getNumber()<18){
-            azimuth = azimuth(extremes[1],extremes[0]);
-            runwayExtreme = extremes[0];
-        } else {
-            azimuth = azimuth(extremes[0],extremes[1]);
-            runwayExtreme = extremes[1];
-        }
+        azimuth = realAzimuth(direction);
 
-        double shiftWidth = takeoffClimb.getLengthOfInnerEdge()/2;
+        shiftWidth = takeoffClimb.getLengthOfInnerEdge()/2;
+
+        runwayExtreme = oppositeThreshold(direction);
 
         //1. inner edge
         extreme1 = move(runwayExtreme,azimuth,shiftLength);
@@ -310,24 +283,5 @@ public class ICAOAnnex14SurfaceGeometriesHelper {
         out.toString();
 */
         return takeoffGeometry;
-    }
-
-    private LineString centerline(Runway runway) {
-
-        //List<Coordinate> directionCoordinates = runway.getDirections().stream().map(d -> d.getGeom().getCoordinate()).collect(Collectors.toList());
-
-        Coordinate[] extremes = runway.getGeom().norm().getCoordinates();
-
-        LineString lineString1 = new GeometryFactory().createLineString(new Coordinate[]{extremes[0],extremes[1]});
-        LineString lineString2 = new GeometryFactory().createLineString(new Coordinate[]{extremes[2],extremes[3]});
-
-        return (LineString) new GeometryFactory()
-                .createLineString(
-                    new Coordinate[]{
-                            lineString1.getInteriorPoint().getCoordinate(),
-                            lineString2.getInteriorPoint().getCoordinate(),
-                    }
-                )
-                .norm();
     }
 }
