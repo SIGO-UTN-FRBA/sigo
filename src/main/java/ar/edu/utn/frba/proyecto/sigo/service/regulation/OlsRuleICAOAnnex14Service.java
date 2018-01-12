@@ -115,7 +115,6 @@ public class OlsRuleICAOAnnex14Service
                 ICAOAnnex14Surfaces.INNER_HORIZONTAL,
                 ICAOAnnex14Surfaces.APPROACH,
                 ICAOAnnex14Surfaces.APPROACH_FIRST_SECTION,
-                ICAOAnnex14Surfaces.APPROACH_SECOND_SECTION,
                 ICAOAnnex14Surfaces.TRANSITIONAL,
                 ICAOAnnex14Surfaces.TAKEOFF_CLIMB
         );
@@ -127,8 +126,10 @@ public class OlsRuleICAOAnnex14Service
 
             case NON_PRECISION_APPROACH:
 
-                if(ICAOAnnex14RunwayCodeNumbers.THREE == number || ICAOAnnex14RunwayCodeNumbers.FOUR == number)
+                if(ICAOAnnex14RunwayCodeNumbers.THREE == number || ICAOAnnex14RunwayCodeNumbers.FOUR == number){
+                    surfaces.add(ICAOAnnex14Surfaces.APPROACH_SECOND_SECTION);
                     surfaces.add(ICAOAnnex14Surfaces.APPROACH_HORIZONTAL_SECTION);
+                }
 
                 return surfaces;
 
