@@ -33,10 +33,10 @@ public class AnalysisResultReason extends SigoDomain {
     @Column
     private String description;
 
-    @Column(name = "apply_unmount")
-    private Boolean applyToUnmount;
+    @Column
+    private Boolean obstacle;
 
-    @Column(name = "apply_keep")
-    private Boolean applyToKeep;
+    @Column
+    private Boolean keep;
 
 }
