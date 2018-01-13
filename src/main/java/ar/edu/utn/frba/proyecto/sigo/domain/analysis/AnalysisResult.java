@@ -1,6 +1,10 @@
 package ar.edu.utn.frba.proyecto.sigo.domain.analysis;
 
+import ar.edu.utn.frba.proyecto.sigo.domain.SigoDomain;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -15,8 +19,11 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "public.tbl_analysis_results")
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 @Data
-public class AnalysisResult {
+public class AnalysisResult extends SigoDomain {
 
     @Id
     @SequenceGenerator(name = "analysisResultGenerator", sequenceName = "ANALYSIS_RESULT_SEQUENCE", allocationSize = 1)
