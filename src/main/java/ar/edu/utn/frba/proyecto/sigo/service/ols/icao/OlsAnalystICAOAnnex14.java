@@ -101,7 +101,6 @@ public class OlsAnalystICAOAnnex14 extends OlsAnalyst {
                             .analysisCase(this.getAnalysisCase())
                             .objectHeight(objectHeight)
                             .surfaceHeight(surfaceHeight)
-                            .excluded((surfaceHeight - objectHeight) > 0)
                             .build();
     }
 

@@ -8,8 +8,10 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -56,11 +58,8 @@ public class AnalysisObstacle extends SigoDomain {
     @Column(name = "surface_height")
     private Double surfaceHeight;
 
-    @Column
-    private Boolean excluded = false;
-
-    @Column
-    private String justification;
+    @OneToOne (mappedBy = "obstacle", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    private AnalysisResult result;
 
     public Double getPenetration(){
         return objectHeight - surfaceHeight;

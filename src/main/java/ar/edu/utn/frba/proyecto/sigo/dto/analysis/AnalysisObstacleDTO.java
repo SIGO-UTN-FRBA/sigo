@@ -28,4 +28,5 @@ public class AnalysisObstacleDTO {
     private ArrayList<Double> coordinate;
     private Boolean excluded;
     private String justification;
+    private Long resultId;
 }
