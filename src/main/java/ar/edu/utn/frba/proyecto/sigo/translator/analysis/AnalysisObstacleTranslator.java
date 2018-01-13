@@ -40,7 +40,10 @@ public class AnalysisObstacleTranslator extends Translator<AnalysisObstacle, Ana
             .directionName(direction.getIdentifier());
 
         Optional.ofNullable(domain.getResult())
-                .ifPresent(r -> builder.resultId(domain.getResult().getId()));
+                .ifPresent(r -> builder
+                        .resultId(domain.getResult().getId())
+                        .resultSummary(r.getSummary())
+                );
 
         Optional.ofNullable(domain.getException())
                 .ifPresent(e -> builder.exceptionId(e.getId()));

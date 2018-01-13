@@ -41,4 +41,7 @@ public class AnalysisResult {
     @Column
     private String reasonDetail;
 
+    public String getSummary() {
+        return null; //TODO
+    }
 }

@@ -1,31 +1,20 @@
 package ar.edu.utn.frba.proyecto.sigo.router;
 
-import ar.edu.utn.frba.proyecto.sigo.exception.InvalidParameterException;
-import ar.edu.utn.frba.proyecto.sigo.persistence.HibernateUtil;
 import ar.edu.utn.frba.proyecto.sigo.exception.MissingParameterException;
 import ar.edu.utn.frba.proyecto.sigo.exception.SigoException;
+import ar.edu.utn.frba.proyecto.sigo.persistence.HibernateUtil;
 import ar.edu.utn.frba.proyecto.sigo.spark.Router;
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import lombok.Getter;
-import org.geotools.geojson.feature.FeatureJSON;
-import org.geotools.geojson.geom.GeometryJSON;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.context.internal.ManagedSessionContext;
 import org.hibernate.resource.transaction.spi.TransactionStatus;
-import org.opengis.feature.simple.SimpleFeature;
 import spark.Request;
 import spark.Response;
 import spark.Route;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 import java.util.function.BiFunction;
 
@@ -43,6 +32,7 @@ public abstract class SigoRouter extends Router {
     protected static String ANALYSIS_ID_PARAM ="analysis_id";
     protected static String EXCEPTION_ID_PARAM ="exception_id";
     protected static String RULE_ID_PARAM = "rule_id";
+    protected static String OBSTACLE_ID_PARAM = "obstacle_id";
 
     protected Gson objectMapper;
     @Getter
@@ -99,6 +89,10 @@ public abstract class SigoRouter extends Router {
 
     protected Long getParamRuleId(Request request){
         return getParam(request, RULE_ID_PARAM);
+    }
+
+    protected Long getParamObstacleId(Request request){
+        return getParam(request, OBSTACLE_ID_PARAM);
     }
 
     private Long getParam(Request request, String key) {
