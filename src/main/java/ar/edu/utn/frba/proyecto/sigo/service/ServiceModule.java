@@ -1,6 +1,7 @@
 package ar.edu.utn.frba.proyecto.sigo.service;
 
 import ar.edu.utn.frba.proyecto.sigo.service.airport.AirportService;
+import ar.edu.utn.frba.proyecto.sigo.service.analysis.AnalysisResultReasonService;
 import ar.edu.utn.frba.proyecto.sigo.service.object.CatalogObjectService;
 import ar.edu.utn.frba.proyecto.sigo.service.object.PlacedObjectFeatureService;
 import ar.edu.utn.frba.proyecto.sigo.translator.airport.AirportTranslator;
@@ -69,6 +70,7 @@ public class ServiceModule extends AbstractModule {
         bind(RunwayStripService.class);
         bind(AnalysisSurfaceService.class);
         bind(AnalysisObstacleService.class);
+        bind(AnalysisResultReasonService.class);
 
         install(new FactoryModuleBuilder()
                 .implement(OlsRuleService.class, OlsRuleICAOAnnex14Service.class)
