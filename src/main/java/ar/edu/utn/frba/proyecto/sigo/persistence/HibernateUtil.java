@@ -130,7 +130,9 @@ public class HibernateUtil {
                 .addAnnotatedClass(ICAOAnnex14SurfaceApproachSecondSection.class)
                 .addAnnotatedClass(ICAOAnnex14SurfaceApproachHorizontalSection.class)
                 .addAnnotatedClass(ICAOAnnex14SurfaceApproachFirstSection.class)
-                .addAnnotatedClass(ICAOAnnex14SurfaceApproach.class);
+                .addAnnotatedClass(ICAOAnnex14SurfaceApproach.class)
+                .addAnnotatedClass(AnalysisResult.class)
+                .addAnnotatedClass(AnalysisResultReason.class);
 
         Metadata metadata = sources.getMetadataBuilder().build();
 

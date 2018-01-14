@@ -15,6 +15,8 @@ public class AnalysisCaseTranslator extends Translator<AnalysisCase, AnalysisCas
             Gson gson
     ){
         this.objectMapper = gson;
+        this.domainClass = AnalysisCase.class;
+        this.dtoClass = AnalysisCaseDTO.class;
     }
 
     @Override

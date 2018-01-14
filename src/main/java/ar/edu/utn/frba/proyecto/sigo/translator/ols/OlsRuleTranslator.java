@@ -9,6 +9,8 @@ import ar.edu.utn.frba.proyecto.sigo.dto.regulation.OlsRuleICAOAnnex14DTO;
 import ar.edu.utn.frba.proyecto.sigo.translator.Translator;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
+import java.util.Optional;
+
 public class OlsRuleTranslator
         extends Translator<OlsRule, OlsRuleDTO>
         implements OlsRuleVisitor<OlsRuleDTO>
@@ -26,17 +28,22 @@ public class OlsRuleTranslator
 
     @Override
     public OlsRuleDTO visitOlsRuleICAOAnnex14(OlsRuleICAOAnnex14 rule) {
-        return OlsRuleICAOAnnex14DTO.builder()
+        OlsRuleICAOAnnex14DTO.OlsRuleICAOAnnex14DTOBuilder builder = OlsRuleICAOAnnex14DTO.builder();
+
+        Optional.ofNullable(rule.getRunwayCategory())
+                .ifPresent(v -> builder.runwayCategory(v.ordinal()));
+
+        builder
                 .id(rule.getId())
                 .regulationId(rule.getRegulation().ordinal())
                 .surface(rule.getSurface().ordinal())
                 .runwayClassification(rule.getRunwayClassification().ordinal())
-                .runwayCategory(rule.getRunwayCategory().ordinal())
                 .runwayCodeNumber(rule.getRunwayCodeNumber().ordinal())
                 .propertyName(rule.getPropertyName())
                 .propertyCode(rule.getPropertyCode())
-                .value(rule.getValue())
-                .build();
+                .value(rule.getValue());
+
+        return builder.build();
     }
 
     @Override

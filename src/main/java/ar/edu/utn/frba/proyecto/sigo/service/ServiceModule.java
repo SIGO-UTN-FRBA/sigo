@@ -1,6 +1,7 @@
 package ar.edu.utn.frba.proyecto.sigo.service;
 
 import ar.edu.utn.frba.proyecto.sigo.service.airport.AirportService;
+import ar.edu.utn.frba.proyecto.sigo.service.analysis.*;
 import ar.edu.utn.frba.proyecto.sigo.service.object.CatalogObjectService;
 import ar.edu.utn.frba.proyecto.sigo.service.object.PlacedObjectFeatureService;
 import ar.edu.utn.frba.proyecto.sigo.translator.airport.AirportTranslator;
@@ -16,15 +17,9 @@ import ar.edu.utn.frba.proyecto.sigo.service.airport.RunwayStripService;
 import ar.edu.utn.frba.proyecto.sigo.service.airport.RunwayTakeoffSectionService;
 import ar.edu.utn.frba.proyecto.sigo.translator.airport.RunwayTakeoffSectionTranslator;
 import ar.edu.utn.frba.proyecto.sigo.translator.airport.RunwayTranslator;
-import ar.edu.utn.frba.proyecto.sigo.service.analysis.AnalysisCaseService;
 import ar.edu.utn.frba.proyecto.sigo.translator.analysis.AnalysisCaseTranslator;
-import ar.edu.utn.frba.proyecto.sigo.service.analysis.AnalysisExceptionService;
 import ar.edu.utn.frba.proyecto.sigo.translator.analysis.AnalysisExceptionTranslator;
-import ar.edu.utn.frba.proyecto.sigo.service.analysis.AnalysisObjectService;
 import ar.edu.utn.frba.proyecto.sigo.translator.analysis.AnalysisObjectTranslator;
-import ar.edu.utn.frba.proyecto.sigo.service.analysis.AnalysisObstacleService;
-import ar.edu.utn.frba.proyecto.sigo.service.analysis.AnalysisService;
-import ar.edu.utn.frba.proyecto.sigo.service.analysis.AnalysisSurfaceService;
 import ar.edu.utn.frba.proyecto.sigo.translator.analysis.AnalysisTranslator;
 import ar.edu.utn.frba.proyecto.sigo.service.location.PoliticalLocationService;
 import ar.edu.utn.frba.proyecto.sigo.service.location.RegionService;
@@ -69,6 +64,8 @@ public class ServiceModule extends AbstractModule {
         bind(RunwayStripService.class);
         bind(AnalysisSurfaceService.class);
         bind(AnalysisObstacleService.class);
+        bind(AnalysisResultReasonService.class);
+        bind(AnalysisResultService.class);
 
         install(new FactoryModuleBuilder()
                 .implement(OlsRuleService.class, OlsRuleICAOAnnex14Service.class)

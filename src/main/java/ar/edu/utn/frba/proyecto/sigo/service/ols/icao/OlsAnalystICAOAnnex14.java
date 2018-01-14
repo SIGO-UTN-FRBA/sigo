@@ -30,6 +30,7 @@ import com.google.inject.assistedinject.Assisted;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Geometry;
 import org.apache.commons.lang3.StringUtils;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import javax.inject.Inject;
 import java.lang.reflect.InvocationTargetException;
@@ -100,7 +101,6 @@ public class OlsAnalystICAOAnnex14 extends OlsAnalyst {
                             .analysisCase(this.getAnalysisCase())
                             .objectHeight(objectHeight)
                             .surfaceHeight(surfaceHeight)
-                            .excluded((surfaceHeight - objectHeight) > 0)
                             .build();
     }
 
@@ -144,16 +144,15 @@ public class OlsAnalystICAOAnnex14 extends OlsAnalyst {
             case NON_INSTRUMENT:
                 return createAnalysisSurfacesForNonInstrument(direction, surfacesDefinitions);
             case NON_PRECISION_APPROACH:
-                return createAnalysisSurfacesForNonInstrument(direction, surfacesDefinitions); //TODO createAnalysisSurfacesForNonPrecision
+                return createAnalysisSurfacesForNonPrecision(direction, surfacesDefinitions); //TODO createAnalysisSurfacesForNonPrecision
             case PRECISION_APPROACH:
-                return createAnalysisSurfacesForNonInstrument(direction, surfacesDefinitions); //TODO createAnalysisSurfacesForPrecision
+                return createAnalysisSurfacesForPrecision(direction, surfacesDefinitions); //TODO createAnalysisSurfacesForPrecision
         }
 
         throw new SigoException("Invalid classification of runway direction");
     }
 
-    private List<AnalysisSurface> createAnalysisSurfacesForNonInstrument(RunwayDirection direction, List<ICAOAnnex14Surface> surfacesDefinitions) {
-
+    private List<AnalysisSurface> createAnalysisSurfacesForPrecision(RunwayDirection direction, List<ICAOAnnex14Surface> surfacesDefinitions) {
         List<AnalysisSurface> analysisSurfaces = Lists.newArrayList();
 
         //1. Strip
@@ -205,6 +204,82 @@ public class OlsAnalystICAOAnnex14 extends OlsAnalyst {
                         approachSecondSection,
                         approach,
                         approachFirstSection
+                )
+        );
+
+        //5. Transitional
+        ICAOAnnex14SurfaceTransitional transitional = (ICAOAnnex14SurfaceTransitional) surfacesDefinitions.stream().filter(d -> d.getEnum() == ICAOAnnex14Surfaces.TRANSITIONAL).findFirst().get();
+        analysisSurfaces.add(
+                createTransitionalAnalysisSurface(
+                        direction,
+                        transitional,
+                        strip,
+                        approachFirstSection,
+                        innerHorizontal
+                )
+        );
+
+        //6. TakeoffClimb
+        ICAOAnnex14SurfaceTakeoffClimb takeoffClimb = (ICAOAnnex14SurfaceTakeoffClimb) surfacesDefinitions.stream().filter(d -> d.getEnum() == ICAOAnnex14Surfaces.TAKEOFF_CLIMB).findFirst().get();
+        analysisSurfaces.add(
+                createTakeoffClimbAnalysisSurface(
+                        direction,
+                        takeoffClimb
+                )
+        );
+
+        //7. horizontal externa
+
+        return analysisSurfaces;
+    }
+
+    private List<AnalysisSurface> createAnalysisSurfacesForNonPrecision(RunwayDirection direction, List<ICAOAnnex14Surface> surfacesDefinitions) {
+        //TODO
+        throw new NotImplementedException();
+    }
+
+    private List<AnalysisSurface> createAnalysisSurfacesForNonInstrument(RunwayDirection direction, List<ICAOAnnex14Surface> surfacesDefinitions) {
+
+        List<AnalysisSurface> analysisSurfaces = Lists.newArrayList();
+
+        //1. Strip
+        ICAOAnnex14SurfaceStrip strip = (ICAOAnnex14SurfaceStrip) surfacesDefinitions.stream().filter(d -> d.getEnum() == ICAOAnnex14Surfaces.STRIP).findFirst().get();
+        analysisSurfaces.add(
+                createStripAnalysisSurface(
+                        direction,
+                        strip
+                )
+        );
+
+        //2. InnerHorizontal
+        ICAOAnnex14SurfaceInnerHorizontal innerHorizontal = (ICAOAnnex14SurfaceInnerHorizontal) surfacesDefinitions.stream().filter(d -> d.getEnum() == ICAOAnnex14Surfaces.INNER_HORIZONTAL).findFirst().get();
+        analysisSurfaces.add(
+                createInnerHorizontalAnalysisSurface(
+                        direction,
+                        innerHorizontal,
+                        strip)
+        );
+
+        //3. Conical
+        ICAOAnnex14SurfaceConical conical = (ICAOAnnex14SurfaceConical) surfacesDefinitions.stream().filter(d -> d.getEnum() == ICAOAnnex14Surfaces.CONICAL).findFirst().get();
+        analysisSurfaces.add(
+                createConicalAnalysisSurface(
+                        direction,
+                        conical,
+                        innerHorizontal,
+                        strip
+                )
+        );
+
+        //4. ApproachFirstSection
+        ICAOAnnex14SurfaceApproach approach = (ICAOAnnex14SurfaceApproach) surfacesDefinitions.stream().filter(d -> d.getEnum() == ICAOAnnex14Surfaces.APPROACH).findFirst().get();
+        ICAOAnnex14SurfaceApproachFirstSection approachFirstSection = (ICAOAnnex14SurfaceApproachFirstSection) surfacesDefinitions.stream().filter(d -> d.getEnum() == ICAOAnnex14Surfaces.APPROACH_FIRST_SECTION).findFirst().get();
+        analysisSurfaces.add(
+                createApproachFirstSectionAnalysisSurface(
+                        direction,
+                        approach,
+                        approachFirstSection,
+                        strip
                 )
         );
 
