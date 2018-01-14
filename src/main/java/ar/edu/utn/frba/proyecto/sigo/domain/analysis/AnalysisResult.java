@@ -49,6 +49,6 @@ public class AnalysisResult extends SigoDomain {
     private String reasonDetail;
 
     public String getSummary() {
-        return null; //TODO
+        return String.format("Obstacle: '%s'. Keep: '%s'. Reason: '%s'.", isObstacle, mustKeep, reason.getDescription());
     }
 }
