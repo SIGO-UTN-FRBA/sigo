@@ -54,6 +54,14 @@ public class AnalysisObstacleRouter extends SigoRouter{
                         .collect(Collectors.toList());
     });
 
+    private final Route fetchObstacle = doInTransaction(false, (request, response) -> {
+        Long obstacleId = getParamObstacleId(request);
+
+        return Optional.ofNullable(this.obstacleService.get(obstacleId))
+                    .map(translator::getAsDTO)
+                    .orElseThrow(()-> new ResourceNotFoundException(String.format("obstacle_id = %s", obstacleId)));
+    });
+
     private final Route fetchResult = doInTransaction(false, (request, response) -> {
 
         Long obstacleId = getParamObstacleId(request);
@@ -85,6 +93,8 @@ public class AnalysisObstacleRouter extends SigoRouter{
     public RouteGroup routes() {
         return ()->{
             get("", fetchObstacles, jsonTransformer);
+
+            get("/:" + OBSTACLE_ID_PARAM, fetchObstacle, jsonTransformer);
 
             get("/:" + OBSTACLE_ID_PARAM + "/result", fetchResult, jsonTransformer);
             put("/:" + OBSTACLE_ID_PARAM + "/result", saveResult, jsonTransformer);
