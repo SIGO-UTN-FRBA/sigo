@@ -9,15 +9,7 @@ import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceStrip;
 import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceTakeoffClimb;
 import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceTransitional;
 import ar.edu.utn.frba.proyecto.sigo.exception.SigoException;
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.LineString;
-import com.vividsolutions.jts.geom.Point;
-import org.geolatte.geom.Geometries;
-import org.geolatte.geom.JTSGeometryOperations;
-import org.geotools.geometry.jts.JTS;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+import com.vividsolutions.jts.geom.*;
 
 import javax.inject.Singleton;
 import java.util.stream.IntStream;
@@ -60,7 +52,7 @@ public class ICAOAnnex14SurfaceHeightsHelper {
 
     private Double heightAtCoordinate(ICAOAnnex14SurfaceConical surface, Coordinate intersection){
 
-        return heightOnSloping(
+        return calculateHeightByPythagoras(
                 surface.getGeometry().getInteriorRingN(0),
                 surface.getSlope(),
                 intersection
@@ -84,35 +76,39 @@ public class ICAOAnnex14SurfaceHeightsHelper {
                 .map( i -> surface.getGeometry().getGeometryN(i))
                 .filter( g -> g.covers(point))
                 .findAny()
-                .map(g -> heightOnSloping(g, surface.getSlope(), intersection))
+                .map(g -> calculateHeightByPythagoras(g, surface.getSlope(), intersection))
                 .orElseThrow(()-> new SigoException("No geometry covers the object"));
     }
 
     private Double heightAtCoordinate(ICAOAnnex14SurfaceApproachFirstSection surface, Coordinate intersection){
+        return calculateHeightForSlopingPolygon(surface.getGeometry(), surface.getSlope(), intersection);
+    }
 
-        LineString exteriorRing = surface.getGeometry().getExteriorRing();
+    private Double heightAtCoordinate(ICAOAnnex14SurfaceApproachSecondSection surface, Coordinate intersection){
+        return calculateHeightForSlopingPolygon(surface.getGeometry(), surface.getSlope(), intersection);
+    }
 
-        return heightOnSloping(
+    private Double heightAtCoordinate(ICAOAnnex14SurfaceTakeoffClimb surface, Coordinate intersection){
+        return calculateHeightForSlopingPolygon(surface.getGeometry(), surface.getSlope(), intersection);
+    }
+
+    private Double calculateHeightForSlopingPolygon(Polygon geometry, Double slope, Coordinate intersection){
+
+        LineString exteriorRing = geometry.getExteriorRing();
+
+        return calculateHeightByPythagoras(
                 new GeometryFactory().createLineString(
-                    new Coordinate[]{
-                            exteriorRing.getPointN(0).getCoordinate(),
-                            exteriorRing.getPointN(3).getCoordinate()
-                    }
+                        new Coordinate[]{
+                                exteriorRing.getPointN(0).getCoordinate(),
+                                exteriorRing.getPointN(3).getCoordinate()
+                        }
                 ),
-                surface.getSlope(),
+                slope,
                 intersection
         );
     }
 
-    private Double heightAtCoordinate(ICAOAnnex14SurfaceApproachSecondSection surface, Coordinate intersection){
-        return heightOnSloping(surface.getGeometry(),surface.getSlope(),intersection);
-    }
-
-    private Double heightAtCoordinate(ICAOAnnex14SurfaceTakeoffClimb surface, Coordinate intersection){
-        return heightOnSloping(surface.getGeometry(),surface.getSlope(),intersection);
-    }
-
-    private Double heightOnSloping(Geometry geometry, Double slope, Coordinate intersection){
+    private Double calculateHeightByPythagoras(Geometry geometry, Double slope, Coordinate intersection){
 
         Point point = new GeometryFactory().createPoint(intersection);
 
