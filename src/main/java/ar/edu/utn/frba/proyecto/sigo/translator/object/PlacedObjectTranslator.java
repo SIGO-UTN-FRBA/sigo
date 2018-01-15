@@ -8,7 +8,7 @@ import ar.edu.utn.frba.proyecto.sigo.domain.object.PlacedObjectBuilding;
 import ar.edu.utn.frba.proyecto.sigo.domain.object.PlacedObjectIndividual;
 import ar.edu.utn.frba.proyecto.sigo.domain.object.PlacedObjectOverheadWire;
 import ar.edu.utn.frba.proyecto.sigo.domain.object.PlacedObjectOwner;
-import ar.edu.utn.frba.proyecto.sigo.domain.object.PlacedObjectTypes;
+import ar.edu.utn.frba.proyecto.sigo.domain.object.ElevatedObjectTypes;
 import ar.edu.utn.frba.proyecto.sigo.dto.object.PlacedObjectDTO;
 import ar.edu.utn.frba.proyecto.sigo.exception.InvalidParameterException;
 import ar.edu.utn.frba.proyecto.sigo.service.object.PlacedObjectOwnerService;
@@ -60,7 +60,7 @@ public class PlacedObjectTranslator extends Translator<PlacedObject, PlacedObjec
     @Override
     public PlacedObject getAsDomain(PlacedObjectDTO dto) {
 
-        switch (PlacedObjectTypes.values()[dto.getTypeId()]){
+        switch (ElevatedObjectTypes.values()[dto.getTypeId()]){
 
             case BUILDING:
                 return getAsBuildingDomain(dto);
@@ -85,7 +85,7 @@ public class PlacedObjectTranslator extends Translator<PlacedObject, PlacedObjec
                 .lighting(LightingTypes.values()[dto.getLightingId()])
                 .markIndicator(MarkIndicatorTypes.values()[dto.getMarkIndicatorId()])
                 .name(dto.getName())
-                .type(PlacedObjectTypes.values()[dto.getTypeId()])
+                .type(ElevatedObjectTypes.values()[dto.getTypeId()])
                 .subtype(dto.getSubtype())
                 .verified(dto.getVerified())
                 .temporary(dto.getTemporary());
@@ -120,7 +120,7 @@ public class PlacedObjectTranslator extends Translator<PlacedObject, PlacedObjec
                 .lighting(LightingTypes.values()[dto.getLightingId()])
                 .markIndicator(MarkIndicatorTypes.values()[dto.getMarkIndicatorId()])
                 .name(dto.getName())
-                .type(PlacedObjectTypes.values()[dto.getTypeId()])
+                .type(ElevatedObjectTypes.values()[dto.getTypeId()])
                 .subtype(dto.getSubtype())
                 .verified(dto.getVerified())
                 .temporary(dto.getTemporary());
@@ -155,7 +155,7 @@ public class PlacedObjectTranslator extends Translator<PlacedObject, PlacedObjec
                 .lighting(LightingTypes.values()[dto.getLightingId()])
                 .markIndicator(MarkIndicatorTypes.values()[dto.getMarkIndicatorId()])
                 .name(dto.getName())
-                .type(PlacedObjectTypes.values()[dto.getTypeId()])
+                .type(ElevatedObjectTypes.values()[dto.getTypeId()])
                 .subtype(dto.getSubtype())
                 .verified(dto.getVerified())
                 .temporary(dto.getTemporary());

@@ -22,7 +22,7 @@ public class PlacedObjectFeatureService implements PlacedObjectVisitor<SimpleFea
 
     public SimpleFeature getFeature(PlacedObject placedObject) {
 
-        return placedObject.accept(this);
+        return (SimpleFeature)placedObject.accept(this);
     }
 
     @Override

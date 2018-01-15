@@ -3,13 +3,11 @@ package ar.edu.utn.frba.proyecto.sigo.service.ols.icao;
 import ar.edu.utn.frba.proyecto.sigo.domain.airport.Runway;
 import ar.edu.utn.frba.proyecto.sigo.domain.airport.RunwayDirection;
 import ar.edu.utn.frba.proyecto.sigo.domain.airport.icao.RunwayClassificationICAOAnnex14;
-import ar.edu.utn.frba.proyecto.sigo.domain.analysis.Analysis;
 import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisCase;
 import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisExceptionRule;
 import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisObject;
 import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisObstacle;
 import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisSurface;
-import ar.edu.utn.frba.proyecto.sigo.domain.ols.ObstacleLimitationSurface;
 import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14Surface;
 import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceApproach;
 import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceApproachFirstSection;
@@ -28,7 +26,6 @@ import ar.edu.utn.frba.proyecto.sigo.service.regulation.OlsRuleICAOAnnex14Servic
 import com.google.common.collect.Lists;
 import com.google.inject.assistedinject.Assisted;
 import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.Geometry;
 import org.apache.commons.lang3.StringUtils;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
@@ -86,14 +83,14 @@ public class OlsAnalystICAOAnnex14 extends OlsAnalyst {
     }
 
     private boolean isObstacle(AnalysisSurface surface, AnalysisObject object) {
-        return surface.getSurface().getGeometry().covers(object.getPlacedObject().getGeom());
+        return surface.getSurface().getGeometry().covers(object.getElevatedObject().getGeom());
     }
 
     private AnalysisObstacle createAnalysisObstacle(AnalysisSurface surface, AnalysisObject object) {
 
         Double surfaceHeight = determineSurfaceHeight(surface, object);
 
-        Double objectHeight = object.getPlacedObject().getHeightAmls();
+        Double objectHeight = object.getElevatedObject().getHeightAmls();
 
         return AnalysisObstacle.builder()
                             .object(object)
@@ -107,7 +104,7 @@ public class OlsAnalystICAOAnnex14 extends OlsAnalyst {
     private Double determineSurfaceHeight(AnalysisSurface surface, AnalysisObject object) {
 
         Coordinate intersection = surface.getSurface().getGeometry()
-                .intersection(object.getPlacedObject().getGeom())
+                .intersection(object.getElevatedObject().getGeom())
                 .getInteriorPoint()
                 .getCoordinate();
 

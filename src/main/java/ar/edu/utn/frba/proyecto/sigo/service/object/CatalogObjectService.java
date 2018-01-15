@@ -1,8 +1,8 @@
 package ar.edu.utn.frba.proyecto.sigo.service.object;
 
+import ar.edu.utn.frba.proyecto.sigo.domain.object.ElevatedObjectTypes;
 import ar.edu.utn.frba.proyecto.sigo.domain.object.LightingTypes;
 import ar.edu.utn.frba.proyecto.sigo.domain.object.MarkIndicatorTypes;
-import ar.edu.utn.frba.proyecto.sigo.domain.object.PlacedObjectTypes;
 
 import javax.inject.Singleton;
 
@@ -17,7 +17,7 @@ public class CatalogObjectService {
         return MarkIndicatorTypes.values();
     }
 
-    public PlacedObjectTypes[] fetchObjectTypes() {
-        return PlacedObjectTypes.values();
+    public ElevatedObjectTypes[] fetchObjectTypes() {
+        return ElevatedObjectTypes.values();
     }
 }

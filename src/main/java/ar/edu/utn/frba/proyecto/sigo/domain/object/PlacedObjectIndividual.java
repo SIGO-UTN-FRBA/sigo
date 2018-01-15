@@ -1,30 +1,25 @@
 package ar.edu.utn.frba.proyecto.sigo.domain.object;
 
 import ar.edu.utn.frba.proyecto.sigo.domain.location.PoliticalLocation;
-import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.Point;
-import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.EqualsAndHashCode;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "public.tbl_placed_object_individual")
-@PrimaryKeyJoinColumn(name = "object_id")
-@NoArgsConstructor(access = AccessLevel.PUBLIC)
 @Data
-public class PlacedObjectIndividual extends PlacedObject{
+public class PlacedObjectIndividual extends PlacedObject<Point> {
 
     @Builder
     public PlacedObjectIndividual(
             Long id,
             String name,
-            PlacedObjectTypes type,
+            ElevatedObjectTypes type,
             String subtype,
             Boolean verified,
             PoliticalLocation politicalLocation,
@@ -36,20 +31,11 @@ public class PlacedObjectIndividual extends PlacedObject{
             MarkIndicatorTypes markIndicator,
             Point geom
     ) {
-        super(id, name, type, subtype, verified, politicalLocation, owner, heightAgl, heightAmls, temporary, lighting, markIndicator);
-        this.geom = geom;
-    }
-
-    @Column(name = "geom")
-    private Geometry geom;
-
-    @Override
-    public Class getGeomClass() {
-        return Point.class;
+        super(id, name, heightAgl, heightAmls, geom, type, subtype, verified, politicalLocation, owner, temporary, lighting, markIndicator);
     }
 
     @Override
-    public <T> T accept(PlacedObjectVisitor<T> visitor) {
+    public <P> P accept(PlacedObjectVisitor<P> visitor) {
         return visitor.visitPlacedObjectIndividual(this);
     }
 }

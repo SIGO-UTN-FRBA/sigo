@@ -67,7 +67,7 @@ public class AnalysisCase extends SigoDomain {
     public Boolean isObjectAnalyzed(PlacedObject o) {
         return this.getObjects()
                 .stream()
-                .anyMatch(r -> r.getIncluded() && Objects.equals(r.getPlacedObject().getId(), o.getId()));
+                .anyMatch(r -> r.getIncluded() && Objects.equals(r.getElevatedObject().getId(), o.getId()));
     }
 
     public Stream<AnalysisExceptionRule> getRuleExceptions(){

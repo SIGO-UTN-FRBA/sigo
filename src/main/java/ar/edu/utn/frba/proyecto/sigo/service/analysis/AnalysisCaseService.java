@@ -60,7 +60,7 @@ public class AnalysisCaseService extends SigoService <AnalysisCase, Analysis> {
                 .stream()
                 .map(o -> AnalysisObject.builder()
                         .analysisCase(analysisCase)
-                        .placedObject(o)
+                        .elevatedObject(o)
                         .included(analysisCase.getAnalysis().getParent().isObjectAnalyzed(o))
                         .build()
                 )

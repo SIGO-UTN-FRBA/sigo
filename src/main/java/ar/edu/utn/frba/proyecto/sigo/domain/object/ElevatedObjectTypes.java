@@ -1,14 +1,15 @@
 package ar.edu.utn.frba.proyecto.sigo.domain.object;
 
-public enum PlacedObjectTypes {
+public enum ElevatedObjectTypes {
 
     BUILDING("Building"),
     INDIVIDUAL("Individual"),
-    OVERHEAD_WIRED("Overhead wired");
+    OVERHEAD_WIRED("Overhead wired"),
+    LEVEL_CURVE("Level curve");
 
     private String type;
 
-    PlacedObjectTypes(String s) {
+    ElevatedObjectTypes(String s) {
         this.type = s;
     }
 
