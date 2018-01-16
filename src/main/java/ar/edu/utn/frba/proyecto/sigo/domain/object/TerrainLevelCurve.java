@@ -1,6 +1,7 @@
 package ar.edu.utn.frba.proyecto.sigo.domain.object;
 
 import com.vividsolutions.jts.geom.MultiLineString;
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -27,9 +28,14 @@ public class TerrainLevelCurve extends NaturalObject<MultiLineString> {
     @Column(name = "sag")
     private String source;
 
+    @Column(name = "geom")
+    private MultiLineString geom;
+
+    @Builder
     public TerrainLevelCurve(Long id, String name, Double heightAgl, Double heightAmls, ElevatedObjectTypes type, MultiLineString geom, String representation, String source) {
-        super(id, name, heightAgl, heightAmls, type, geom);
+        super(id, name, heightAgl, heightAmls, type);
         this.representation = representation;
         this.source = source;
+        this.geom = geom;
     }
 }

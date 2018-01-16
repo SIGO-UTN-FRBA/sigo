@@ -10,14 +10,13 @@ import javax.persistence.*;
 
 @EqualsAndHashCode(callSuper = true)
 @Entity
-@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 @Data
 public abstract class PlacedObject<T extends Geometry> extends ElevatedObject<T> {
 
 
-    public PlacedObject(Long id, String name, Double heightAgl, Double heightAmls, T geom, ElevatedObjectTypes type, String subtype, Boolean verified, PoliticalLocation politicalLocation, PlacedObjectOwner owner, Boolean temporary, LightingTypes lighting, MarkIndicatorTypes markIndicator) {
+    public PlacedObject(Long id, String name, Double heightAgl, Double heightAmls, ElevatedObjectTypes type, String subtype, Boolean verified, PoliticalLocation politicalLocation, PlacedObjectOwner owner, Boolean temporary, LightingTypes lighting, MarkIndicatorTypes markIndicator) {
 
-        super(id, name, heightAgl, heightAmls, type, geom);
+        super(id, name, heightAgl, heightAmls, type);
 
         this.subtype = subtype;
         this.verified = verified;

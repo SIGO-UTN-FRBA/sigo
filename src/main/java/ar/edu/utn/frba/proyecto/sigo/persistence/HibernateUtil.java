@@ -89,6 +89,9 @@ public class HibernateUtil {
         registry = registryBuilder.build();
         MetadataSources sources = new MetadataSources(registry)
                 .addAnnotatedClass(Airport.class)
+                .addAnnotatedClass(ElevatedObject.class)
+                .addAnnotatedClass(NaturalObject.class)
+                .addAnnotatedClass(TerrainLevelCurve.class)
                 .addAnnotatedClass(PlacedObject.class)
                 .addAnnotatedClass(PlacedObjectBuilding.class)
                 .addAnnotatedClass(PlacedObjectIndividual.class)

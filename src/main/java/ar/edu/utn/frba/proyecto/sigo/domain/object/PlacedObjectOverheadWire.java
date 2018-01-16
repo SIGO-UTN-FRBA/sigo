@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
@@ -32,9 +33,12 @@ public class PlacedObjectOverheadWire extends PlacedObject<MultiLineString> {
             MarkIndicatorTypes markIndicator,
             MultiLineString geom
     ) {
-        super(id, name, heightAgl, heightAmls, geom, type, subtype, verified, politicalLocation, owner, temporary, lighting, markIndicator);
+        super(id, name, heightAgl, heightAmls, type, subtype, verified, politicalLocation, owner, temporary, lighting, markIndicator);
+        this.geom = geom;
     }
 
+    @Column(name = "geom")
+    private MultiLineString geom;
 
     @Override
     public <P> P accept(PlacedObjectVisitor<P> visitor) {

@@ -9,8 +9,9 @@ import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
 
+@Entity
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 @EqualsAndHashCode(callSuper = true)
-@MappedSuperclass
 @AllArgsConstructor
 @Data
 public abstract class ElevatedObject<T extends Geometry>
@@ -36,7 +37,4 @@ public abstract class ElevatedObject<T extends Geometry>
     @Enumerated(EnumType.ORDINAL)
     @Column(name = "type")
     protected ElevatedObjectTypes type;
-
-    @Column(name = "geom")
-    private T geom;
 }
