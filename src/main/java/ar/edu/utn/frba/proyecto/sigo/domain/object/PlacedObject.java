@@ -5,11 +5,13 @@ import com.google.common.base.MoreObjects;
 import com.vividsolutions.jts.geom.Geometry;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
 @EqualsAndHashCode(callSuper = true)
 @Entity
+@NoArgsConstructor
 @Data
 public abstract class PlacedObject<T extends Geometry> extends ElevatedObject<T> {
 

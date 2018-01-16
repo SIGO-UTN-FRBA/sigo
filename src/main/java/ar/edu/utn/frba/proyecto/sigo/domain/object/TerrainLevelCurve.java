@@ -4,6 +4,7 @@ import com.vividsolutions.jts.geom.MultiLineString;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,6 +13,7 @@ import javax.persistence.Table;
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "public.tbl_level_curves")
+@NoArgsConstructor
 @Data
 public class TerrainLevelCurve extends NaturalObject<MultiLineString> {
     /**

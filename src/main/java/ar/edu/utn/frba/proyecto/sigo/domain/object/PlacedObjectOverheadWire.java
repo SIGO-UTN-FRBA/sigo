@@ -5,6 +5,7 @@ import com.vividsolutions.jts.geom.MultiLineString;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -14,6 +15,7 @@ import javax.persistence.Table;
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "public.tbl_placed_object_overhead_wire")
+@NoArgsConstructor
 @Data
 public class PlacedObjectOverheadWire extends PlacedObject<MultiLineString> {
 

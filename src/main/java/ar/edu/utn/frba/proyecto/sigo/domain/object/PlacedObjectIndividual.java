@@ -5,6 +5,7 @@ import com.vividsolutions.jts.geom.Point;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -13,6 +14,7 @@ import javax.persistence.Table;
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "public.tbl_placed_object_individual")
+@NoArgsConstructor
 @Data
 public class PlacedObjectIndividual extends PlacedObject<Point> {
 
