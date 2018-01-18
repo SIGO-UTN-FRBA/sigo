@@ -18,8 +18,10 @@ import ar.edu.utn.frba.proyecto.sigo.service.location.RegionService;
 import com.google.gson.Gson;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.Optional;
 
+@Singleton
 public class PlacedObjectTranslator extends Translator<PlacedObject, PlacedObjectDTO>{
 
     private PlacedObjectOwnerService ownerService;

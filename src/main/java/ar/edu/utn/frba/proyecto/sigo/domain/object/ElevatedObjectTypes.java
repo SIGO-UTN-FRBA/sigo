@@ -2,18 +2,23 @@ package ar.edu.utn.frba.proyecto.sigo.domain.object;
 
 public enum ElevatedObjectTypes {
 
-    BUILDING("Building"),
-    INDIVIDUAL("Individual"),
-    OVERHEAD_WIRED("Overhead wired"),
-    LEVEL_CURVE("Level curve");
+    BUILDING("building", "Building"),
+    INDIVIDUAL("individual", "Individual"),
+    OVERHEAD_WIRED("wired", "Overhead wired"),
+    LEVEL_CURVE("curve","Level curve");
 
-    private String type;
+    private String code;
+    private String description;
 
-    ElevatedObjectTypes(String s) {
-        this.type = s;
+    ElevatedObjectTypes(String code, String description) {
+        this.code = code;
+        this.description= description;
     }
 
-    public String type() {
-        return type;
+    public String code() {
+        return code;
+    }
+    public String description() {
+        return description;
     }
 }

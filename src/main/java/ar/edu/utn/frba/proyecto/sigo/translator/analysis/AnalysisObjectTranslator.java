@@ -37,6 +37,7 @@ public class AnalysisObjectTranslator extends Translator<AnalysisObject, Analysi
                 .id(domain.getId())
                 .caseId(domain.getAnalysisCase().getId())
                 .objectId(domain.getElevatedObject().getId())
+                .objectTypeId(domain.getElevatedObject().getType().ordinal())
                 .included(domain.getIncluded())
                 .build();
     }

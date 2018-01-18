@@ -11,7 +11,7 @@ import ar.edu.utn.frba.proyecto.sigo.router.analysis.CatalogAnalysisRouter;
 import ar.edu.utn.frba.proyecto.sigo.router.location.LocationRouter;
 import ar.edu.utn.frba.proyecto.sigo.router.object.CatalogObjectRouter;
 import ar.edu.utn.frba.proyecto.sigo.router.object.ObjectOwnerRouter;
-import ar.edu.utn.frba.proyecto.sigo.router.object.PlacedObjectRouter;
+import ar.edu.utn.frba.proyecto.sigo.router.object.ElevatedObjectRouter;
 import ar.edu.utn.frba.proyecto.sigo.router.regulation.RegulationFAARouter;
 import ar.edu.utn.frba.proyecto.sigo.router.regulation.RegulationICAOAnnex14Router;
 import ar.edu.utn.frba.proyecto.sigo.router.regulation.RegulationRouter;
@@ -33,7 +33,7 @@ public class RouterModule extends AbstractModule {
         routerBinder.addBinding().to(CatalogAirportRouter.class);
         routerBinder.addBinding().to(RegionRouter.class);
         routerBinder.addBinding().to(CatalogObjectRouter.class);
-        routerBinder.addBinding().to(PlacedObjectRouter.class);
+        routerBinder.addBinding().to(ElevatedObjectRouter.class);
         routerBinder.addBinding().to(ObjectOwnerRouter.class);
         routerBinder.addBinding().to(LocationRouter.class);
         routerBinder.addBinding().to(RegulationRouter.class);

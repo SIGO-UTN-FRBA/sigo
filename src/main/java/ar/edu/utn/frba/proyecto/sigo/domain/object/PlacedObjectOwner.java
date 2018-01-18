@@ -1,14 +1,17 @@
 package ar.edu.utn.frba.proyecto.sigo.domain.object;
 
 
-import javax.persistence.*;
-import java.util.List;
-
 import ar.edu.utn.frba.proyecto.sigo.domain.SigoDomain;
 import com.google.common.base.MoreObjects;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+
+import javax.persistence.*;
 
 
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "public.tbl_placed_object_owner")
 @NoArgsConstructor(access = AccessLevel.PUBLIC)

@@ -9,8 +9,8 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
-@EqualsAndHashCode(callSuper = true)
 @Entity
+@EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @Data
 public abstract class PlacedObject<T extends Geometry> extends ElevatedObject<T> {

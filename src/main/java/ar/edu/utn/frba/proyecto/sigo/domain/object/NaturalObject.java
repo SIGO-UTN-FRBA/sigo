@@ -5,10 +5,10 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
+import javax.persistence.MappedSuperclass;
 
+@MappedSuperclass
 @EqualsAndHashCode(callSuper = true)
-@Entity
 @NoArgsConstructor
 @Data
 public abstract class NaturalObject<T extends Geometry> extends ElevatedObject<T> {

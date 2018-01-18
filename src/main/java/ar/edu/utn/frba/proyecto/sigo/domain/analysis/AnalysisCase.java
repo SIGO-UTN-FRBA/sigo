@@ -2,7 +2,7 @@ package ar.edu.utn.frba.proyecto.sigo.domain.analysis;
 
 import ar.edu.utn.frba.proyecto.sigo.domain.SigoDomain;
 import ar.edu.utn.frba.proyecto.sigo.domain.airport.Airport;
-import ar.edu.utn.frba.proyecto.sigo.domain.object.PlacedObject;
+import ar.edu.utn.frba.proyecto.sigo.domain.object.ElevatedObject;
 import ar.edu.utn.frba.proyecto.sigo.domain.regulation.Regulations;
 import com.google.common.base.MoreObjects;
 import com.google.common.collect.Lists;
@@ -64,10 +64,10 @@ public class AnalysisCase extends SigoDomain {
        return this.getAerodrome().getRegulation();
    }
 
-    public Boolean isObjectAnalyzed(PlacedObject o) {
+    public Boolean hasAlreadyBeenAnalyzed(ElevatedObject object) {
         return this.getObjects()
                 .stream()
-                .anyMatch(r -> r.getIncluded() && Objects.equals(r.getElevatedObject().getId(), o.getId()));
+                .anyMatch(o -> o.getIncluded() && Objects.equals(o.getElevatedObject().getId(), object.getId()));
     }
 
     public Stream<AnalysisExceptionRule> getRuleExceptions(){
