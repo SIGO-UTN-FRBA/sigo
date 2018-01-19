@@ -3,23 +3,9 @@ package ar.edu.utn.frba.proyecto.sigo.service.ols.icao;
 import ar.edu.utn.frba.proyecto.sigo.domain.airport.Runway;
 import ar.edu.utn.frba.proyecto.sigo.domain.airport.RunwayDirection;
 import ar.edu.utn.frba.proyecto.sigo.domain.airport.icao.RunwayClassificationICAOAnnex14;
-import ar.edu.utn.frba.proyecto.sigo.domain.analysis.Analysis;
-import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisCase;
-import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisExceptionRule;
-import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisObject;
-import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisObstacle;
-import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisSurface;
-import ar.edu.utn.frba.proyecto.sigo.domain.ols.ObstacleLimitationSurface;
-import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14Surface;
-import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceApproach;
-import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceApproachFirstSection;
-import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceApproachSecondSection;
-import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceConical;
-import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceInnerHorizontal;
-import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceStrip;
-import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceTakeoffClimb;
-import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceTransitional;
-import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14Surfaces;
+import ar.edu.utn.frba.proyecto.sigo.domain.analysis.*;
+import ar.edu.utn.frba.proyecto.sigo.domain.object.ElevatedObject;
+import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.*;
 import ar.edu.utn.frba.proyecto.sigo.domain.regulation.icao.OlsRuleICAOAnnex14;
 import ar.edu.utn.frba.proyecto.sigo.exception.SigoException;
 import ar.edu.utn.frba.proyecto.sigo.persistence.HibernateUtil;
@@ -28,7 +14,6 @@ import ar.edu.utn.frba.proyecto.sigo.service.regulation.OlsRuleICAOAnnex14Servic
 import com.google.common.collect.Lists;
 import com.google.inject.assistedinject.Assisted;
 import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.Geometry;
 import org.apache.commons.lang3.StringUtils;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
@@ -36,7 +21,6 @@ import javax.inject.Inject;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 public class OlsAnalystICAOAnnex14 extends OlsAnalyst {
@@ -66,54 +50,16 @@ public class OlsAnalystICAOAnnex14 extends OlsAnalyst {
     }
 
     @Override
-    protected void defineObstacles() {
+    protected Double determineSurfaceHeight(AnalysisSurface analysisSurface, ElevatedObject object) {
 
-        Set<AnalysisObstacle> obstacles = this.getAnalysisCase().getSurfaces()
-                .stream()
-                .map(this::defineObstacles)
-                .flatMap(Collection::stream)
-                .collect(Collectors.toSet());
-
-        this.analysisCase.setObstacles(obstacles);
-    }
-
-    private Set<AnalysisObstacle> defineObstacles(AnalysisSurface surface) {
-        return this.getAnalysisCase().getObjects()
-                .stream()
-                .filter(object -> isObstacle(surface, object))
-                .map(object -> createAnalysisObstacle(surface, object))
-                .collect(Collectors.toSet());
-    }
-
-    private boolean isObstacle(AnalysisSurface surface, AnalysisObject object) {
-        return surface.getSurface().getGeometry().covers(object.getPlacedObject().getGeom());
-    }
-
-    private AnalysisObstacle createAnalysisObstacle(AnalysisSurface surface, AnalysisObject object) {
-
-        Double surfaceHeight = determineSurfaceHeight(surface, object);
-
-        Double objectHeight = object.getPlacedObject().getHeightAmls();
-
-        return AnalysisObstacle.builder()
-                            .object(object)
-                            .surface(surface)
-                            .analysisCase(this.getAnalysisCase())
-                            .objectHeight(objectHeight)
-                            .surfaceHeight(surfaceHeight)
-                            .build();
-    }
-
-    private Double determineSurfaceHeight(AnalysisSurface surface, AnalysisObject object) {
-
-        Coordinate intersection = surface.getSurface().getGeometry()
-                .intersection(object.getPlacedObject().getGeom())
+        Coordinate intersection = analysisSurface.getSurface().getGeometry()
+                .intersection(object.getGeom())
                 .getInteriorPoint()
                 .getCoordinate();
 
-        Double surfaceHeight = this.heightsHelper.heightAtCoordinate((ICAOAnnex14Surface) surface.getSurface(), intersection);
+        Double surfaceHeight = this.heightsHelper.heightAtCoordinate((ICAOAnnex14Surface) analysisSurface.getSurface(), intersection);
 
-        return surface.getDirection().getHeight() + surfaceHeight;
+        return analysisSurface.getDirection().getHeight() + surfaceHeight;
     }
 
     @Override

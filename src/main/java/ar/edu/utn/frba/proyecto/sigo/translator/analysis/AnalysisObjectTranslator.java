@@ -36,7 +36,8 @@ public class AnalysisObjectTranslator extends Translator<AnalysisObject, Analysi
         return AnalysisObjectDTO.builder()
                 .id(domain.getId())
                 .caseId(domain.getAnalysisCase().getId())
-                .objectId(domain.getPlacedObject().getId())
+                .objectId(domain.getElevatedObject().getId())
+                .objectTypeId(domain.getElevatedObject().getType().ordinal())
                 .included(domain.getIncluded())
                 .build();
     }
@@ -54,7 +55,7 @@ public class AnalysisObjectTranslator extends Translator<AnalysisObject, Analysi
         Optional<PlacedObject> placedObject = Optional.ofNullable(placedObjectService.get(dto.getObjectId()));
         if(!placedObject.isPresent())
             throw new InvalidParameterException("objectId");
-        builder.placedObject(placedObject.get());
+        builder.elevatedObject(placedObject.get());
 
         // relation: case
         Optional<AnalysisCase> analysisCase = Optional.ofNullable(caseService.get(dto.getCaseId()));

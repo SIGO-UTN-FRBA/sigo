@@ -74,7 +74,7 @@ public class ICAOAnnex14SurfaceHeightsHelper {
         return IntStream.rangeClosed(0, surface.getGeometry().getNumGeometries())
                 .boxed()
                 .map( i -> surface.getGeometry().getGeometryN(i))
-                .filter( g -> g.covers(point))
+                .filter( g -> g.intersects(point))
                 .findAny()
                 .map(g -> calculateHeightByPythagoras(g, surface.getSlope(), intersection))
                 .orElseThrow(()-> new SigoException("No geometry covers the object"));

@@ -2,7 +2,7 @@ package ar.edu.utn.frba.proyecto.sigo.translator.analysis;
 
 import ar.edu.utn.frba.proyecto.sigo.domain.airport.RunwayDirection;
 import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisObstacle;
-import ar.edu.utn.frba.proyecto.sigo.domain.object.PlacedObject;
+import ar.edu.utn.frba.proyecto.sigo.domain.object.ElevatedObject;
 import ar.edu.utn.frba.proyecto.sigo.domain.ols.ObstacleLimitationSurface;
 import ar.edu.utn.frba.proyecto.sigo.dto.analysis.AnalysisObstacleDTO;
 import ar.edu.utn.frba.proyecto.sigo.translator.Translator;
@@ -18,7 +18,7 @@ public class AnalysisObstacleTranslator extends Translator<AnalysisObstacle, Ana
     public AnalysisObstacleDTO getAsDTO(AnalysisObstacle domain) {
         AnalysisObstacleDTO.AnalysisObstacleDTOBuilder builder = AnalysisObstacleDTO.builder();
 
-        PlacedObject placedObject = domain.getObject().getPlacedObject();
+        ElevatedObject placedObject = domain.getObject().getElevatedObject();
         ObstacleLimitationSurface surface = domain.getSurface().getSurface();
         Coordinate objectCoordinate = placedObject.getGeom().getCoordinate();
 

@@ -6,10 +6,10 @@ import ar.edu.utn.frba.proyecto.sigo.exception.MissingParameterException;
 import ar.edu.utn.frba.proyecto.sigo.persistence.HibernateUtil;
 import ar.edu.utn.frba.proyecto.sigo.router.SigoRouter;
 import ar.edu.utn.frba.proyecto.sigo.service.analysis.AnalysisCaseService;
-import ar.edu.utn.frba.proyecto.sigo.translator.analysis.AnalysisCaseTranslator;
-import ar.edu.utn.frba.proyecto.sigo.translator.analysis.AnalysisObjectTranslator;
 import ar.edu.utn.frba.proyecto.sigo.service.analysis.AnalysisService;
 import ar.edu.utn.frba.proyecto.sigo.spark.JsonTransformer;
+import ar.edu.utn.frba.proyecto.sigo.translator.analysis.AnalysisCaseTranslator;
+import ar.edu.utn.frba.proyecto.sigo.translator.analysis.AnalysisObjectTranslator;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import spark.Route;
@@ -17,11 +17,8 @@ import spark.RouteGroup;
 
 import javax.inject.Inject;
 
-import static java.lang.String.format;
 import static spark.Spark.get;
 import static spark.Spark.patch;
-import static spark.Spark.post;
-import static spark.Spark.put;
 
 public class AnalysisCaseRouter extends SigoRouter {
 
@@ -76,7 +73,7 @@ public class AnalysisCaseRouter extends SigoRouter {
 
         AnalysisCase analysisCase = analysis.getAnalysisCase();
 
-        caseService.updateObjects(analysisCase, radius);
+        caseService.updateAnalyzedObjects(analysisCase, radius);
 
         return caseTranslator.getAsDTO(analysisCase);
     });
