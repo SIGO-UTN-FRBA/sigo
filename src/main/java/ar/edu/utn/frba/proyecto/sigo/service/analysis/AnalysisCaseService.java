@@ -59,7 +59,7 @@ public class AnalysisCaseService extends SigoService <AnalysisCase, Analysis> {
                 .map(o -> AnalysisObject.builder()
                         .analysisCase(analysisCase)
                         .elevatedObject(o)
-                        .included(hasAlreadyBeenAnalyzed(analysisCase, o))
+                        .included(o.getType().equals(ElevatedObjectTypes.LEVEL_CURVE) || hasAlreadyBeenAnalyzed(analysisCase, o))
                         .build()
                 )
                 .forEach(o -> currentSession().save(o));
@@ -129,9 +129,9 @@ public class AnalysisCaseService extends SigoService <AnalysisCase, Analysis> {
         ParameterExpression bufferParam = builder.parameter(Geometry.class);
 
 
-        Expression<Boolean> st_coveredby = builder.function("st_coveredby", Boolean.class, placedObject.get("geom"), bufferParam);
+        Expression<Boolean> st_intersects = builder.function("st_intersects", Boolean.class, placedObject.get("geom"), bufferParam);
 
-        criteria.where(builder.isTrue(st_coveredby));
+        criteria.where(builder.isTrue(st_intersects));
 
         Query<T> query = currentSession().createQuery(criteria);
         query.setParameter(bufferParam, buffer);

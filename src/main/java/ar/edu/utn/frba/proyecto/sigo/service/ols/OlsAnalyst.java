@@ -4,6 +4,9 @@ import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisCase;
 import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisObject;
 import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisObstacle;
 import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisSurface;
+import ar.edu.utn.frba.proyecto.sigo.domain.object.ElevatedObject;
+import ar.edu.utn.frba.proyecto.sigo.domain.object.ElevatedObjectTypes;
+import com.vividsolutions.jts.geom.Geometry;
 import lombok.Data;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -63,14 +66,14 @@ public abstract class OlsAnalyst {
     }
 
 
-    protected AnalysisObstacle createAnalysisObstacle(AnalysisSurface surface, AnalysisObject object) {
+    protected AnalysisObstacle createAnalysisObstacle(AnalysisSurface surface, AnalysisObject analysisObject) {
 
-        Double surfaceHeight = determineSurfaceHeight(surface, object);
+        Double surfaceHeight = determineSurfaceHeight(surface, analysisObject.getElevatedObject());
 
-        Double objectHeight = object.getElevatedObject().getHeightAmls();
+        Double objectHeight = analysisObject.getElevatedObject().getHeightAmls();
 
         return AnalysisObstacle.builder()
-                .object(object)
+                .object(analysisObject)
                 .surface(surface)
                 .analysisCase(this.getAnalysisCase())
                 .objectHeight(objectHeight)
@@ -78,9 +81,17 @@ public abstract class OlsAnalyst {
                 .build();
     }
 
-    protected abstract Double determineSurfaceHeight(AnalysisSurface surface, AnalysisObject object);
+    protected abstract Double determineSurfaceHeight(AnalysisSurface analysisSurface, ElevatedObject object);
 
-    protected Boolean isObstacle(AnalysisSurface surface, AnalysisObject object) {
-        return surface.getSurface().getGeometry().covers(object.getElevatedObject().getGeom());
+    protected Boolean isObstacle(AnalysisSurface surface, AnalysisObject analysisObject) {
+
+        Geometry surfaceGeometry = surface.getSurface().getGeometry();
+
+        ElevatedObject object = analysisObject.getElevatedObject();
+
+        return surfaceGeometry.intersects(object.getGeom())
+                    && ( !object.getType().equals(ElevatedObjectTypes.LEVEL_CURVE)
+                            || object.getHeightAmls() >= determineSurfaceHeight(surface, object)
+                    );
     }
 }

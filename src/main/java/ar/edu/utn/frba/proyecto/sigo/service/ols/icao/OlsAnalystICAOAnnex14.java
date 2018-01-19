@@ -4,6 +4,7 @@ import ar.edu.utn.frba.proyecto.sigo.domain.airport.Runway;
 import ar.edu.utn.frba.proyecto.sigo.domain.airport.RunwayDirection;
 import ar.edu.utn.frba.proyecto.sigo.domain.airport.icao.RunwayClassificationICAOAnnex14;
 import ar.edu.utn.frba.proyecto.sigo.domain.analysis.*;
+import ar.edu.utn.frba.proyecto.sigo.domain.object.ElevatedObject;
 import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.*;
 import ar.edu.utn.frba.proyecto.sigo.domain.regulation.icao.OlsRuleICAOAnnex14;
 import ar.edu.utn.frba.proyecto.sigo.exception.SigoException;
@@ -49,16 +50,16 @@ public class OlsAnalystICAOAnnex14 extends OlsAnalyst {
     }
 
     @Override
-    protected Double determineSurfaceHeight(AnalysisSurface surface, AnalysisObject object) {
+    protected Double determineSurfaceHeight(AnalysisSurface analysisSurface, ElevatedObject object) {
 
-        Coordinate intersection = surface.getSurface().getGeometry()
-                .intersection(object.getElevatedObject().getGeom())
+        Coordinate intersection = analysisSurface.getSurface().getGeometry()
+                .intersection(object.getGeom())
                 .getInteriorPoint()
                 .getCoordinate();
 
-        Double surfaceHeight = this.heightsHelper.heightAtCoordinate((ICAOAnnex14Surface) surface.getSurface(), intersection);
+        Double surfaceHeight = this.heightsHelper.heightAtCoordinate((ICAOAnnex14Surface) analysisSurface.getSurface(), intersection);
 
-        return surface.getDirection().getHeight() + surfaceHeight;
+        return analysisSurface.getDirection().getHeight() + surfaceHeight;
     }
 
     @Override
