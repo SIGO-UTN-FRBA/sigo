@@ -52,7 +52,7 @@ public class ICAOAnnex14SurfaceHeightsHelper {
 
     private Double heightAtCoordinate(ICAOAnnex14SurfaceConical surface, Coordinate intersection){
 
-        return calculateHeightByPythagoras(
+        return surface.getInitialHeight() + calculateHeightByPythagoras(
                 surface.getGeometry().getInteriorRingN(0),
                 surface.getSlope(),
                 intersection
@@ -76,20 +76,20 @@ public class ICAOAnnex14SurfaceHeightsHelper {
                 .map( i -> surface.getGeometry().getGeometryN(i))
                 .filter( g -> g.intersects(point))
                 .findAny()
-                .map(g -> calculateHeightByPythagoras(g, surface.getSlope(), intersection))
+                .map(g -> surface.getInitialHeight() + calculateHeightByPythagoras(g, surface.getSlope(), intersection))
                 .orElseThrow(()-> new SigoException("No geometry covers the object"));
     }
 
     private Double heightAtCoordinate(ICAOAnnex14SurfaceApproachFirstSection surface, Coordinate intersection){
-        return calculateHeightForSlopingPolygon(surface.getGeometry(), surface.getSlope(), intersection);
+        return surface.getInitialHeight() + calculateHeightForSlopingPolygon(surface.getGeometry(), surface.getSlope(), intersection);
     }
 
     private Double heightAtCoordinate(ICAOAnnex14SurfaceApproachSecondSection surface, Coordinate intersection){
-        return calculateHeightForSlopingPolygon(surface.getGeometry(), surface.getSlope(), intersection);
+        return surface.getInitialHeight() + calculateHeightForSlopingPolygon(surface.getGeometry(), surface.getSlope(), intersection);
     }
 
     private Double heightAtCoordinate(ICAOAnnex14SurfaceTakeoffClimb surface, Coordinate intersection){
-        return calculateHeightForSlopingPolygon(surface.getGeometry(), surface.getSlope(), intersection);
+        return surface.getInitialHeight() + calculateHeightForSlopingPolygon(surface.getGeometry(), surface.getSlope(), intersection);
     }
 
     private Double calculateHeightForSlopingPolygon(Polygon geometry, Double slope, Coordinate intersection){

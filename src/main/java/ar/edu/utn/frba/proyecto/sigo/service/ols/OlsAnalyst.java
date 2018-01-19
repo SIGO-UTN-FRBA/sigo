@@ -5,7 +5,6 @@ import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisObject;
 import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisObstacle;
 import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisSurface;
 import ar.edu.utn.frba.proyecto.sigo.domain.object.ElevatedObject;
-import ar.edu.utn.frba.proyecto.sigo.domain.object.ElevatedObjectTypes;
 import com.vividsolutions.jts.geom.Geometry;
 import lombok.Data;
 import org.hibernate.Session;
@@ -89,9 +88,9 @@ public abstract class OlsAnalyst {
 
         ElevatedObject object = analysisObject.getElevatedObject();
 
-        return surfaceGeometry.intersects(object.getGeom())
-                    && ( !object.getType().equals(ElevatedObjectTypes.LEVEL_CURVE)
-                            || object.getHeightAmls() >= determineSurfaceHeight(surface, object)
-                    );
+        return surfaceGeometry.intersects(object.getGeom());
+        //&& ( !object.getType().equals(ElevatedObjectTypes.LEVEL_CURVE)
+        //        || object.getHeightAmls() >= determineSurfaceHeight(surface, object)
+        //);
     }
 }
