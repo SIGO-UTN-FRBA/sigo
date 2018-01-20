@@ -1,6 +1,6 @@
 package ar.edu.utn.frba.proyecto.sigo.domain.analysis;
 
-import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.Polygon;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Data;
@@ -19,7 +19,7 @@ import javax.persistence.Table;
 public class AnalysisExceptionDynamicSurface extends AnalysisException {
 
     @Column(name = "geom")
-    private Geometry geom;
+    private Polygon geom;
 
     @Column(name = "function")
     private String function  = "";
@@ -30,10 +30,12 @@ public class AnalysisExceptionDynamicSurface extends AnalysisException {
             String name,
             AnalysisExceptions type,
             AnalysisCase analysisCase,
-            String function
+            String function,
+            Polygon geom
     ){
         super(id, name, type, analysisCase);
         this.function = function;
+        this.geom = geom;
     }
 
     @Override
