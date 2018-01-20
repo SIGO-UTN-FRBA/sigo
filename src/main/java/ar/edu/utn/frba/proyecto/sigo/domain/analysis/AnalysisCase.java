@@ -7,6 +7,7 @@ import ar.edu.utn.frba.proyecto.sigo.domain.regulation.Regulations;
 import com.google.common.base.MoreObjects;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+import com.google.common.collect.Streams;
 import lombok.*;
 
 import javax.persistence.*;
@@ -82,5 +83,9 @@ public class AnalysisCase extends SigoDomain {
                 .stream()
                 .filter(s -> s.getType().equals(AnalysisExceptions.SURFACE))
                 .map(s -> (AnalysisExceptionSurface)s);
+    }
+
+    public Stream<AnalysisRestriction> getRestrictions(){
+        return Streams.concat(this.getSurfaceExceptions(), this.getSurfaces().stream());
     }
 }

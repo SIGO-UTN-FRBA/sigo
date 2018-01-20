@@ -1,28 +1,14 @@
 package ar.edu.utn.frba.proyecto.sigo.domain.ols.icao;
 
-import ar.edu.utn.frba.proyecto.sigo.domain.SigoDomain;
 import ar.edu.utn.frba.proyecto.sigo.domain.ols.ObstacleLimitationSurface;
+import ar.edu.utn.frba.proyecto.sigo.domain.regulation.Regulations;
 import ar.edu.utn.frba.proyecto.sigo.domain.regulation.icao.ICAOAnnex14RunwayCategories;
 import ar.edu.utn.frba.proyecto.sigo.domain.regulation.icao.ICAOAnnex14RunwayClassifications;
 import ar.edu.utn.frba.proyecto.sigo.domain.regulation.icao.ICAOAnnex14RunwayCodeNumbers;
 import com.vividsolutions.jts.geom.Geometry;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
-import javax.persistence.Transient;
+import javax.persistence.*;
 
 @EqualsAndHashCode(callSuper = true)
 @Entity
@@ -31,7 +17,7 @@ import javax.persistence.Transient;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 @Data
-public abstract class ICAOAnnex14Surface extends SigoDomain {
+public abstract class ICAOAnnex14Surface<T extends Geometry> extends ObstacleLimitationSurface<T> {
 
     @Id
     @SequenceGenerator(
@@ -57,4 +43,9 @@ public abstract class ICAOAnnex14Surface extends SigoDomain {
 
     @Column
     private ICAOAnnex14RunwayCodeNumbers code;
+
+    @Override
+    public Regulations getRegulation() {
+        return Regulations.ICAO_ANNEX_14;
+    }
 }

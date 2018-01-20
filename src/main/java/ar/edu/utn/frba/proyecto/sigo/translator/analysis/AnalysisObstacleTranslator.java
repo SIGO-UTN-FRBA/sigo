@@ -2,8 +2,9 @@ package ar.edu.utn.frba.proyecto.sigo.translator.analysis;
 
 import ar.edu.utn.frba.proyecto.sigo.domain.airport.RunwayDirection;
 import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisObstacle;
+import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisRestrictionTypes;
+import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisSurface;
 import ar.edu.utn.frba.proyecto.sigo.domain.object.ElevatedObject;
-import ar.edu.utn.frba.proyecto.sigo.domain.ols.ObstacleLimitationSurface;
 import ar.edu.utn.frba.proyecto.sigo.dto.analysis.AnalysisObstacleDTO;
 import ar.edu.utn.frba.proyecto.sigo.translator.Translator;
 import com.google.common.collect.Lists;
@@ -19,10 +20,7 @@ public class AnalysisObstacleTranslator extends Translator<AnalysisObstacle, Ana
         AnalysisObstacleDTO.AnalysisObstacleDTOBuilder builder = AnalysisObstacleDTO.builder();
 
         ElevatedObject placedObject = domain.getObject().getElevatedObject();
-        ObstacleLimitationSurface surface = domain.getSurface().getSurface();
         Coordinate objectCoordinate = placedObject.getGeom().getCoordinate();
-
-        RunwayDirection direction = domain.getSurface().getDirection();
 
         builder
             .id(domain.getId())
@@ -32,21 +30,24 @@ public class AnalysisObstacleTranslator extends Translator<AnalysisObstacle, Ana
             .objectType(placedObject.getType().ordinal())
             .coordinate(Lists.newArrayList(objectCoordinate.x, objectCoordinate.y))
             .objectHeight(domain.getObjectHeight())
-            .surfaceHeight(domain.getSurfaceHeight())
+            .restrictionHeight(domain.getRestrictionHeight())
             .penetration(domain.getPenetration())
-            .surfaceId(surface.getId())
-            .surfaceName(surface.getName())
-            .directionId(direction.getId())
-            .directionName(direction.getIdentifier());
+            .restrictionId(domain.getRestriction().getId())
+            .restrictionName(domain.getRestriction().getName())
+            .restrictionTypeId(domain.getRestriction().getRestrictionType().ordinal());
+
+        if(domain.getRestriction().getRestrictionType().equals(AnalysisRestrictionTypes.OBSTACLE_LIMITATION_SURFACE)){
+            RunwayDirection direction = ((AnalysisSurface)domain.getRestriction()).getDirection();
+            builder
+                    .directionId(direction.getId())
+                    .directionName(direction.getIdentifier());
+        }
 
         Optional.ofNullable(domain.getResult())
                 .ifPresent(r -> builder
                         .resultId(domain.getResult().getId())
                         .resultSummary(r.getSummary())
                 );
-
-        Optional.ofNullable(domain.getException())
-                .ifPresent(e -> builder.exceptionId(e.getId()));
 
         return builder.build();
     }

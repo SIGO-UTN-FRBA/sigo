@@ -1,11 +1,7 @@
 package ar.edu.utn.frba.proyecto.sigo.service.ols;
 
-import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisCase;
-import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisObject;
-import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisObstacle;
-import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisSurface;
-import ar.edu.utn.frba.proyecto.sigo.domain.object.ElevatedObject;
-import com.vividsolutions.jts.geom.Geometry;
+import ar.edu.utn.frba.proyecto.sigo.domain.analysis.*;
+import com.vividsolutions.jts.geom.Point;
 import lombok.Data;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -33,64 +29,63 @@ public abstract class OlsAnalyst {
 
         initializeSurfaces();
 
-        defineObstacles();
+        applyExceptions();
 
-        //applyExceptions();
+        defineObstacles();
 
         getCurrentSession().save(analysisCase);
     }
 
-    protected abstract void applyExceptions();
+    protected void applyExceptions(){
+        //1. obtener excepciones
+        //2. modificar geom de superficies segun interseccion con excepciones
+    }
 
     protected abstract void initializeSurfaces();
 
 
     private void defineObstacles() {
 
-        Set<AnalysisObstacle> obstacles = this.getAnalysisCase().getSurfaces()
-                .stream()
+        Set<AnalysisObstacle> analysisObstacles = this.getAnalysisCase().getRestrictions()
                 .map(this::defineObstacles)
                 .flatMap(Collection::stream)
                 .collect(Collectors.toSet());
 
-        this.analysisCase.setObstacles(obstacles);
+        this.analysisCase.setObstacles(analysisObstacles);
     }
 
-    private Set<AnalysisObstacle> defineObstacles(AnalysisSurface surface) {
+    private Set<AnalysisObstacle> defineObstacles(AnalysisRestriction restriction) {
         return this.getAnalysisCase().getObjects()
                 .stream()
-                .filter(object -> isObstacle(surface, object))
-                .map(object -> createAnalysisObstacle(surface, object))
+                .filter(object -> isObstacle(restriction, object))
+                .map(object -> createAnalysisObstacle(restriction, object))
                 .collect(Collectors.toSet());
     }
 
 
-    protected AnalysisObstacle createAnalysisObstacle(AnalysisSurface surface, AnalysisObject analysisObject) {
+    protected AnalysisObstacle createAnalysisObstacle(AnalysisRestriction restriction, AnalysisObject analysisObject) {
 
-        Double surfaceHeight = determineSurfaceHeight(surface, analysisObject.getElevatedObject());
+        Point intersection = restriction.getGeometry()
+                .intersection(analysisObject.getGeometry())
+                .getInteriorPoint();
+
+        Double restrictionHeight = restriction.determineHeightAt(intersection, this);
 
         Double objectHeight = analysisObject.getElevatedObject().getHeightAmls();
 
         return AnalysisObstacle.builder()
                 .object(analysisObject)
-                .surface(surface)
+                .restriction(restriction)
                 .analysisCase(this.getAnalysisCase())
                 .objectHeight(objectHeight)
-                .surfaceHeight(surfaceHeight)
+                .restrictionHeight(restrictionHeight)
                 .build();
     }
 
-    protected abstract Double determineSurfaceHeight(AnalysisSurface analysisSurface, ElevatedObject object);
+    public abstract Double determineHeightForAnalysisSurface(AnalysisSurface analysisSurface, Point point);
 
-    protected Boolean isObstacle(AnalysisSurface surface, AnalysisObject analysisObject) {
+    protected Boolean isObstacle(AnalysisRestriction restriction, AnalysisObject analysisObject) {
 
-        Geometry surfaceGeometry = surface.getSurface().getGeometry();
-
-        ElevatedObject object = analysisObject.getElevatedObject();
-
-        return surfaceGeometry.intersects(object.getGeom());
-        //&& ( !object.getType().equals(ElevatedObjectTypes.LEVEL_CURVE)
-        //        || object.getHeightAmls() >= determineSurfaceHeight(surface, object)
-        //);
+        return restriction.getGeometry().intersects(analysisObject.getGeometry());
     }
 }

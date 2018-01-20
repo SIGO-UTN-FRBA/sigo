@@ -2,6 +2,7 @@ package ar.edu.utn.frba.proyecto.sigo.domain.analysis;
 
 import ar.edu.utn.frba.proyecto.sigo.domain.SigoDomain;
 import ar.edu.utn.frba.proyecto.sigo.domain.object.ElevatedObject;
+import com.vividsolutions.jts.geom.Geometry;
 import lombok.*;
 
 import javax.persistence.*;
@@ -29,4 +30,8 @@ public class AnalysisObject extends SigoDomain {
 
     @Column
     private Boolean included;
+
+    public Geometry getGeometry() {
+        return this.getElevatedObject().getGeom();
+    }
 }

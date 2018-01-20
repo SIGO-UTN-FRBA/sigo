@@ -3,8 +3,9 @@ package ar.edu.utn.frba.proyecto.sigo.service.ols.icao;
 import ar.edu.utn.frba.proyecto.sigo.domain.airport.Runway;
 import ar.edu.utn.frba.proyecto.sigo.domain.airport.RunwayDirection;
 import ar.edu.utn.frba.proyecto.sigo.domain.airport.icao.RunwayClassificationICAOAnnex14;
-import ar.edu.utn.frba.proyecto.sigo.domain.analysis.*;
-import ar.edu.utn.frba.proyecto.sigo.domain.object.ElevatedObject;
+import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisCase;
+import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisExceptionRule;
+import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisSurface;
 import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.*;
 import ar.edu.utn.frba.proyecto.sigo.domain.regulation.icao.OlsRuleICAOAnnex14;
 import ar.edu.utn.frba.proyecto.sigo.exception.SigoException;
@@ -13,7 +14,7 @@ import ar.edu.utn.frba.proyecto.sigo.service.ols.OlsAnalyst;
 import ar.edu.utn.frba.proyecto.sigo.service.regulation.OlsRuleICAOAnnex14Service;
 import com.google.common.collect.Lists;
 import com.google.inject.assistedinject.Assisted;
-import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.Point;
 import org.apache.commons.lang3.StringUtils;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
@@ -50,14 +51,9 @@ public class OlsAnalystICAOAnnex14 extends OlsAnalyst {
     }
 
     @Override
-    protected Double determineSurfaceHeight(AnalysisSurface analysisSurface, ElevatedObject object) {
+    public Double determineHeightForAnalysisSurface(AnalysisSurface analysisSurface, Point point) {
 
-        Coordinate intersection = analysisSurface.getSurface().getGeometry()
-                .intersection(object.getGeom())
-                .getInteriorPoint()
-                .getCoordinate();
-
-        Double surfaceHeight = this.heightsHelper.heightAtCoordinate((ICAOAnnex14Surface) analysisSurface.getSurface(), intersection);
+        Double surfaceHeight = this.heightsHelper.determineHeightAt((ICAOAnnex14Surface)analysisSurface.getSurface(), point);
 
         return analysisSurface.getDirection().getHeight() + surfaceHeight;
     }
