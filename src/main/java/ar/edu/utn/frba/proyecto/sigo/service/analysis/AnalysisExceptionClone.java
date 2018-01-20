@@ -27,7 +27,7 @@ public class AnalysisExceptionClone implements AnalysisExceptionVisitor<Analysis
         return AnalysisExceptionSurface.builder()
                 .name(exception.getName())
                 .type(exception.getType())
-                .heightAgl(exception.getHeightAgl())
+                .heightAmls(exception.getHeightAmls())
                 .build();
     }
 

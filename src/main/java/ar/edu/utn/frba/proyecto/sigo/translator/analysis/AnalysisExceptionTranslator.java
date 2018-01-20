@@ -94,7 +94,7 @@ public class AnalysisExceptionTranslator extends Translator<AnalysisException, A
                     .id(exception.getId())
                     .name(exception.getName())
                     .caseId(exception.getAnalysisCase().getId())
-                    .heightAgl(exception.getHeightAgl())
+                    .heightAmls(exception.getHeightAmls())
                     .build();
         }
 
@@ -118,7 +118,8 @@ public class AnalysisExceptionTranslator extends Translator<AnalysisException, A
             .id(dto.getId())
             .name(dto.getName())
             .type(AnalysisExceptions.SURFACE)
-            .heightAgl(dto.getHeightAgl());
+            .heightAmls(dto.getHeightAmls())
+            .geom(dto.getGeom());
 
         // relation: case
         AnalysisCase analysisCase = caseService.get(dto.getCaseId());
