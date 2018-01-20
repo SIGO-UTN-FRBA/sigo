@@ -95,6 +95,7 @@ public class AnalysisExceptionTranslator extends Translator<AnalysisException, A
                     .name(exception.getName())
                     .caseId(exception.getAnalysisCase().getId())
                     .heightAmls(exception.getHeightAmls())
+                    .geom(exception.getGeom())
                     .build();
         }
 
