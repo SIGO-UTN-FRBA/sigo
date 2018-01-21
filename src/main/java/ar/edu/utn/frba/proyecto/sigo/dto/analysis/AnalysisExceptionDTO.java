@@ -1,14 +1,7 @@
 package ar.edu.utn.frba.proyecto.sigo.dto.analysis;
 
-import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.Polygon;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
-import java.util.Map;
+import lombok.*;
 
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
@@ -28,8 +21,8 @@ public class AnalysisExceptionDTO {
     private Long directionId;
 
     //AnalysisExceptionSurface
-    private Double heightAgl;
-    private Geometry geom;
+    private Double heightAmls;
+    private Polygon geom;
 
     //AnalysisExceptionDynamicSurface
     private String function;

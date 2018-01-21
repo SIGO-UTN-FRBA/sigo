@@ -1,31 +1,29 @@
 package ar.edu.utn.frba.proyecto.sigo.domain.object;
 
 import ar.edu.utn.frba.proyecto.sigo.domain.location.PoliticalLocation;
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.MultiLineString;
-import lombok.AccessLevel;
+import com.vividsolutions.jts.geom.LineString;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 
 
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "public.tbl_placed_object_overhead_wire")
-@PrimaryKeyJoinColumn(name = "object_id")
-@NoArgsConstructor(access = AccessLevel.PUBLIC)
+@NoArgsConstructor
 @Data
-public class PlacedObjectOverheadWire extends PlacedObject {
+public class PlacedObjectOverheadWire extends PlacedObject<LineString> {
 
     @Builder
     public PlacedObjectOverheadWire(
             Long id,
             String name,
-            PlacedObjectTypes type,
+            ElevatedObjectTypes type,
             String subtype,
             Boolean verified,
             PoliticalLocation politicalLocation,
@@ -35,22 +33,17 @@ public class PlacedObjectOverheadWire extends PlacedObject {
             Boolean temporary,
             LightingTypes lighting,
             MarkIndicatorTypes markIndicator,
-            MultiLineString geom
+            LineString geom
     ) {
-        super(id, name, type, subtype, verified, politicalLocation, owner, heightAgl, heightAmls, temporary, lighting, markIndicator);
+        super(id, name, heightAgl, heightAmls, type, subtype, verified, politicalLocation, owner, temporary, lighting, markIndicator);
         this.geom = geom;
     }
 
     @Column(name = "geom")
-    private Geometry geom;
+    private LineString geom;
 
     @Override
-    public Class getGeomClass() {
-        return MultiLineString.class;
-    }
-
-    @Override
-    public <T> T accept(PlacedObjectVisitor<T> visitor) {
+    public <P> P accept(PlacedObjectVisitor<P> visitor) {
         return visitor.visitPlacedObjectOverheadWire(this);
     }
 

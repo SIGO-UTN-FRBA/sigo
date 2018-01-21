@@ -7,14 +7,15 @@ import ar.edu.utn.frba.proyecto.sigo.dto.analysis.AnalysisResultDTO;
 import ar.edu.utn.frba.proyecto.sigo.exception.InvalidParameterException;
 import ar.edu.utn.frba.proyecto.sigo.service.analysis.AnalysisObstacleService;
 import ar.edu.utn.frba.proyecto.sigo.service.analysis.AnalysisResultReasonService;
-import ar.edu.utn.frba.proyecto.sigo.translator.Translator;
+import ar.edu.utn.frba.proyecto.sigo.translator.SigoTranslator;
 import com.google.gson.Gson;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.Optional;
 
-public class AnalysisResultTranslator extends Translator<AnalysisResult,AnalysisResultDTO>{
+@Singleton
+public class AnalysisResultTranslator extends SigoTranslator<AnalysisResult,AnalysisResultDTO> {
 
     private final AnalysisResultReasonService reasonService;
     private final AnalysisObstacleService obstacleService;
@@ -25,11 +26,10 @@ public class AnalysisResultTranslator extends Translator<AnalysisResult,Analysis
             AnalysisResultReasonService reasonService,
             AnalysisObstacleService obstacleService
     ){
+        super(gson, AnalysisResultDTO.class, AnalysisResult.class);
+
         this.reasonService = reasonService;
         this.obstacleService = obstacleService;
-        this.objectMapper = gson;
-        this.domainClass = AnalysisResult.class;
-        this.dtoClass = AnalysisResultDTO.class;
     }
 
     @Override

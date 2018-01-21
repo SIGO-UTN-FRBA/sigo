@@ -15,7 +15,6 @@ public class AnalysisExceptionClone implements AnalysisExceptionVisitor<Analysis
     public AnalysisException visitAnalysisExceptionRule(AnalysisExceptionRule exception) {
         return AnalysisExceptionRule.builder()
                 .name(exception.getName())
-                .type(exception.getType())
                 .rule(exception.getRule())
                 .value(exception.getValue())
                 .direction(exception.getDirection())
@@ -26,8 +25,7 @@ public class AnalysisExceptionClone implements AnalysisExceptionVisitor<Analysis
     public AnalysisException visitAnalysisExceptionSurface(AnalysisExceptionSurface exception) {
         return AnalysisExceptionSurface.builder()
                 .name(exception.getName())
-                .type(exception.getType())
-                .heightAgl(exception.getHeightAgl())
+                .heightAmls(exception.getHeightAmls())
                 .build();
     }
 
@@ -35,7 +33,6 @@ public class AnalysisExceptionClone implements AnalysisExceptionVisitor<Analysis
     public AnalysisException visitAnalysisExceptionDynamicSurface(AnalysisExceptionDynamicSurface exception) {
         return AnalysisExceptionDynamicSurface.builder()
                 .name(exception.getName())
-                .type(exception.getType())
                 .function(exception.getFunction())
                 .build();
     }

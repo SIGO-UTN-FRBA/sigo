@@ -6,7 +6,7 @@ import ar.edu.utn.frba.proyecto.sigo.domain.airport.RunwaySurfaces;
 import ar.edu.utn.frba.proyecto.sigo.dto.airport.RunwayDTO;
 import ar.edu.utn.frba.proyecto.sigo.exception.InvalidParameterException;
 import ar.edu.utn.frba.proyecto.sigo.service.airport.AirportService;
-import ar.edu.utn.frba.proyecto.sigo.translator.Translator;
+import ar.edu.utn.frba.proyecto.sigo.translator.SigoTranslator;
 import com.google.common.collect.Lists;
 import com.google.gson.Gson;
 
@@ -15,7 +15,7 @@ import javax.inject.Singleton;
 import java.util.Optional;
 
 @Singleton
-public class RunwayTranslator extends Translator<Runway, RunwayDTO> {
+public class RunwayTranslator extends SigoTranslator<Runway, RunwayDTO> {
 
     private AirportService airportService;
 
@@ -24,10 +24,9 @@ public class RunwayTranslator extends Translator<Runway, RunwayDTO> {
         Gson gson,
         AirportService airportService
     ){
+        super(gson, RunwayDTO.class, Runway.class);
+
         this.airportService = airportService;
-        this.objectMapper = gson;
-        this.dtoClass = RunwayDTO.class;
-        this.domainClass = Runway.class;
     }
 
     public RunwayDTO getAsDTO(Runway domain) {

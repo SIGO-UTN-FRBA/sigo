@@ -4,24 +4,18 @@ import ar.edu.utn.frba.proyecto.sigo.domain.analysis.Analysis;
 import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisCase;
 import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisException;
 import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisObject;
-import ar.edu.utn.frba.proyecto.sigo.domain.object.PlacedObject;
-import ar.edu.utn.frba.proyecto.sigo.domain.object.PlacedObjectBuilding;
-import ar.edu.utn.frba.proyecto.sigo.domain.object.PlacedObjectIndividual;
-import ar.edu.utn.frba.proyecto.sigo.domain.object.PlacedObjectOverheadWire;
+import ar.edu.utn.frba.proyecto.sigo.domain.object.*;
 import ar.edu.utn.frba.proyecto.sigo.persistence.HibernateUtil;
 import ar.edu.utn.frba.proyecto.sigo.service.SigoService;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+import com.google.common.collect.Streams;
 import com.vividsolutions.jts.geom.Geometry;
 import org.hibernate.query.Query;
 
 import javax.inject.Inject;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Expression;
-import javax.persistence.criteria.ParameterExpression;
-import javax.persistence.criteria.Root;
+import javax.persistence.criteria.*;
 import java.util.List;
+import java.util.stream.Stream;
 
 public class AnalysisCaseService extends SigoService <AnalysisCase, Analysis> {
 
@@ -41,7 +35,7 @@ public class AnalysisCaseService extends SigoService <AnalysisCase, Analysis> {
         super.preCreateActions(object, parent);
 
         object.setExceptions(Sets.newHashSet());
-        object.setObjects(Lists.newArrayList());
+        object.setObjects(Sets.newHashSet());
     }
 
     @Override
@@ -49,38 +43,40 @@ public class AnalysisCaseService extends SigoService <AnalysisCase, Analysis> {
 
         super.postCreateActions(analysisCase, parent);
 
-        initializeObjects(analysisCase);
+        initializeAnalyzedObjects(analysisCase);
 
         initializeExceptions(analysisCase, parent);
     }
 
-    private void initializeObjects(AnalysisCase analysisCase) {
+    private void initializeAnalyzedObjects(AnalysisCase analysisCase) {
 
-        this.collectPlacedObject(analysisCase)
-                .stream()
+        this.collectElevatedObjects(analysisCase)
                 .map(o -> AnalysisObject.builder()
                         .analysisCase(analysisCase)
-                        .placedObject(o)
-                        .included(analysisCase.getAnalysis().getParent().isObjectAnalyzed(o))
+                        .elevatedObject(o)
+                        .included(o.getType().equals(ElevatedObjectTypes.LEVEL_CURVE) || hasAlreadyBeenAnalyzed(analysisCase, o))
                         .build()
                 )
-                .forEach(o -> {
-                    currentSession().save(o);
-                });
+                .forEach(o -> currentSession().save(o));
     }
 
-    private void discardObjects(AnalysisCase analysisCase) {
+    private boolean hasAlreadyBeenAnalyzed(AnalysisCase analysisCase, ElevatedObject object) {
+        return !object.getType().equals(ElevatedObjectTypes.LEVEL_CURVE)
+                    && analysisCase.getAnalysis().getParent().hasAlreadyBeenAnalyzed(object);
+    }
+
+    private void discardAnalyzedObjects(AnalysisCase analysisCase) {
         analysisCase.getObjects().forEach( o -> currentSession().delete(o));
         analysisCase.getObjects().clear();
     }
 
-    public void updateObjects(AnalysisCase analysisCase, Double radius){
+    public void updateAnalyzedObjects(AnalysisCase analysisCase, Double radius){
 
         analysisCase.setSearchRadius(radius);
 
-        discardObjects(analysisCase);
+        discardAnalyzedObjects(analysisCase);
 
-        initializeObjects(analysisCase);
+        initializeAnalyzedObjects(analysisCase);
     }
 
     private void initializeExceptions(AnalysisCase analysisCase, Analysis parent) {
@@ -101,26 +97,22 @@ public class AnalysisCaseService extends SigoService <AnalysisCase, Analysis> {
         return null;
     }
 
-    private List<PlacedObject> collectPlacedObject(AnalysisCase analysisCase) {
-
-        List<PlacedObject> placedObjects = Lists.newArrayList();
+    private Stream<ElevatedObject> collectElevatedObjects(AnalysisCase analysisCase) {
 
         Geometry buffer = analysisCase.getAerodrome().getGeom().buffer(analysisCase.getSearchRadius());
 
         buffer.setSRID(4326);
 
+        return Streams.concat(
+                collectElevatedObjectsOnArea(PlacedObjectIndividual.class, buffer),
+                collectElevatedObjectsOnArea(PlacedObjectBuilding.class, buffer),
+                collectElevatedObjectsOnArea(PlacedObjectOverheadWire.class, buffer),
+                collectElevatedObjectsOnArea(TerrainLevelCurve.class, buffer)
+        );
 
-        placedObjects.addAll(collectPlacedObjectsOnArea(PlacedObjectIndividual.class, buffer));
-
-        placedObjects.addAll(collectPlacedObjectsOnArea(PlacedObjectBuilding.class, buffer));
-
-        placedObjects.addAll(collectPlacedObjectsOnArea(PlacedObjectOverheadWire.class, buffer));
-
-
-        return placedObjects;
     }
 
-    private <T extends PlacedObject> List<T> collectPlacedObjectsOnArea(Class<T> clazz, Geometry buffer) {
+    private <T extends ElevatedObject> Stream<T> collectElevatedObjectsOnArea(Class<T> clazz, Geometry buffer) {
 
         CriteriaBuilder builder = currentSession().getCriteriaBuilder();
 
@@ -132,14 +124,14 @@ public class AnalysisCaseService extends SigoService <AnalysisCase, Analysis> {
         ParameterExpression bufferParam = builder.parameter(Geometry.class);
 
 
-        Expression<Boolean> st_coveredby = builder.function("st_coveredby", Boolean.class, placedObject.get("geom"), bufferParam);
+        Expression<Boolean> st_intersects = builder.function("st_intersects", Boolean.class, placedObject.get("geom"), bufferParam);
 
-        criteria.where(builder.isTrue(st_coveredby));
+        criteria.where(builder.isTrue(st_intersects));
 
         Query<T> query = currentSession().createQuery(criteria);
         query.setParameter(bufferParam, buffer);
 
-        return query.getResultList();
+        return query.getResultStream();
     }
 
 }

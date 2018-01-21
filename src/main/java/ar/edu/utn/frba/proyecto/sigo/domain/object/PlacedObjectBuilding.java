@@ -1,30 +1,28 @@
 package ar.edu.utn.frba.proyecto.sigo.domain.object;
 
 import ar.edu.utn.frba.proyecto.sigo.domain.location.PoliticalLocation;
-import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.MultiPolygon;
-import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "public.tbl_placed_object_building")
-@PrimaryKeyJoinColumn(name = "object_id")
-@NoArgsConstructor(access = AccessLevel.PUBLIC)
+@NoArgsConstructor
 @Data
-public class PlacedObjectBuilding extends PlacedObject {
+public class PlacedObjectBuilding extends PlacedObject<MultiPolygon> {
 
     @Builder
     public PlacedObjectBuilding(
             Long id,
             String name,
-            PlacedObjectTypes type,
+            ElevatedObjectTypes type,
             String subtype,
             Boolean verified,
             PoliticalLocation politicalLocation,
@@ -36,20 +34,15 @@ public class PlacedObjectBuilding extends PlacedObject {
             MarkIndicatorTypes markIndicator,
             MultiPolygon geom
     ) {
-        super(id, name, type, subtype, verified, politicalLocation, owner, heightAgl, heightAmls, temporary, lighting, markIndicator);
+        super(id, name, heightAgl, heightAmls, type, subtype, verified, politicalLocation, owner, temporary, lighting, markIndicator);
         this.geom = geom;
     }
 
     @Column(name = "geom")
-    private Geometry geom;
+    private MultiPolygon geom;
 
     @Override
-    public Class getGeomClass() {
-        return MultiPolygon.class;
-    }
-
-    @Override
-    public <T> T accept(PlacedObjectVisitor<T> visitor) {
+    public <P> P accept(PlacedObjectVisitor<P> visitor) {
         return visitor.visitPlacedObjectBuilding(this);
     }
 }

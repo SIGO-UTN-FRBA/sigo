@@ -18,11 +18,11 @@ import org.opengis.feature.simple.SimpleFeatureType;
 import javax.inject.Singleton;
 
 @Singleton
-public class PlacedObjectFeatureService implements PlacedObjectVisitor<SimpleFeature>{
+public class PlacedObjectFeatureHelper implements PlacedObjectVisitor<SimpleFeature>{
 
     public SimpleFeature getFeature(PlacedObject placedObject) {
 
-        return placedObject.accept(this);
+        return (SimpleFeature)placedObject.accept(this);
     }
 
     @Override

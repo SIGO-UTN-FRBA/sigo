@@ -1,30 +1,12 @@
 package ar.edu.utn.frba.proyecto.sigo.domain.analysis;
 
 import ar.edu.utn.frba.proyecto.sigo.domain.SigoDomain;
-import ar.edu.utn.frba.proyecto.sigo.domain.object.PlacedObject;
+import ar.edu.utn.frba.proyecto.sigo.domain.object.ElevatedObject;
 import ar.edu.utn.frba.proyecto.sigo.domain.regulation.Regulations;
 import com.google.common.base.MoreObjects;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.ForeignKey;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
@@ -78,7 +60,7 @@ public class Analysis extends SigoDomain {
                 .toString();
     }
 
-    public Boolean isObjectAnalyzed(PlacedObject o) {
-        return this.getAnalysisCase().isObjectAnalyzed(o);
+    public Boolean hasAlreadyBeenAnalyzed(ElevatedObject o) {
+        return this.getAnalysisCase().hasAlreadyBeenAnalyzed(o);
     }
 }

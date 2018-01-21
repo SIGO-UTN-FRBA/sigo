@@ -1,33 +1,33 @@
 package ar.edu.utn.frba.proyecto.sigo.domain.object;
 
-import javax.persistence.*;
-
-import ar.edu.utn.frba.proyecto.sigo.domain.SigoDomain;
-import ar.edu.utn.frba.proyecto.sigo.domain.Spatial;
 import ar.edu.utn.frba.proyecto.sigo.domain.location.PoliticalLocation;
 import com.google.common.base.MoreObjects;
 import com.vividsolutions.jts.geom.Geometry;
-import lombok.*;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+
+import javax.persistence.*;
 
 @Entity
-@Table(name = "public.tbl_placed_object")
-@Inheritance(strategy = InheritanceType.JOINED)
-@AllArgsConstructor
-@NoArgsConstructor(access = AccessLevel.PUBLIC)
+@EqualsAndHashCode(callSuper = true)
+@NoArgsConstructor
 @Data
-public abstract class PlacedObject extends SigoDomain implements Spatial<Geometry>{
-    @Id
-    @SequenceGenerator(name = "placedObjectGenerator", sequenceName = "PLACED_OBJECT_SEQUENCE", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "placedObjectGenerator")
-    @Column(name = "object_id")
-    protected Long id;
+public abstract class PlacedObject<T extends Geometry> extends ElevatedObject<T> {
 
-    @Column(name = "name")
-    protected String name;
 
-    @Enumerated(EnumType.ORDINAL)
-    @Column(name = "type")
-    protected PlacedObjectTypes type;
+    public PlacedObject(Long id, String name, Double heightAgl, Double heightAmls, ElevatedObjectTypes type, String subtype, Boolean verified, PoliticalLocation politicalLocation, PlacedObjectOwner owner, Boolean temporary, LightingTypes lighting, MarkIndicatorTypes markIndicator) {
+
+        super(id, name, heightAgl, heightAmls, type);
+
+        this.subtype = subtype;
+        this.verified = verified;
+        this.politicalLocation = politicalLocation;
+        this.owner = owner;
+        this.temporary = temporary;
+        this.lighting = lighting;
+        this.markIndicator = markIndicator;
+    }
 
     @Column(name = "subtype")
     protected String subtype;
@@ -43,12 +43,6 @@ public abstract class PlacedObject extends SigoDomain implements Spatial<Geometr
     @JoinColumn(name = "owner_id")
     protected PlacedObjectOwner owner;
 
-    @Column(name = "height_agl")
-    protected Double heightAgl;
-
-    @Column(name = "height_amls")
-    protected Double heightAmls;
-
     @Column(name = "temporary")
     protected Boolean temporary;
 
@@ -60,10 +54,6 @@ public abstract class PlacedObject extends SigoDomain implements Spatial<Geometr
     @Column(name = "mark_indicator")
     protected MarkIndicatorTypes markIndicator;
 
-
-    public abstract Class getGeomClass();
-
-
     public String toString(){
         return MoreObjects.toStringHelper(this)
                 .add("id", id)
@@ -72,5 +62,5 @@ public abstract class PlacedObject extends SigoDomain implements Spatial<Geometr
                 .toString();
     }
 
-    public abstract <T> T accept(PlacedObjectVisitor<T> visitor);
+    public abstract <P> P accept(PlacedObjectVisitor<P> visitor);
 }

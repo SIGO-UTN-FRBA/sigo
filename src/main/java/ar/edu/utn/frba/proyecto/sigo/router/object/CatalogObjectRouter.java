@@ -57,8 +57,8 @@ public class CatalogObjectRouter extends SigoRouter {
         return Arrays.stream(catalogService.fetchObjectTypes())
                 .map(v -> EnumerationDTO.builder()
                             .id(v.ordinal())
-                            .name(v.name())
-                            .description(v.type())
+                            .name(v.code())
+                            .description(v.description())
                             .build()
                 )
                 .collect(Collectors.toList());

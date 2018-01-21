@@ -2,8 +2,11 @@ package ar.edu.utn.frba.proyecto.sigo.translator;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import lombok.AllArgsConstructor;
 
-public abstract class Translator<ENTITY, ENTITY_DTO> {
+
+@AllArgsConstructor
+public abstract class SigoTranslator<ENTITY, ENTITY_DTO> {
 
     protected Gson objectMapper;
     protected Class<ENTITY_DTO> dtoClass;

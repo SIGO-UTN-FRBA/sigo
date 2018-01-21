@@ -15,4 +15,5 @@ public class AnalysisObjectDTO {
     private Long caseId;
     private Long objectId;
     private Boolean included;
+    private Integer objectTypeId;
 }

@@ -1,24 +1,15 @@
 package ar.edu.utn.frba.proyecto.sigo.domain.analysis;
 
+import ar.edu.utn.frba.proyecto.sigo.service.ols.OlsAnalyst;
+import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.Point;
 import com.vividsolutions.jts.geom.Polygon;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.Column;
-import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.MapKeyColumn;
 import javax.persistence.PrimaryKeyJoinColumn;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-import java.util.HashMap;
-import java.util.Map;
 
 @EqualsAndHashCode(callSuper = true)
 @Entity
@@ -26,28 +17,50 @@ import java.util.Map;
 @PrimaryKeyJoinColumn(name = "exception_id")
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 @Data
-public class AnalysisExceptionSurface extends AnalysisException {
+public class AnalysisExceptionSurface extends AnalysisException implements AnalysisRestriction {
 
     @Builder
     public AnalysisExceptionSurface(
             Long id,
             String name,
-            AnalysisExceptions type,
             AnalysisCase analysisCase,
-            Double heightAgl
+            Double heightAmls,
+            Polygon geom
     ){
-        super(id, name, type, analysisCase);
-        this.heightAgl = heightAgl;
+        super(id, name, analysisCase);
+        this.heightAmls = heightAmls;
+        this.geom = geom;
     }
 
-    @Column(name = "height_AGL")
-    private Double heightAgl;
+    @Column(name = "height_amls")
+    private Double heightAmls;
 
     @Column(name = "geom")
     private Polygon geom;
 
+
     @Override
     public <T> T accept(AnalysisExceptionVisitor<T> visitor) {
         return visitor.visitAnalysisExceptionSurface(this);
+    }
+
+    @Override
+    public Geometry getGeometry() {
+        return this.getGeom();
+    }
+
+    @Override
+    public Double determineHeightAt(Point point, OlsAnalyst analyst) {
+        return this.getHeightAmls();
+    }
+
+    @Override
+    public AnalysisRestrictionTypes getRestrictionType() {
+        return AnalysisRestrictionTypes.TERRAIN_SURFACE_EXCEPTION;
+    }
+
+    @Override
+    public AnalysisExceptionTypes getType() {
+        return AnalysisExceptionTypes.SURFACE;
     }
 }

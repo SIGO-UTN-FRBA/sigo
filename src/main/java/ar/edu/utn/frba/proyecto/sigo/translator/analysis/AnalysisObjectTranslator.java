@@ -5,7 +5,7 @@ import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisObject;
 import ar.edu.utn.frba.proyecto.sigo.domain.object.PlacedObject;
 import ar.edu.utn.frba.proyecto.sigo.dto.analysis.AnalysisObjectDTO;
 import ar.edu.utn.frba.proyecto.sigo.service.analysis.AnalysisCaseService;
-import ar.edu.utn.frba.proyecto.sigo.translator.Translator;
+import ar.edu.utn.frba.proyecto.sigo.translator.SigoTranslator;
 import ar.edu.utn.frba.proyecto.sigo.service.object.PlacedObjectService;
 import com.google.gson.Gson;
 import ar.edu.utn.frba.proyecto.sigo.exception.InvalidParameterException;
@@ -15,7 +15,7 @@ import javax.inject.Singleton;
 import java.util.Optional;
 
 @Singleton
-public class AnalysisObjectTranslator extends Translator<AnalysisObject, AnalysisObjectDTO>{
+public class AnalysisObjectTranslator extends SigoTranslator<AnalysisObject, AnalysisObjectDTO> {
 
     private AnalysisCaseService caseService;
     private PlacedObjectService placedObjectService;
@@ -26,9 +26,10 @@ public class AnalysisObjectTranslator extends Translator<AnalysisObject, Analysi
             AnalysisCaseService caseService,
             PlacedObjectService placedObjectService
     ){
+        super(gson, AnalysisObjectDTO.class, AnalysisObject.class);
+
         this.caseService = caseService;
         this.placedObjectService = placedObjectService;
-        this.objectMapper = gson;
     }
 
     @Override
@@ -36,7 +37,8 @@ public class AnalysisObjectTranslator extends Translator<AnalysisObject, Analysi
         return AnalysisObjectDTO.builder()
                 .id(domain.getId())
                 .caseId(domain.getAnalysisCase().getId())
-                .objectId(domain.getPlacedObject().getId())
+                .objectId(domain.getElevatedObject().getId())
+                .objectTypeId(domain.getElevatedObject().getType().ordinal())
                 .included(domain.getIncluded())
                 .build();
     }
@@ -54,7 +56,7 @@ public class AnalysisObjectTranslator extends Translator<AnalysisObject, Analysi
         Optional<PlacedObject> placedObject = Optional.ofNullable(placedObjectService.get(dto.getObjectId()));
         if(!placedObject.isPresent())
             throw new InvalidParameterException("objectId");
-        builder.placedObject(placedObject.get());
+        builder.elevatedObject(placedObject.get());
 
         // relation: case
         Optional<AnalysisCase> analysisCase = Optional.ofNullable(caseService.get(dto.getCaseId()));

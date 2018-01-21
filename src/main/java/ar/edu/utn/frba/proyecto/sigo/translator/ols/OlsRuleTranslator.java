@@ -6,15 +6,24 @@ import ar.edu.utn.frba.proyecto.sigo.domain.regulation.faa.OlsRulesFAA;
 import ar.edu.utn.frba.proyecto.sigo.domain.regulation.icao.OlsRuleICAOAnnex14;
 import ar.edu.utn.frba.proyecto.sigo.dto.regulation.OlsRuleDTO;
 import ar.edu.utn.frba.proyecto.sigo.dto.regulation.OlsRuleICAOAnnex14DTO;
-import ar.edu.utn.frba.proyecto.sigo.translator.Translator;
+import ar.edu.utn.frba.proyecto.sigo.translator.SigoTranslator;
+import com.google.gson.Gson;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.Optional;
 
+@Singleton
 public class OlsRuleTranslator
-        extends Translator<OlsRule, OlsRuleDTO>
+        extends SigoTranslator<OlsRule, OlsRuleDTO>
         implements OlsRuleVisitor<OlsRuleDTO>
 {
+
+    @Inject
+    public OlsRuleTranslator(Gson objectMapper) {
+        super(objectMapper, OlsRuleDTO.class, OlsRule.class);
+    }
 
     @Override
     public OlsRuleDTO getAsDTO(OlsRule domain) {

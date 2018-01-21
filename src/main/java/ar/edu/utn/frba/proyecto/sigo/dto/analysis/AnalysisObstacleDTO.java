@@ -17,13 +17,14 @@ public class AnalysisObstacleDTO {
     private String objectName;
     private Integer objectType;
     private Long caseId;
-    private Long surfaceId;
-    private String surfaceName;
+    private Long restrictionId;
+    private Integer restrictionTypeId;
+    private String restrictionName;
     private Long exceptionId;
     private Long directionId;
     private String directionName;
     private Double objectHeight;
-    private Double surfaceHeight;
+    private Double restrictionHeight;
     private Double penetration;
     private ArrayList<Double> coordinate;
     private Boolean excluded;

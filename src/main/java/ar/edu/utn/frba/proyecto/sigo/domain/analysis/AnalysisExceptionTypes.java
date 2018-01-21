@@ -1,13 +1,13 @@
 package ar.edu.utn.frba.proyecto.sigo.domain.analysis;
 
-public enum AnalysisExceptions {
+public enum AnalysisExceptionTypes {
     SURFACE("Surface"),                 //0
     RULE("Rule"),                       //1
     DYNAMIC_SURFACE("Dynamic Surface"); //2
 
     private String description;
 
-    AnalysisExceptions(String d) {
+    AnalysisExceptionTypes(String d) {
         this.description = d;
     }
 

@@ -6,7 +6,7 @@ import ar.edu.utn.frba.proyecto.sigo.domain.regulation.Regulations;
 import ar.edu.utn.frba.proyecto.sigo.dto.airport.AirportDTO;
 import ar.edu.utn.frba.proyecto.sigo.exception.InvalidParameterException;
 import ar.edu.utn.frba.proyecto.sigo.service.airport.RegionService;
-import ar.edu.utn.frba.proyecto.sigo.translator.Translator;
+import ar.edu.utn.frba.proyecto.sigo.translator.SigoTranslator;
 import com.google.gson.Gson;
 
 import javax.inject.Inject;
@@ -14,7 +14,7 @@ import javax.inject.Singleton;
 import java.util.Optional;
 
 @Singleton
-public class AirportTranslator extends Translator<Airport, AirportDTO> {
+public class AirportTranslator extends SigoTranslator<Airport, AirportDTO> {
 
     private RegionService regionService;
 
@@ -23,10 +23,9 @@ public class AirportTranslator extends Translator<Airport, AirportDTO> {
             Gson gson,
             RegionService regionService
     ){
+        super(gson, AirportDTO.class, Airport.class);
+
         this.regionService = regionService;
-        this.objectMapper = gson;
-        this.dtoClass = AirportDTO.class;
-        this.domainClass = Airport.class;
     }
 
     @Override

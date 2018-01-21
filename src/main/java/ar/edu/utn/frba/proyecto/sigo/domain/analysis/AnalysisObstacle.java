@@ -1,25 +1,10 @@
 package ar.edu.utn.frba.proyecto.sigo.domain.analysis;
 
 import ar.edu.utn.frba.proyecto.sigo.domain.SigoDomain;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.hibernate.annotations.Any;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @EqualsAndHashCode(callSuper = true, exclude = "analysisCase")
 @Entity
@@ -36,9 +21,13 @@ public class AnalysisObstacle extends SigoDomain {
     @Column(name = "obstacle_id")
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "surface_id")
-    private AnalysisSurface surface;
+    @Any(
+            metaDef = "RestrictionMetaDef",
+            metaColumn = @Column( name = "restriction_type" ),
+            fetch = FetchType.EAGER
+    )
+    @JoinColumn(name = "restriction_id")
+    private AnalysisRestriction restriction;
 
     @ManyToOne
     @JoinColumn(name = "analysis_object_id")
@@ -48,20 +37,16 @@ public class AnalysisObstacle extends SigoDomain {
     @JoinColumn(name = "case_id")
     private AnalysisCase analysisCase;
 
-    @ManyToOne
-    @JoinColumn(name="exception_id")
-    private AnalysisException exception;
-
-    @Column(name = "object_height")
+    @Column(name = "object_height_amls")
     private Double objectHeight;
 
-    @Column(name = "surface_height")
-    private Double surfaceHeight;
+    @Column(name = "restriction_height_amls")
+    private Double restrictionHeight;
 
     @OneToOne (mappedBy = "obstacle", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private AnalysisResult result;
 
     public Double getPenetration(){
-        return objectHeight - surfaceHeight;
+        return objectHeight - restrictionHeight;
     }
 }
