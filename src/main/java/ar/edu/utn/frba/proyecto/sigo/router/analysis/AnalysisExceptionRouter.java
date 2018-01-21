@@ -1,6 +1,7 @@
 package ar.edu.utn.frba.proyecto.sigo.router.analysis;
 
 import ar.edu.utn.frba.proyecto.sigo.domain.analysis.Analysis;
+import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisException;
 import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisExceptionRule;
 import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisExceptionSurface;
 import ar.edu.utn.frba.proyecto.sigo.dto.analysis.AnalysisExceptionRuleDTO;
@@ -23,6 +24,7 @@ import spark.RouteGroup;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import javax.inject.Inject;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static spark.Spark.*;
@@ -73,7 +75,19 @@ public class AnalysisExceptionRouter extends SigoRouter {
 
         Analysis analysis = this.analysisService.get(this.getParamAnalysisId(request));
 
-        return analysis.getAnalysisCase().getExceptions()
+        Set<AnalysisException> exceptions = analysis.getAnalysisCase().getExceptions();
+
+        if(request.queryMap().hasKey("type")){
+            Integer type = request.queryMap().get("type").integerValue();
+
+            return exceptions
+                    .stream()
+                    .filter(e -> e.getType().ordinal() == type)
+                    .map(e -> translator.getAsDTO(e))
+                    .collect(Collectors.toList());
+        }
+
+        return exceptions
                 .stream()
                 .map(e -> translator.getAsDTO(e))
                 .collect(Collectors.toList());
@@ -160,13 +174,16 @@ public class AnalysisExceptionRouter extends SigoRouter {
 
             get("", fetchExceptions, jsonTransformer);
 
+
             post("/rule", createRuleException, jsonTransformer);
             post("/surface", createSurfaceException, jsonTransformer);
             //post("/dynamicSurface", createDynamicSurfaceException, jsonTransformer);
 
             get("/rule/:" + EXCEPTION_ID_PARAM, fetchRuleException, jsonTransformer);
+
             get("/surface/:" + EXCEPTION_ID_PARAM, fetchSurfaceException, jsonTransformer);
             get("/surface/:" + EXCEPTION_ID_PARAM + "/feature", fetchExceptionFeature, jsonTransformer);
+
             //get("/dynamicSurface/:" + EXCEPTION_ID_PARAM, fetchException, jsonTransformer);
 
             put("/rule/:" + EXCEPTION_ID_PARAM, updateException, jsonTransformer);
