@@ -41,14 +41,18 @@ public abstract class OlsAnalyst {
     }
 
     private void applyException(AnalysisExceptionSurface exception){
-//        this.analysisCase.getSurfaces()
-//                .stream()
-//                .filter(s -> s.getGeometry().intersects(exception.getGeometry()))
-//                .forEach(s -> redefineSurface(s, exception));
+
+        Set<AnalysisObstacle> obstaclesCausedByException = analysisCase.getObstaclesCausedByRestriction(exception);
+
+        analysisCase.getSurfaces()
+                .stream()
+                .map(s -> analysisCase.getObstaclesCausedByRestriction(s))
+                .flatMap(Collection::stream)
+                .filter(os -> obstaclesCausedByException.stream().anyMatch(oe -> oe.getObject().equals(os.getObject())))
+                .forEach(os -> os.setExcepting(true));
     }
 
     protected abstract void initializeSurfaces();
-
 
     private void defineObstacles() {
 
@@ -85,6 +89,7 @@ public abstract class OlsAnalyst {
                 .analysisCase(this.getAnalysisCase())
                 .objectHeight(objectHeight)
                 .restrictionHeight(restrictionHeight)
+                .excepting(false)
                 .build();
     }
 

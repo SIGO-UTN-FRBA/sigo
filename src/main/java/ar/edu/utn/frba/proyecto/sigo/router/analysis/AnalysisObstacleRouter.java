@@ -12,6 +12,7 @@ import ar.edu.utn.frba.proyecto.sigo.spark.JsonTransformer;
 import ar.edu.utn.frba.proyecto.sigo.translator.analysis.AnalysisObstacleTranslator;
 import ar.edu.utn.frba.proyecto.sigo.translator.analysis.AnalysisResultTranslator;
 import com.google.gson.Gson;
+import spark.QueryParamsMap;
 import spark.Route;
 import spark.RouteGroup;
 
@@ -49,7 +50,11 @@ public class AnalysisObstacleRouter extends SigoRouter{
     }
 
     private final Route fetchObstacles = doInTransaction(false , (request, response) -> {
+
+        Optional<QueryParamsMap> exceptingParam = Optional.ofNullable(request.queryMap().get("excepting"));
+
         return this.obstacleService.find(getParamAnalysisId(request))
+                        .filter( o -> exceptingParam.map(param -> o.getExcepting() == param.booleanValue()).orElse(true))
                         .map(translator::getAsDTO)
                         .collect(Collectors.toList());
     });
