@@ -53,6 +53,7 @@ public class AnalysisObjectRouter extends SigoRouter {
 
         return analysis.getAnalysisCase().getObjects()
                 .stream()
+                .distinct()
                 .map(o -> objectTranslator.getAsDTO(o))
                 .collect(Collectors.toList());
     });

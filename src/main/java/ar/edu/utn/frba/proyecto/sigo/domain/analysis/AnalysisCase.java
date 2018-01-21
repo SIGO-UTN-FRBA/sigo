@@ -5,13 +5,11 @@ import ar.edu.utn.frba.proyecto.sigo.domain.airport.Airport;
 import ar.edu.utn.frba.proyecto.sigo.domain.object.ElevatedObject;
 import ar.edu.utn.frba.proyecto.sigo.domain.regulation.Regulations;
 import com.google.common.base.MoreObjects;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.google.common.collect.Streams;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Stream;
@@ -37,7 +35,7 @@ public class AnalysisCase extends SigoDomain {
     private Airport aerodrome;
 
     @OneToMany(mappedBy = "analysisCase", cascade = CascadeType.ALL)
-    private List<AnalysisObject> objects = Lists.newArrayList();
+    private Set<AnalysisObject> objects = Sets.newHashSet();
 
     @OneToMany(mappedBy="analysisCase", cascade = CascadeType.ALL)
     private Set<AnalysisException> exceptions = Sets.newHashSet();
@@ -46,7 +44,7 @@ public class AnalysisCase extends SigoDomain {
     private Double searchRadius;
 
     @OneToMany(mappedBy = "analysisCase", cascade = CascadeType.ALL)
-    private List<AnalysisSurface> surfaces = Lists.newArrayList();
+    private Set<AnalysisSurface> surfaces = Sets.newHashSet();
 
     @OneToMany(mappedBy = "analysisCase", cascade = CascadeType.ALL)
     private Set<AnalysisObstacle> obstacles = Sets.newHashSet();

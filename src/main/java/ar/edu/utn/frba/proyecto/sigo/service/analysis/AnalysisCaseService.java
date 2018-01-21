@@ -7,18 +7,13 @@ import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisObject;
 import ar.edu.utn.frba.proyecto.sigo.domain.object.*;
 import ar.edu.utn.frba.proyecto.sigo.persistence.HibernateUtil;
 import ar.edu.utn.frba.proyecto.sigo.service.SigoService;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.google.common.collect.Streams;
 import com.vividsolutions.jts.geom.Geometry;
 import org.hibernate.query.Query;
 
 import javax.inject.Inject;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Expression;
-import javax.persistence.criteria.ParameterExpression;
-import javax.persistence.criteria.Root;
+import javax.persistence.criteria.*;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -40,7 +35,7 @@ public class AnalysisCaseService extends SigoService <AnalysisCase, Analysis> {
         super.preCreateActions(object, parent);
 
         object.setExceptions(Sets.newHashSet());
-        object.setObjects(Lists.newArrayList());
+        object.setObjects(Sets.newHashSet());
     }
 
     @Override

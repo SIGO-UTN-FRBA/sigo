@@ -22,8 +22,16 @@ public abstract class ElevatedObject<T extends Geometry>
 {
 
     @Id
-    @SequenceGenerator(name = "elevatedObjectGenerator", sequenceName = "ELEVATED_OBJECT_SEQUENCE", allocationSize = 1, initialValue = 120000)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "elevatedObjectGenerator")
+    @SequenceGenerator(
+            name = "elevated_object_generator",
+            initialValue = 100,
+            allocationSize = 1,
+            sequenceName = "elevated_object_sequence"
+    )
+    @GeneratedValue(
+            generator = "elevated_object_generator",
+            strategy = GenerationType.SEQUENCE
+    )
     @Column(name = "object_id")
     protected Long id;
 

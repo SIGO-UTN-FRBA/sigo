@@ -12,7 +12,7 @@ import ar.edu.utn.frba.proyecto.sigo.exception.SigoException;
 import ar.edu.utn.frba.proyecto.sigo.persistence.HibernateUtil;
 import ar.edu.utn.frba.proyecto.sigo.service.ols.OlsAnalyst;
 import ar.edu.utn.frba.proyecto.sigo.service.regulation.OlsRuleICAOAnnex14Service;
-import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import com.google.inject.assistedinject.Assisted;
 import com.vividsolutions.jts.geom.Point;
 import org.apache.commons.lang3.StringUtils;
@@ -22,6 +22,7 @@ import javax.inject.Inject;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class OlsAnalystICAOAnnex14 extends OlsAnalyst {
@@ -65,7 +66,7 @@ public class OlsAnalystICAOAnnex14 extends OlsAnalyst {
     }
 
 
-    private List<AnalysisSurface> createAnalysisSurfaces() {
+    private Set<AnalysisSurface> createAnalysisSurfaces() {
 
         return this.analysisCase.getAerodrome().getRunways()
                 .stream()
@@ -73,10 +74,10 @@ public class OlsAnalystICAOAnnex14 extends OlsAnalyst {
                 .flatMap(Collection::stream)
                 .map(this::createAnalysisSurfaces)
                 .flatMap(Collection::stream)
-                .collect(Collectors.toList());
+                .collect(Collectors.toSet());
     }
 
-    private List<AnalysisSurface> createAnalysisSurfaces(RunwayDirection direction){
+    private Set<AnalysisSurface> createAnalysisSurfaces(RunwayDirection direction){
 
         RunwayClassificationICAOAnnex14 classification = (RunwayClassificationICAOAnnex14) direction.getClassification();
 
@@ -94,8 +95,8 @@ public class OlsAnalystICAOAnnex14 extends OlsAnalyst {
         throw new SigoException("Invalid classification of runway direction");
     }
 
-    private List<AnalysisSurface> createAnalysisSurfacesForPrecision(RunwayDirection direction, List<ICAOAnnex14Surface> surfacesDefinitions) {
-        List<AnalysisSurface> analysisSurfaces = Lists.newArrayList();
+    private Set<AnalysisSurface> createAnalysisSurfacesForPrecision(RunwayDirection direction, List<ICAOAnnex14Surface> surfacesDefinitions) {
+        Set<AnalysisSurface> analysisSurfaces = Sets.newHashSet();
 
         //1. Strip
         ICAOAnnex14SurfaceStrip strip = (ICAOAnnex14SurfaceStrip) surfacesDefinitions.stream().filter(d -> d.getEnum() == ICAOAnnex14Surfaces.STRIP).findFirst().get();
@@ -175,14 +176,14 @@ public class OlsAnalystICAOAnnex14 extends OlsAnalyst {
         return analysisSurfaces;
     }
 
-    private List<AnalysisSurface> createAnalysisSurfacesForNonPrecision(RunwayDirection direction, List<ICAOAnnex14Surface> surfacesDefinitions) {
+    private Set<AnalysisSurface> createAnalysisSurfacesForNonPrecision(RunwayDirection direction, List<ICAOAnnex14Surface> surfacesDefinitions) {
         //TODO
         throw new NotImplementedException();
     }
 
-    private List<AnalysisSurface> createAnalysisSurfacesForNonInstrument(RunwayDirection direction, List<ICAOAnnex14Surface> surfacesDefinitions) {
+    private Set<AnalysisSurface> createAnalysisSurfacesForNonInstrument(RunwayDirection direction, List<ICAOAnnex14Surface> surfacesDefinitions) {
 
-        List<AnalysisSurface> analysisSurfaces = Lists.newArrayList();
+        Set<AnalysisSurface> analysisSurfaces = Sets.newHashSet();
 
         //1. Strip
         ICAOAnnex14SurfaceStrip strip = (ICAOAnnex14SurfaceStrip) surfacesDefinitions.stream().filter(d -> d.getEnum() == ICAOAnnex14Surfaces.STRIP).findFirst().get();

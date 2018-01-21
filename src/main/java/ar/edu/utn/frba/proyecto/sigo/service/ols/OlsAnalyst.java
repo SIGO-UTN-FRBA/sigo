@@ -29,16 +29,22 @@ public abstract class OlsAnalyst {
 
         initializeSurfaces();
 
-        applyExceptions();
-
         defineObstacles();
+
+        applyExceptions();
 
         getCurrentSession().save(analysisCase);
     }
 
     protected void applyExceptions(){
-        //1. obtener excepciones
-        //2. modificar geom de superficies segun interseccion con excepciones
+        this.analysisCase.getSurfaceExceptions().forEach(this::applyException);
+    }
+
+    private void applyException(AnalysisExceptionSurface exception){
+//        this.analysisCase.getSurfaces()
+//                .stream()
+//                .filter(s -> s.getGeometry().intersects(exception.getGeometry()))
+//                .forEach(s -> redefineSurface(s, exception));
     }
 
     protected abstract void initializeSurfaces();
