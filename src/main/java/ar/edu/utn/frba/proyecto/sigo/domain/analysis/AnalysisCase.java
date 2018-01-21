@@ -74,14 +74,14 @@ public class AnalysisCase extends SigoDomain {
     public Stream<AnalysisExceptionRule> getRuleExceptions(){
         return this.getExceptions()
                 .stream()
-                .filter(s -> s.getType().equals(AnalysisExceptions.RULE))
+                .filter(s -> s.getType().equals(AnalysisExceptionTypes.RULE))
                 .map(s -> (AnalysisExceptionRule)s);
     }
 
     public Stream<AnalysisExceptionSurface> getSurfaceExceptions(){
         return this.getExceptions()
                 .stream()
-                .filter(s -> s.getType().equals(AnalysisExceptions.SURFACE))
+                .filter(s -> s.getType().equals(AnalysisExceptionTypes.SURFACE))
                 .map(s -> (AnalysisExceptionSurface)s);
     }
 

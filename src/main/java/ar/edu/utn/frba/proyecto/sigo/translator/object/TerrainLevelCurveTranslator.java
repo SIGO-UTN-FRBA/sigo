@@ -2,19 +2,19 @@ package ar.edu.utn.frba.proyecto.sigo.translator.object;
 
 import ar.edu.utn.frba.proyecto.sigo.domain.object.TerrainLevelCurve;
 import ar.edu.utn.frba.proyecto.sigo.dto.object.TerrainLevelCurveDTO;
-import ar.edu.utn.frba.proyecto.sigo.translator.Translator;
+import ar.edu.utn.frba.proyecto.sigo.translator.SigoTranslator;
 import com.google.gson.Gson;
 import org.apache.commons.lang.NotImplementedException;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
-public class TerrainLevelCurveTranslator extends Translator<TerrainLevelCurve, TerrainLevelCurveDTO>{
+@Singleton
+public class TerrainLevelCurveTranslator extends SigoTranslator<TerrainLevelCurve, TerrainLevelCurveDTO> {
 
     @Inject
-    public TerrainLevelCurveTranslator(
-            Gson gson
-    ) {
-        this.objectMapper = gson;
+    public TerrainLevelCurveTranslator(Gson gson) {
+        super(gson,TerrainLevelCurveDTO.class, TerrainLevelCurve.class);
     }
 
     @Override

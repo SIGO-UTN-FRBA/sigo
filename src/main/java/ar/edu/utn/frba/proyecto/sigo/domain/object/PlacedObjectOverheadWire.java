@@ -1,7 +1,7 @@
 package ar.edu.utn.frba.proyecto.sigo.domain.object;
 
 import ar.edu.utn.frba.proyecto.sigo.domain.location.PoliticalLocation;
-import com.vividsolutions.jts.geom.MultiLineString;
+import com.vividsolutions.jts.geom.LineString;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -17,7 +17,7 @@ import javax.persistence.Table;
 @Table(name = "public.tbl_placed_object_overhead_wire")
 @NoArgsConstructor
 @Data
-public class PlacedObjectOverheadWire extends PlacedObject<MultiLineString> {
+public class PlacedObjectOverheadWire extends PlacedObject<LineString> {
 
     @Builder
     public PlacedObjectOverheadWire(
@@ -33,14 +33,14 @@ public class PlacedObjectOverheadWire extends PlacedObject<MultiLineString> {
             Boolean temporary,
             LightingTypes lighting,
             MarkIndicatorTypes markIndicator,
-            MultiLineString geom
+            LineString geom
     ) {
         super(id, name, heightAgl, heightAmls, type, subtype, verified, politicalLocation, owner, temporary, lighting, markIndicator);
         this.geom = geom;
     }
 
     @Column(name = "geom")
-    private MultiLineString geom;
+    private LineString geom;
 
     @Override
     public <P> P accept(PlacedObjectVisitor<P> visitor) {

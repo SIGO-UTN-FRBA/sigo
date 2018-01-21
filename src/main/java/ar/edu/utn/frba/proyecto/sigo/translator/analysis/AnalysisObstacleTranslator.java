@@ -6,14 +6,23 @@ import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisRestrictionTypes;
 import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisSurface;
 import ar.edu.utn.frba.proyecto.sigo.domain.object.ElevatedObject;
 import ar.edu.utn.frba.proyecto.sigo.dto.analysis.AnalysisObstacleDTO;
-import ar.edu.utn.frba.proyecto.sigo.translator.Translator;
+import ar.edu.utn.frba.proyecto.sigo.translator.SigoTranslator;
 import com.google.common.collect.Lists;
+import com.google.gson.Gson;
 import com.vividsolutions.jts.geom.Coordinate;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.Optional;
 
-public class AnalysisObstacleTranslator extends Translator<AnalysisObstacle, AnalysisObstacleDTO> {
+@Singleton
+public class AnalysisObstacleTranslator extends SigoTranslator<AnalysisObstacle, AnalysisObstacleDTO> {
+
+    @Inject
+    public AnalysisObstacleTranslator(Gson objectMapper) {
+        super(objectMapper, AnalysisObstacleDTO.class, AnalysisObstacle.class);
+    }
 
     @Override
     public AnalysisObstacleDTO getAsDTO(AnalysisObstacle domain) {

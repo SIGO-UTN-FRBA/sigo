@@ -23,12 +23,11 @@ public class AnalysisExceptionSurface extends AnalysisException implements Analy
     public AnalysisExceptionSurface(
             Long id,
             String name,
-            AnalysisExceptions type,
             AnalysisCase analysisCase,
             Double heightAmls,
             Polygon geom
     ){
-        super(id, name, type, analysisCase);
+        super(id, name, analysisCase);
         this.heightAmls = heightAmls;
         this.geom = geom;
     }
@@ -58,5 +57,10 @@ public class AnalysisExceptionSurface extends AnalysisException implements Analy
     @Override
     public AnalysisRestrictionTypes getRestrictionType() {
         return AnalysisRestrictionTypes.TERRAIN_SURFACE_EXCEPTION;
+    }
+
+    @Override
+    public AnalysisExceptionTypes getType() {
+        return AnalysisExceptionTypes.SURFACE;
     }
 }

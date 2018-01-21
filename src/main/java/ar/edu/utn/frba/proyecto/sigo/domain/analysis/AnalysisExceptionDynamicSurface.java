@@ -28,12 +28,11 @@ public class AnalysisExceptionDynamicSurface extends AnalysisException {
     public AnalysisExceptionDynamicSurface(
             Long id,
             String name,
-            AnalysisExceptions type,
             AnalysisCase analysisCase,
             String function,
             Polygon geom
     ){
-        super(id, name, type, analysisCase);
+        super(id, name, analysisCase);
         this.function = function;
         this.geom = geom;
     }
@@ -41,5 +40,10 @@ public class AnalysisExceptionDynamicSurface extends AnalysisException {
     @Override
     public <T> T accept(AnalysisExceptionVisitor<T> visitor) {
         return null;
+    }
+
+    @Override
+    public AnalysisExceptionTypes getType() {
+        return AnalysisExceptionTypes.DYNAMIC_SURFACE;
     }
 }

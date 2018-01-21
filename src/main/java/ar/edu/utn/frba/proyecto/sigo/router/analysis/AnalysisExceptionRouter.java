@@ -1,14 +1,21 @@
 package ar.edu.utn.frba.proyecto.sigo.router.analysis;
 
 import ar.edu.utn.frba.proyecto.sigo.domain.analysis.Analysis;
-import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisException;
-import ar.edu.utn.frba.proyecto.sigo.dto.analysis.AnalysisExceptionDTO;
+import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisExceptionRule;
+import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisExceptionSurface;
+import ar.edu.utn.frba.proyecto.sigo.dto.analysis.AnalysisExceptionRuleDTO;
+import ar.edu.utn.frba.proyecto.sigo.dto.analysis.AnalysisExceptionSurfaceDTO;
 import ar.edu.utn.frba.proyecto.sigo.persistence.HibernateUtil;
 import ar.edu.utn.frba.proyecto.sigo.router.SigoRouter;
+import ar.edu.utn.frba.proyecto.sigo.service.analysis.AnalysisExceptionRuleService;
 import ar.edu.utn.frba.proyecto.sigo.service.analysis.AnalysisExceptionService;
-import ar.edu.utn.frba.proyecto.sigo.translator.analysis.AnalysisExceptionTranslator;
+import ar.edu.utn.frba.proyecto.sigo.service.analysis.AnalysisExceptionSurfaceService;
 import ar.edu.utn.frba.proyecto.sigo.service.analysis.AnalysisService;
 import ar.edu.utn.frba.proyecto.sigo.spark.JsonTransformer;
+import ar.edu.utn.frba.proyecto.sigo.translator.SimpleFeatureTranslator;
+import ar.edu.utn.frba.proyecto.sigo.translator.analysis.AnalysisExceptionRuleTranslator;
+import ar.edu.utn.frba.proyecto.sigo.translator.analysis.AnalysisExceptionSurfaceTranslator;
+import ar.edu.utn.frba.proyecto.sigo.translator.analysis.AnalysisExceptionTranslator;
 import com.google.gson.Gson;
 import org.eclipse.jetty.http.HttpStatus;
 import spark.Route;
@@ -16,20 +23,21 @@ import spark.RouteGroup;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import javax.inject.Inject;
-
 import java.util.stream.Collectors;
 
-import static spark.Spark.delete;
-import static spark.Spark.get;
-import static spark.Spark.post;
-import static spark.Spark.put;
+import static spark.Spark.*;
 
 public class AnalysisExceptionRouter extends SigoRouter {
 
     private JsonTransformer jsonTransformer;
     private AnalysisService analysisService;
+    private AnalysisExceptionRuleTranslator ruleTranslator;
+    private AnalysisExceptionSurfaceTranslator surfaceTranslator;
     private AnalysisExceptionTranslator translator;
     private AnalysisExceptionService exceptionService;
+    private AnalysisExceptionRuleService ruleService;
+    private AnalysisExceptionSurfaceService surfaceService;
+    private SimpleFeatureTranslator featureTranslator;
 
     @Inject
     public AnalysisExceptionRouter(
@@ -37,15 +45,24 @@ public class AnalysisExceptionRouter extends SigoRouter {
             Gson objectMapper,
             JsonTransformer jsonTransformer,
             AnalysisService analysisService,
+            AnalysisExceptionSurfaceTranslator surfaceTranslator,
             AnalysisExceptionService exceptionService,
-            AnalysisExceptionTranslator translator
-    ){
+            AnalysisExceptionRuleTranslator ruleTranslator,
+            AnalysisExceptionTranslator translator,
+            AnalysisExceptionRuleService ruleService,
+            AnalysisExceptionSurfaceService surfaceService,
+            SimpleFeatureTranslator featureTranslator){
         super(objectMapper, hibernateUtil);
 
         this.jsonTransformer = jsonTransformer;
         this.analysisService = analysisService;
+        this.surfaceTranslator = surfaceTranslator;
         this.exceptionService = exceptionService;
+        this.ruleTranslator = ruleTranslator;
         this.translator = translator;
+        this.ruleService = ruleService;
+        this.surfaceService = surfaceService;
+        this.featureTranslator = featureTranslator;
     }
 
 
@@ -58,31 +75,60 @@ public class AnalysisExceptionRouter extends SigoRouter {
 
         return analysis.getAnalysisCase().getExceptions()
                 .stream()
-                .map(e -> translator.getAsAbstractDTO(e))
+                .map(e -> translator.getAsDTO(e))
                 .collect(Collectors.toList());
     });
 
     /**
-     * Create an exception for an analysis case
+     * Create a rule exception for an analysis case
      */
-    private final Route createException = doInTransaction(true, (request, response) -> {
+    private final Route createRuleException = doInTransaction(true, (request, response) -> {
 
-        AnalysisExceptionDTO dto = translator.getAsDTO(request.body());
+        AnalysisExceptionRuleDTO dto = ruleTranslator.getAsDTO(request.body());
 
-        AnalysisException domain = translator.getAsDomain(dto);
+        AnalysisExceptionRule domain = ruleTranslator.getAsDomain(dto);
 
-        this.exceptionService.create(domain);
+        ruleService.create(domain);
 
-        return translator.getAsDTO(domain);
+        return ruleTranslator.getAsDTO(domain);
     });
 
     /**
-     * Get an exception for an analysis case
+     * Create a surface exception for an analysis case
      */
-    private final Route fetchException = doInTransaction(false, (request, response) -> {
-        AnalysisException exception = this.exceptionService.get(this.getParamExceptionId(request));
+    private final Route createSurfaceException = doInTransaction(true, (request, response) -> {
 
-        return translator.getAsDTO(exception);
+        AnalysisExceptionSurfaceDTO dto = surfaceTranslator.getAsDTO(request.body());
+
+        AnalysisExceptionSurface domain = surfaceTranslator.getAsDomain(dto);
+
+        surfaceService.create(domain);
+
+        return surfaceTranslator.getAsDTO(domain);
+    });
+
+    /**
+     * Get a rule exception for an analysis case
+     */
+    private final Route fetchRuleException = doInTransaction(false, (request, response) -> {
+        AnalysisExceptionRule exception = this.ruleService.get(this.getParamExceptionId(request));
+
+        return ruleTranslator.getAsDTO(exception);
+    });
+
+    /**
+     * Get a surface exception for an analysis case
+     */
+    private final Route fetchSurfaceException = doInTransaction(false, (request, response) -> {
+        AnalysisExceptionSurface exception = this.surfaceService.get(this.getParamExceptionId(request));
+
+        return surfaceTranslator.getAsDTO(exception);
+    });
+
+    private final Route fetchExceptionFeature = doInTransaction(false, (request, response) -> {
+        AnalysisExceptionSurface exception = this.surfaceService.get(this.getParamExceptionId(request));
+
+        return featureTranslator.getAsDTO(this.surfaceService.getFeature(exception));
     });
 
     /**
@@ -113,11 +159,21 @@ public class AnalysisExceptionRouter extends SigoRouter {
             //TODO validar que se encuentre en stage correcto
 
             get("", fetchExceptions, jsonTransformer);
-            post("", createException, jsonTransformer);
 
-            get("/:" + EXCEPTION_ID_PARAM, fetchException, jsonTransformer);
-            put("/:" + EXCEPTION_ID_PARAM, updateException, jsonTransformer);
-            delete("/:" + EXCEPTION_ID_PARAM, deleteException, jsonTransformer);
+            post("/rule", createRuleException, jsonTransformer);
+            post("/surface", createSurfaceException, jsonTransformer);
+            //post("/dynamicSurface", createDynamicSurfaceException, jsonTransformer);
+
+            get("/rule/:" + EXCEPTION_ID_PARAM, fetchRuleException, jsonTransformer);
+            get("/surface/:" + EXCEPTION_ID_PARAM, fetchSurfaceException, jsonTransformer);
+            get("/surface/:" + EXCEPTION_ID_PARAM + "/feature", fetchExceptionFeature, jsonTransformer);
+            //get("/dynamicSurface/:" + EXCEPTION_ID_PARAM, fetchException, jsonTransformer);
+
+            put("/rule/:" + EXCEPTION_ID_PARAM, updateException, jsonTransformer);
+            put("/surface/:" + EXCEPTION_ID_PARAM, updateException, jsonTransformer);
+            //put("/dynamicSurface/:" + EXCEPTION_ID_PARAM, updateException, jsonTransformer);
+
+            delete("/:exception_type/:" + EXCEPTION_ID_PARAM, deleteException, jsonTransformer);
         };
     }
 

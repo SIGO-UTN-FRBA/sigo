@@ -12,7 +12,7 @@ import ar.edu.utn.frba.proyecto.sigo.domain.regulation.icao.ICAOAnnex14RunwayCod
 import ar.edu.utn.frba.proyecto.sigo.dto.airport.RunwayClassificationDTO;
 import ar.edu.utn.frba.proyecto.sigo.exception.InvalidParameterException;
 import ar.edu.utn.frba.proyecto.sigo.service.airport.RunwayDirectionService;
-import ar.edu.utn.frba.proyecto.sigo.translator.Translator;
+import ar.edu.utn.frba.proyecto.sigo.translator.SigoTranslator;
 import com.google.gson.Gson;
 
 import javax.inject.Inject;
@@ -20,7 +20,7 @@ import javax.inject.Singleton;
 import java.util.Optional;
 
 @Singleton
-public class RunwayClassificationTranslator extends Translator<RunwayClassification, RunwayClassificationDTO> {
+public class RunwayClassificationTranslator extends SigoTranslator<RunwayClassification, RunwayClassificationDTO> {
 
     private RunwayDirectionService directionService;
 
@@ -29,10 +29,9 @@ public class RunwayClassificationTranslator extends Translator<RunwayClassificat
             Gson objectMapper,
             RunwayDirectionService directionService
     ){
+        super(objectMapper, RunwayClassificationDTO.class, RunwayClassification.class);
+
         this.directionService = directionService;
-        this.objectMapper = objectMapper;
-        this.dtoClass = RunwayClassificationDTO.class;
-        this.domainClass = RunwayClassification.class;
     }
 
     @Override

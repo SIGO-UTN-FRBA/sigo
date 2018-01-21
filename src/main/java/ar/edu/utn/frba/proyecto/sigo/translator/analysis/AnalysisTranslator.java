@@ -2,20 +2,22 @@ package ar.edu.utn.frba.proyecto.sigo.translator.analysis;
 
 import ar.edu.utn.frba.proyecto.sigo.domain.analysis.Analysis;
 import ar.edu.utn.frba.proyecto.sigo.dto.analysis.AnalysisDTO;
-import ar.edu.utn.frba.proyecto.sigo.translator.Translator;
+import ar.edu.utn.frba.proyecto.sigo.translator.SigoTranslator;
 import com.google.gson.Gson;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.time.ZoneOffset;
 
-public class AnalysisTranslator extends Translator<Analysis, AnalysisDTO> {
+@Singleton
+public class AnalysisTranslator extends SigoTranslator<Analysis, AnalysisDTO> {
 
     @Inject
     public AnalysisTranslator(
             Gson gson
     ){
-        this.objectMapper = gson;
+        super(gson, AnalysisDTO.class, Analysis.class);
     }
 
     @Override

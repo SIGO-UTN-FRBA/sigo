@@ -12,7 +12,7 @@ import ar.edu.utn.frba.proyecto.sigo.domain.object.ElevatedObjectTypes;
 import ar.edu.utn.frba.proyecto.sigo.dto.object.PlacedObjectDTO;
 import ar.edu.utn.frba.proyecto.sigo.exception.InvalidParameterException;
 import ar.edu.utn.frba.proyecto.sigo.service.object.PlacedObjectOwnerService;
-import ar.edu.utn.frba.proyecto.sigo.translator.Translator;
+import ar.edu.utn.frba.proyecto.sigo.translator.SigoTranslator;
 import ar.edu.utn.frba.proyecto.sigo.service.location.PoliticalLocationService;
 import ar.edu.utn.frba.proyecto.sigo.service.location.RegionService;
 import com.google.gson.Gson;
@@ -22,7 +22,7 @@ import javax.inject.Singleton;
 import java.util.Optional;
 
 @Singleton
-public class PlacedObjectTranslator extends Translator<PlacedObject, PlacedObjectDTO>{
+public class PlacedObjectTranslator extends SigoTranslator<PlacedObject, PlacedObjectDTO> {
 
     private PlacedObjectOwnerService ownerService;
     private PoliticalLocationService locationService;
@@ -35,9 +35,9 @@ public class PlacedObjectTranslator extends Translator<PlacedObject, PlacedObjec
             PoliticalLocationService locationService,
             RegionService regionService
     ){
+        super(gson, PlacedObjectDTO.class, PlacedObject.class);
         this.locationService = locationService;
         this.regionService = regionService;
-        this.objectMapper = gson;
         this.ownerService = ownerService;
     };
 
