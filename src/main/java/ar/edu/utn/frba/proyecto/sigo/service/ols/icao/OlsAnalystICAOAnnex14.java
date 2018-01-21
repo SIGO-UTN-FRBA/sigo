@@ -47,11 +47,6 @@ public class OlsAnalystICAOAnnex14 extends OlsAnalyst {
     }
 
     @Override
-    protected void applyExceptions() {
-
-    }
-
-    @Override
     public Double determineHeightForAnalysisSurface(AnalysisSurface analysisSurface, Point point) {
 
         Double surfaceHeight = this.heightsHelper.determineHeightAt((ICAOAnnex14Surface)analysisSurface.getSurface(), point);

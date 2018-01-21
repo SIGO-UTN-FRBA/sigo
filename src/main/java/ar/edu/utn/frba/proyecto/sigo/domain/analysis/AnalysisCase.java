@@ -12,6 +12,7 @@ import lombok.*;
 import javax.persistence.*;
 import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @EqualsAndHashCode(callSuper = true, exclude = {"objects","exceptions", "surfaces"})
@@ -85,5 +86,12 @@ public class AnalysisCase extends SigoDomain {
 
     public Stream<AnalysisRestriction> getRestrictions(){
         return Streams.concat(this.getSurfaceExceptions(), this.getSurfaces().stream());
+    }
+
+    public Set<AnalysisObstacle> getObstaclesCausedByRestriction(AnalysisRestriction restriction){
+        return this.getObstacles()
+                .stream()
+                .filter(o -> o.isCausedBy(restriction))
+                .collect(Collectors.toSet());
     }
 }

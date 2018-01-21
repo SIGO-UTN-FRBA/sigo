@@ -46,7 +46,14 @@ public class AnalysisObstacle extends SigoDomain {
     @OneToOne (mappedBy = "obstacle", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private AnalysisResult result;
 
+    @Column
+    private Boolean excepting;
+
     public Double getPenetration(){
         return objectHeight - restrictionHeight;
+    }
+
+    public Boolean isCausedBy(AnalysisRestriction restriction) {
+        return this.getRestriction().equals(restriction);
     }
 }
