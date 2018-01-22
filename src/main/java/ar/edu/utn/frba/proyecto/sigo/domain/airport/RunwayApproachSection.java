@@ -15,8 +15,16 @@ import javax.persistence.*;
 @Builder
 public class RunwayApproachSection extends SigoDomain {
     @Id
-    @SequenceGenerator(name = "runwayApproachSectionGenerator", sequenceName = "Runway_Approach_Section_SEQUENCE", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "runwayApproachSectionGenerator")
+    @SequenceGenerator(
+            name = "runwayApproachSectionGenerator",
+            sequenceName = "Runway_Approach_Section_SEQUENCE",
+            allocationSize = 1,
+            initialValue = 1000
+    )
+    @GeneratedValue(
+            strategy = GenerationType.SEQUENCE,
+            generator = "runwayApproachSectionGenerator"
+    )
     @Column(name = "section_id")
     private Long id;
 

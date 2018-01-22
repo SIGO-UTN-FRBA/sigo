@@ -1,7 +1,5 @@
 package ar.edu.utn.frba.proyecto.sigo.domain.regulation;
 
-import java.util.List;
-
 import ar.edu.utn.frba.proyecto.sigo.domain.SigoDomain;
 import ar.edu.utn.frba.proyecto.sigo.domain.regulation.bmvbw.RegulationBMVBW;
 import ar.edu.utn.frba.proyecto.sigo.domain.regulation.easa.RegulationEASA;
@@ -14,7 +12,9 @@ import ar.edu.utn.frba.proyecto.sigo.domain.regulation.tcanada.RegulationTpCanad
 import ar.edu.utn.frba.proyecto.sigo.exception.SigoException;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
+@EqualsAndHashCode(callSuper = true)
 @AllArgsConstructor
 @Data
 public abstract class Regulation extends SigoDomain {

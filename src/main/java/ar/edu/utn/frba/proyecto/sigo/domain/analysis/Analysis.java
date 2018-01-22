@@ -19,8 +19,16 @@ import java.util.Optional;
 @Builder
 public class Analysis extends SigoDomain {
     @Id
-    @SequenceGenerator(name = "analysisGenerator", sequenceName = "ANALYSIS_SEQUENCE", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "analysisGenerator")
+    @SequenceGenerator(
+            name = "analysisGenerator",
+            sequenceName = "ANALYSIS_SEQUENCE",
+            allocationSize = 1,
+            initialValue = 1000
+    )
+    @GeneratedValue(
+            strategy = GenerationType.SEQUENCE,
+            generator = "analysisGenerator"
+    )
     @Column(name = "analysis_id")
     private Long id;
 

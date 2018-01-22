@@ -1,20 +1,32 @@
 package ar.edu.utn.frba.proyecto.sigo.domain.analysis;
 
+import ar.edu.utn.frba.proyecto.sigo.domain.SigoDomain;
+import com.google.common.base.MoreObjects;
+import lombok.AccessLevel;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
 import java.util.List;
 
-import ar.edu.utn.frba.proyecto.sigo.domain.SigoDomain;
-import com.google.common.base.MoreObjects;
-import lombok.*;
-
+@EqualsAndHashCode(callSuper = true, exclude = "regions")
 @Entity
 @Table(name = "public.tbl_states")
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 @Data
 public class State extends SigoDomain {
     @Id
-    @SequenceGenerator(name = "stateGenerator", sequenceName = "STATE_SEQUENCE", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "stateGenerator")
+    @SequenceGenerator(
+            name = "stateGenerator",
+            sequenceName = "STATE_SEQUENCE",
+            allocationSize = 1,
+            initialValue = 10
+    )
+    @GeneratedValue(
+            strategy = GenerationType.SEQUENCE,
+            generator = "stateGenerator"
+    )
 
     @Column(name = "state_id")
     private Long id;

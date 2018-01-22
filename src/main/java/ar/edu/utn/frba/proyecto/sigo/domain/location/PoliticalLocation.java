@@ -9,14 +9,23 @@ import javax.persistence.*;
 import java.util.List;
 import java.util.Optional;
 
+@EqualsAndHashCode(callSuper = true, exclude = "children")
 @Entity
 @Table(name = "public.tbl_political_locations")
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 @Data
 public class PoliticalLocation extends SigoDomain implements Spatial<MultiPolygon> {
     @Id
-    @SequenceGenerator(name = "politicalLocationGenerator", sequenceName = "POLITICAL_LOCATION_SEQUENCE", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "politicalLocationGenerator")
+    @SequenceGenerator(
+            name = "politicalLocationGenerator",
+            sequenceName = "POLITICAL_LOCATION_SEQUENCE",
+            allocationSize = 1,
+            initialValue = 550
+    )
+    @GeneratedValue(
+            strategy = GenerationType.SEQUENCE,
+            generator = "politicalLocationGenerator"
+    )
     @Column(name = "location_id")
     private Long id;
 

@@ -3,10 +3,10 @@ package ar.edu.utn.frba.proyecto.sigo.domain.airport;
 import ar.edu.utn.frba.proyecto.sigo.domain.SigoDomain;
 import ar.edu.utn.frba.proyecto.sigo.domain.Spatial;
 import com.google.common.base.MoreObjects;
-import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Point;
 import lombok.*;
 import org.apache.commons.lang3.StringUtils;
+
 import javax.persistence.*;
 import java.util.Optional;
 
@@ -20,8 +20,16 @@ import java.util.Optional;
 public class RunwayDirection extends SigoDomain implements Spatial<Point> {
 
     @Id
-    @SequenceGenerator(name = "directionGenerator", sequenceName = "RUNWAY_DIRECTION_SEQUENCE", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "directionGenerator")
+    @SequenceGenerator(
+            name = "directionGenerator",
+            sequenceName = "RUNWAY_DIRECTION_SEQUENCE",
+            allocationSize = 1,
+            initialValue = 2000
+    )
+    @GeneratedValue(
+            strategy = GenerationType.SEQUENCE,
+            generator = "directionGenerator"
+    )
     @Column(name = "direction_id")
     private Long id;
 
