@@ -1,14 +1,17 @@
 package ar.edu.utn.frba.proyecto.sigo.domain.analysis;
 
-import javax.persistence.*;
-import java.util.List;
-
 import ar.edu.utn.frba.proyecto.sigo.domain.SigoDomain;
 import ar.edu.utn.frba.proyecto.sigo.domain.Spatial;
 import ar.edu.utn.frba.proyecto.sigo.domain.airport.Airport;
 import com.google.common.base.MoreObjects;
 import com.vividsolutions.jts.geom.MultiPolygon;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+
+import javax.persistence.*;
+import java.util.List;
 
 @EqualsAndHashCode(callSuper = true, exclude = "airports")
 @Entity
@@ -17,8 +20,16 @@ import lombok.*;
 @Data
 public class Region extends SigoDomain implements Spatial<MultiPolygon> {
     @Id
-    @SequenceGenerator(name = "regionGenerator", sequenceName = "REGION_SEQUENCE", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "regionGenerator")
+    @SequenceGenerator(
+            name = "regionGenerator",
+            sequenceName = "REGION_SEQUENCE",
+            allocationSize = 1,
+            initialValue = 5
+    )
+    @GeneratedValue(
+            strategy = GenerationType.SEQUENCE,
+            generator = "regionGenerator"
+    )
     @Column(name = "region_id")
     private Long id;
 

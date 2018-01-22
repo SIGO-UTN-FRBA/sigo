@@ -6,7 +6,7 @@ import org.hibernate.annotations.Any;
 
 import javax.persistence.*;
 
-@EqualsAndHashCode(callSuper = true, exclude = "analysisCase")
+@EqualsAndHashCode(callSuper = true, exclude = {"analysisCase", "object", "result", "restriction"})
 @Entity
 @Table(name = "public.tbl_analysis_obstacles")
 @AllArgsConstructor

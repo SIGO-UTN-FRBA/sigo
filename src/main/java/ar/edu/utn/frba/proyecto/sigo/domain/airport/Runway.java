@@ -4,8 +4,8 @@ import ar.edu.utn.frba.proyecto.sigo.domain.SigoDomain;
 import ar.edu.utn.frba.proyecto.sigo.domain.Spatial;
 import com.google.common.base.MoreObjects;
 import com.vividsolutions.jts.geom.LineString;
-import com.vividsolutions.jts.geom.Polygon;
 import lombok.*;
+
 import javax.persistence.*;
 import java.util.List;
 import java.util.Optional;
@@ -21,8 +21,16 @@ import java.util.stream.Collectors;
 public class Runway extends SigoDomain implements Spatial<LineString> {
 
     @Id
-    @SequenceGenerator(name = "runwayGenerator", sequenceName = "RUNWAY_SEQUENCE", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "runwayGenerator")
+    @SequenceGenerator(
+            name = "runwayGenerator",
+            sequenceName = "RUNWAY_SEQUENCE",
+            allocationSize = 1,
+            initialValue = 1000
+    )
+    @GeneratedValue(
+            strategy = GenerationType.SEQUENCE,
+            generator = "runwayGenerator"
+    )
     @Column(name = "runway_id")
     private Long id;
 

@@ -18,7 +18,12 @@ import javax.persistence.*;
 @Data
 public class PlacedObjectOwner extends SigoDomain {
     @Id
-    @SequenceGenerator(name = "placedObjectOwnerGenerator", sequenceName = "PLACED_OBJECT_OWNER_SEQUENCE", allocationSize = 1)
+    @SequenceGenerator(
+            name = "placedObjectOwnerGenerator",
+            sequenceName = "PLACED_OBJECT_OWNER_SEQUENCE",
+            allocationSize = 1,
+            initialValue = 1000
+    )
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "placedObjectOwnerGenerator")
     @Column(name = "owner_id")
     private Long id;

@@ -25,7 +25,12 @@ import javax.persistence.Table;
 public class AnalysisResultReason extends SigoDomain {
 
     @Id
-    @SequenceGenerator(name = "analysisResultReasonGenerator", sequenceName = "ANALYSIS_RESULT_REASON_SEQUENCE", allocationSize = 1)
+    @SequenceGenerator(
+            name = "analysisResultReasonGenerator",
+            sequenceName = "ANALYSIS_RESULT_REASON_SEQUENCE",
+            allocationSize = 1,
+            initialValue = 10
+    )
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "analysisResultReasonGenerator")
     @Column(name = "reason_id")
     private Long id;

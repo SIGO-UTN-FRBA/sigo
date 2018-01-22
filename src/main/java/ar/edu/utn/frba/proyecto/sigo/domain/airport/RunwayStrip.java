@@ -24,8 +24,16 @@ import javax.persistence.Table;
 public class RunwayStrip extends SigoDomain {
 
     @Id
-    @SequenceGenerator(name = "runwayStripGenerator", sequenceName = "RUNWAY_STRIP_SEQUENCE", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "runwayStripGenerator")
+    @SequenceGenerator(
+            name = "runwayStripGenerator",
+            sequenceName = "RUNWAY_STRIP_SEQUENCE",
+            allocationSize = 1,
+            initialValue = 1000
+    )
+    @GeneratedValue(
+            strategy = GenerationType.SEQUENCE,
+            generator = "runwayStripGenerator"
+    )
     @Column(name = "strip_id")
     private Long id;
 

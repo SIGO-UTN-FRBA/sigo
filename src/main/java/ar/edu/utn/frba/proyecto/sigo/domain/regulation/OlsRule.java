@@ -1,11 +1,11 @@
 package ar.edu.utn.frba.proyecto.sigo.domain.regulation;
 
-import javax.persistence.*;
-
 import ar.edu.utn.frba.proyecto.sigo.domain.SigoDomain;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import javax.persistence.*;
 
 
 @Entity
@@ -16,7 +16,12 @@ import lombok.NoArgsConstructor;
 public abstract class OlsRule extends SigoDomain {
 
     @Id
-    @SequenceGenerator(name = "olsRuleGenerator", sequenceName = "OLS_RULE_SEQUENCE", allocationSize = 1)
+    @SequenceGenerator(
+            name = "olsRuleGenerator",
+            sequenceName = "OLS_RULE_SEQUENCE",
+            allocationSize = 1,
+            initialValue = 500
+    )
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "olsRuleGenerator")
     @Column(name = "rule_id")
     private Long id;

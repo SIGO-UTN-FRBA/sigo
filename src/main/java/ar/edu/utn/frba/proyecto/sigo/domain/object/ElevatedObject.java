@@ -24,7 +24,7 @@ public abstract class ElevatedObject<T extends Geometry>
     @Id
     @SequenceGenerator(
             name = "elevated_object_generator",
-            initialValue = 100,
+            initialValue = 120500,
             allocationSize = 1,
             sequenceName = "elevated_object_sequence"
     )

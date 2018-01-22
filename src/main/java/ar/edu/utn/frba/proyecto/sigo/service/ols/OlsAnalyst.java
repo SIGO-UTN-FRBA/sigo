@@ -83,13 +83,32 @@ public abstract class OlsAnalyst {
 
         Double objectHeight = analysisObject.getElevatedObject().getHeightAmls();
 
-        return AnalysisObstacle.builder()
+        AnalysisObstacle analysisObstacle = AnalysisObstacle.builder()
                 .object(analysisObject)
                 .restriction(restriction)
                 .analysisCase(this.getAnalysisCase())
                 .objectHeight(objectHeight)
                 .restrictionHeight(restrictionHeight)
                 .excepting(false)
+                .build();
+
+        if(analysisObstacle.getPenetration() < 0D )
+            analysisObstacle.setResult(createSuggestedAnalystResult(analysisObstacle));
+
+        return analysisObstacle;
+    }
+
+    private AnalysisResult createSuggestedAnalystResult(AnalysisObstacle analysisObstacle) {
+
+        //FIXME
+        AnalysisResultReason reason = getCurrentSession().get(AnalysisResultReason.class, 7L);
+
+        return AnalysisResult.builder()
+                .obstacle(analysisObstacle)
+                .reason(reason)
+                .mustKeep(true)
+                .isObstacle(false)
+                .reasonDetail("This reason was generated automatically.")
                 .build();
     }
 
