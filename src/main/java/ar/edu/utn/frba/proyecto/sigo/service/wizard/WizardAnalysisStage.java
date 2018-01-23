@@ -3,7 +3,7 @@ package ar.edu.utn.frba.proyecto.sigo.service.wizard;
 import ar.edu.utn.frba.proyecto.sigo.domain.analysis.Analysis;
 import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisStages;
 import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisStatuses;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+import org.apache.commons.lang.NotImplementedException;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
@@ -27,7 +27,7 @@ public abstract class WizardAnalysisStage {
     }
 
     protected void finish(Analysis analysis){
-        throw new RuntimeException(); //TODO especializar exception
+        throw new NotImplementedException();
     }
 
     public void cancel(Analysis analysis) {

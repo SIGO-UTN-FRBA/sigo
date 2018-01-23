@@ -1,6 +1,7 @@
 package ar.edu.utn.frba.proyecto.sigo.service.wizard;
 
 import ar.edu.utn.frba.proyecto.sigo.domain.analysis.Analysis;
+import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisObject;
 import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisStages;
 
 import javax.inject.Inject;
@@ -32,7 +33,7 @@ public class WizardAnalysisStageObject extends WizardAnalysisStage {
 
     @Override
     protected void validateExit(Analysis analysis) {
-        if(!analysis.getAnalysisCase().getObjects().stream().anyMatch(o -> o.getIncluded()))
+        if(analysis.getAnalysisCase().getObjects().stream().noneMatch(AnalysisObject::getIncluded))
             throw new RuntimeException("There is no object included into analysis case");
     }
 
