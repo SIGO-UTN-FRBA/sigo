@@ -1,6 +1,7 @@
 package ar.edu.utn.frba.proyecto.sigo.service.ols;
 
 import ar.edu.utn.frba.proyecto.sigo.domain.analysis.*;
+import ar.edu.utn.frba.proyecto.sigo.domain.object.ElevatedObjectTypes;
 import com.vividsolutions.jts.geom.Point;
 import lombok.Data;
 import org.hibernate.Session;
@@ -93,12 +94,14 @@ public abstract class OlsAnalyst {
                 .build();
 
         if(analysisObstacle.getPenetration() < 0D )
-            analysisObstacle.setResult(createSuggestedAnalystResult(analysisObstacle));
+            analysisObstacle.setResult(createSuggestedAnalystResultForSafetyObject(analysisObstacle));
+        else if(analysisObstacle.getPenetration() > 0D && analysisObject.getElevatedObject().getType().equals(ElevatedObjectTypes.LEVEL_CURVE))
+            analysisObstacle.setResult(createSuggestedAnalystResultForFixedRiskyObject(analysisObstacle));
 
         return analysisObstacle;
     }
 
-    private AnalysisResult createSuggestedAnalystResult(AnalysisObstacle analysisObstacle) {
+    private AnalysisResult createSuggestedAnalystResultForSafetyObject(AnalysisObstacle analysisObstacle) {
 
         //FIXME
         AnalysisResultReason reason = getCurrentSession().get(AnalysisResultReason.class, 7L);
@@ -108,6 +111,20 @@ public abstract class OlsAnalyst {
                 .reason(reason)
                 .mustKeep(true)
                 .isObstacle(false)
+                .reasonDetail("This reason was generated automatically.")
+                .build();
+    }
+
+    private AnalysisResult createSuggestedAnalystResultForFixedRiskyObject(AnalysisObstacle analysisObstacle){
+
+        //FIXME
+        AnalysisResultReason reason = getCurrentSession().get(AnalysisResultReason.class, 1L);
+
+        return AnalysisResult.builder()
+                .obstacle(analysisObstacle)
+                .reason(reason)
+                .mustKeep(true)
+                .isObstacle(true)
                 .reasonDetail("This reason was generated automatically.")
                 .build();
     }
