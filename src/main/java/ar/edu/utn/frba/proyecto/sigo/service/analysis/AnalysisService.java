@@ -52,6 +52,10 @@ public class AnalysisService extends SigoService<Analysis, Analysis>{
         Join<Object, Object> airport = analysisCase.join(AnalysisCase_.aerodrome.getName());
 
 
+        Optional<Predicate> predicateId = Optional
+                .ofNullable(parameters.get(Airport_.id.getName()).value())
+                .map(v -> builder.equal(airport.get(Airport_.id.getName()), v));
+
         Optional<Predicate> predicateNameFIR = Optional
                 .ofNullable(parameters.get(Airport_.nameFIR.getName()).value())
                 .map(v -> builder.like(airport.get(Airport_.nameFIR.getName()), String.format("%%%s%%",v)));
@@ -86,7 +90,7 @@ public class AnalysisService extends SigoService<Analysis, Analysis>{
                 });
 
 
-        List<Predicate> collect = Lists.newArrayList(predicateNameFIR, predicateCodeFIR, predicateCodeIATA, predicateCodeLocal, predicateCurrent)
+        List<Predicate> collect = Lists.newArrayList(predicateId, predicateNameFIR, predicateCodeFIR, predicateCodeIATA, predicateCodeLocal, predicateCurrent)
                 .stream()
                 .filter(Optional::isPresent)
                 .map(Optional::get)
