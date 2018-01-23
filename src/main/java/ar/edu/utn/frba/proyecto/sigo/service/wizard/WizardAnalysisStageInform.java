@@ -41,6 +41,9 @@ public class WizardAnalysisStageInform extends WizardAnalysisStage {
     @Override
     protected void validateEnter(Analysis analysis) {
 
+        if(analysis.getAnalysisCase().getObstacles().isEmpty())
+            return;
+
         boolean pending = analysis.getAnalysisCase().getObstacles()
                 .stream()
                 .anyMatch(o -> !o.getExcepting() && !Optional.ofNullable(o.getResult()).isPresent());
