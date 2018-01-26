@@ -22,6 +22,7 @@ public abstract class WizardAnalysisStage {
     protected abstract AnalysisStages identifier();
 
     protected void enter(Analysis analysis){
+        analysis.setStatus(AnalysisStatuses.IN_PROGRESS);
         analysis.setStage(this.identifier());
         analysis.setEditionDate(LocalDateTime.now(ZoneOffset.UTC));
     }
