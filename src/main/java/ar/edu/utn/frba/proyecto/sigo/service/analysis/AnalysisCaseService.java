@@ -133,5 +133,4 @@ public class AnalysisCaseService extends SigoService <AnalysisCase, Analysis> {
 
         return query.getResultStream();
     }
-
 }

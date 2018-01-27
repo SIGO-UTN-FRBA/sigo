@@ -2,11 +2,8 @@ package ar.edu.utn.frba.proyecto.sigo.service.wizard;
 
 import ar.edu.utn.frba.proyecto.sigo.domain.analysis.Analysis;
 import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisStages;
-import ar.edu.utn.frba.proyecto.sigo.service.ols.OlsAnalyst;
+import ar.edu.utn.frba.proyecto.sigo.service.analysis.AnalysisCaseService;
 import ar.edu.utn.frba.proyecto.sigo.service.ols.OlsAnalystFactory;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -19,16 +16,19 @@ public class WizardAnalysisStageAnalysis extends WizardAnalysisStage{
     private OlsAnalystFactory analystFactory;
     private Provider<WizardAnalysisStageInform> next;
     private Provider<WizardAnalysisStageException> previous;
+    private AnalysisCaseService caseService;
 
     @Inject
     public WizardAnalysisStageAnalysis(
             OlsAnalystFactory analystFactory,
             Provider<WizardAnalysisStageInform> next,
-            Provider<WizardAnalysisStageException> previous
+            Provider<WizardAnalysisStageException> previous,
+            AnalysisCaseService caseService
     ) {
         this.analystFactory = analystFactory;
         this.next = next;
         this.previous = previous;
+        this.caseService = caseService;
     }
 
     @Override
@@ -62,5 +62,13 @@ public class WizardAnalysisStageAnalysis extends WizardAnalysisStage{
 
         analystFactory.createAnalystICAOAnnex14(analysis.getAnalysisCase())
                 .analyze();
+    }
+
+    @Override
+    protected void rollback(Analysis analysis) {
+        super.rollback(analysis);
+
+        analysis.getAnalysisCase().getObstacles().clear();
+        analysis.getAnalysisCase().getSurfaces().clear();
     }
 }
