@@ -57,18 +57,17 @@ public abstract class OlsAnalyst {
 
     private void defineObstacles() {
 
-        Set<AnalysisObstacle> analysisObstacles = this.getAnalysisCase().getRestrictions()
+        this.getAnalysisCase().getRestrictions()
                 .map(this::defineObstacles)
                 .flatMap(Collection::stream)
-                .collect(Collectors.toSet());
+                .forEach( o -> this.analysisCase.addObstacle(o));
 
-        this.analysisCase.setObstacles(analysisObstacles);
     }
 
     private Set<AnalysisObstacle> defineObstacles(AnalysisRestriction restriction) {
         return this.getAnalysisCase().getObjects()
                 .stream()
-                .filter(object -> isObstacle(restriction, object))
+                .filter(object -> object.getIncluded() && isObstacle(restriction, object))
                 .map(object -> createAnalysisObstacle(restriction, object))
                 .collect(Collectors.toSet());
     }

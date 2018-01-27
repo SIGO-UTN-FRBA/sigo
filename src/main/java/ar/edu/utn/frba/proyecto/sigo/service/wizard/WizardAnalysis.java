@@ -2,12 +2,10 @@ package ar.edu.utn.frba.proyecto.sigo.service.wizard;
 
 import ar.edu.utn.frba.proyecto.sigo.domain.analysis.Analysis;
 import ar.edu.utn.frba.proyecto.sigo.exception.SigoException;
-import com.google.common.collect.Sets;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
 import java.util.Set;
 
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
@@ -38,6 +36,8 @@ public class WizardAnalysis {
         WizardAnalysisStage currentStage = getCurrentStage(analysis);
 
         WizardAnalysisStage previousStage = currentStage.previous().orElseThrow(()-> new RuntimeException("Invalid wizard stage transition"));
+
+        currentStage.rollback(analysis);
 
         previousStage.enter(analysis);
     }

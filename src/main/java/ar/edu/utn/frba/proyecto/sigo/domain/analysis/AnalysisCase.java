@@ -44,10 +44,10 @@ public class AnalysisCase extends SigoDomain {
     @Column(name="search_radius")
     private Double searchRadius;
 
-    @OneToMany(mappedBy = "analysisCase", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "analysisCase", orphanRemoval = true, cascade = CascadeType.ALL)
     private Set<AnalysisSurface> surfaces = Sets.newHashSet();
 
-    @OneToMany(mappedBy = "analysisCase", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "analysisCase", orphanRemoval = true, cascade = CascadeType.ALL)
     private Set<AnalysisObstacle> obstacles = Sets.newHashSet();
 
 
@@ -93,5 +93,13 @@ public class AnalysisCase extends SigoDomain {
                 .stream()
                 .filter(o -> o.isCausedBy(restriction))
                 .collect(Collectors.toSet());
+    }
+
+    public void addObstacle(AnalysisObstacle o) {
+        this.getObstacles().add(o);
+    }
+
+    public void addSurface(AnalysisSurface s) {
+        this.getSurfaces().add(s);
     }
 }

@@ -23,7 +23,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 public class OlsAnalystICAOAnnex14 extends OlsAnalyst {
 
@@ -57,19 +56,13 @@ public class OlsAnalystICAOAnnex14 extends OlsAnalyst {
     @Override
     protected void initializeSurfaces() {
 
-        this.analysisCase.setSurfaces(createAnalysisSurfaces());
-    }
-
-
-    private Set<AnalysisSurface> createAnalysisSurfaces() {
-
-        return this.analysisCase.getAerodrome().getRunways()
+        this.analysisCase.getAerodrome().getRunways()
                 .stream()
                 .map(Runway::getDirections)
                 .flatMap(Collection::stream)
                 .map(this::createAnalysisSurfaces)
                 .flatMap(Collection::stream)
-                .collect(Collectors.toSet());
+                .forEach(s -> this.analysisCase.addSurface(s));
     }
 
     private Set<AnalysisSurface> createAnalysisSurfaces(RunwayDirection direction){
