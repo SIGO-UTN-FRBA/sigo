@@ -68,7 +68,7 @@ public abstract class OlsAnalyst {
     private Set<AnalysisObstacle> defineObstacles(AnalysisRestriction restriction) {
         return this.getAnalysisCase().getObjects()
                 .stream()
-                .filter(object -> isObstacle(restriction, object))
+                .filter(object -> object.getIncluded() && isObstacle(restriction, object))
                 .map(object -> createAnalysisObstacle(restriction, object))
                 .collect(Collectors.toSet());
     }
