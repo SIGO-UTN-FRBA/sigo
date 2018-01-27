@@ -190,7 +190,7 @@ public class AnalysisExceptionRouter extends SigoRouter {
             put("/surface/:" + EXCEPTION_ID_PARAM, updateException, jsonTransformer);
             //put("/dynamicSurface/:" + EXCEPTION_ID_PARAM, updateException, jsonTransformer);
 
-            delete("/:exception_type/:" + EXCEPTION_ID_PARAM, deleteException, jsonTransformer);
+            delete("/:" + EXCEPTION_ID_PARAM, deleteException, jsonTransformer);
         };
     }
 
