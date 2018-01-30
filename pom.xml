@@ -89,7 +89,6 @@
       <version>${guice.version}</version>
     </dependency>
 
-
     <!-- Json -->
     <dependency>
       <groupId>com.google.code.gson</groupId>
@@ -129,6 +128,14 @@
       <groupId>org.hibernate</groupId>
       <artifactId>hibernate-jpamodelgen</artifactId>
       <version>${hibernate.version}</version>
+    </dependency>
+
+
+    <!-- OAuth -->
+    <dependency>
+      <groupId>com.auth0</groupId>
+      <artifactId>java-jwt</artifactId>
+      <version>3.3.0</version>
     </dependency>
 
 

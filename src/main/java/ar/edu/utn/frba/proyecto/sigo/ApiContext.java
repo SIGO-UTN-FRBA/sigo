@@ -3,15 +3,20 @@ package ar.edu.utn.frba.proyecto.sigo;
 import ar.edu.utn.frba.proyecto.sigo.dto.common.ExceptionDTO;
 import ar.edu.utn.frba.proyecto.sigo.exception.*;
 import ar.edu.utn.frba.proyecto.sigo.spark.Router;
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.JWTVerifier;
+import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.github.racc.tscg.TypesafeConfig;
 import com.google.gson.Gson;
 import lombok.extern.slf4j.Slf4j;
+import org.eclipse.jetty.http.HttpMethod;
 import org.eclipse.jetty.http.HttpStatus;
 import spark.Filter;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-
+import java.io.UnsupportedEncodingException;
 import java.util.Set;
 
 import static spark.Spark.*;
@@ -23,6 +28,9 @@ public class ApiContext {
     private final Integer port;
     private final String basePath;
     private String url;
+    private String secret;
+    private String audience;
+    private String issuer;
     private Gson jsonTransformer;
     private final Set<Router> routers;
 
@@ -31,6 +39,9 @@ public class ApiContext {
             @TypesafeConfig("server.port") Integer port,
             @TypesafeConfig("app.context") String basePath,
             @TypesafeConfig("app.url") String url,
+            @TypesafeConfig("auth0.clientSecret") String secret,
+            @TypesafeConfig("auth0.audience") String audience,
+            @TypesafeConfig("auth0.issuer") String issuer,
             Gson jsonTransformer,
             Set<Router> routers
     ){
@@ -38,6 +49,9 @@ public class ApiContext {
         this.port = port;
         this.basePath = basePath;
         this.url = url;
+        this.secret = secret;
+        this.audience = audience;
+        this.issuer = issuer;
         this.jsonTransformer = jsonTransformer;
         this.routers = routers;
         this.url=url;
@@ -50,11 +64,45 @@ public class ApiContext {
 
         this.configureCors();
 
+        this.configureAuth();
+
         this.configureExceptions();
 
         this.configureRoutes();
 
         this.configureContentTypes();
+
+    }
+
+    private void configureAuth() {
+
+        Algorithm algorithm = null;
+
+        try {
+            algorithm = Algorithm.HMAC256(secret);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+
+        JWTVerifier verifier = JWT.require(algorithm)
+                .withIssuer(issuer)
+                .withAudience(audience)
+                .build();
+
+        before(basePath + "/*", (request, response) -> {
+
+            if(request.requestMethod().equals(HttpMethod.OPTIONS.asString()))
+                    return;
+
+            try {
+
+                verifier.verify(request.headers("authorization"));
+
+            } catch (JWTVerificationException e){
+                //Invalid signature/claims
+                throw new UnauthorizedRequestException(e);
+            }
+        });
 
     }
 
@@ -143,6 +191,17 @@ public class ApiContext {
                             e.getMessage()
                     )
                 )
+            );
+        });
+
+        exception(UnauthorizedRequestException.class, (e, request, response) ->{
+            response.status(HttpStatus.UNAUTHORIZED_401);
+            response.body(jsonTransformer.toJson(
+                    new ExceptionDTO(
+                            UnauthorizedRequestException.class.getSimpleName(),
+                            e.getMessage()
+                    )
+                    )
             );
         });
     }
