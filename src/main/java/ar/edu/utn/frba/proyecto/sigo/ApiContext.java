@@ -3,10 +3,14 @@ package ar.edu.utn.frba.proyecto.sigo;
 import ar.edu.utn.frba.proyecto.sigo.dto.common.ExceptionDTO;
 import ar.edu.utn.frba.proyecto.sigo.exception.*;
 import ar.edu.utn.frba.proyecto.sigo.spark.Router;
+import com.auth0.jwk.JwkException;
+import com.auth0.jwk.JwkProvider;
+import com.auth0.jwk.JwkProviderBuilder;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
+import com.auth0.jwt.interfaces.RSAKeyProvider;
 import com.github.racc.tscg.TypesafeConfig;
 import com.google.gson.Gson;
 import lombok.extern.slf4j.Slf4j;
@@ -16,7 +20,8 @@ import spark.Filter;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.io.UnsupportedEncodingException;
+import java.security.interfaces.RSAPrivateKey;
+import java.security.interfaces.RSAPublicKey;
 import java.util.Set;
 
 import static spark.Spark.*;
@@ -29,8 +34,10 @@ public class ApiContext {
     private final String basePath;
     private String url;
     private String secret;
-    private String audience;
+    private String audience1;
+    private String audience2;
     private String issuer;
+    private String jwksUri;
     private Gson jsonTransformer;
     private final Set<Router> routers;
 
@@ -40,8 +47,10 @@ public class ApiContext {
             @TypesafeConfig("app.context") String basePath,
             @TypesafeConfig("app.url") String url,
             @TypesafeConfig("auth0.clientSecret") String secret,
-            @TypesafeConfig("auth0.audience") String audience,
+            @TypesafeConfig("auth0.audience1") String audience1,
+            @TypesafeConfig("auth0.audience2") String audience2,
             @TypesafeConfig("auth0.issuer") String issuer,
+            @TypesafeConfig("auth0.jwksUri") String jwksUri,
             Gson jsonTransformer,
             Set<Router> routers
     ){
@@ -50,8 +59,10 @@ public class ApiContext {
         this.basePath = basePath;
         this.url = url;
         this.secret = secret;
-        this.audience = audience;
+        this.audience1 = audience1;
+        this.audience2 = audience2;
         this.issuer = issuer;
+        this.jwksUri = jwksUri;
         this.jsonTransformer = jsonTransformer;
         this.routers = routers;
         this.url=url;
@@ -76,27 +87,48 @@ public class ApiContext {
 
     private void configureAuth() {
 
-        Algorithm algorithm = null;
 
-        try {
-            algorithm = Algorithm.HMAC256(secret);
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
+        JwkProvider jwkProvider = new JwkProviderBuilder(jwksUri).build();
 
-        JWTVerifier verifier = JWT.require(algorithm)
-                .withIssuer(issuer)
-                .withAudience(audience)
-                .build();
+        RSAKeyProvider keyProvider = new RSAKeyProvider() {
+            @Override
+            public RSAPublicKey getPublicKeyById(String kid) {
+
+                try {
+                    return (RSAPublicKey) jwkProvider.get(kid).getPublicKey();
+
+                } catch (JwkException e) {
+                    throw new SigoException(e);
+                }
+
+            }
+
+            @Override
+            public RSAPrivateKey getPrivateKey() {
+                return null;
+            }
+
+            @Override
+            public String getPrivateKeyId() {
+                return null;
+            }
+        };
 
         before(basePath + "/*", (request, response) -> {
 
             if(request.requestMethod().equals(HttpMethod.OPTIONS.asString()))
                     return;
 
+            Algorithm algorithm = Algorithm.RSA256(keyProvider);
+
+            JWTVerifier verifier = JWT.require(algorithm)
+                    .withIssuer(issuer)
+                    .withAudience(audience1,audience2)
+                    .build();
+
             try {
 
-                verifier.verify(request.headers("authorization"));
+                verifier.verify(request.headers("Authorization"));
 
             } catch (JWTVerificationException e){
                 //Invalid signature/claims

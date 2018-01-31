@@ -1,17 +1,11 @@
 package ar.edu.utn.frba.proyecto.sigo.router;
 
 import ar.edu.utn.frba.proyecto.sigo.router.airport.*;
-import ar.edu.utn.frba.proyecto.sigo.router.analysis.AnalysisCaseRouter;
-import ar.edu.utn.frba.proyecto.sigo.router.analysis.AnalysisExceptionRouter;
-import ar.edu.utn.frba.proyecto.sigo.router.analysis.AnalysisObjectRouter;
-import ar.edu.utn.frba.proyecto.sigo.router.analysis.AnalysisObstacleRouter;
-import ar.edu.utn.frba.proyecto.sigo.router.analysis.AnalysisRouter;
-import ar.edu.utn.frba.proyecto.sigo.router.analysis.AnalysisSurfaceRouter;
-import ar.edu.utn.frba.proyecto.sigo.router.analysis.CatalogAnalysisRouter;
+import ar.edu.utn.frba.proyecto.sigo.router.analysis.*;
 import ar.edu.utn.frba.proyecto.sigo.router.location.LocationRouter;
 import ar.edu.utn.frba.proyecto.sigo.router.object.CatalogObjectRouter;
-import ar.edu.utn.frba.proyecto.sigo.router.object.ObjectOwnerRouter;
 import ar.edu.utn.frba.proyecto.sigo.router.object.ElevatedObjectRouter;
+import ar.edu.utn.frba.proyecto.sigo.router.object.ObjectOwnerRouter;
 import ar.edu.utn.frba.proyecto.sigo.router.regulation.RegulationFAARouter;
 import ar.edu.utn.frba.proyecto.sigo.router.regulation.RegulationICAOAnnex14Router;
 import ar.edu.utn.frba.proyecto.sigo.router.regulation.RegulationRouter;

@@ -137,7 +137,19 @@
       <artifactId>java-jwt</artifactId>
       <version>3.3.0</version>
     </dependency>
+    <dependency>
+      <groupId>com.auth0</groupId>
+      <artifactId>jwks-rsa</artifactId>
+      <version>0.3.0</version>
+    </dependency>
 
+
+    <!-- Http client -->
+    <dependency>
+      <groupId>org.apache.httpcomponents</groupId>
+      <artifactId>httpclient</artifactId>
+      <version>4.5.5</version>
+    </dependency>
 
     <!-- Core Utils -->
     <dependency>
