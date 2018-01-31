@@ -143,14 +143,6 @@
       <version>0.3.0</version>
     </dependency>
 
-
-    <!-- Http client -->
-    <dependency>
-      <groupId>org.apache.httpcomponents</groupId>
-      <artifactId>httpclient</artifactId>
-      <version>4.5.5</version>
-    </dependency>
-
     <!-- Core Utils -->
     <dependency>
       <groupId>org.projectlombok</groupId>
