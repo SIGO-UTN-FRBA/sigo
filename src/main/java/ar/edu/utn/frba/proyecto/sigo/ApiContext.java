@@ -2,6 +2,7 @@ package ar.edu.utn.frba.proyecto.sigo;
 
 import ar.edu.utn.frba.proyecto.sigo.dto.common.ExceptionDTO;
 import ar.edu.utn.frba.proyecto.sigo.exception.*;
+import ar.edu.utn.frba.proyecto.sigo.security.UserSessionFactory;
 import ar.edu.utn.frba.proyecto.sigo.spark.Router;
 import com.auth0.jwk.JwkException;
 import com.auth0.jwk.JwkProvider;
@@ -10,6 +11,7 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
+import com.auth0.jwt.interfaces.DecodedJWT;
 import com.auth0.jwt.interfaces.RSAKeyProvider;
 import com.github.racc.tscg.TypesafeConfig;
 import com.google.gson.Gson;
@@ -38,6 +40,7 @@ public class ApiContext {
     private String audience2;
     private String issuer;
     private String jwksUri;
+    private UserSessionFactory userSessionFactory;
     private Gson jsonTransformer;
     private final Set<Router> routers;
 
@@ -51,6 +54,7 @@ public class ApiContext {
             @TypesafeConfig("auth0.audience2") String audience2,
             @TypesafeConfig("auth0.issuer") String issuer,
             @TypesafeConfig("auth0.jwksUri") String jwksUri,
+            UserSessionFactory userSessionFactory,
             Gson jsonTransformer,
             Set<Router> routers
     ){
@@ -63,6 +67,7 @@ public class ApiContext {
         this.audience2 = audience2;
         this.issuer = issuer;
         this.jwksUri = jwksUri;
+        this.userSessionFactory = userSessionFactory;
         this.jsonTransformer = jsonTransformer;
         this.routers = routers;
         this.url=url;
@@ -128,7 +133,9 @@ public class ApiContext {
 
             try {
 
-                verifier.verify(request.headers("Authorization"));
+                DecodedJWT decodedJWT = verifier.verify(request.headers("Authorization"));
+
+                request.attribute("current-session", userSessionFactory.createUserSession(decodedJWT));
 
             } catch (JWTVerificationException e){
                 //Invalid signature/claims
