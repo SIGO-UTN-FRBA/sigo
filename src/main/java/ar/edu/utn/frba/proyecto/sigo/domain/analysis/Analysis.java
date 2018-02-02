@@ -57,6 +57,9 @@ public class Analysis extends SigoDomain {
     @Column(name= "regulation_id")
     private Regulations regulation;
 
+    @Column(name = "user_id")
+    private String userId;
+
     public String toString(){
 
         return MoreObjects.toStringHelper(this)

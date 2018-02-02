@@ -3,6 +3,7 @@ package ar.edu.utn.frba.proyecto.sigo.router;
 import ar.edu.utn.frba.proyecto.sigo.exception.MissingParameterException;
 import ar.edu.utn.frba.proyecto.sigo.exception.SigoException;
 import ar.edu.utn.frba.proyecto.sigo.persistence.HibernateUtil;
+import ar.edu.utn.frba.proyecto.sigo.security.UserSession;
 import ar.edu.utn.frba.proyecto.sigo.spark.Router;
 import com.google.gson.Gson;
 import lombok.Getter;
@@ -163,5 +164,9 @@ public abstract class SigoRouter extends Router {
         if (txn != null && txn.getStatus() == TransactionStatus.ACTIVE) {
             txn.commit();
         }
+    }
+
+    protected UserSession getCurrentUserSession(Request request) {
+        return request.attribute("current-session");
     }
 }
