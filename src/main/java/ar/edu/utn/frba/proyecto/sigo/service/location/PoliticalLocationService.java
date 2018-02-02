@@ -1,11 +1,11 @@
 package ar.edu.utn.frba.proyecto.sigo.service.location;
 
-import ar.edu.utn.frba.proyecto.sigo.domain.location.PoliticalLocationType_;
-import ar.edu.utn.frba.proyecto.sigo.domain.location.PoliticalLocation_;
 import ar.edu.utn.frba.proyecto.sigo.domain.location.PoliticalLocation;
 import ar.edu.utn.frba.proyecto.sigo.domain.location.PoliticalLocationType;
-import ar.edu.utn.frba.proyecto.sigo.persistence.HibernateUtil;
+import ar.edu.utn.frba.proyecto.sigo.domain.location.PoliticalLocationType_;
+import ar.edu.utn.frba.proyecto.sigo.domain.location.PoliticalLocation_;
 import ar.edu.utn.frba.proyecto.sigo.service.SigoService;
+import org.hibernate.SessionFactory;
 import spark.QueryParamsMap;
 
 import javax.inject.Inject;
@@ -18,8 +18,8 @@ import java.util.List;
 public class PoliticalLocationService extends SigoService<PoliticalLocation, PoliticalLocation> {
 
     @Inject
-    public PoliticalLocationService(HibernateUtil hibernateUtil) {
-        super(PoliticalLocation.class,hibernateUtil.getSessionFactory());
+    public PoliticalLocationService(SessionFactory sessionFactory) {
+        super(PoliticalLocation.class, sessionFactory);
     }
 
 

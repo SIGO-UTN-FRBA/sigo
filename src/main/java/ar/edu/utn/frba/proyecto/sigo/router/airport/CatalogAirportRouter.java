@@ -2,18 +2,17 @@ package ar.edu.utn.frba.proyecto.sigo.router.airport;
 
 import ar.edu.utn.frba.proyecto.sigo.domain.airport.RunwayDirectionPositions;
 import ar.edu.utn.frba.proyecto.sigo.dto.common.EnumerationDTO;
-import ar.edu.utn.frba.proyecto.sigo.persistence.HibernateUtil;
 import ar.edu.utn.frba.proyecto.sigo.router.SigoRouter;
 import ar.edu.utn.frba.proyecto.sigo.service.airport.CatalogAirportService;
 import ar.edu.utn.frba.proyecto.sigo.spark.JsonTransformer;
 import com.google.gson.Gson;
+import org.hibernate.SessionFactory;
 import spark.Request;
 import spark.Response;
 import spark.Route;
 import spark.RouteGroup;
 
 import javax.inject.Inject;
-
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
@@ -26,12 +25,12 @@ public class CatalogAirportRouter extends SigoRouter {
 
     @Inject
     public CatalogAirportRouter(
-            HibernateUtil hibernateUtil,
+            SessionFactory sessionFactory,
             Gson objectMapper,
             JsonTransformer jsonTransformer,
             CatalogAirportService catalogService
     ) {
-        super(objectMapper, hibernateUtil);
+        super(objectMapper, sessionFactory);
 
         this.jsonTransformer = jsonTransformer;
         this.catalogService = catalogService;

@@ -1,10 +1,10 @@
 package ar.edu.utn.frba.proyecto.sigo.router.analysis;
 
-import ar.edu.utn.frba.proyecto.sigo.persistence.HibernateUtil;
 import ar.edu.utn.frba.proyecto.sigo.router.SigoRouter;
 import ar.edu.utn.frba.proyecto.sigo.service.analysis.AnalysisResultReasonService;
 import ar.edu.utn.frba.proyecto.sigo.spark.JsonTransformer;
 import com.google.gson.Gson;
+import org.hibernate.SessionFactory;
 import spark.Route;
 import spark.RouteGroup;
 
@@ -20,12 +20,12 @@ public class CatalogAnalysisRouter extends SigoRouter {
     @Inject
     public CatalogAnalysisRouter(
             Gson objectMapper,
-            HibernateUtil hibernateUtil,
+            SessionFactory sessionFactory,
             JsonTransformer jsonTransformer,
             AnalysisResultReasonService resultReasonService
     ) {
 
-        super(objectMapper, hibernateUtil);
+        super(objectMapper, sessionFactory);
 
         this.jsonTransformer = jsonTransformer;
         this.resultReasonService = resultReasonService;

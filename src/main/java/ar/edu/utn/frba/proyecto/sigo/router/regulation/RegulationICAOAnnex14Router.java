@@ -1,31 +1,26 @@
 package ar.edu.utn.frba.proyecto.sigo.router.regulation;
 
-import ar.edu.utn.frba.proyecto.sigo.domain.regulation.OlsRule;
-import ar.edu.utn.frba.proyecto.sigo.domain.regulation.icao.ICAOAnnex14RunwayCategories;
-import ar.edu.utn.frba.proyecto.sigo.domain.regulation.icao.ICAOAnnex14RunwayClassifications;
-import ar.edu.utn.frba.proyecto.sigo.domain.regulation.icao.ICAOAnnex14RunwayCodeLetters;
-import ar.edu.utn.frba.proyecto.sigo.domain.regulation.icao.ICAOAnnex14RunwayCodeNumbers;
 import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14Surface;
 import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14Surfaces;
-import ar.edu.utn.frba.proyecto.sigo.domain.regulation.icao.OlsRuleICAOAnnex14;
+import ar.edu.utn.frba.proyecto.sigo.domain.regulation.OlsRule;
+import ar.edu.utn.frba.proyecto.sigo.domain.regulation.icao.*;
 import ar.edu.utn.frba.proyecto.sigo.dto.common.EnumerationDTO;
 import ar.edu.utn.frba.proyecto.sigo.dto.common.ListItemDTO;
 import ar.edu.utn.frba.proyecto.sigo.exception.InvalidParameterException;
 import ar.edu.utn.frba.proyecto.sigo.exception.MissingParameterException;
-import ar.edu.utn.frba.proyecto.sigo.persistence.HibernateUtil;
 import ar.edu.utn.frba.proyecto.sigo.router.SigoRouter;
-import ar.edu.utn.frba.proyecto.sigo.translator.ols.OlsRuleTranslator;
 import ar.edu.utn.frba.proyecto.sigo.service.regulation.OlsRuleICAOAnnex14Service;
 import ar.edu.utn.frba.proyecto.sigo.spark.JsonTransformer;
+import ar.edu.utn.frba.proyecto.sigo.translator.ols.OlsRuleTranslator;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import org.hibernate.SessionFactory;
 import spark.QueryParamsMap;
 import spark.Request;
 import spark.Route;
 import spark.RouteGroup;
 
 import javax.inject.Inject;
-
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
@@ -43,16 +38,15 @@ public class RegulationICAOAnnex14Router extends SigoRouter {
     @Inject
     public RegulationICAOAnnex14Router(
             JsonTransformer jsonTransformer,
-            HibernateUtil hibernateUtil,
+            SessionFactory sessionFactory,
             OlsRuleICAOAnnex14Service ruleService,
             OlsRuleTranslator ruleTranslator,
             Gson gson
     ){
-        super(gson, hibernateUtil);
+        super(gson, sessionFactory);
 
         this.ruleService = ruleService;
         this.ruleTranslator = ruleTranslator;
-        this.hibernateUtil = hibernateUtil;
         this.jsonTransformer = jsonTransformer;
     }
 

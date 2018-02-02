@@ -3,19 +3,18 @@ package ar.edu.utn.frba.proyecto.sigo.router.analysis;
 import ar.edu.utn.frba.proyecto.sigo.domain.analysis.Analysis;
 import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisObject;
 import ar.edu.utn.frba.proyecto.sigo.exception.MissingParameterException;
-import ar.edu.utn.frba.proyecto.sigo.persistence.HibernateUtil;
 import ar.edu.utn.frba.proyecto.sigo.router.SigoRouter;
 import ar.edu.utn.frba.proyecto.sigo.service.analysis.AnalysisObjectService;
-import ar.edu.utn.frba.proyecto.sigo.translator.analysis.AnalysisObjectTranslator;
 import ar.edu.utn.frba.proyecto.sigo.service.analysis.AnalysisService;
 import ar.edu.utn.frba.proyecto.sigo.spark.JsonTransformer;
+import ar.edu.utn.frba.proyecto.sigo.translator.analysis.AnalysisObjectTranslator;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import org.hibernate.SessionFactory;
 import spark.Route;
 import spark.RouteGroup;
 
 import javax.inject.Inject;
-
 import java.util.stream.Collectors;
 
 import static spark.Spark.get;
@@ -31,13 +30,13 @@ public class AnalysisObjectRouter extends SigoRouter {
     @Inject
     public AnalysisObjectRouter(
             Gson objectMapper,
-            HibernateUtil hibernateUtil,
+            SessionFactory sessionFactory,
             AnalysisService analysisService,
             JsonTransformer jsonTransformer,
             AnalysisObjectTranslator objectTranslator,
             AnalysisObjectService objectService
     ) {
-        super(objectMapper, hibernateUtil);
+        super(objectMapper, sessionFactory);
         this.analysisService = analysisService;
         this.jsonTransformer = jsonTransformer;
         this.objectTranslator = objectTranslator;

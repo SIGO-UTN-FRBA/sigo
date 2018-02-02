@@ -1,22 +1,24 @@
 package ar.edu.utn.frba.proyecto.sigo.service.airport;
 
-import ar.edu.utn.frba.proyecto.sigo.persistence.HibernateUtil;
 import ar.edu.utn.frba.proyecto.sigo.domain.airport.Airport;
 import ar.edu.utn.frba.proyecto.sigo.domain.airport.Airport_;
 import ar.edu.utn.frba.proyecto.sigo.domain.airport.Runway;
 import ar.edu.utn.frba.proyecto.sigo.service.SigoService;
 import com.google.common.collect.Lists;
-
 import org.geotools.feature.simple.SimpleFeatureBuilder;
 import org.geotools.feature.simple.SimpleFeatureTypeBuilder;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
+import org.hibernate.SessionFactory;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
 import spark.QueryParamsMap;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import javax.persistence.criteria.*;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 import java.awt.*;
 import java.util.List;
 import java.util.Optional;
@@ -28,8 +30,8 @@ import static java.util.stream.Collectors.toList;
 public class AirportService extends SigoService<Airport, Airport> {
 
     @Inject
-    public AirportService(HibernateUtil hibernateUtil) {
-        super(Airport.class, hibernateUtil.getSessionFactory());
+    public AirportService(SessionFactory sessionFactory) {
+        super(Airport.class, sessionFactory);
     }
 
     public List<Runway> getRunways(Airport airport){

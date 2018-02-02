@@ -5,11 +5,11 @@ import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisCase;
 import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisException;
 import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisObject;
 import ar.edu.utn.frba.proyecto.sigo.domain.object.*;
-import ar.edu.utn.frba.proyecto.sigo.persistence.HibernateUtil;
 import ar.edu.utn.frba.proyecto.sigo.service.SigoService;
 import com.google.common.collect.Sets;
 import com.google.common.collect.Streams;
 import com.vividsolutions.jts.geom.Geometry;
+import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 
 import javax.inject.Inject;
@@ -23,10 +23,10 @@ public class AnalysisCaseService extends SigoService <AnalysisCase, Analysis> {
 
     @Inject
     public AnalysisCaseService(
-            HibernateUtil hibernateUtil,
+            SessionFactory sessionFactory,
             AnalysisExceptionClone clone
     ) {
-        super(AnalysisCase.class, hibernateUtil.getSessionFactory());
+        super(AnalysisCase.class, sessionFactory);
         this.clone = clone;
     }
 

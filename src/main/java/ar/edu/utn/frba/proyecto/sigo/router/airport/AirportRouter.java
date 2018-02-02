@@ -1,17 +1,17 @@
 package ar.edu.utn.frba.proyecto.sigo.router.airport;
 
-import ar.edu.utn.frba.proyecto.sigo.persistence.HibernateUtil;
-import ar.edu.utn.frba.proyecto.sigo.router.SigoRouter;
-import ar.edu.utn.frba.proyecto.sigo.translator.SimpleFeatureTranslator;
-import ar.edu.utn.frba.proyecto.sigo.translator.airport.AirportTranslator;
-import ar.edu.utn.frba.proyecto.sigo.service.airport.AirportService;
 import ar.edu.utn.frba.proyecto.sigo.domain.airport.Airport;
 import ar.edu.utn.frba.proyecto.sigo.dto.airport.AirportDTO;
+import ar.edu.utn.frba.proyecto.sigo.router.SigoRouter;
+import ar.edu.utn.frba.proyecto.sigo.service.airport.AirportService;
 import ar.edu.utn.frba.proyecto.sigo.spark.JsonTransformer;
+import ar.edu.utn.frba.proyecto.sigo.translator.SimpleFeatureTranslator;
+import ar.edu.utn.frba.proyecto.sigo.translator.airport.AirportTranslator;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.vividsolutions.jts.geom.Point;
 import org.eclipse.jetty.http.HttpStatus;
+import org.hibernate.SessionFactory;
 import org.opengis.feature.simple.SimpleFeature;
 import spark.Request;
 import spark.Response;
@@ -21,7 +21,7 @@ import spark.RouteGroup;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import static java.lang.String.*;
+import static java.lang.String.format;
 import static java.util.stream.Collectors.toList;
 import static spark.Spark.*;
 
@@ -35,14 +35,14 @@ public class AirportRouter extends SigoRouter {
 
     @Inject
     public AirportRouter(
-            HibernateUtil hibernateUtil,
+            SessionFactory sessionFactory,
             Gson objectMapper,
             JsonTransformer jsonTransformer,
             AirportService airportService,
             AirportTranslator translator,
             SimpleFeatureTranslator featureTranslator
     ) {
-        super(objectMapper, hibernateUtil);
+        super(objectMapper, sessionFactory);
 
         this.jsonTransformer = jsonTransformer;
         this.airportService = airportService;

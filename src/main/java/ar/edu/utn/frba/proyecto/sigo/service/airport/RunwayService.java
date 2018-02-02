@@ -1,7 +1,5 @@
 package ar.edu.utn.frba.proyecto.sigo.service.airport;
 
-import ar.edu.utn.frba.proyecto.sigo.domain.airport.RunwayStrip;
-import ar.edu.utn.frba.proyecto.sigo.persistence.HibernateUtil;
 import ar.edu.utn.frba.proyecto.sigo.domain.airport.Airport;
 import ar.edu.utn.frba.proyecto.sigo.domain.airport.Runway;
 import ar.edu.utn.frba.proyecto.sigo.domain.airport.RunwayDirection;
@@ -9,6 +7,7 @@ import ar.edu.utn.frba.proyecto.sigo.service.SigoService;
 import org.geotools.feature.simple.SimpleFeatureBuilder;
 import org.geotools.feature.simple.SimpleFeatureTypeBuilder;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
+import org.hibernate.SessionFactory;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
 
@@ -27,8 +26,8 @@ public class RunwayService extends SigoService<Runway, Airport> {
     }
 
     @Inject
-    public RunwayService(HibernateUtil hibernateUtil){
-        super(Runway.class, hibernateUtil.getSessionFactory());
+    public RunwayService(SessionFactory sessionFactory){
+        super(Runway.class, sessionFactory);
     }
 
     protected void preUpdateActions(Runway newInstance, Runway oldInstance){

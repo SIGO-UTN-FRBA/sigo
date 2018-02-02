@@ -3,16 +3,15 @@ package ar.edu.utn.frba.proyecto.sigo.router.location;
 import ar.edu.utn.frba.proyecto.sigo.domain.location.PoliticalLocation;
 import ar.edu.utn.frba.proyecto.sigo.dto.common.ListItemDTO;
 import ar.edu.utn.frba.proyecto.sigo.exception.MissingParameterException;
-import ar.edu.utn.frba.proyecto.sigo.persistence.HibernateUtil;
 import ar.edu.utn.frba.proyecto.sigo.router.SigoRouter;
 import ar.edu.utn.frba.proyecto.sigo.service.location.PoliticalLocationService;
-import ar.edu.utn.frba.proyecto.sigo.translator.location.PoliticalLocationTranslator;
 import ar.edu.utn.frba.proyecto.sigo.spark.JsonTransformer;
+import ar.edu.utn.frba.proyecto.sigo.translator.location.PoliticalLocationTranslator;
+import org.hibernate.SessionFactory;
 import spark.Route;
 import spark.RouteGroup;
 
 import javax.inject.Inject;
-
 import java.util.stream.Collectors;
 
 import static spark.Spark.get;
@@ -25,12 +24,12 @@ public class LocationRouter extends SigoRouter {
 
     @Inject
     public LocationRouter(
-        HibernateUtil hibernateUtil,
+        SessionFactory sessionFactory,
         JsonTransformer jsonTransformer,
         PoliticalLocationService locationService,
         PoliticalLocationTranslator translator
     ){
-        super(null, hibernateUtil);
+        super(null, sessionFactory);
 
         this.jsonTransformer = jsonTransformer;
         this.locationService = locationService;

@@ -4,7 +4,6 @@ import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisObstacle;
 import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisResult;
 import ar.edu.utn.frba.proyecto.sigo.dto.analysis.AnalysisResultDTO;
 import ar.edu.utn.frba.proyecto.sigo.exception.ResourceNotFoundException;
-import ar.edu.utn.frba.proyecto.sigo.persistence.HibernateUtil;
 import ar.edu.utn.frba.proyecto.sigo.router.SigoRouter;
 import ar.edu.utn.frba.proyecto.sigo.service.analysis.AnalysisObstacleService;
 import ar.edu.utn.frba.proyecto.sigo.service.analysis.AnalysisResultService;
@@ -12,6 +11,7 @@ import ar.edu.utn.frba.proyecto.sigo.spark.JsonTransformer;
 import ar.edu.utn.frba.proyecto.sigo.translator.analysis.AnalysisObstacleTranslator;
 import ar.edu.utn.frba.proyecto.sigo.translator.analysis.AnalysisResultTranslator;
 import com.google.gson.Gson;
+import org.hibernate.SessionFactory;
 import spark.QueryParamsMap;
 import spark.Route;
 import spark.RouteGroup;
@@ -34,13 +34,15 @@ public class AnalysisObstacleRouter extends SigoRouter{
     @Inject
     public AnalysisObstacleRouter(
             Gson objectMapper,
-            HibernateUtil hibernateUtil,
+            SessionFactory sessionFactory,
             JsonTransformer jsonTransformer,
             AnalysisObstacleService obstacleService,
             AnalysisObstacleTranslator obstacleTranslator,
             AnalysisResultTranslator resultTranslator,
-            AnalysisResultService resultService) {
-        super(objectMapper, hibernateUtil);
+            AnalysisResultService resultService
+    ) {
+
+        super(objectMapper, sessionFactory);
 
         this.jsonTransformer = jsonTransformer;
         this.obstacleService = obstacleService;

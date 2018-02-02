@@ -1,15 +1,10 @@
 package ar.edu.utn.frba.proyecto.sigo.router.regulation;
 
-import ar.edu.utn.frba.proyecto.sigo.domain.regulation.faa.FAAAircraftApproachCategories;
-import ar.edu.utn.frba.proyecto.sigo.domain.regulation.faa.FAAAircraftClassifications;
-import ar.edu.utn.frba.proyecto.sigo.domain.regulation.faa.FAAAircraftDesignGroups;
-import ar.edu.utn.frba.proyecto.sigo.domain.regulation.faa.FAARunwayCategories;
-import ar.edu.utn.frba.proyecto.sigo.domain.regulation.faa.FAARunwayClassifications;
-import ar.edu.utn.frba.proyecto.sigo.domain.regulation.faa.FAARunwaysTypes;
+import ar.edu.utn.frba.proyecto.sigo.domain.regulation.faa.*;
 import ar.edu.utn.frba.proyecto.sigo.dto.common.EnumerationDTO;
-import ar.edu.utn.frba.proyecto.sigo.persistence.HibernateUtil;
 import ar.edu.utn.frba.proyecto.sigo.router.SigoRouter;
 import ar.edu.utn.frba.proyecto.sigo.spark.JsonTransformer;
+import org.hibernate.SessionFactory;
 import spark.Route;
 import spark.RouteGroup;
 
@@ -25,13 +20,12 @@ public class RegulationFAARouter extends SigoRouter {
 
     @Inject
     public RegulationFAARouter(
-            HibernateUtil hibernateUtil,
+            SessionFactory sessionFactory,
             JsonTransformer jsonTransformer
     ){
-        super(null, hibernateUtil);
+        super(null, sessionFactory);
 
         this.jsonTransformer = jsonTransformer;
-        this.hibernateUtil = hibernateUtil;
     }
 
     private final Route fetchRunwayCategories = (request, response) -> {

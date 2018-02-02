@@ -3,7 +3,6 @@ package ar.edu.utn.frba.proyecto.sigo.router.analysis;
 import ar.edu.utn.frba.proyecto.sigo.domain.analysis.Analysis;
 import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisCase;
 import ar.edu.utn.frba.proyecto.sigo.exception.MissingParameterException;
-import ar.edu.utn.frba.proyecto.sigo.persistence.HibernateUtil;
 import ar.edu.utn.frba.proyecto.sigo.router.SigoRouter;
 import ar.edu.utn.frba.proyecto.sigo.service.analysis.AnalysisCaseService;
 import ar.edu.utn.frba.proyecto.sigo.service.analysis.AnalysisService;
@@ -12,6 +11,7 @@ import ar.edu.utn.frba.proyecto.sigo.translator.analysis.AnalysisCaseTranslator;
 import ar.edu.utn.frba.proyecto.sigo.translator.analysis.AnalysisObjectTranslator;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import org.hibernate.SessionFactory;
 import spark.Route;
 import spark.RouteGroup;
 
@@ -30,7 +30,7 @@ public class AnalysisCaseRouter extends SigoRouter {
 
     @Inject
     public AnalysisCaseRouter(
-            HibernateUtil hibernateUtil,
+            SessionFactory sessionFactory,
             Gson objectMapper,
             JsonTransformer jsonTransformer,
             AnalysisCaseService caseService,
@@ -38,7 +38,7 @@ public class AnalysisCaseRouter extends SigoRouter {
             AnalysisObjectTranslator objectTranslator,
             AnalysisService analysisService
     ){
-        super(objectMapper, hibernateUtil);
+        super(objectMapper, sessionFactory);
 
         this.jsonTransformer = jsonTransformer;
         this.caseService = caseService;

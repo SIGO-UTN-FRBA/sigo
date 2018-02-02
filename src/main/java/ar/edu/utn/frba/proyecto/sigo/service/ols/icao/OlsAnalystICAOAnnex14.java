@@ -9,13 +9,13 @@ import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisSurface;
 import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.*;
 import ar.edu.utn.frba.proyecto.sigo.domain.regulation.icao.OlsRuleICAOAnnex14;
 import ar.edu.utn.frba.proyecto.sigo.exception.SigoException;
-import ar.edu.utn.frba.proyecto.sigo.persistence.HibernateUtil;
 import ar.edu.utn.frba.proyecto.sigo.service.ols.OlsAnalyst;
 import ar.edu.utn.frba.proyecto.sigo.service.regulation.OlsRuleICAOAnnex14Service;
 import com.google.common.collect.Sets;
 import com.google.inject.assistedinject.Assisted;
 import com.vividsolutions.jts.geom.Point;
 import org.apache.commons.lang3.StringUtils;
+import org.hibernate.SessionFactory;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import javax.inject.Inject;
@@ -34,11 +34,11 @@ public class OlsAnalystICAOAnnex14 extends OlsAnalyst {
     public OlsAnalystICAOAnnex14(
             OlsRuleICAOAnnex14Service service,
             ICAOAnnex14SurfaceGeometriesHelper geometryHelper,
-            HibernateUtil hibernateUtil,
+            SessionFactory sessionFactory,
             ICAOAnnex14SurfaceHeightsHelper heightsHelper,
             @Assisted AnalysisCase analysisCase
     ) {
-        super(analysisCase, hibernateUtil.getSessionFactory());
+        super(analysisCase, sessionFactory);
 
         this.definitionService = service;
         this.geometryHelper = geometryHelper;

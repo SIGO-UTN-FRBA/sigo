@@ -2,27 +2,24 @@ package ar.edu.utn.frba.proyecto.sigo.service.airport;
 
 import ar.edu.utn.frba.proyecto.sigo.domain.airport.*;
 import ar.edu.utn.frba.proyecto.sigo.domain.airport.icao.RunwayClassificationICAOAnnex14;
-import ar.edu.utn.frba.proyecto.sigo.persistence.HibernateUtil;
 import ar.edu.utn.frba.proyecto.sigo.service.SigoService;
 import org.geotools.feature.simple.SimpleFeatureBuilder;
 import org.geotools.feature.simple.SimpleFeatureTypeBuilder;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
+import org.hibernate.SessionFactory;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
 
 import javax.inject.Inject;
 import java.awt.*;
-import java.util.HashMap;
-
-import static org.reflections.util.ConfigurationBuilder.build;
 
 public class RunwayDirectionService extends SigoService<RunwayDirection, Runway> {
 
     @Inject
     public RunwayDirectionService(
-            HibernateUtil hibernateUtil
+            SessionFactory sessionFactory
     ){
-        super(RunwayDirection.class, hibernateUtil.getSessionFactory());
+        super(RunwayDirection.class, sessionFactory);
     }
 
     @Override

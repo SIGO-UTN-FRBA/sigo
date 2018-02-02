@@ -2,7 +2,6 @@ package ar.edu.utn.frba.proyecto.sigo.router;
 
 import ar.edu.utn.frba.proyecto.sigo.exception.MissingParameterException;
 import ar.edu.utn.frba.proyecto.sigo.exception.SigoException;
-import ar.edu.utn.frba.proyecto.sigo.persistence.HibernateUtil;
 import ar.edu.utn.frba.proyecto.sigo.security.UserSession;
 import ar.edu.utn.frba.proyecto.sigo.spark.Router;
 import com.google.gson.Gson;
@@ -36,12 +35,13 @@ public abstract class SigoRouter extends Router {
     protected static String OBSTACLE_ID_PARAM = "obstacle_id";
 
     protected Gson objectMapper;
-    @Getter
-    public HibernateUtil hibernateUtil;
 
-    public SigoRouter(Gson objectMapper, HibernateUtil hibernateUtil) {
+    @Getter
+    public SessionFactory sessionFactory;
+
+    public SigoRouter(Gson objectMapper, SessionFactory sessionFactory) {
         this.objectMapper = objectMapper;
-        this.hibernateUtil = hibernateUtil;
+        this.sessionFactory = sessionFactory;
     }
 
     protected Long getParamAirportId(Request request){
@@ -107,7 +107,7 @@ public abstract class SigoRouter extends Router {
 
         return (Request request, Response response) ->{
 
-            SessionFactory sessionFactory = this.getHibernateUtil().getSessionFactory();
+            SessionFactory sessionFactory = this.getSessionFactory().getSessionFactory();
 
             Session session = sessionFactory.openSession();
 
