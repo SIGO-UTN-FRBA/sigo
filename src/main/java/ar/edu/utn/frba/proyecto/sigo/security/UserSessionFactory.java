@@ -1,5 +1,6 @@
 package ar.edu.utn.frba.proyecto.sigo.security;
 
+import ar.edu.utn.frba.proyecto.sigo.domain.user.SigoUser;
 import com.auth0.jwt.impl.JWTParser;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.auth0.jwt.interfaces.Payload;
@@ -10,6 +11,8 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -20,14 +23,17 @@ import java.util.concurrent.ExecutionException;
 public class UserSessionFactory {
 
     private LoadingCache<String, UserSession> usersCache;
+    private SessionFactory sessionFactory;
     private String authorize;
 
     @Inject
     public UserSessionFactory(
             LoadingCache<String, UserSession> usersCache,
+            SessionFactory sessionFactory,
             @TypesafeConfig("auth0.audience2") String authorize
     ) {
         this.usersCache = usersCache;
+        this.sessionFactory = sessionFactory;
         this.authorize = authorize;
     }
 
@@ -37,6 +43,9 @@ public class UserSessionFactory {
             return usersCache.get(
                 jwt.getSubject(),
                 () -> {
+
+                    UserSession userSession;
+
                     try (CloseableHttpClient httpClient = HttpClients.createDefault()){
 
                         HttpGet request = new HttpGet(authorize);
@@ -47,16 +56,46 @@ public class UserSessionFactory {
 
                         Payload payload = new JWTParser().parsePayload(EntityUtils.toString(response.getEntity()));
 
-                        return new UserSession(payload);
+                        userSession = new UserSession(payload);
 
                     } catch (IOException e) {
-                        e.printStackTrace();
-                        throw new RuntimeException("Cannot create a user session for user " + jwt.getId());
+                        throw new RuntimeException("Fail to create a user session " + jwt.getId());
                     }
+
+                    persistUser(userSession.getUser());
+
+                    return userSession;
                 });
         } catch (ExecutionException e) {
-            e.printStackTrace();
-            throw new RuntimeException("Cannot create a user session for user " + jwt.getId());
+            throw new RuntimeException("Fail to retrieve a user session " + jwt.getId());
+        }
+    }
+
+    private SigoUser persistUser(SigoUser user) {
+        try(Session session = sessionFactory.openSession()){
+
+            session.saveOrUpdate(user);
+
+        } catch (Exception e){
+            throw new RuntimeException("Fail to persist a user " + user.getId());
+        }
+
+        return user;
+    }
+
+    public UserSession createFakeUserSession(DecodedJWT jwt) {
+
+        try {
+            return usersCache.get(jwt.getSubject(), () -> {
+
+                UserSession userSession = new UserSession(jwt);
+
+                persistUser(userSession.getUser());
+
+                return userSession;
+            });
+        } catch (ExecutionException e) {
+            throw new RuntimeException("Fail to retrieve a user session " + jwt.getId());
         }
     }
 }

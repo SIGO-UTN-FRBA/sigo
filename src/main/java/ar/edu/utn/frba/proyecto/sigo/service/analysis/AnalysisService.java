@@ -80,7 +80,7 @@ public class AnalysisService extends SigoService<Analysis, Analysis>{
                 });
 
         Optional<Predicate> predicateUser = Optional
-                .ofNullable(parameters.get("user"))
+                .ofNullable(parameters.get("user").value())
                 .map( v -> builder.equal(analysis.get(Analysis_.user.getName()), v));
 
 

@@ -25,6 +25,10 @@ public class UserSession {
                 .build();
     }
 
+    public UserSession() {
+
+    }
+
     public HashMap<String,Object> getAppMetadata(){
         return this.payload.getClaim("http://localhost:8080/sigo/api/app_metadata").as(HashMap.class);
     }
