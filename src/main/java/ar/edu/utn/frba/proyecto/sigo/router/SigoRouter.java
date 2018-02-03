@@ -1,5 +1,6 @@
 package ar.edu.utn.frba.proyecto.sigo.router;
 
+import ar.edu.utn.frba.proyecto.sigo.exception.InternalServerErrorException;
 import ar.edu.utn.frba.proyecto.sigo.exception.MissingParameterException;
 import ar.edu.utn.frba.proyecto.sigo.exception.SigoException;
 import ar.edu.utn.frba.proyecto.sigo.security.UserSession;
@@ -10,11 +11,11 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.context.internal.ManagedSessionContext;
-import org.hibernate.resource.transaction.spi.TransactionStatus;
 import spark.Request;
 import spark.Response;
 import spark.Route;
 
+import javax.persistence.EntityTransaction;
 import java.util.Optional;
 import java.util.function.BiFunction;
 
@@ -107,63 +108,37 @@ public abstract class SigoRouter extends Router {
 
         return (Request request, Response response) ->{
 
-            SessionFactory sessionFactory = this.getSessionFactory().getSessionFactory();
-
-            Session session = sessionFactory.openSession();
-
-            try {
+            try (Session session = sessionFactory.openSession()) {
                 //configureSession(session);
 
                 ManagedSessionContext.bind(session);
 
-                if(inTransaction) session.beginTransaction();
+                Optional<Transaction> transaction = (inTransaction) ? Optional.of(session.beginTransaction()) : Optional.empty();
 
                 try {
 
                     R r = route.apply(request, response);
 
-                    if(inTransaction) commitTransaction(session);
+                    transaction.ifPresent(EntityTransaction::commit);
 
                     return r;
 
-                } catch (SigoException e){
+                } catch (SigoException e) {
 
-                    if(inTransaction) abortTransaction(session);
-
-                    e.printStackTrace();
+                    transaction.ifPresent(EntityTransaction::rollback);
 
                     throw e;
 
-                }catch (Exception e) {
+                } catch (Exception e) {
 
-                    if(inTransaction) abortTransaction(session);
+                    transaction.ifPresent(EntityTransaction::rollback);
 
-                    e.printStackTrace();
-
-                    throw new SigoException(e);
+                    throw new InternalServerErrorException(e);
                 }
             } finally {
-
-                session.close();
-
                 ManagedSessionContext.unbind(sessionFactory);
             }
         };
-    }
-
-    private void abortTransaction(Session session) {
-        Transaction txn = session.getTransaction();
-        if (txn != null && txn.getStatus() == TransactionStatus.ACTIVE) {
-            txn.rollback();
-        }
-    }
-
-    private void commitTransaction(Session session) {
-        Transaction txn = session.getTransaction();
-
-        if (txn != null && txn.getStatus() == TransactionStatus.ACTIVE) {
-            txn.commit();
-        }
     }
 
     protected UserSession getCurrentUserSession(Request request) {

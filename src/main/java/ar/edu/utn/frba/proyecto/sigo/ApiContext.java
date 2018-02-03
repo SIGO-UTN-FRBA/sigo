@@ -100,6 +100,18 @@ public class ApiContext {
 
     private void configureExceptions() {
 
+
+        exception(InternalServerErrorException.class, (e, request, response) ->{
+            response.status(HttpStatus.INTERNAL_SERVER_ERROR_500);
+            response.body(jsonTransformer.toJson(
+                    new ExceptionDTO(
+                            e.getCause().getClass().getName(),
+                            e.getCause().getMessage()
+                    )
+                )
+            );
+        });
+
         exception(SigoException.class, (e, request, response) ->{
             response.status(HttpStatus.INTERNAL_SERVER_ERROR_500);
             response.body(jsonTransformer.toJson(
