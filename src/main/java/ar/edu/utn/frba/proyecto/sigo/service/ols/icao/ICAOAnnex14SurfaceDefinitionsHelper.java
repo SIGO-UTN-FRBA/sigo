@@ -68,6 +68,9 @@ public class ICAOAnnex14SurfaceDefinitionsHelper {
                 case "Slope":
                     builder.slope(icaoRule.getValue());
                     break;
+                case "Limit":
+                    builder.limitHeight(icaoRule.getValue());
+                    break;
             }
         });
 

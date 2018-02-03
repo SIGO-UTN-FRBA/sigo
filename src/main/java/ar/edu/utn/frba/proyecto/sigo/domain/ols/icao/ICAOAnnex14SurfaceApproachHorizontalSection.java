@@ -27,6 +27,9 @@ public class ICAOAnnex14SurfaceApproachHorizontalSection extends ICAOAnnex14Surf
     @Column(name="geom")
     private Polygon geometry;
 
+    @Column(name = "initial_height")
+    private Double initialHeight;
+
     @Override
     public ICAOAnnex14Surfaces getEnum() {
         return ICAOAnnex14Surfaces.APPROACH_HORIZONTAL_SECTION;

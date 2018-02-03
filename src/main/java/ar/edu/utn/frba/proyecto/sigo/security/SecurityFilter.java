@@ -14,7 +14,9 @@ import spark.Request;
 import spark.Response;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
+@Singleton
 public class SecurityFilter implements Filter {
 
     private Boolean enabled;

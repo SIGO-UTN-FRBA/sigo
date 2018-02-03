@@ -7,6 +7,8 @@ import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisCase;
 import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisExceptionRule;
 import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisSurface;
 import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.*;
+import ar.edu.utn.frba.proyecto.sigo.domain.regulation.icao.ICAOAnnex14RunwayCodeLetters;
+import ar.edu.utn.frba.proyecto.sigo.domain.regulation.icao.ICAOAnnex14RunwayCodeNumbers;
 import ar.edu.utn.frba.proyecto.sigo.domain.regulation.icao.OlsRuleICAOAnnex14;
 import ar.edu.utn.frba.proyecto.sigo.exception.SigoException;
 import ar.edu.utn.frba.proyecto.sigo.service.ols.OlsAnalyst;
@@ -14,7 +16,6 @@ import ar.edu.utn.frba.proyecto.sigo.service.regulation.OlsRuleICAOAnnex14Servic
 import com.google.common.collect.Sets;
 import com.google.inject.assistedinject.Assisted;
 import com.vividsolutions.jts.geom.Point;
-import org.apache.commons.lang.NotImplementedException;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.SessionFactory;
 
@@ -22,6 +23,7 @@ import javax.inject.Inject;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 public class OlsAnalystICAOAnnex14 extends OlsAnalyst {
@@ -75,15 +77,18 @@ public class OlsAnalystICAOAnnex14 extends OlsAnalyst {
             case NON_INSTRUMENT:
                 return createAnalysisSurfacesForNonInstrument(direction, surfacesDefinitions);
             case NON_PRECISION_APPROACH:
-                return createAnalysisSurfacesForNonPrecision(direction, surfacesDefinitions); //TODO createAnalysisSurfacesForNonPrecision
+                return createAnalysisSurfacesForNonPrecision(direction, surfacesDefinitions);
             case PRECISION_APPROACH:
-                return createAnalysisSurfacesForPrecision(direction, surfacesDefinitions); //TODO createAnalysisSurfacesForPrecision
+                return createAnalysisSurfacesForPrecision(direction, surfacesDefinitions);
         }
 
         throw new SigoException("Invalid classification of runway direction");
     }
 
     private Set<AnalysisSurface> createAnalysisSurfacesForPrecision(RunwayDirection direction, List<ICAOAnnex14Surface> surfacesDefinitions) {
+
+        RunwayClassificationICAOAnnex14 classification = (RunwayClassificationICAOAnnex14) direction.getClassification();
+
         Set<AnalysisSurface> analysisSurfaces = Sets.newHashSet();
 
         //1. Strip
@@ -138,6 +143,22 @@ public class OlsAnalystICAOAnnex14 extends OlsAnalyst {
                 )
         );
 
+        //4. ApproachHorizontalSection
+        if(classification.getRunwayTypeNumber().equals(ICAOAnnex14RunwayCodeNumbers.THREE) || classification.getRunwayTypeNumber().equals(ICAOAnnex14RunwayCodeNumbers.FOUR)){
+
+            ICAOAnnex14SurfaceApproachHorizontalSection approachHorizontalSection = (ICAOAnnex14SurfaceApproachHorizontalSection) surfacesDefinitions.stream().filter(d -> d.getEnum() == ICAOAnnex14Surfaces.APPROACH_HORIZONTAL_SECTION).findFirst().get();
+
+            analysisSurfaces.add(
+                    createApproachHorizontalSectionAnalysisSurface(
+                            direction,
+                            approachHorizontalSection,
+                            approachSecondSection,
+                            approachFirstSection,
+                            approach
+                    )
+            );
+        }
+
         //5. Transitional
         ICAOAnnex14SurfaceTransitional transitional = (ICAOAnnex14SurfaceTransitional) surfacesDefinitions.stream().filter(d -> d.getEnum() == ICAOAnnex14Surfaces.TRANSITIONAL).findFirst().get();
         analysisSurfaces.add(
@@ -159,14 +180,24 @@ public class OlsAnalystICAOAnnex14 extends OlsAnalyst {
                 )
         );
 
-        //7. horizontal externa
+        //7. BalkedLanding
+        ICAOAnnex14SurfaceBalkedLanding balkedLanding = (ICAOAnnex14SurfaceBalkedLanding) surfacesDefinitions.stream().filter(d -> d.getEnum() == ICAOAnnex14Surfaces.BALKED_LANDING_SURFACE).findFirst().get();
+        analysisSurfaces.add(
+                createBalkedLandingAnalysisSurface(
+                        direction,
+                        balkedLanding,
+                        strip,
+                        innerHorizontal
+                )
+        );
+        //8. horizontal externa
 
         return analysisSurfaces;
     }
 
     private Set<AnalysisSurface> createAnalysisSurfacesForNonPrecision(RunwayDirection direction, List<ICAOAnnex14Surface> surfacesDefinitions) {
-        //TODO
-        throw new NotImplementedException();
+
+        return createAnalysisSurfacesForNonInstrument(direction, surfacesDefinitions);
     }
 
     private Set<AnalysisSurface> createAnalysisSurfacesForNonInstrument(RunwayDirection direction, List<ICAOAnnex14Surface> surfacesDefinitions) {
@@ -331,6 +362,29 @@ public class OlsAnalystICAOAnnex14 extends OlsAnalyst {
                 .build();
     }
 
+    private AnalysisSurface createApproachHorizontalSectionAnalysisSurface(
+            RunwayDirection direction,
+            ICAOAnnex14SurfaceApproachHorizontalSection approachHorizontalSection,
+            ICAOAnnex14SurfaceApproachSecondSection approachSecondSection,
+            ICAOAnnex14SurfaceApproachFirstSection approachFirstSection,
+            ICAOAnnex14SurfaceApproach approach
+    ) {
+
+        double adjacent = approachSecondSection.getLength();
+        double degrees = Math.atan(approachSecondSection.getSlope() / 100);
+        double hypotenuse = adjacent / Math.cos(degrees);
+        double opposite = Math.sqrt(Math.pow(hypotenuse,2) - Math.pow(adjacent,2));
+        approachHorizontalSection.setInitialHeight(approachSecondSection.getInitialHeight() + opposite);
+
+        approachHorizontalSection.setGeometry(geometryHelper.createApproachHorizontalSectionSurfaceGeometry(direction, approachHorizontalSection, approachSecondSection, approachFirstSection, approach));
+
+        return AnalysisSurface.builder()
+                .analysisCase(this.analysisCase)
+                .surface(approachHorizontalSection)
+                .direction(direction)
+                .build();
+    }
+
     private AnalysisSurface createTransitionalAnalysisSurface(
             RunwayDirection direction,
             ICAOAnnex14SurfaceTransitional transitional,
@@ -366,6 +420,29 @@ public class OlsAnalystICAOAnnex14 extends OlsAnalyst {
         return AnalysisSurface.builder()
                 .analysisCase(this.analysisCase)
                 .surface(takeoffClimb)
+                .direction(direction)
+                .build();
+    }
+
+    private AnalysisSurface createBalkedLandingAnalysisSurface(
+            RunwayDirection direction,
+            ICAOAnnex14SurfaceBalkedLanding balkedLanding,
+            ICAOAnnex14SurfaceStrip strip, ICAOAnnex14SurfaceInnerHorizontal innerHorizontal) {
+
+        RunwayClassificationICAOAnnex14 classification = (RunwayClassificationICAOAnnex14) direction.getClassification();
+
+        if(classification.getRunwayTypeNumber().equals(ICAOAnnex14RunwayCodeNumbers.ONE) || classification.getRunwayTypeNumber().equals(ICAOAnnex14RunwayCodeNumbers.TWO)){
+            balkedLanding.setLengthOfInnerEdge(strip.getWidth());
+            balkedLanding.setDistanceFromThreshold(0D); //TODO
+        } else if(Optional.ofNullable(classification.getRunwayTypeLetter()).isPresent() && classification.getRunwayTypeLetter().equals(ICAOAnnex14RunwayCodeLetters.F)){
+            balkedLanding.setLengthOfInnerEdge(155D);
+        }
+
+        balkedLanding.setGeometry(geometryHelper.createBalkedLandingSurfaceGeometry(direction, balkedLanding, innerHorizontal));
+
+        return AnalysisSurface.builder()
+                .analysisCase(this.analysisCase)
+                .surface(balkedLanding)
                 .direction(direction)
                 .build();
     }

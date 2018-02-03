@@ -3,6 +3,7 @@ package ar.edu.utn.frba.proyecto.sigo.service.analysis;
 import ar.edu.utn.frba.proyecto.sigo.domain.airport.Airport;
 import ar.edu.utn.frba.proyecto.sigo.domain.airport.Airport_;
 import ar.edu.utn.frba.proyecto.sigo.domain.analysis.*;
+import ar.edu.utn.frba.proyecto.sigo.domain.user.SigoUser_;
 import ar.edu.utn.frba.proyecto.sigo.exception.BusinessConstrainException;
 import ar.edu.utn.frba.proyecto.sigo.service.SigoService;
 import com.google.common.collect.Lists;
@@ -15,6 +16,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toList;
 
@@ -29,7 +31,7 @@ public class AnalysisService extends SigoService<Analysis, Analysis>{
         this.caseService = caseService;
     }
 
-    public List<Analysis> find(QueryParamsMap parameters){
+    public Stream<Analysis> find(QueryParamsMap parameters){
 
         CriteriaBuilder builder = currentSession().getCriteriaBuilder();
 
@@ -41,6 +43,7 @@ public class AnalysisService extends SigoService<Analysis, Analysis>{
 
         Join<Object, Object> airport = analysisCase.join(AnalysisCase_.aerodrome.getName());
 
+        Join<Object, Object> user = analysis.join(Analysis_.user.getName());
 
         Optional<Predicate> predicateId = Optional
                 .ofNullable(parameters.get(Airport_.id.getName()).value())
@@ -81,7 +84,7 @@ public class AnalysisService extends SigoService<Analysis, Analysis>{
 
         Optional<Predicate> predicateUser = Optional
                 .ofNullable(parameters.get("user").value())
-                .map( v -> builder.equal(analysis.get(Analysis_.user.getName()), v));
+                .map( v -> builder.equal(user.get(SigoUser_.id.getName()), v));
 
 
         List<Predicate> collect = Lists.newArrayList(predicateId, predicateUser, predicateNameFIR, predicateCodeFIR, predicateCodeIATA, predicateCodeLocal, predicateCurrent)
@@ -92,16 +95,19 @@ public class AnalysisService extends SigoService<Analysis, Analysis>{
 
         criteria.where(builder.and(collect.toArray(new Predicate[collect.size()])));
 
-        return currentSession().createQuery(criteria).getResultList();
+        return currentSession().createQuery(criteria).getResultStream();
     }
 
     @Override
     protected void preCreateActions(Analysis analysis, Analysis parent) {
         super.preCreateActions(analysis, parent);
 
-        analysis.setParent(parent);
+        if(Optional.ofNullable(parent.getId()).isPresent()){
+            analysis.setParent(parent);
+        }
+
         analysis.setRegulation(parent.getRegulation());
-        analysis.setStage(AnalysisStages.OBJECT);
+        analysis.setStage(AnalysisStages.UNDEFINED);
         analysis.setStatus(AnalysisStatuses.INITIALIZED);
         analysis.setCreationDate(LocalDateTime.now(ZoneOffset.UTC));
         analysis.setEditionDate(LocalDateTime.now(ZoneOffset.UTC));

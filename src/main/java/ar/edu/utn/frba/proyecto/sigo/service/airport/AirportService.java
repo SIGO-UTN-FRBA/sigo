@@ -3,6 +3,8 @@ package ar.edu.utn.frba.proyecto.sigo.service.airport;
 import ar.edu.utn.frba.proyecto.sigo.domain.airport.Airport;
 import ar.edu.utn.frba.proyecto.sigo.domain.airport.Airport_;
 import ar.edu.utn.frba.proyecto.sigo.domain.airport.Runway;
+import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisCase;
+import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisCase_;
 import ar.edu.utn.frba.proyecto.sigo.service.SigoService;
 import com.google.common.collect.Lists;
 import org.geotools.feature.simple.SimpleFeatureBuilder;
@@ -15,10 +17,7 @@ import spark.QueryParamsMap;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
+import javax.persistence.criteria.*;
 import java.awt.*;
 import java.util.List;
 import java.util.Optional;
@@ -75,6 +74,13 @@ public class AirportService extends SigoService<Airport, Airport> {
         criteria.where(builder.and(collect.toArray(new Predicate[collect.size()])));
 
         return currentSession().createQuery(criteria).getResultStream();
+    }
+
+    public Stream<Airport> findWithoutAnalysis(){
+
+        return currentSession()
+                .createQuery("SELECT airports FROM Airport airports LEFT JOIN AnalysisCase cases ON cases.aerodrome = airports.id WHERE cases.id IS NULL")
+                .getResultStream();
     }
 
     public SimpleFeature getFeature(Airport airport){

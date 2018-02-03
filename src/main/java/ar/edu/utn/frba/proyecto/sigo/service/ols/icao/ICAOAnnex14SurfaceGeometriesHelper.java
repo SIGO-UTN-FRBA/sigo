@@ -1,23 +1,10 @@
 package ar.edu.utn.frba.proyecto.sigo.service.ols.icao;
 
 import ar.edu.utn.frba.proyecto.sigo.domain.airport.RunwayDirection;
-import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceApproach;
-import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceApproachFirstSection;
-import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceApproachSecondSection;
-import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceConical;
-import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceInnerHorizontal;
-import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceStrip;
-import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceTakeoffClimb;
-import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceTransitional;
+import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.*;
 import ar.edu.utn.frba.proyecto.sigo.utils.geom.GeographicHelper;
 import com.google.common.collect.Lists;
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.LineString;
-import com.vividsolutions.jts.geom.MultiPolygon;
-import com.vividsolutions.jts.geom.Point;
-import com.vividsolutions.jts.geom.Polygon;
+import com.vividsolutions.jts.geom.*;
 import com.vividsolutions.jts.operation.buffer.BufferParameters;
 
 import javax.inject.Singleton;
@@ -25,10 +12,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static ar.edu.utn.frba.proyecto.sigo.utils.geom.GeographicHelper.move;
-import static ar.edu.utn.frba.proyecto.sigo.utils.geom.GeographicHelper.oppositeThreshold;
-import static ar.edu.utn.frba.proyecto.sigo.utils.geom.GeographicHelper.realAzimuth;
-import static ar.edu.utn.frba.proyecto.sigo.utils.geom.GeographicHelper.slopePercentToDegrees;
+import static ar.edu.utn.frba.proyecto.sigo.utils.geom.GeographicHelper.*;
 
 @Singleton
 public class ICAOAnnex14SurfaceGeometriesHelper {
@@ -130,7 +114,7 @@ public class ICAOAnnex14SurfaceGeometriesHelper {
         Coordinate extreme3;
         Coordinate extreme4;
         Double azimuth;
-        double divergence;
+        Double divergence;
 
         divergence = slopePercentToDegrees(approach.getDivergence());
 
@@ -176,7 +160,7 @@ public class ICAOAnnex14SurfaceGeometriesHelper {
         Coordinate extreme3;
         Coordinate extreme4;
         Double azimuth;
-        double divergence;
+        Double divergence;
 
         divergence = slopePercentToDegrees(approach.getDivergence());
 
@@ -196,6 +180,61 @@ public class ICAOAnnex14SurfaceGeometriesHelper {
         //2. outer edge
         extreme3 = move(extreme2, azimuth+divergence, -1 * approachSecondSection.getLength());
         extreme4 = move(extreme1, azimuth-divergence, -1 * approachSecondSection.getLength());
+
+        //3. create polygon
+        approachGeometry = new GeometryFactory().createPolygon(new Coordinate[]{extreme1, extreme2, extreme3, extreme4, extreme1});
+/*
+        OutputStream out = new ByteArrayOutputStream();
+        try {
+            new GeometryJSON(14).write(approachGeometry, out);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        out.toString();
+*/
+        return approachGeometry;
+    }
+
+    public Polygon createApproachHorizontalSectionSurfaceGeometry(
+            RunwayDirection direction,
+            ICAOAnnex14SurfaceApproachHorizontalSection approachHorizontalSection,
+            ICAOAnnex14SurfaceApproachSecondSection approachSecondSection,
+            ICAOAnnex14SurfaceApproachFirstSection approachFirstSection,
+            ICAOAnnex14SurfaceApproach approach
+    ) {
+
+        Polygon approachGeometry;
+        Coordinate threshold;
+        Coordinate extreme1;
+        Coordinate extreme2;
+        Coordinate extreme3;
+        Coordinate extreme4;
+        Double azimuth;
+        Double divergence;
+        Double innerEdgeShift;
+        Double outerEdgeShift;
+
+        divergence = slopePercentToDegrees(approach.getDivergence());
+
+        azimuth = realAzimuth(direction);
+
+        threshold = direction.getGeom().getCoordinate();
+
+        innerEdgeShift = approachFirstSection.getLength() + approachSecondSection.getLength();
+        outerEdgeShift = approachHorizontalSection.getLength();
+
+        //1. inner edge
+        extreme1 = move(threshold, azimuth, -1 * approach.getDistanceFromThreshold());
+        extreme1 = move(extreme1, azimuth-90, -1 * approach.getLengthOfInnerEdge()/2);
+        extreme1 = move(extreme1, azimuth-divergence,-1 * innerEdgeShift);
+
+        extreme2 = move(threshold, azimuth, -1 * approach.getDistanceFromThreshold());
+        extreme2 = move(extreme2, azimuth+90, -1 * approach.getLengthOfInnerEdge()/2);
+        extreme2 = move(extreme2, azimuth+divergence, -1 * innerEdgeShift);
+
+        //2. outer edge
+        extreme3 = move(extreme2, azimuth+divergence, -1 * outerEdgeShift);
+        extreme4 = move(extreme1, azimuth-divergence, -1 * outerEdgeShift);
 
         //3. create polygon
         approachGeometry = new GeometryFactory().createPolygon(new Coordinate[]{extreme1, extreme2, extreme3, extreme4, extreme1});
@@ -282,6 +321,53 @@ public class ICAOAnnex14SurfaceGeometriesHelper {
         }
         out.toString();
 */
+        return takeoffGeometry;
+    }
+
+    public Polygon createBalkedLandingSurfaceGeometry(
+            RunwayDirection direction,
+            ICAOAnnex14SurfaceBalkedLanding balkedLanding,
+            ICAOAnnex14SurfaceInnerHorizontal innerHorizontal) {
+
+        Double azimuth;
+        Double divergence;
+        Double shiftLength, shiftWidth;
+        Coordinate runwayExtreme;
+        Coordinate extreme1;
+        Coordinate extreme4;
+        Coordinate extreme2;
+        Coordinate extreme3;
+        Polygon takeoffGeometry;
+
+        azimuth = realAzimuth(direction);
+
+        shiftWidth = balkedLanding.getLengthOfInnerEdge()/2;
+
+        shiftLength = balkedLanding.getDistanceFromThreshold();
+
+        runwayExtreme = oppositeThreshold(direction);
+
+        //1. inner edge
+        extreme1 = move(runwayExtreme,azimuth,-1 * shiftLength);
+        extreme1 = move(extreme1,azimuth+90, shiftWidth);
+
+        extreme2 = move(runwayExtreme,azimuth,-1 * shiftLength);
+        extreme2 = move(extreme2,azimuth-90, shiftWidth);
+
+        //2. outer edge
+        divergence = slopePercentToDegrees(balkedLanding.getDivergence());
+
+        Double opposite = innerHorizontal.getHeight();
+        Double degrees = Math.atan(balkedLanding.getSlope() / 100);
+        Double hypotenuse = opposite / Math.sin(degrees);
+        Double adjacent = Math.sqrt(Math.pow(hypotenuse,2) + Math.pow(opposite,2));
+
+        extreme3 = move(extreme2,azimuth-divergence,adjacent);
+        extreme4 = move(extreme1,azimuth+divergence,adjacent);
+
+        //3. create polygon
+        takeoffGeometry = new GeometryFactory().createPolygon(new Coordinate[]{extreme1, extreme2, extreme3, extreme4, extreme1});
+
         return takeoffGeometry;
     }
 }
