@@ -2,11 +2,11 @@ package ar.edu.utn.frba.proyecto.sigo.service.analysis;
 
 import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisCase;
 import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisExceptionSurface;
-import ar.edu.utn.frba.proyecto.sigo.persistence.HibernateUtil;
 import ar.edu.utn.frba.proyecto.sigo.service.SigoService;
 import org.geotools.feature.simple.SimpleFeatureBuilder;
 import org.geotools.feature.simple.SimpleFeatureTypeBuilder;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
+import org.hibernate.SessionFactory;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
 
@@ -18,8 +18,8 @@ import java.awt.*;
 public class AnalysisExceptionSurfaceService extends SigoService<AnalysisExceptionSurface, AnalysisCase>{
 
     @Inject
-    public AnalysisExceptionSurfaceService(HibernateUtil util) {
-        super(AnalysisExceptionSurface.class, util.getSessionFactory());
+    public AnalysisExceptionSurfaceService(SessionFactory sessionFactory) {
+        super(AnalysisExceptionSurface.class, sessionFactory);
     }
 
     public SimpleFeature getFeature(AnalysisExceptionSurface exception){

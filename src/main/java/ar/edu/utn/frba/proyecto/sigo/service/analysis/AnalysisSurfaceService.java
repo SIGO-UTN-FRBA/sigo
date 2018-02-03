@@ -4,8 +4,6 @@ import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisCase;
 import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisSurface;
 import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisSurface_;
 import ar.edu.utn.frba.proyecto.sigo.domain.ols.ObstacleLimitationSurface;
-import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14Surface;
-import ar.edu.utn.frba.proyecto.sigo.persistence.HibernateUtil;
 import ar.edu.utn.frba.proyecto.sigo.service.SigoService;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Streams;
@@ -14,6 +12,7 @@ import org.geotools.feature.simple.SimpleFeatureBuilder;
 import org.geotools.feature.simple.SimpleFeatureTypeBuilder;
 import org.geotools.referencing.crs.DefaultGeographicCRS;
 import org.hibernate.Hibernate;
+import org.hibernate.SessionFactory;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
 import spark.QueryParamsMap;
@@ -34,8 +33,8 @@ import static java.util.stream.Collectors.toList;
 public class AnalysisSurfaceService extends SigoService<AnalysisSurface, AnalysisCase> {
 
     @Inject
-    public AnalysisSurfaceService(HibernateUtil util) {
-        super(AnalysisSurface.class, util.getSessionFactory());
+    public AnalysisSurfaceService(SessionFactory sessionFactory) {
+        super(AnalysisSurface.class, sessionFactory);
     }
 
     public Stream<AnalysisSurface> find(Long analysisCaseId, QueryParamsMap parameters) {

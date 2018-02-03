@@ -1,31 +1,26 @@
 package ar.edu.utn.frba.proyecto.sigo.router.airport;
 
 import ar.edu.utn.frba.proyecto.sigo.domain.airport.*;
-import ar.edu.utn.frba.proyecto.sigo.dto.airport.RunwayApproachSectionDTO;
-import ar.edu.utn.frba.proyecto.sigo.dto.airport.RunwayClassificationDTO;
-import ar.edu.utn.frba.proyecto.sigo.dto.airport.RunwayDistanceDTO;
-import ar.edu.utn.frba.proyecto.sigo.dto.airport.RunwayTakeoffSectionDTO;
-import ar.edu.utn.frba.proyecto.sigo.persistence.HibernateUtil;
-import ar.edu.utn.frba.proyecto.sigo.dto.airport.RunwayDirectionDTO;
+import ar.edu.utn.frba.proyecto.sigo.dto.airport.*;
 import ar.edu.utn.frba.proyecto.sigo.router.SigoRouter;
+import ar.edu.utn.frba.proyecto.sigo.service.airport.*;
+import ar.edu.utn.frba.proyecto.sigo.spark.JsonTransformer;
+import ar.edu.utn.frba.proyecto.sigo.translator.SimpleFeatureTranslator;
 import ar.edu.utn.frba.proyecto.sigo.translator.airport.RunwayApproachSectionTranslator;
 import ar.edu.utn.frba.proyecto.sigo.translator.airport.RunwayClassificationTranslator;
 import ar.edu.utn.frba.proyecto.sigo.translator.airport.RunwayDirectionTranslator;
 import ar.edu.utn.frba.proyecto.sigo.translator.airport.RunwayTakeoffSectionTranslator;
-import ar.edu.utn.frba.proyecto.sigo.translator.SimpleFeatureTranslator;
-import ar.edu.utn.frba.proyecto.sigo.service.airport.*;
-import ar.edu.utn.frba.proyecto.sigo.spark.JsonTransformer;
 import com.google.common.collect.Lists;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.vividsolutions.jts.geom.Point;
 import org.eclipse.jetty.http.HttpStatus;
+import org.hibernate.SessionFactory;
 import org.opengis.feature.simple.SimpleFeature;
 import spark.Route;
 import spark.RouteGroup;
 
 import javax.inject.Inject;
-
 import java.util.List;
 
 import static java.lang.String.format;
@@ -50,7 +45,7 @@ public class RunwayDirectionRouter extends SigoRouter {
     @Inject
     public RunwayDirectionRouter(
         Gson objectMapper,
-        HibernateUtil hibernateUtil,
+        SessionFactory sessionFactory,
         JsonTransformer jsonTransformer,
         RunwayService runwayService,
         RunwayDirectionService directionService,
@@ -64,7 +59,7 @@ public class RunwayDirectionRouter extends SigoRouter {
         RunwayStripService stripService,
         SimpleFeatureTranslator featureTranslator
     ){
-        super(objectMapper, hibernateUtil);
+        super(objectMapper, sessionFactory);
 
         this.jsonTransformer = jsonTransformer;
         this.runwayService = runwayService;

@@ -28,7 +28,7 @@ import javax.persistence.Table;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 @Data
-public abstract class RunwayClassification extends SigoDomain {
+public abstract class RunwayClassification extends SigoDomain<Long> {
 
     @Id
     @SequenceGenerator(name = "runwayClassificationGenerator", sequenceName = "runwayClassificationGenerator_SEQUENCE", allocationSize = 1)

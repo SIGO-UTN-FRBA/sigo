@@ -1,15 +1,14 @@
 package ar.edu.utn.frba.proyecto.sigo.router.object;
 
 import ar.edu.utn.frba.proyecto.sigo.dto.common.ListItemDTO;
-import ar.edu.utn.frba.proyecto.sigo.persistence.HibernateUtil;
 import ar.edu.utn.frba.proyecto.sigo.router.SigoRouter;
 import ar.edu.utn.frba.proyecto.sigo.service.object.ObjectOwnerService;
 import ar.edu.utn.frba.proyecto.sigo.spark.JsonTransformer;
+import org.hibernate.SessionFactory;
 import spark.Route;
 import spark.RouteGroup;
 
 import javax.inject.Inject;
-
 import java.util.stream.Collectors;
 
 import static spark.Spark.get;
@@ -21,11 +20,11 @@ public class ObjectOwnerRouter extends SigoRouter {
 
     @Inject
     public ObjectOwnerRouter(
-            HibernateUtil hibernateUtil,
+            SessionFactory sessionFactory,
             JsonTransformer jsonTransformer,
             ObjectOwnerService objectService
     ) {
-        super(null, hibernateUtil);
+        super(null, sessionFactory);
 
         this.jsonTransformer = jsonTransformer;
         this.objectService = objectService;

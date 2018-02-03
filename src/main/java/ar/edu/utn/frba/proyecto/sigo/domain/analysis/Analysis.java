@@ -3,6 +3,7 @@ package ar.edu.utn.frba.proyecto.sigo.domain.analysis;
 import ar.edu.utn.frba.proyecto.sigo.domain.SigoDomain;
 import ar.edu.utn.frba.proyecto.sigo.domain.object.ElevatedObject;
 import ar.edu.utn.frba.proyecto.sigo.domain.regulation.Regulations;
+import ar.edu.utn.frba.proyecto.sigo.domain.user.SigoUser;
 import com.google.common.base.MoreObjects;
 import lombok.*;
 
@@ -17,7 +18,7 @@ import java.util.Optional;
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 @Data
 @Builder
-public class Analysis extends SigoDomain {
+public class Analysis extends SigoDomain<Long> {
     @Id
     @SequenceGenerator(
             name = "analysisGenerator",
@@ -56,6 +57,10 @@ public class Analysis extends SigoDomain {
     @Enumerated(EnumType.ORDINAL)
     @Column(name= "regulation_id")
     private Regulations regulation;
+
+    @ManyToOne(cascade = CascadeType.MERGE)
+    @JoinColumn(name = "user_id")
+    private SigoUser user;
 
     public String toString(){
 

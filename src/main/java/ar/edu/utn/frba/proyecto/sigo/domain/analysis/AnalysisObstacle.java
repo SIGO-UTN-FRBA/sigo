@@ -13,7 +13,7 @@ import javax.persistence.*;
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 @Data
 @Builder
-public class AnalysisObstacle extends SigoDomain {
+public class AnalysisObstacle extends SigoDomain<Long> {
 
     @Id
     @SequenceGenerator(name = "analysisObstacleGenerator", sequenceName = "ANALYSIS_OBSTACLE_SEQUENCE", allocationSize = 1)

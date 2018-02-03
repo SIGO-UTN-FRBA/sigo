@@ -17,7 +17,7 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 @AllArgsConstructor
 @Data
-public abstract class Regulation extends SigoDomain {
+public abstract class Regulation extends SigoDomain<Long> {
     private Long id;
     private String authority;
     private String name;

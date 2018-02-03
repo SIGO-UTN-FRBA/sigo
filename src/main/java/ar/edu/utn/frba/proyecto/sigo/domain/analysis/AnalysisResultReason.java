@@ -22,7 +22,7 @@ import javax.persistence.Table;
 @NoArgsConstructor
 @Builder
 @Data
-public class AnalysisResultReason extends SigoDomain {
+public class AnalysisResultReason extends SigoDomain<Long> {
 
     @Id
     @SequenceGenerator(

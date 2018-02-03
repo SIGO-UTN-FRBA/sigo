@@ -18,7 +18,7 @@ import java.util.List;
 @Builder
 @Data
 @Table(name = "public.tbl_aerodromes")
-public class Airport extends SigoDomain implements Spatial<Point> {
+public class Airport extends SigoDomain<Long> implements Spatial<Point> {
 
     @Id
     @SequenceGenerator(

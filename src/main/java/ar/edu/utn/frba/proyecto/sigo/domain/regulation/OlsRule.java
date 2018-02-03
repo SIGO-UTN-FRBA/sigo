@@ -13,7 +13,7 @@ import javax.persistence.*;
 @Inheritance(strategy = InheritanceType.JOINED)
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 @Data
-public abstract class OlsRule extends SigoDomain {
+public abstract class OlsRule extends SigoDomain<Long> {
 
     @Id
     @SequenceGenerator(

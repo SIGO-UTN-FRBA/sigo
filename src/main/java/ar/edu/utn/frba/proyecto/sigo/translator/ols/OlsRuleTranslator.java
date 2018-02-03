@@ -8,7 +8,7 @@ import ar.edu.utn.frba.proyecto.sigo.dto.regulation.OlsRuleDTO;
 import ar.edu.utn.frba.proyecto.sigo.dto.regulation.OlsRuleICAOAnnex14DTO;
 import ar.edu.utn.frba.proyecto.sigo.translator.SigoTranslator;
 import com.google.gson.Gson;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+import org.apache.commons.lang.NotImplementedException;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;

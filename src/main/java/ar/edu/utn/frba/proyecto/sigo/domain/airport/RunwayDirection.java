@@ -17,7 +17,7 @@ import java.util.Optional;
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 @Data
 @Builder
-public class RunwayDirection extends SigoDomain implements Spatial<Point> {
+public class RunwayDirection extends SigoDomain<Long> implements Spatial<Point> {
 
     @Id
     @SequenceGenerator(

@@ -2,13 +2,13 @@ package ar.edu.utn.frba.proyecto.sigo.router.analysis;
 
 import ar.edu.utn.frba.proyecto.sigo.domain.analysis.Analysis;
 import ar.edu.utn.frba.proyecto.sigo.exception.MissingParameterException;
-import ar.edu.utn.frba.proyecto.sigo.persistence.HibernateUtil;
 import ar.edu.utn.frba.proyecto.sigo.router.SigoRouter;
 import ar.edu.utn.frba.proyecto.sigo.service.analysis.AnalysisService;
-import ar.edu.utn.frba.proyecto.sigo.translator.analysis.AnalysisTranslator;
 import ar.edu.utn.frba.proyecto.sigo.spark.JsonTransformer;
+import ar.edu.utn.frba.proyecto.sigo.translator.analysis.AnalysisTranslator;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import org.hibernate.SessionFactory;
 import spark.Route;
 import spark.RouteGroup;
 
@@ -16,7 +16,6 @@ import javax.inject.Inject;
 import java.util.stream.Collectors;
 
 import static spark.Spark.get;
-import static spark.Spark.patch;
 import static spark.Spark.post;
 
 public class AnalysisRouter extends SigoRouter {
@@ -27,13 +26,13 @@ public class AnalysisRouter extends SigoRouter {
 
     @Inject
     public AnalysisRouter(
-            HibernateUtil hibernateUtil,
+            SessionFactory sessionFactory,
             Gson objectMapper,
             JsonTransformer jsonTransformer,
             AnalysisService analysisService,
             AnalysisTranslator analysisTranslator
     ){
-        super(objectMapper, hibernateUtil);
+        super(objectMapper, sessionFactory);
 
         this.jsonTransformer = jsonTransformer;
         this.analysisService = analysisService;
@@ -62,9 +61,13 @@ public class AnalysisRouter extends SigoRouter {
 
         Analysis baseCase = this.analysisService.get(jsonObject.get("parentId").getAsLong());
 
-        Analysis analysisCase = this.analysisService.create(new Analysis(), baseCase);
+        Analysis analysis = Analysis.builder()
+                .user(getCurrentUserSession(request).getUser())
+                .build();
 
-        return analysisTranslator.getAsDTO(analysisCase);
+        this.analysisService.create(analysis, baseCase);
+
+        return analysisTranslator.getAsDTO(analysis);
     });
 
 

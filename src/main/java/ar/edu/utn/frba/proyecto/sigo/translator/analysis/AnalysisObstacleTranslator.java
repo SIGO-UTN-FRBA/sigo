@@ -10,7 +10,7 @@ import ar.edu.utn.frba.proyecto.sigo.translator.SigoTranslator;
 import com.google.common.collect.Lists;
 import com.google.gson.Gson;
 import com.vividsolutions.jts.geom.Coordinate;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+import org.apache.commons.lang.NotImplementedException;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;

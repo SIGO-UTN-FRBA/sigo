@@ -3,13 +3,13 @@ package ar.edu.utn.frba.proyecto.sigo.router.wizard;
 import ar.edu.utn.frba.proyecto.sigo.domain.analysis.Analysis;
 import ar.edu.utn.frba.proyecto.sigo.exception.InvalidParameterException;
 import ar.edu.utn.frba.proyecto.sigo.exception.MissingParameterException;
-import ar.edu.utn.frba.proyecto.sigo.persistence.HibernateUtil;
 import ar.edu.utn.frba.proyecto.sigo.router.SigoRouter;
 import ar.edu.utn.frba.proyecto.sigo.service.analysis.AnalysisService;
-import ar.edu.utn.frba.proyecto.sigo.translator.analysis.AnalysisTranslator;
-import ar.edu.utn.frba.proyecto.sigo.spark.JsonTransformer;
 import ar.edu.utn.frba.proyecto.sigo.service.wizard.WizardAnalysis;
+import ar.edu.utn.frba.proyecto.sigo.spark.JsonTransformer;
+import ar.edu.utn.frba.proyecto.sigo.translator.analysis.AnalysisTranslator;
 import com.google.gson.Gson;
+import org.hibernate.SessionFactory;
 import spark.Route;
 import spark.RouteGroup;
 
@@ -26,14 +26,14 @@ public class WizardAnalysisRouter extends SigoRouter {
 
     @Inject
     public WizardAnalysisRouter(
-            HibernateUtil hibernateUtil,
+            SessionFactory sessionFactory,
             Gson objectMapper,
             JsonTransformer jsonTransformer,
             WizardAnalysis wizard,
             AnalysisService analysisService,
             AnalysisTranslator analysisTranslator
     ){
-        super(objectMapper, hibernateUtil);
+        super(objectMapper, sessionFactory);
 
         this.jsonTransformer = jsonTransformer;
         this.wizard = wizard;

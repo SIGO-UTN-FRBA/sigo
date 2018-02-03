@@ -2,6 +2,7 @@ package ar.edu.utn.frba.proyecto.sigo;
 
 import ar.edu.utn.frba.proyecto.sigo.dto.common.ExceptionDTO;
 import ar.edu.utn.frba.proyecto.sigo.exception.*;
+import ar.edu.utn.frba.proyecto.sigo.security.SecurityFilter;
 import ar.edu.utn.frba.proyecto.sigo.spark.Router;
 import com.github.racc.tscg.TypesafeConfig;
 import com.google.gson.Gson;
@@ -11,7 +12,6 @@ import spark.Filter;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-
 import java.util.Set;
 
 import static spark.Spark.*;
@@ -23,6 +23,7 @@ public class ApiContext {
     private final Integer port;
     private final String basePath;
     private String url;
+    private SecurityFilter securityFilter;
     private Gson jsonTransformer;
     private final Set<Router> routers;
 
@@ -32,7 +33,8 @@ public class ApiContext {
             @TypesafeConfig("app.context") String basePath,
             @TypesafeConfig("app.url") String url,
             Gson jsonTransformer,
-            Set<Router> routers
+            Set<Router> routers,
+            SecurityFilter securityFilter
     ){
 
         this.port = port;
@@ -41,6 +43,7 @@ public class ApiContext {
         this.jsonTransformer = jsonTransformer;
         this.routers = routers;
         this.url=url;
+        this.securityFilter = securityFilter;
     }
 
     void init(){
@@ -50,12 +53,18 @@ public class ApiContext {
 
         this.configureCors();
 
+        this.configureAuth();
+
         this.configureExceptions();
 
         this.configureRoutes();
 
         this.configureContentTypes();
 
+    }
+
+    private void configureAuth() {
+        before(basePath + "/*", securityFilter);
     }
 
     private void configureCors() {
@@ -90,6 +99,18 @@ public class ApiContext {
     }
 
     private void configureExceptions() {
+
+
+        exception(InternalServerErrorException.class, (e, request, response) ->{
+            response.status(HttpStatus.INTERNAL_SERVER_ERROR_500);
+            response.body(jsonTransformer.toJson(
+                    new ExceptionDTO(
+                            e.getCause().getClass().getName(),
+                            e.getCause().getMessage()
+                    )
+                )
+            );
+        });
 
         exception(SigoException.class, (e, request, response) ->{
             response.status(HttpStatus.INTERNAL_SERVER_ERROR_500);
@@ -143,6 +164,17 @@ public class ApiContext {
                             e.getMessage()
                     )
                 )
+            );
+        });
+
+        exception(UnauthorizedRequestException.class, (e, request, response) ->{
+            response.status(HttpStatus.UNAUTHORIZED_401);
+            response.body(jsonTransformer.toJson(
+                    new ExceptionDTO(
+                            UnauthorizedRequestException.class.getSimpleName(),
+                            e.getMessage()
+                    )
+                    )
             );
         });
     }

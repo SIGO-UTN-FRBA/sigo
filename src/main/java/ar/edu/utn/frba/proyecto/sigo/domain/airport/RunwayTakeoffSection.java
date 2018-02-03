@@ -13,7 +13,7 @@ import javax.persistence.*;
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 @Data
 @Builder
-public class RunwayTakeoffSection extends SigoDomain {
+public class RunwayTakeoffSection extends SigoDomain<Long> {
     @Id
     @SequenceGenerator(
             name = "runwayTakeoffSectionGenerator",

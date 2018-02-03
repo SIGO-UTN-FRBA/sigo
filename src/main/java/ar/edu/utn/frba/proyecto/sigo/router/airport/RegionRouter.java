@@ -1,17 +1,16 @@
 package ar.edu.utn.frba.proyecto.sigo.router.airport;
 
 import ar.edu.utn.frba.proyecto.sigo.domain.analysis.Region;
-import ar.edu.utn.frba.proyecto.sigo.persistence.HibernateUtil;
 import ar.edu.utn.frba.proyecto.sigo.router.SigoRouter;
 import ar.edu.utn.frba.proyecto.sigo.service.airport.RegionService;
-import ar.edu.utn.frba.proyecto.sigo.translator.location.RegionTranslator;
 import ar.edu.utn.frba.proyecto.sigo.spark.JsonTransformer;
+import ar.edu.utn.frba.proyecto.sigo.translator.location.RegionTranslator;
 import com.google.gson.Gson;
+import org.hibernate.SessionFactory;
 import spark.Route;
 import spark.RouteGroup;
 
 import javax.inject.Inject;
-
 import java.util.stream.Collectors;
 
 import static spark.Spark.get;
@@ -24,13 +23,13 @@ public class RegionRouter extends SigoRouter {
 
     @Inject
     public RegionRouter(
-            HibernateUtil hibernateUtil,
+            SessionFactory sessionFactory,
             Gson objectMapper,
             JsonTransformer jsonTransformer,
             RegionService regionService,
             RegionTranslator translator
     ) {
-        super(objectMapper, hibernateUtil);
+        super(objectMapper, sessionFactory);
 
         this.jsonTransformer = jsonTransformer;
         this.regionService = regionService;

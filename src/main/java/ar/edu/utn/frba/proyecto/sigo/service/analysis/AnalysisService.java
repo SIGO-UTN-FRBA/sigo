@@ -2,25 +2,15 @@ package ar.edu.utn.frba.proyecto.sigo.service.analysis;
 
 import ar.edu.utn.frba.proyecto.sigo.domain.airport.Airport;
 import ar.edu.utn.frba.proyecto.sigo.domain.airport.Airport_;
-import ar.edu.utn.frba.proyecto.sigo.domain.analysis.Analysis;
-import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisCase;
-import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisCase_;
-import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisStages;
-import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisStatuses;
-import ar.edu.utn.frba.proyecto.sigo.domain.analysis.Analysis_;
+import ar.edu.utn.frba.proyecto.sigo.domain.analysis.*;
 import ar.edu.utn.frba.proyecto.sigo.exception.BusinessConstrainException;
-import ar.edu.utn.frba.proyecto.sigo.persistence.HibernateUtil;
 import ar.edu.utn.frba.proyecto.sigo.service.SigoService;
 import com.google.common.collect.Lists;
+import org.hibernate.SessionFactory;
 import spark.QueryParamsMap;
 
 import javax.inject.Inject;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Join;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
-import javax.persistence.criteria.Subquery;
+import javax.persistence.criteria.*;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.List;
@@ -33,8 +23,8 @@ public class AnalysisService extends SigoService<Analysis, Analysis>{
     private AnalysisCaseService caseService;
 
     @Inject
-    public AnalysisService(HibernateUtil hibernateUtil, AnalysisCaseService caseService) {
-        super(Analysis.class, hibernateUtil.getSessionFactory());
+    public AnalysisService(SessionFactory sessionFactory, AnalysisCaseService caseService) {
+        super(Analysis.class, sessionFactory);
 
         this.caseService = caseService;
     }
@@ -89,8 +79,12 @@ public class AnalysisService extends SigoService<Analysis, Analysis>{
                     return builder.not(builder.exists(subquery));
                 });
 
+        Optional<Predicate> predicateUser = Optional
+                .ofNullable(parameters.get("user").value())
+                .map( v -> builder.equal(analysis.get(Analysis_.user.getName()), v));
 
-        List<Predicate> collect = Lists.newArrayList(predicateId, predicateNameFIR, predicateCodeFIR, predicateCodeIATA, predicateCodeLocal, predicateCurrent)
+
+        List<Predicate> collect = Lists.newArrayList(predicateId, predicateUser, predicateNameFIR, predicateCodeFIR, predicateCodeIATA, predicateCodeLocal, predicateCurrent)
                 .stream()
                 .filter(Optional::isPresent)
                 .map(Optional::get)

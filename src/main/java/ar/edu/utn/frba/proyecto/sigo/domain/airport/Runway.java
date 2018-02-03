@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 @Builder
 @Data
-public class Runway extends SigoDomain implements Spatial<LineString> {
+public class Runway extends SigoDomain<Long> implements Spatial<LineString> {
 
     @Id
     @SequenceGenerator(

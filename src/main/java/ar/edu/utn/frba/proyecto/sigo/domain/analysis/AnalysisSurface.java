@@ -19,7 +19,7 @@ import javax.persistence.*;
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 @Data
 @Builder
-public class AnalysisSurface<T extends ObstacleLimitationSurface> extends SigoDomain implements AnalysisRestriction{
+public class AnalysisSurface<T extends ObstacleLimitationSurface> extends SigoDomain<Long> implements AnalysisRestriction{
 
     @Id
     @SequenceGenerator(name = "analysisSurfaceGenerator", sequenceName = "ANALYSIS_SURFACE_SEQUENCE", allocationSize = 1)

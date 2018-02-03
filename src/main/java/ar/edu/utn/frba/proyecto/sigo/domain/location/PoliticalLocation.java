@@ -14,7 +14,7 @@ import java.util.Optional;
 @Table(name = "public.tbl_political_locations")
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 @Data
-public class PoliticalLocation extends SigoDomain implements Spatial<MultiPolygon> {
+public class PoliticalLocation extends SigoDomain<Long> implements Spatial<MultiPolygon> {
     @Id
     @SequenceGenerator(
             name = "politicalLocationGenerator",

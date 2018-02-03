@@ -2,7 +2,6 @@ package ar.edu.utn.frba.proyecto.sigo.router.object;
 
 import ar.edu.utn.frba.proyecto.sigo.domain.object.*;
 import ar.edu.utn.frba.proyecto.sigo.dto.object.PlacedObjectDTO;
-import ar.edu.utn.frba.proyecto.sigo.persistence.HibernateUtil;
 import ar.edu.utn.frba.proyecto.sigo.router.SigoRouter;
 import ar.edu.utn.frba.proyecto.sigo.service.object.*;
 import ar.edu.utn.frba.proyecto.sigo.spark.JsonTransformer;
@@ -14,6 +13,7 @@ import com.google.gson.JsonObject;
 import com.vividsolutions.jts.geom.Geometry;
 import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.jetty.http.HttpStatus;
+import org.hibernate.SessionFactory;
 import org.opengis.feature.simple.SimpleFeature;
 import spark.Route;
 import spark.RouteGroup;
@@ -39,7 +39,7 @@ public class ElevatedObjectRouter extends SigoRouter {
 
     @Inject
     public ElevatedObjectRouter(
-            HibernateUtil hibernateUtil,
+            SessionFactory sessionFactory,
             JsonTransformer jsonTransformer,
             PlacedObjectService placedObjectService,
             PlacedObjectTranslator objectTranslator,
@@ -52,7 +52,7 @@ public class ElevatedObjectRouter extends SigoRouter {
             TerrainLevelCurveService terrainService,
             TerrainLevelCurveFeatureHelper featureTerrainHelper,
             TerrainLevelCurveTranslator terrainTranslator){
-        super(objectMapper, hibernateUtil);
+        super(objectMapper, sessionFactory);
 
         this.featurePlacedObjectHelper = featurePlacedObjectHelper;
         this.jsonTransformer = jsonTransformer;

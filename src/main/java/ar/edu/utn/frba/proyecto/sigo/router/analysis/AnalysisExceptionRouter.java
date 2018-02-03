@@ -6,7 +6,6 @@ import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisExceptionRule;
 import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisExceptionSurface;
 import ar.edu.utn.frba.proyecto.sigo.dto.analysis.AnalysisExceptionRuleDTO;
 import ar.edu.utn.frba.proyecto.sigo.dto.analysis.AnalysisExceptionSurfaceDTO;
-import ar.edu.utn.frba.proyecto.sigo.persistence.HibernateUtil;
 import ar.edu.utn.frba.proyecto.sigo.router.SigoRouter;
 import ar.edu.utn.frba.proyecto.sigo.service.analysis.AnalysisExceptionRuleService;
 import ar.edu.utn.frba.proyecto.sigo.service.analysis.AnalysisExceptionService;
@@ -18,10 +17,11 @@ import ar.edu.utn.frba.proyecto.sigo.translator.analysis.AnalysisExceptionRuleTr
 import ar.edu.utn.frba.proyecto.sigo.translator.analysis.AnalysisExceptionSurfaceTranslator;
 import ar.edu.utn.frba.proyecto.sigo.translator.analysis.AnalysisExceptionTranslator;
 import com.google.gson.Gson;
+import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.jetty.http.HttpStatus;
+import org.hibernate.SessionFactory;
 import spark.Route;
 import spark.RouteGroup;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import javax.inject.Inject;
 import java.util.Set;
@@ -43,7 +43,7 @@ public class AnalysisExceptionRouter extends SigoRouter {
 
     @Inject
     public AnalysisExceptionRouter(
-            HibernateUtil hibernateUtil,
+            SessionFactory sessionFactory,
             Gson objectMapper,
             JsonTransformer jsonTransformer,
             AnalysisService analysisService,
@@ -54,7 +54,7 @@ public class AnalysisExceptionRouter extends SigoRouter {
             AnalysisExceptionRuleService ruleService,
             AnalysisExceptionSurfaceService surfaceService,
             SimpleFeatureTranslator featureTranslator){
-        super(objectMapper, hibernateUtil);
+        super(objectMapper, sessionFactory);
 
         this.jsonTransformer = jsonTransformer;
         this.analysisService = analysisService;

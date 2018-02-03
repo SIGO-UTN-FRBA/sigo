@@ -15,7 +15,7 @@ import java.util.List;
 @Table(name = "public.tbl_states")
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 @Data
-public class State extends SigoDomain {
+public class State extends SigoDomain<Long> {
     @Id
     @SequenceGenerator(
             name = "stateGenerator",

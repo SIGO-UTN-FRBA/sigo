@@ -89,7 +89,6 @@
       <version>${guice.version}</version>
     </dependency>
 
-
     <!-- Json -->
     <dependency>
       <groupId>com.google.code.gson</groupId>
@@ -132,6 +131,18 @@
     </dependency>
 
 
+    <!-- OAuth -->
+    <dependency>
+      <groupId>com.auth0</groupId>
+      <artifactId>java-jwt</artifactId>
+      <version>3.3.0</version>
+    </dependency>
+    <dependency>
+      <groupId>com.auth0</groupId>
+      <artifactId>jwks-rsa</artifactId>
+      <version>0.3.0</version>
+    </dependency>
+
     <!-- Core Utils -->
     <dependency>
       <groupId>org.projectlombok</groupId>
@@ -149,6 +160,12 @@
       <artifactId>guava</artifactId>
       <version>23.0</version>
     </dependency>
+    <dependency>
+      <groupId>org.apache.httpcomponents</groupId>
+      <artifactId>httpclient</artifactId>
+      <version>4.5.5</version>
+    </dependency>
+
 
   </dependencies>
 

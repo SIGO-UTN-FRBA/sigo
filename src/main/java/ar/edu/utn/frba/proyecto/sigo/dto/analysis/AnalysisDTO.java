@@ -20,4 +20,6 @@ public class AnalysisDTO {
     private Integer statusId;
     private Long airportId;
     private Integer regulationId;
+    private String userId;
+    private String userNickname;
 }

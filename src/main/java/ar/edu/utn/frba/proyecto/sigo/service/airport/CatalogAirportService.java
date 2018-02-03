@@ -4,7 +4,6 @@ import ar.edu.utn.frba.proyecto.sigo.domain.airport.RunwaySurfaces;
 import ar.edu.utn.frba.proyecto.sigo.domain.regulation.Regulation;
 import ar.edu.utn.frba.proyecto.sigo.domain.regulation.icao.ICAOAnnex14RunwayCodeLetters;
 import ar.edu.utn.frba.proyecto.sigo.domain.regulation.icao.ICAOAnnex14RunwayCodeNumbers;
-import ar.edu.utn.frba.proyecto.sigo.persistence.HibernateUtil;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
@@ -22,9 +21,9 @@ public class CatalogAirportService {
 
     @Inject
     public CatalogAirportService(
-        HibernateUtil hibernateUtil
+        SessionFactory sessionFactory
     ){
-        this.sessionFactory = hibernateUtil.getSessionFactory();
+        this.sessionFactory = sessionFactory;
     }
 
     public RunwaySurfaces[] findAllRunwaySurfaces() {
