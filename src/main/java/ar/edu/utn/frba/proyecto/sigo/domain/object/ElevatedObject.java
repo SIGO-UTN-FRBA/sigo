@@ -17,7 +17,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Data
 public abstract class ElevatedObject<T extends Geometry>
-    extends SigoDomain
+    extends SigoDomain<Long>
     implements Spatial<T>
 {
 

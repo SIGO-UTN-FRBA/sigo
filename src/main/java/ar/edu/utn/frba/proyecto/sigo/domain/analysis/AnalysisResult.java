@@ -21,7 +21,7 @@ import javax.persistence.Table;
 @NoArgsConstructor
 @Builder
 @Data
-public class AnalysisResult extends SigoDomain {
+public class AnalysisResult extends SigoDomain<Long> {
 
     @Id
     @SequenceGenerator(name = "analysisResultGenerator", sequenceName = "ANALYSIS_RESULT_SEQUENCE", allocationSize = 1)

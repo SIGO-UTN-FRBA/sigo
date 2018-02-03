@@ -21,7 +21,7 @@ import javax.persistence.Table;
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 @Data
 @Builder
-public class RunwayStrip extends SigoDomain {
+public class RunwayStrip extends SigoDomain<Long> {
 
     @Id
     @SequenceGenerator(

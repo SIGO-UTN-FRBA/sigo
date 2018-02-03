@@ -4,6 +4,7 @@ import ar.edu.utn.frba.proyecto.sigo.domain.regulation.Regulation;
 import ar.edu.utn.frba.proyecto.sigo.domain.regulation.Regulations;
 
 public class RegulationEASA extends Regulation {
+
     public RegulationEASA() {
         super((long)Regulations.EASA.ordinal(),
                 "European Aviation Safety Agency (EASA)",

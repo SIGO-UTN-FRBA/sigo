@@ -22,7 +22,7 @@ import java.util.stream.Stream;
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 @Data
 @Builder
-public class AnalysisCase extends SigoDomain {
+public class AnalysisCase extends SigoDomain<Long> {
     @Id
     @Column(name = "case_id")
     private Long id;

@@ -62,7 +62,7 @@ public class AnalysisRouter extends SigoRouter {
         Analysis baseCase = this.analysisService.get(jsonObject.get("parentId").getAsLong());
 
         Analysis analysis = Analysis.builder()
-                .userId(getCurrentUserSession(request).getUserId())
+                .user(getCurrentUserSession(request).getUser())
                 .build();
 
         this.analysisService.create(analysis, baseCase);

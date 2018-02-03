@@ -25,6 +25,7 @@ import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceTransitio
 import ar.edu.utn.frba.proyecto.sigo.domain.regulation.OlsRule;
 import ar.edu.utn.frba.proyecto.sigo.domain.regulation.faa.OlsRulesFAA;
 import ar.edu.utn.frba.proyecto.sigo.domain.regulation.icao.OlsRuleICAOAnnex14;
+import ar.edu.utn.frba.proyecto.sigo.domain.user.SigoUser;
 import com.github.racc.tscg.TypesafeConfig;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -136,7 +137,8 @@ public class HibernateUtil {
                 .addAnnotatedClass(ICAOAnnex14SurfaceApproachFirstSection.class)
                 .addAnnotatedClass(ICAOAnnex14SurfaceApproach.class)
                 .addAnnotatedClass(AnalysisResult.class)
-                .addAnnotatedClass(AnalysisResultReason.class);
+                .addAnnotatedClass(AnalysisResultReason.class)
+                .addAnnotatedClass(SigoUser.class);
 
         Metadata metadata = sources.getMetadataBuilder().build();
 

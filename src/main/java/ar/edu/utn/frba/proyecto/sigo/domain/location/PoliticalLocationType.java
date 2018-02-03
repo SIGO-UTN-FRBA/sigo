@@ -14,7 +14,7 @@ import javax.persistence.*;
 @Table(name = "public.tbl_political_location_types")
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 @Data
-public class PoliticalLocationType extends SigoDomain {
+public class PoliticalLocationType extends SigoDomain<Long> {
     @Id
     @SequenceGenerator(
             name = "PoliticalLocationTypeGenerator",

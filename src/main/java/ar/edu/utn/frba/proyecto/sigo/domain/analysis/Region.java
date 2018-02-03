@@ -18,7 +18,7 @@ import java.util.List;
 @Table(name = "public.tbl_regions")
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 @Data
-public class Region extends SigoDomain implements Spatial<MultiPolygon> {
+public class Region extends SigoDomain<Long> implements Spatial<MultiPolygon> {
     @Id
     @SequenceGenerator(
             name = "regionGenerator",

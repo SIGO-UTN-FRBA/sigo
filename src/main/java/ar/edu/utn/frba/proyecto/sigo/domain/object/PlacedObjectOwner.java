@@ -16,7 +16,7 @@ import javax.persistence.*;
 @Table(name = "public.tbl_placed_object_owner")
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 @Data
-public class PlacedObjectOwner extends SigoDomain {
+public class PlacedObjectOwner extends SigoDomain<Long> {
     @Id
     @SequenceGenerator(
             name = "placedObjectOwnerGenerator",

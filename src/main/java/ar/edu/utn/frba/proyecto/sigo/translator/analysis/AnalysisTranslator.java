@@ -4,7 +4,7 @@ import ar.edu.utn.frba.proyecto.sigo.domain.analysis.Analysis;
 import ar.edu.utn.frba.proyecto.sigo.dto.analysis.AnalysisDTO;
 import ar.edu.utn.frba.proyecto.sigo.translator.SigoTranslator;
 import com.google.gson.Gson;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+import org.apache.commons.lang.NotImplementedException;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -31,6 +31,8 @@ public class AnalysisTranslator extends SigoTranslator<Analysis, AnalysisDTO> {
                 .editionDate(domain.getEditionDate().toInstant(ZoneOffset.UTC).toEpochMilli())
                 .airportId(domain.getAnalysisCase().getAerodrome().getId())
                 .regulationId(domain.getRegulation().ordinal())
+                .userId(domain.getUser().getId())
+                .userNickname(domain.getUser().getNickname())
                 .build();
     }
 

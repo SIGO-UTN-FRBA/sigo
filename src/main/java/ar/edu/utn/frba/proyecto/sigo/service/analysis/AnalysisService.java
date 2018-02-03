@@ -79,8 +79,12 @@ public class AnalysisService extends SigoService<Analysis, Analysis>{
                     return builder.not(builder.exists(subquery));
                 });
 
+        Optional<Predicate> predicateUser = Optional
+                .ofNullable(parameters.get("user"))
+                .map( v -> builder.equal(analysis.get(Analysis_.user.getName()), v));
 
-        List<Predicate> collect = Lists.newArrayList(predicateId, predicateNameFIR, predicateCodeFIR, predicateCodeIATA, predicateCodeLocal, predicateCurrent)
+
+        List<Predicate> collect = Lists.newArrayList(predicateId, predicateUser, predicateNameFIR, predicateCodeFIR, predicateCodeIATA, predicateCodeLocal, predicateCurrent)
                 .stream()
                 .filter(Optional::isPresent)
                 .map(Optional::get)
