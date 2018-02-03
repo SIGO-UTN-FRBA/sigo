@@ -2,6 +2,8 @@ package ar.edu.utn.frba.proyecto.sigo;
 
 import ar.edu.utn.frba.proyecto.sigo.dto.common.ExceptionDTO;
 import ar.edu.utn.frba.proyecto.sigo.exception.*;
+import ar.edu.utn.frba.proyecto.sigo.security.ReadOnlyFilter;
+import ar.edu.utn.frba.proyecto.sigo.security.RoleAssignedFilter;
 import ar.edu.utn.frba.proyecto.sigo.security.SecurityFilter;
 import ar.edu.utn.frba.proyecto.sigo.spark.Router;
 import com.github.racc.tscg.TypesafeConfig;
@@ -24,6 +26,8 @@ public class ApiContext {
     private final String basePath;
     private String url;
     private SecurityFilter securityFilter;
+    private RoleAssignedFilter roleAssignedFilter;
+    private ReadOnlyFilter readOnlyFilter;
     private Gson jsonTransformer;
     private final Set<Router> routers;
 
@@ -34,7 +38,9 @@ public class ApiContext {
             @TypesafeConfig("app.url") String url,
             Gson jsonTransformer,
             Set<Router> routers,
-            SecurityFilter securityFilter
+            SecurityFilter securityFilter,
+            RoleAssignedFilter roleAssignedFilter,
+            ReadOnlyFilter readOnlyFilter
     ){
 
         this.port = port;
@@ -44,6 +50,8 @@ public class ApiContext {
         this.routers = routers;
         this.url=url;
         this.securityFilter = securityFilter;
+        this.roleAssignedFilter = roleAssignedFilter;
+        this.readOnlyFilter = readOnlyFilter;
     }
 
     void init(){
@@ -64,7 +72,7 @@ public class ApiContext {
     }
 
     private void configureAuth() {
-        before(basePath + "/*", securityFilter);
+        before(basePath + "/*", securityFilter, roleAssignedFilter, readOnlyFilter);
     }
 
     private void configureCors() {
