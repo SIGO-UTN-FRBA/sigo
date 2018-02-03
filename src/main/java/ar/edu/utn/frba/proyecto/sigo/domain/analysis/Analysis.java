@@ -58,7 +58,7 @@ public class Analysis extends SigoDomain<Long> {
     @Column(name= "regulation_id")
     private Regulations regulation;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "user_id")
     private SigoUser user;
 

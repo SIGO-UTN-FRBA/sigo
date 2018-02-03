@@ -13,6 +13,7 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -74,7 +75,11 @@ public class UserSessionFactory {
     private SigoUser persistUser(SigoUser user) {
         try(Session session = sessionFactory.openSession()){
 
+            Transaction transaction = session.beginTransaction();
+
             session.saveOrUpdate(user);
+
+            transaction.commit();
 
         } catch (Exception e){
             throw new RuntimeException("Fail to persist a user " + user.getId());
