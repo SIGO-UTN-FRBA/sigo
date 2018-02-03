@@ -17,11 +17,11 @@ import ar.edu.utn.frba.proyecto.sigo.translator.analysis.AnalysisExceptionRuleTr
 import ar.edu.utn.frba.proyecto.sigo.translator.analysis.AnalysisExceptionSurfaceTranslator;
 import ar.edu.utn.frba.proyecto.sigo.translator.analysis.AnalysisExceptionTranslator;
 import com.google.gson.Gson;
+import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.jetty.http.HttpStatus;
 import org.hibernate.SessionFactory;
 import spark.Route;
 import spark.RouteGroup;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import javax.inject.Inject;
 import java.util.Set;
