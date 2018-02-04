@@ -42,12 +42,12 @@ public class AnalysisRouter extends SigoRouter {
     /**
      * Search analysis instances filtered by parameters
      */
-    private final Route searchAnalysis = doInTransaction(false, (request, response) -> {
-        return this.analysisService.find(request.queryMap())
-                .stream()
+    private final Route searchAnalysis = doInTransaction(false, (request, response) ->
+         this.analysisService
+                .find(request.queryMap())
                 .map(c -> analysisTranslator.getAsDTO(c))
-                .collect(Collectors.toList());
-    });
+                .collect(Collectors.toList())
+    );
 
     /**
      * Create a case depending on older case.
