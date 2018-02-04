@@ -102,9 +102,12 @@ public class AnalysisService extends SigoService<Analysis, Analysis>{
     protected void preCreateActions(Analysis analysis, Analysis parent) {
         super.preCreateActions(analysis, parent);
 
-        analysis.setParent(parent);
+        if(Optional.ofNullable(parent.getId()).isPresent()){
+            analysis.setParent(parent);
+        }
+
         analysis.setRegulation(parent.getRegulation());
-        analysis.setStage(AnalysisStages.OBJECT);
+        analysis.setStage(AnalysisStages.UNDEFINED);
         analysis.setStatus(AnalysisStatuses.INITIALIZED);
         analysis.setCreationDate(LocalDateTime.now(ZoneOffset.UTC));
         analysis.setEditionDate(LocalDateTime.now(ZoneOffset.UTC));

@@ -1,8 +1,11 @@
 package ar.edu.utn.frba.proyecto.sigo.router.analysis;
 
+import ar.edu.utn.frba.proyecto.sigo.domain.airport.Airport;
 import ar.edu.utn.frba.proyecto.sigo.domain.analysis.Analysis;
-import ar.edu.utn.frba.proyecto.sigo.exception.MissingParameterException;
+import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisCase;
+import ar.edu.utn.frba.proyecto.sigo.exception.InvalidParameterException;
 import ar.edu.utn.frba.proyecto.sigo.router.SigoRouter;
+import ar.edu.utn.frba.proyecto.sigo.service.airport.AirportService;
 import ar.edu.utn.frba.proyecto.sigo.service.analysis.AnalysisService;
 import ar.edu.utn.frba.proyecto.sigo.spark.JsonTransformer;
 import ar.edu.utn.frba.proyecto.sigo.translator.analysis.AnalysisTranslator;
@@ -23,6 +26,7 @@ public class AnalysisRouter extends SigoRouter {
     private JsonTransformer jsonTransformer;
     private AnalysisService analysisService;
     private AnalysisTranslator analysisTranslator;
+    private AirportService airportService;
 
     @Inject
     public AnalysisRouter(
@@ -30,13 +34,15 @@ public class AnalysisRouter extends SigoRouter {
             Gson objectMapper,
             JsonTransformer jsonTransformer,
             AnalysisService analysisService,
-            AnalysisTranslator analysisTranslator
+            AnalysisTranslator analysisTranslator,
+            AirportService airportService
     ){
         super(objectMapper, sessionFactory);
 
         this.jsonTransformer = jsonTransformer;
         this.analysisService = analysisService;
         this.analysisTranslator = analysisTranslator;
+        this.airportService = airportService;
     }
 
     /**
@@ -56,16 +62,32 @@ public class AnalysisRouter extends SigoRouter {
 
         JsonObject jsonObject = objectMapper.fromJson(request.body(), JsonObject.class);
 
-        if(!jsonObject.has("parentId"))
-            throw new MissingParameterException("parentId");
+        Analysis baseAnalysis;
 
-        Analysis baseCase = this.analysisService.get(jsonObject.get("parentId").getAsLong());
+        if (jsonObject.has("parentId")){
+            baseAnalysis = this.analysisService.get(jsonObject.get("parentId").getAsLong());
+
+        } else if (jsonObject.has("airportId")){
+
+            Airport airport = airportService.get(jsonObject.get("airportId").getAsLong());
+
+            baseAnalysis = Analysis.builder()
+                    .analysisCase(
+                            AnalysisCase.builder()
+                                .aerodrome(airport)
+                                .build()
+                    )
+                    .regulation(airport.getRegulation())
+                    .build();
+        }
+        else
+            throw new InvalidParameterException("Missing required 'parentId' or 'airportId' parameter.");
 
         Analysis analysis = Analysis.builder()
                 .user(getCurrentUserSession(request).getUser())
                 .build();
 
-        this.analysisService.create(analysis, baseCase);
+        this.analysisService.create(analysis, baseAnalysis);
 
         return analysisTranslator.getAsDTO(analysis);
     });

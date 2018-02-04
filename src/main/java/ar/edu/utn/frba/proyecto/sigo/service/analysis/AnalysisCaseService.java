@@ -15,6 +15,7 @@ import org.hibernate.query.Query;
 import javax.inject.Inject;
 import javax.persistence.criteria.*;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 public class AnalysisCaseService extends SigoService <AnalysisCase, Analysis> {
@@ -62,7 +63,7 @@ public class AnalysisCaseService extends SigoService <AnalysisCase, Analysis> {
 
     private boolean hasAlreadyBeenAnalyzed(AnalysisCase analysisCase, ElevatedObject object) {
         return !object.getType().equals(ElevatedObjectTypes.LEVEL_CURVE)
-                    && analysisCase.getAnalysis().getParent().hasAlreadyBeenAnalyzed(object);
+                    && Optional.ofNullable(analysisCase.getAnalysis().getParent()).map( p -> p.hasAlreadyBeenAnalyzed(object)).orElse(Boolean.FALSE);
     }
 
     private void discardAnalyzedObjects(AnalysisCase analysisCase) {
@@ -81,15 +82,16 @@ public class AnalysisCaseService extends SigoService <AnalysisCase, Analysis> {
 
     private void initializeExceptions(AnalysisCase analysisCase, Analysis parent) {
 
-        parent.getParent().getAnalysisCase().getExceptions()
-                .stream()
-                .map(e -> e.accept(clone))
-                .forEach(e -> {
+        Optional.ofNullable(parent.getParent()).ifPresent( p ->
 
-                    e.setAnalysisCase(analysisCase);
-
-                    currentSession().save(e);
-                });
+            p.getAnalysisCase().getExceptions()
+                    .stream()
+                    .map(e -> e.accept(clone))
+                    .forEach(e -> {
+                        e.setAnalysisCase(analysisCase);
+                        currentSession().save(e);
+                    })
+        );
 
     }
 

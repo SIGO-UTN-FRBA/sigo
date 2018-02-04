@@ -41,7 +41,7 @@ public class WizardAnalysisRouter extends SigoRouter {
         this.analysisTranslator = analysisTranslator;
     }
 
-    private final Route updateAnalysis = doInTransaction(true, (request, response) -> {
+    private final Route manageAnalysis = doInTransaction(true, (request, response) -> {
 
         if(!request.queryMap().hasKey("action"))
             throw new MissingParameterException("action");
@@ -49,6 +49,9 @@ public class WizardAnalysisRouter extends SigoRouter {
         Analysis analysis = this.analysisService.get(getParamAnalysisId(request));
 
         switch (request.queryMap().get("action").value()){
+            case "start":
+                wizard.start(analysis, getCurrentUserSession(request));
+                break;
             case "next":
                 wizard.goNext(analysis, getCurrentUserSession(request));
                 break;
@@ -61,9 +64,6 @@ public class WizardAnalysisRouter extends SigoRouter {
             case "cancel":
                 wizard.cancel(analysis, getCurrentUserSession(request));
                 break;
-
-            //TODO case "initialize"
-
             default:
                 throw new InvalidParameterException("Action does not exists");
         }
@@ -75,7 +75,7 @@ public class WizardAnalysisRouter extends SigoRouter {
     @Override
     public RouteGroup routes() {
         return ()->{
-            post("/:" + ANALYSIS_ID_PARAM, updateAnalysis, jsonTransformer);
+            post("/:" + ANALYSIS_ID_PARAM, manageAnalysis, jsonTransformer);
         };
     }
 

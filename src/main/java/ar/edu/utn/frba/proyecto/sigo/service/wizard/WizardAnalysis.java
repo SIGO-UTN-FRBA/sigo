@@ -1,6 +1,8 @@
 package ar.edu.utn.frba.proyecto.sigo.service.wizard;
 
 import ar.edu.utn.frba.proyecto.sigo.domain.analysis.Analysis;
+import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisStages;
+import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisStatuses;
 import ar.edu.utn.frba.proyecto.sigo.exception.BusinessConstrainException;
 import ar.edu.utn.frba.proyecto.sigo.exception.SigoException;
 import ar.edu.utn.frba.proyecto.sigo.security.SigoRoles;
@@ -21,6 +23,23 @@ public class WizardAnalysis {
         Set<WizardAnalysisStage> stages
     ) {
         this.stages = stages;
+    }
+
+    public void start(Analysis analysis, UserSession currentUserSession){
+
+        validateCrossUserEdition(analysis, currentUserSession);
+
+        validateStart(analysis);
+
+        analysis.setStatus(AnalysisStatuses.IN_PROGRESS);
+
+        analysis.setStage(AnalysisStages.OBJECT);
+    }
+
+    private void validateStart(Analysis analysis) {
+        if(!analysis.getStatus().equals(AnalysisStatuses.INITIALIZED)){
+            throw new BusinessConstrainException("Fail to start wizard because the analysis is not in a initial state");
+        }
     }
 
     public void goNext(Analysis analysis, UserSession currentUserSession){
