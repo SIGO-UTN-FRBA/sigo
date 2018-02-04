@@ -1,6 +1,7 @@
 package ar.edu.utn.frba.proyecto.sigo.security;
 
 import ar.edu.utn.frba.proyecto.sigo.domain.user.SigoUser;
+import ar.edu.utn.frba.proyecto.sigo.exception.SigoException;
 import com.auth0.jwt.interfaces.Payload;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -32,11 +33,14 @@ public class UserSession {
         return Optional.ofNullable(this.payload.getClaim("http://localhost:8080/sigo/api/app_metadata").as(HashMap.class));
     }
 
-    public Optional<SigoRoles> getRole(){
+    public Optional<SigoRoles> getUncheckedRole(){
 
         return this.getAppMetadata()
                 .map(metadata -> metadata.getOrDefault("role", null))
                 .map(value -> SigoRoles.valueOf((String) value));
+    }
 
+    public SigoRoles getRole(){
+        return this.getUncheckedRole().orElseThrow(()-> new SigoException("Must be a role assigned to user."));
     }
 }

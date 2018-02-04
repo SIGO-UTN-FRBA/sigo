@@ -50,16 +50,16 @@ public class WizardAnalysisRouter extends SigoRouter {
 
         switch (request.queryMap().get("action").value()){
             case "next":
-                wizard.goNext(analysis);
+                wizard.goNext(analysis, getCurrentUserSession(request));
                 break;
             case "previous":
-                wizard.goPrevious(analysis);
+                wizard.goPrevious(analysis, getCurrentUserSession(request));
                 break;
             case "finish":
-                wizard.finish(analysis);
+                wizard.finish(analysis, getCurrentUserSession(request));
                 break;
             case "cancel":
-                wizard.cancel(analysis);
+                wizard.cancel(analysis, getCurrentUserSession(request));
                 break;
 
             //TODO case "initialize"

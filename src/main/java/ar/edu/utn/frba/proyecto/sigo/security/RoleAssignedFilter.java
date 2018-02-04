@@ -19,7 +19,7 @@ public class RoleAssignedFilter implements Filter {
 
         UserSession session = request.attribute("current-session");
 
-        if(!session.getRole().isPresent()){
+        if(!session.getUncheckedRole().isPresent()){
             throw new UnauthorizedRequestException("You do not have a role assigned. Please, contact with the system administrator to check this.");
         }
     }

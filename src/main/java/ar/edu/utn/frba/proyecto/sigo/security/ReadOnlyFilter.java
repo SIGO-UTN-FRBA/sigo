@@ -18,7 +18,7 @@ public class ReadOnlyFilter implements Filter {
 
         UserSession session = request.attribute("current-session");
 
-        if(session.getRole().get().equals(SigoRoles.READONLY) && !request.requestMethod().equals(HttpMethod.GET.asString()))
+        if(session.getRole().equals(SigoRoles.READONLY) && !request.requestMethod().equals(HttpMethod.GET.asString()))
             throw new UnauthorizedRequestException("You are only authorized to read resources.");
     }
 }
