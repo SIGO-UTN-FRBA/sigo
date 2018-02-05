@@ -21,6 +21,8 @@ import spark.RouteGroup;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import java.util.stream.Stream;
+
 import static java.lang.String.format;
 import static java.util.stream.Collectors.toList;
 import static spark.Spark.*;
@@ -55,9 +57,15 @@ public class AirportRouter extends SigoRouter {
      */
     private final Route fetchAirports = doInTransaction(false, (Request request, Response response) -> {
 
-        return airportService.find(request.queryMap())
-                .map(translator::getAsDTO)
-                .collect(toList());
+        Stream<Airport> airports;
+
+        if(request.queryMap().hasKey("withoutCases")) {
+            airports = airportService.findWithoutAnalysis();
+        } else {
+            airports = airportService.find(request.queryMap());
+        }
+
+        return airports.map(translator::getAsDTO).collect(toList());
     });
 
     /**
