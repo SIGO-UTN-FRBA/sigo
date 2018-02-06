@@ -7,6 +7,7 @@ import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisCase;
 import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisExceptionRule;
 import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisSurface;
 import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.*;
+import ar.edu.utn.frba.proyecto.sigo.domain.regulation.icao.ICAOAnnex14RunwayCodeLetters;
 import ar.edu.utn.frba.proyecto.sigo.domain.regulation.icao.ICAOAnnex14RunwayCodeNumbers;
 import ar.edu.utn.frba.proyecto.sigo.domain.regulation.icao.OlsRuleICAOAnnex14;
 import ar.edu.utn.frba.proyecto.sigo.exception.SigoException;
@@ -22,6 +23,7 @@ import javax.inject.Inject;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 public class OlsAnalystICAOAnnex14 extends OlsAnalyst {
@@ -178,7 +180,17 @@ public class OlsAnalystICAOAnnex14 extends OlsAnalyst {
                 )
         );
 
-        //7. horizontal externa
+        //7. BalkedLanding
+        ICAOAnnex14SurfaceBalkedLanding balkedLanding = (ICAOAnnex14SurfaceBalkedLanding) surfacesDefinitions.stream().filter(d -> d.getEnum() == ICAOAnnex14Surfaces.BALKED_LANDING_SURFACE).findFirst().get();
+        analysisSurfaces.add(
+                createBalkedLandingAnalysisSurface(
+                        direction,
+                        balkedLanding,
+                        strip,
+                        innerHorizontal
+                )
+        );
+        //8. horizontal externa
 
         return analysisSurfaces;
     }
@@ -408,6 +420,29 @@ public class OlsAnalystICAOAnnex14 extends OlsAnalyst {
         return AnalysisSurface.builder()
                 .analysisCase(this.analysisCase)
                 .surface(takeoffClimb)
+                .direction(direction)
+                .build();
+    }
+
+    private AnalysisSurface createBalkedLandingAnalysisSurface(
+            RunwayDirection direction,
+            ICAOAnnex14SurfaceBalkedLanding balkedLanding,
+            ICAOAnnex14SurfaceStrip strip, ICAOAnnex14SurfaceInnerHorizontal innerHorizontal) {
+
+        RunwayClassificationICAOAnnex14 classification = (RunwayClassificationICAOAnnex14) direction.getClassification();
+
+        if(classification.getRunwayTypeNumber().equals(ICAOAnnex14RunwayCodeNumbers.ONE) || classification.getRunwayTypeNumber().equals(ICAOAnnex14RunwayCodeNumbers.TWO)){
+            balkedLanding.setLengthOfInnerEdge(strip.getWidth());
+            balkedLanding.setDistanceFromThreshold(0D); //TODO
+        } else if(Optional.ofNullable(classification.getRunwayTypeLetter()).isPresent() && classification.getRunwayTypeLetter().equals(ICAOAnnex14RunwayCodeLetters.F)){
+            balkedLanding.setLengthOfInnerEdge(155D);
+        }
+
+        balkedLanding.setGeometry(geometryHelper.createBalkedLandingSurfaceGeometry(direction, balkedLanding, innerHorizontal));
+
+        return AnalysisSurface.builder()
+                .analysisCase(this.analysisCase)
+                .surface(balkedLanding)
                 .direction(direction)
                 .build();
     }
