@@ -7,6 +7,7 @@ import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisCase;
 import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisExceptionRule;
 import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisSurface;
 import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.*;
+import ar.edu.utn.frba.proyecto.sigo.domain.regulation.icao.ICAOAnnex14RunwayCodeNumbers;
 import ar.edu.utn.frba.proyecto.sigo.domain.regulation.icao.OlsRuleICAOAnnex14;
 import ar.edu.utn.frba.proyecto.sigo.exception.SigoException;
 import ar.edu.utn.frba.proyecto.sigo.service.ols.OlsAnalyst;
@@ -14,7 +15,6 @@ import ar.edu.utn.frba.proyecto.sigo.service.regulation.OlsRuleICAOAnnex14Servic
 import com.google.common.collect.Sets;
 import com.google.inject.assistedinject.Assisted;
 import com.vividsolutions.jts.geom.Point;
-import org.apache.commons.lang.NotImplementedException;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.SessionFactory;
 
@@ -75,15 +75,18 @@ public class OlsAnalystICAOAnnex14 extends OlsAnalyst {
             case NON_INSTRUMENT:
                 return createAnalysisSurfacesForNonInstrument(direction, surfacesDefinitions);
             case NON_PRECISION_APPROACH:
-                return createAnalysisSurfacesForNonPrecision(direction, surfacesDefinitions); //TODO createAnalysisSurfacesForNonPrecision
+                return createAnalysisSurfacesForNonPrecision(direction, surfacesDefinitions);
             case PRECISION_APPROACH:
-                return createAnalysisSurfacesForPrecision(direction, surfacesDefinitions); //TODO createAnalysisSurfacesForPrecision
+                return createAnalysisSurfacesForPrecision(direction, surfacesDefinitions);
         }
 
         throw new SigoException("Invalid classification of runway direction");
     }
 
     private Set<AnalysisSurface> createAnalysisSurfacesForPrecision(RunwayDirection direction, List<ICAOAnnex14Surface> surfacesDefinitions) {
+
+        RunwayClassificationICAOAnnex14 classification = (RunwayClassificationICAOAnnex14) direction.getClassification();
+
         Set<AnalysisSurface> analysisSurfaces = Sets.newHashSet();
 
         //1. Strip
@@ -138,6 +141,22 @@ public class OlsAnalystICAOAnnex14 extends OlsAnalyst {
                 )
         );
 
+        //4. ApproachHorizontalSection
+        if(classification.getRunwayTypeNumber().equals(ICAOAnnex14RunwayCodeNumbers.THREE) || classification.getRunwayTypeNumber().equals(ICAOAnnex14RunwayCodeNumbers.FOUR)){
+
+            ICAOAnnex14SurfaceApproachHorizontalSection approachHorizontalSection = (ICAOAnnex14SurfaceApproachHorizontalSection) surfacesDefinitions.stream().filter(d -> d.getEnum() == ICAOAnnex14Surfaces.APPROACH_HORIZONTAL_SECTION).findFirst().get();
+
+            analysisSurfaces.add(
+                    createApproachHorizontalSectionAnalysisSurface(
+                            direction,
+                            approachHorizontalSection,
+                            approachSecondSection,
+                            approachFirstSection,
+                            approach
+                    )
+            );
+        }
+
         //5. Transitional
         ICAOAnnex14SurfaceTransitional transitional = (ICAOAnnex14SurfaceTransitional) surfacesDefinitions.stream().filter(d -> d.getEnum() == ICAOAnnex14Surfaces.TRANSITIONAL).findFirst().get();
         analysisSurfaces.add(
@@ -165,8 +184,8 @@ public class OlsAnalystICAOAnnex14 extends OlsAnalyst {
     }
 
     private Set<AnalysisSurface> createAnalysisSurfacesForNonPrecision(RunwayDirection direction, List<ICAOAnnex14Surface> surfacesDefinitions) {
-        //TODO
-        throw new NotImplementedException();
+
+        return createAnalysisSurfacesForNonInstrument(direction, surfacesDefinitions);
     }
 
     private Set<AnalysisSurface> createAnalysisSurfacesForNonInstrument(RunwayDirection direction, List<ICAOAnnex14Surface> surfacesDefinitions) {
@@ -327,6 +346,29 @@ public class OlsAnalystICAOAnnex14 extends OlsAnalyst {
         return AnalysisSurface.builder()
                 .analysisCase(this.analysisCase)
                 .surface(approachSecondSection)
+                .direction(direction)
+                .build();
+    }
+
+    private AnalysisSurface createApproachHorizontalSectionAnalysisSurface(
+            RunwayDirection direction,
+            ICAOAnnex14SurfaceApproachHorizontalSection approachHorizontalSection,
+            ICAOAnnex14SurfaceApproachSecondSection approachSecondSection,
+            ICAOAnnex14SurfaceApproachFirstSection approachFirstSection,
+            ICAOAnnex14SurfaceApproach approach
+    ) {
+
+        double adjacent = approachSecondSection.getLength();
+        double degrees = Math.atan(approachSecondSection.getSlope() / 100);
+        double hypotenuse = adjacent / Math.cos(degrees);
+        double opposite = Math.sqrt(Math.pow(hypotenuse,2) - Math.pow(adjacent,2));
+        approachHorizontalSection.setInitialHeight(approachSecondSection.getInitialHeight() + opposite);
+
+        approachHorizontalSection.setGeometry(geometryHelper.createApproachHorizontalSectionSurfaceGeometry(direction, approachHorizontalSection, approachSecondSection, approachFirstSection, approach));
+
+        return AnalysisSurface.builder()
+                .analysisCase(this.analysisCase)
+                .surface(approachHorizontalSection)
                 .direction(direction)
                 .build();
     }

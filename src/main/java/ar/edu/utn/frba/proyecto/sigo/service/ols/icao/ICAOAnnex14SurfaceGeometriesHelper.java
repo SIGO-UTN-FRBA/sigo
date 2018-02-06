@@ -1,14 +1,7 @@
 package ar.edu.utn.frba.proyecto.sigo.service.ols.icao;
 
 import ar.edu.utn.frba.proyecto.sigo.domain.airport.RunwayDirection;
-import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceApproach;
-import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceApproachFirstSection;
-import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceApproachSecondSection;
-import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceConical;
-import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceInnerHorizontal;
-import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceStrip;
-import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceTakeoffClimb;
-import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceTransitional;
+import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.*;
 import ar.edu.utn.frba.proyecto.sigo.utils.geom.GeographicHelper;
 import com.google.common.collect.Lists;
 import com.vividsolutions.jts.geom.Coordinate;
@@ -130,7 +123,7 @@ public class ICAOAnnex14SurfaceGeometriesHelper {
         Coordinate extreme3;
         Coordinate extreme4;
         Double azimuth;
-        double divergence;
+        Double divergence;
 
         divergence = slopePercentToDegrees(approach.getDivergence());
 
@@ -176,7 +169,7 @@ public class ICAOAnnex14SurfaceGeometriesHelper {
         Coordinate extreme3;
         Coordinate extreme4;
         Double azimuth;
-        double divergence;
+        Double divergence;
 
         divergence = slopePercentToDegrees(approach.getDivergence());
 
@@ -196,6 +189,61 @@ public class ICAOAnnex14SurfaceGeometriesHelper {
         //2. outer edge
         extreme3 = move(extreme2, azimuth+divergence, -1 * approachSecondSection.getLength());
         extreme4 = move(extreme1, azimuth-divergence, -1 * approachSecondSection.getLength());
+
+        //3. create polygon
+        approachGeometry = new GeometryFactory().createPolygon(new Coordinate[]{extreme1, extreme2, extreme3, extreme4, extreme1});
+/*
+        OutputStream out = new ByteArrayOutputStream();
+        try {
+            new GeometryJSON(14).write(approachGeometry, out);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        out.toString();
+*/
+        return approachGeometry;
+    }
+
+    public Polygon createApproachHorizontalSectionSurfaceGeometry(
+            RunwayDirection direction,
+            ICAOAnnex14SurfaceApproachHorizontalSection approachHorizontalSection,
+            ICAOAnnex14SurfaceApproachSecondSection approachSecondSection,
+            ICAOAnnex14SurfaceApproachFirstSection approachFirstSection,
+            ICAOAnnex14SurfaceApproach approach
+    ) {
+
+        Polygon approachGeometry;
+        Coordinate threshold;
+        Coordinate extreme1;
+        Coordinate extreme2;
+        Coordinate extreme3;
+        Coordinate extreme4;
+        Double azimuth;
+        Double divergence;
+        Double innerEdgeShift;
+        Double outerEdgeShift;
+
+        divergence = slopePercentToDegrees(approach.getDivergence());
+
+        azimuth = realAzimuth(direction);
+
+        threshold = direction.getGeom().getCoordinate();
+
+        innerEdgeShift = approachFirstSection.getLength() + approachSecondSection.getLength();
+        outerEdgeShift = approachHorizontalSection.getLength();
+
+        //1. inner edge
+        extreme1 = move(threshold, azimuth, -1 * approach.getDistanceFromThreshold());
+        extreme1 = move(extreme1, azimuth-90, -1 * approach.getLengthOfInnerEdge()/2);
+        extreme1 = move(extreme1, azimuth-divergence,-1 * innerEdgeShift);
+
+        extreme2 = move(threshold, azimuth, -1 * approach.getDistanceFromThreshold());
+        extreme2 = move(extreme2, azimuth+90, -1 * approach.getLengthOfInnerEdge()/2);
+        extreme2 = move(extreme2, azimuth+divergence, -1 * innerEdgeShift);
+
+        //2. outer edge
+        extreme3 = move(extreme2, azimuth+divergence, -1 * outerEdgeShift);
+        extreme4 = move(extreme1, azimuth-divergence, -1 * outerEdgeShift);
 
         //3. create polygon
         approachGeometry = new GeometryFactory().createPolygon(new Coordinate[]{extreme1, extreme2, extreme3, extreme4, extreme1});

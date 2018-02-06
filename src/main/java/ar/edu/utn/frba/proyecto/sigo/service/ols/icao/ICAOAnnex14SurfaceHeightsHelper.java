@@ -28,7 +28,7 @@ public class ICAOAnnex14SurfaceHeightsHelper {
             case APPROACH_SECOND_SECTION:
                 return this.determineHeightAt((ICAOAnnex14SurfaceApproachSecondSection) surface, point);
             case APPROACH_HORIZONTAL_SECTION:
-                break;
+                return this.determineHeightAt((ICAOAnnex14SurfaceApproachHorizontalSection) surface, point);
             case TRANSITIONAL:
                 return this.determineHeightAt((ICAOAnnex14SurfaceTransitional) surface, point);
             case INNER_TRANSITIONAL:
@@ -75,7 +75,12 @@ public class ICAOAnnex14SurfaceHeightsHelper {
     }
 
     public Double determineHeightAt(ICAOAnnex14SurfaceApproachSecondSection surface, Point point){
+        //TODO contemplar tope porque despues de eso es horizontal
         return surface.getInitialHeight() + calculateHeightForSlopingPolygon(surface.getGeometry(), surface.getSlope(), point);
+    }
+
+    public Double determineHeightAt(ICAOAnnex14SurfaceApproachHorizontalSection surface, Point point){
+        return surface.getInitialHeight();
     }
 
     public Double determineHeightAt(ICAOAnnex14SurfaceTakeoffClimb surface, Point point){
