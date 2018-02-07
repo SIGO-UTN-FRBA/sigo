@@ -12,8 +12,9 @@ public enum ICAOAnnex14Surfaces {
     APPROACH_HORIZONTAL_SECTION("Approach third section"),  // 7
     TRANSITIONAL("Transitional"),                           // 8
     INNER_TRANSITIONAL("Inner Transitional"),               // 9
-    BALKED_LANDING_SURFACE("Balked Landing Surface"),       // 10
-    TAKEOFF_CLIMB("Take-off climb");                        // 11
+    BALKED_LANDING_SURFACE("Balked Landing"),               // 10
+    TAKEOFF_CLIMB("Take-off climb"),                        // 11
+    OUTER_HORIZONTAL("Outer Horizontal");                   // 12
 
     private String description;
 
