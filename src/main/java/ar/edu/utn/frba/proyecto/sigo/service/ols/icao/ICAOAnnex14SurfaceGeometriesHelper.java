@@ -86,9 +86,9 @@ public class ICAOAnnex14SurfaceGeometriesHelper {
         return (Polygon) difference;
     }
 
-    public Polygon createConicalSurfaceGeometry(RunwayDirection direction, ICAOAnnex14SurfaceConical conicalDefinition, ICAOAnnex14SurfaceInnerHorizontal innerHorizontalSurface, ICAOAnnex14SurfaceStrip stripSurface) {
+    public Polygon createConicalSurfaceGeometry(RunwayDirection direction, ICAOAnnex14SurfaceConical conicalDefinition, ICAOAnnex14SurfaceInnerHorizontal innerHorizontalSurface) {
 
-        Geometry baseGeometry = innerHorizontalSurface.getGeometry().union(stripSurface.getGeometry());
+        Geometry baseGeometry = innerHorizontalSurface.getGeometry();
 
         Geometry buffer = baseGeometry.buffer(conicalDefinition.getRatio() / 100000, 25);
 
@@ -102,7 +102,7 @@ public class ICAOAnnex14SurfaceGeometriesHelper {
         }
         out.toString();
 */
-        return (Polygon) difference;
+        return (Polygon) difference.getGeometryN(0);
     }
 
     public Polygon createApproachFirstSectionSurfaceGeometry(RunwayDirection direction, ICAOAnnex14SurfaceApproach approach, ICAOAnnex14SurfaceApproachFirstSection approachFirstSection, ICAOAnnex14SurfaceStrip strip){

@@ -115,8 +115,7 @@ public class OlsAnalystICAOAnnex14 extends OlsAnalyst {
                 createConicalAnalysisSurface(
                         direction,
                         conical,
-                        innerHorizontal,
-                        strip
+                        innerHorizontal
                 )
         );
 
@@ -236,8 +235,7 @@ public class OlsAnalystICAOAnnex14 extends OlsAnalyst {
                 createConicalAnalysisSurface(
                         direction,
                         conical,
-                        innerHorizontal,
-                        strip
+                        innerHorizontal
                 )
         );
 
@@ -312,14 +310,13 @@ public class OlsAnalystICAOAnnex14 extends OlsAnalyst {
     private AnalysisSurface createConicalAnalysisSurface(
             RunwayDirection direction,
             ICAOAnnex14SurfaceConical conicalSurface,
-            ICAOAnnex14SurfaceInnerHorizontal innerHorizontalSurface,
-            ICAOAnnex14SurfaceStrip stripSurface
+            ICAOAnnex14SurfaceInnerHorizontal innerHorizontalSurface
     ){
 
         //1. acondiciono superficie
         applyRuleException(conicalSurface);
 
-        conicalSurface.setGeometry(geometryHelper.createConicalSurfaceGeometry(direction, conicalSurface, innerHorizontalSurface, stripSurface));
+        conicalSurface.setGeometry(geometryHelper.createConicalSurfaceGeometry(direction, conicalSurface, innerHorizontalSurface));
 
         conicalSurface.setInitialHeight(innerHorizontalSurface.getHeight());
 
