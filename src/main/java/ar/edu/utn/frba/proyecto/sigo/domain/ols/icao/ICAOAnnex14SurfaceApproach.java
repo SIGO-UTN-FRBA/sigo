@@ -45,5 +45,6 @@ public class ICAOAnnex14SurfaceApproach extends ICAOAnnex14Surface<Polygon> {
         this.lengthOfInnerEdge = lengthOfInnerEdge;
         this.distanceFromThreshold = distanceFromThreshold;
         this.divergence = divergence;
+        this.geometry = geometry;
     }
 }

@@ -42,5 +42,6 @@ public class ICAOAnnex14SurfaceInnerHorizontal extends ICAOAnnex14Surface<Polygo
         super(id, classification, category, code);
         this.height = height;
         this.radius = radius;
+        this.geometry = geometry;
     }
 }

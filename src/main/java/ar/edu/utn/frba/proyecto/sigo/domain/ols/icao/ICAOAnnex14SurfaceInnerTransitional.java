@@ -4,7 +4,6 @@ import ar.edu.utn.frba.proyecto.sigo.domain.regulation.icao.ICAOAnnex14RunwayCat
 import ar.edu.utn.frba.proyecto.sigo.domain.regulation.icao.ICAOAnnex14RunwayClassifications;
 import ar.edu.utn.frba.proyecto.sigo.domain.regulation.icao.ICAOAnnex14RunwayCodeNumbers;
 import com.vividsolutions.jts.geom.MultiPolygon;
-import com.vividsolutions.jts.geom.Polygon;
 import lombok.*;
 
 import javax.persistence.Column;
@@ -36,8 +35,9 @@ public class ICAOAnnex14SurfaceInnerTransitional extends ICAOAnnex14Surface<Mult
     }
 
     @Builder
-    public ICAOAnnex14SurfaceInnerTransitional(Long id, ICAOAnnex14RunwayClassifications classification, ICAOAnnex14RunwayCategories category, ICAOAnnex14RunwayCodeNumbers code, Polygon geometry, Double slope) {
+    public ICAOAnnex14SurfaceInnerTransitional(Long id, ICAOAnnex14RunwayClassifications classification, ICAOAnnex14RunwayCategories category, ICAOAnnex14RunwayCodeNumbers code, MultiPolygon geometry, Double slope) {
         super(id, classification, category, code);
         this.slope = slope;
+        this.geometry = geometry;
     }
 }

@@ -50,5 +50,6 @@ public class ICAOAnnex14SurfaceInnerApproach extends ICAOAnnex14Surface<Polygon>
         this.distanceFromThreshold = distanceFromThreshold;
         this.length = length;
         this.slope = slope;
+        this.geometry = geometry;
     }
 }

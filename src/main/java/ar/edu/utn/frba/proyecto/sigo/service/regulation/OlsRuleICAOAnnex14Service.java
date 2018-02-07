@@ -124,7 +124,8 @@ public class OlsRuleICAOAnnex14Service
                 ArrayList<ICAOAnnex14Surfaces> extras = Lists.newArrayList(
                         ICAOAnnex14Surfaces.INNER_APPROACH,
                         ICAOAnnex14Surfaces.INNER_TRANSITIONAL,
-                        ICAOAnnex14Surfaces.BALKED_LANDING_SURFACE
+                        ICAOAnnex14Surfaces.BALKED_LANDING_SURFACE,
+                        ICAOAnnex14Surfaces.OUTER_HORIZONTAL
                 );
 
                 switch (category){

@@ -42,5 +42,6 @@ public class ICAOAnnex14SurfaceStrip extends ICAOAnnex14Surface<Polygon>
         super(id, classification, category, code);
         this.length = length;
         this.width = width;
+        this.geometry = geometry;
     }
 }

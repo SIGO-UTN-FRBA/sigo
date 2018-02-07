@@ -45,5 +45,6 @@ public class ICAOAnnex14SurfaceApproachHorizontalSection extends ICAOAnnex14Surf
         super(id, classification, category, code);
         this.length = length;
         this.totalLength = totalLength;
+        this.geometry = geometry;
     }
 }

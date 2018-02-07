@@ -50,5 +50,6 @@ public class ICAOAnnex14SurfaceBalkedLanding extends ICAOAnnex14Surface <Polygon
         this.distanceFromThreshold = distanceFromThreshold;
         this.divergence = divergence;
         this.slope = slope;
+        this.geometry = geometry;
     }
 }
