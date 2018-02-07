@@ -1,17 +1,6 @@
 package ar.edu.utn.frba.proyecto.sigo.service.ols.icao;
 
-import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceApproach;
-import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceApproachFirstSection;
-import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceApproachHorizontalSection;
-import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceApproachSecondSection;
-import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceBalkedLanding;
-import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceConical;
-import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceInnerApproach;
-import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceInnerHorizontal;
-import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceInnerTransitional;
-import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceStrip;
-import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceTakeoffClimb;
-import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceTransitional;
+import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.*;
 import ar.edu.utn.frba.proyecto.sigo.domain.regulation.icao.OlsRuleICAOAnnex14;
 
 import java.util.List;
@@ -238,6 +227,26 @@ public class ICAOAnnex14SurfaceDefinitionsHelper {
                     break;
                 case "Radius":
                     builder.ratio(icaoRule.getValue());
+                    break;
+            }
+        });
+
+        return builder.build();
+    }
+
+    public ICAOAnnex14SurfaceOuterHorizontal createOuterHorizontalSurface(List<OlsRuleICAOAnnex14> rules) {
+
+        ICAOAnnex14SurfaceOuterHorizontal.ICAOAnnex14SurfaceOuterHorizontalBuilder builder = ICAOAnnex14SurfaceOuterHorizontal.builder();
+
+        rules.forEach(icaoRule -> {
+
+            switch (icaoRule.getPropertyName()){
+                case "Radius":
+                    builder.radius(icaoRule.getValue());
+                    break;
+                case "Height":
+                    builder.height(icaoRule.getValue());
+                    break;
             }
         });
 

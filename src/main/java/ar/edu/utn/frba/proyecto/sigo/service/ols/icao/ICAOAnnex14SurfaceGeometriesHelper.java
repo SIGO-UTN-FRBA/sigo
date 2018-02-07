@@ -370,4 +370,16 @@ public class ICAOAnnex14SurfaceGeometriesHelper {
 
         return takeoffGeometry;
     }
+
+    public Polygon createOuterHorizontalSurfaceGeometry(
+            RunwayDirection direction,
+            ICAOAnnex14SurfaceOuterHorizontal outerHorizontal,
+            ICAOAnnex14SurfaceConical conical
+    ) {
+        Point arp = direction.getRunway().getAirport().getGeom();
+
+        Geometry fullBuffer = arp.buffer(outerHorizontal.getRadius() / 100000, 30);
+
+        return (Polygon) fullBuffer.difference(conical.getGeometry()).getGeometryN(0);
+    }
 }

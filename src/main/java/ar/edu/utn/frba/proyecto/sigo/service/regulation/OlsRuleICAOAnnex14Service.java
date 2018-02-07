@@ -334,6 +334,21 @@ public class OlsRuleICAOAnnex14Service
         return new ICAOAnnex14SurfaceDefinitionsHelper().createStripSurface(rules);
     }
 
+    private ICAOAnnex14Surface getICAOAnnex14OuterHorizontalSurface(
+            ICAOAnnex14RunwayCodeNumbers numberCode,
+            ICAOAnnex14RunwayClassifications classification,
+            ICAOAnnex14RunwayCategories category
+    ) {
+
+        List<OlsRuleICAOAnnex14> rules = this.find(
+                ICAOAnnex14Surfaces.OUTER_HORIZONTAL,
+                numberCode,
+                classification,
+                category
+        );
+        return new ICAOAnnex14SurfaceDefinitionsHelper().createOuterHorizontalSurface(rules);
+    }
+
     public List<ICAOAnnex14Surface> getSurfaces(
             ICAOAnnex14RunwayClassifications classification,
             ICAOAnnex14RunwayCategories category,
@@ -418,6 +433,12 @@ public class OlsRuleICAOAnnex14Service
                 );
             case TAKEOFF_CLIMB:
                 return this.getICAOAnnex14SurfaceTakeoffClimb(
+                        paramNumberCode,
+                        paramClassification,
+                        paramCategory
+                );
+            case OUTER_HORIZONTAL:
+                return this.getICAOAnnex14OuterHorizontalSurface(
                         paramNumberCode,
                         paramClassification,
                         paramCategory

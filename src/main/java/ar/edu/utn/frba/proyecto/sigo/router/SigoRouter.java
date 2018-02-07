@@ -127,11 +127,15 @@ public abstract class SigoRouter extends Router {
 
                     transaction.ifPresent(EntityTransaction::rollback);
 
+                    e.printStackTrace();
+
                     throw e;
 
                 } catch (Exception e) {
 
                     transaction.ifPresent(EntityTransaction::rollback);
+
+                    e.printStackTrace();
 
                     throw new InternalServerErrorException(e);
                 }
