@@ -49,5 +49,6 @@ public class ICAOAnnex14SurfaceApproachSecondSection extends ICAOAnnex14Surface 
         this.length = length;
         this.slope = slope;
         this.limitHeight = limitHeight;
+        this.geometry = geometry;
     }
 }

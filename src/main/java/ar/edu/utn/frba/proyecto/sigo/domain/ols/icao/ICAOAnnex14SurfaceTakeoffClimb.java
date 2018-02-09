@@ -61,5 +61,6 @@ public class ICAOAnnex14SurfaceTakeoffClimb extends ICAOAnnex14Surface<Polygon>
         this.divergence = divergence;
         this.distanceFromRunwayEnds = distanceFromRunwayEnds;
         this.lengthOfInnerEdge = lengthOfInnerEdge;
+        this.geometry = geometry;
     }
 }

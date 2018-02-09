@@ -37,6 +37,8 @@ public class ICAOAnnex14SurfaceHeightsHelper {
                 break;
             case TAKEOFF_CLIMB:
                 return this.determineHeightAt((ICAOAnnex14SurfaceTakeoffClimb) surface, point);
+            case OUTER_HORIZONTAL:
+                return this.determineHeightAt((ICAOAnnex14SurfaceOuterHorizontal) surface, point);
         }
 
         return -1D; //TODO completar calculos de altura para todas las superficies
@@ -86,6 +88,11 @@ public class ICAOAnnex14SurfaceHeightsHelper {
     public Double determineHeightAt(ICAOAnnex14SurfaceTakeoffClimb surface, Point point){
         return surface.getInitialHeight() + calculateHeightForSlopingPolygon(surface.getGeometry(), surface.getSlope(), point);
     }
+
+    public Double determineHeightAt(ICAOAnnex14SurfaceOuterHorizontal surface, Point point){
+        return surface.getHeight();
+    }
+
 
     public Double calculateHeightForSlopingPolygon(Polygon geometry, Double slope, Point point){
 

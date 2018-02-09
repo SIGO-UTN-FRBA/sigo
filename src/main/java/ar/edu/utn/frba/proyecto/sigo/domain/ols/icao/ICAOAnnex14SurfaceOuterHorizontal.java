@@ -12,44 +12,35 @@ import javax.persistence.Table;
 
 @EqualsAndHashCode(callSuper = true)
 @Entity
-@Table(name = "tbl_icao14_surface_inner_approach")
+@Table(name = "tbl_icao14_surface_outer_horizontal")
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 @Data
-public class ICAOAnnex14SurfaceInnerApproach extends ICAOAnnex14Surface<Polygon>
-{
+public class ICAOAnnex14SurfaceOuterHorizontal extends ICAOAnnex14Surface<Polygon> {
 
     @Column
-    private Double width;
-
-    @Column(name = "distance_from_threshold")
-    private Double distanceFromThreshold;
+    private Double radius;
 
     @Column
-    private Double length;
-
-    @Column
-    private Double slope;
+    private Double height;
 
     @Column(name="geom")
     private Polygon geometry;
 
     @Override
     public ICAOAnnex14Surfaces getEnum() {
-        return ICAOAnnex14Surfaces.INNER_APPROACH;
+        return ICAOAnnex14Surfaces.OUTER_HORIZONTAL;
     }
 
     @Override
     public String getName() {
-        return ICAOAnnex14Surfaces.INNER_APPROACH.description();
+        return ICAOAnnex14Surfaces.OUTER_HORIZONTAL.description();
     }
 
     @Builder
-    public ICAOAnnex14SurfaceInnerApproach(Long id, ICAOAnnex14RunwayClassifications classification, ICAOAnnex14RunwayCategories category, ICAOAnnex14RunwayCodeNumbers code, Polygon geometry, Double width, Double distanceFromThreshold, Double length, Double slope) {
+    public ICAOAnnex14SurfaceOuterHorizontal(Long id, ICAOAnnex14RunwayClassifications classification, ICAOAnnex14RunwayCategories category, ICAOAnnex14RunwayCodeNumbers code, Polygon geometry, Double height, Double radius) {
         super(id, classification, category, code);
-        this.width = width;
-        this.distanceFromThreshold = distanceFromThreshold;
-        this.length = length;
-        this.slope = slope;
+        this.height = height;
+        this.radius = radius;
         this.geometry = geometry;
     }
 }

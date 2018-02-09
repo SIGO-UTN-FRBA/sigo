@@ -49,5 +49,6 @@ public class ICAOAnnex14SurfaceConical extends ICAOAnnex14Surface<Polygon>
         this.slope = slope;
         this.finalHeight = finalHeight;
         this.ratio = ratio;
+        this.geometry = geometry;
     }
 }

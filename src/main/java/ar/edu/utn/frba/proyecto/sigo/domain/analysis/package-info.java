@@ -24,7 +24,8 @@
                 @MetaValue(value = "ICAOAnnex14SurfaceInnerApproach", targetEntity = ICAOAnnex14SurfaceInnerApproach.class),
                 @MetaValue(value = "ICAOAnnex14SurfaceInnerTransitional", targetEntity = ICAOAnnex14SurfaceInnerTransitional.class),
                 @MetaValue(value = "ICAOAnnex14SurfaceTakeoffClimb", targetEntity = ICAOAnnex14SurfaceTakeoffClimb.class),
-                @MetaValue(value = "ICAOAnnex14SurfaceTransitional", targetEntity = ICAOAnnex14SurfaceTransitional.class)
+                @MetaValue(value = "ICAOAnnex14SurfaceTransitional", targetEntity = ICAOAnnex14SurfaceTransitional.class),
+                @MetaValue(value = "ICAOAnnex14SurfaceOuterHorizontal", targetEntity = ICAOAnnex14SurfaceOuterHorizontal.class)
         }
 )
 

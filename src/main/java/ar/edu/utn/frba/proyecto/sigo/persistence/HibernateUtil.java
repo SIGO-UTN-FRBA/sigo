@@ -6,22 +6,8 @@ import ar.edu.utn.frba.proyecto.sigo.domain.airport.icao.RunwayClassificationICA
 import ar.edu.utn.frba.proyecto.sigo.domain.analysis.*;
 import ar.edu.utn.frba.proyecto.sigo.domain.location.PoliticalLocation;
 import ar.edu.utn.frba.proyecto.sigo.domain.location.PoliticalLocationType;
-import ar.edu.utn.frba.proyecto.sigo.domain.analysis.Region;
-import ar.edu.utn.frba.proyecto.sigo.domain.analysis.State;
 import ar.edu.utn.frba.proyecto.sigo.domain.object.*;
-import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14Surface;
-import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceApproach;
-import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceApproachFirstSection;
-import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceApproachHorizontalSection;
-import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceApproachSecondSection;
-import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceBalkedLanding;
-import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceConical;
-import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceInnerApproach;
-import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceInnerHorizontal;
-import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceInnerTransitional;
-import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceStrip;
-import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceTakeoffClimb;
-import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.ICAOAnnex14SurfaceTransitional;
+import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.*;
 import ar.edu.utn.frba.proyecto.sigo.domain.regulation.OlsRule;
 import ar.edu.utn.frba.proyecto.sigo.domain.regulation.faa.OlsRulesFAA;
 import ar.edu.utn.frba.proyecto.sigo.domain.regulation.icao.OlsRuleICAOAnnex14;
@@ -35,6 +21,7 @@ import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Environment;
+
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.HashMap;
@@ -136,6 +123,7 @@ public class HibernateUtil {
                 .addAnnotatedClass(ICAOAnnex14SurfaceApproachHorizontalSection.class)
                 .addAnnotatedClass(ICAOAnnex14SurfaceApproachFirstSection.class)
                 .addAnnotatedClass(ICAOAnnex14SurfaceApproach.class)
+                .addAnnotatedClass(ICAOAnnex14SurfaceOuterHorizontal.class)
                 .addAnnotatedClass(AnalysisResult.class)
                 .addAnnotatedClass(AnalysisResultReason.class)
                 .addAnnotatedClass(SigoUser.class);

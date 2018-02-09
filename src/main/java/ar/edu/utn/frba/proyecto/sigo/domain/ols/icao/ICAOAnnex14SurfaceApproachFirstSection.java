@@ -45,5 +45,6 @@ public class ICAOAnnex14SurfaceApproachFirstSection extends ICAOAnnex14Surface<P
         super(id, classification, category, code);
         this.length = length;
         this.slope = slope;
+        this.geometry = geometry;
     }
 }
