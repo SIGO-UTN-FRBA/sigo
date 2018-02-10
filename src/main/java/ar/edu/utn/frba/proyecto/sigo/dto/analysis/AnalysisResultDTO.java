@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
@@ -12,9 +14,9 @@ import lombok.NoArgsConstructor;
 public class AnalysisResultDTO {
     private Long id;
     private Long obstacleId;
-    private Boolean obstacle;
-    private Boolean keep;
-    private String reason;
-    private String reasonDetail;
-    private Long reasonId;
+    private Boolean hasAdverseEffect;
+    private Boolean allowed;
+    private Long aspectId;
+    private String extraDetail;
+    private List<Long> mitigationMeasuresIds;
 }

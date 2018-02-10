@@ -125,7 +125,7 @@ public class AnalysisService extends SigoService<Analysis, Analysis>{
                 .id(analysis.getId())
                 .aerodrome(airport)
                 .analysis(analysis)
-                .searchRadius(0.1D)
+                .searchRadius(0.15D)
                 .build();
 
         caseService.create(analysisCase, analysis);

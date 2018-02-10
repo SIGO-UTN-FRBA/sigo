@@ -55,7 +55,7 @@ public class AnalysisObstacleTranslator extends SigoTranslator<AnalysisObstacle,
         Optional.ofNullable(domain.getResult())
                 .ifPresent(r -> builder
                         .resultId(domain.getResult().getId())
-                        .resultSummary(r.getSummary())
+                        .allowed(r.getAllowed())
                 );
 
         return builder.build();

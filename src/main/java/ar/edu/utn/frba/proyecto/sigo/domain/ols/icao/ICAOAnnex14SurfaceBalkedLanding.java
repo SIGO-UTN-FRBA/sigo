@@ -30,6 +30,9 @@ public class ICAOAnnex14SurfaceBalkedLanding extends ICAOAnnex14Surface <Polygon
     @Column
     private Double slope;
 
+    @Column(name = "initial_height")
+    private Double initialHeight;
+
     @Column(name="geom")
     private Polygon geometry;
 

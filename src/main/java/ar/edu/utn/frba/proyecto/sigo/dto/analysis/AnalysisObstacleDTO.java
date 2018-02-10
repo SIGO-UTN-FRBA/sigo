@@ -30,5 +30,5 @@ public class AnalysisObstacleDTO {
     private Boolean excluded;
     private String justification;
     private Long resultId;
-    private String resultSummary;
+    private Boolean allowed;
 }

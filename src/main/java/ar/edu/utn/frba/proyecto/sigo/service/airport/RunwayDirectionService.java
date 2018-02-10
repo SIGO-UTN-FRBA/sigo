@@ -37,6 +37,10 @@ public class RunwayDirectionService extends SigoService<RunwayDirection, Runway>
     @Override
     protected void preUpdateActions(RunwayDirection newInstance, RunwayDirection oldInstance){
         newInstance.setGeom(oldInstance.getGeom());
+        newInstance.setStrip(oldInstance.getStrip());
+        newInstance.setClassification(oldInstance.getClassification());
+        newInstance.setApproachSection(oldInstance.getApproachSection());
+        newInstance.setTakeoffSection(oldInstance.getTakeoffSection());
     }
 
     private void createTakeoffSection(RunwayDirection direction, Runway runway) {

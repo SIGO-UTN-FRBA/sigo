@@ -1,7 +1,6 @@
 package ar.edu.utn.frba.proyecto.sigo.service.ols;
 
 import ar.edu.utn.frba.proyecto.sigo.domain.analysis.*;
-import ar.edu.utn.frba.proyecto.sigo.domain.object.ElevatedObjectTypes;
 import com.vividsolutions.jts.geom.Point;
 import lombok.Data;
 import org.hibernate.Session;
@@ -94,40 +93,34 @@ public abstract class OlsAnalyst {
 
         if(analysisObstacle.getPenetration() < 0D )
             analysisObstacle.setResult(createSuggestedAnalystResultForSafetyObject(analysisObstacle));
-        else if(analysisObstacle.getPenetration() > 0D && analysisObject.getElevatedObject().getType().equals(ElevatedObjectTypes.LEVEL_CURVE))
-            analysisObstacle.setResult(createSuggestedAnalystResultForFixedRiskyObject(analysisObstacle));
+ //       else if(analysisObstacle.getPenetration() > 0D && analysisObject.getElevatedObject().getType().equals(ElevatedObjectTypes.LEVEL_CURVE))
+ //           analysisObstacle.setResult(createSuggestedAnalystResultForFixedRiskyObject(analysisObstacle));
 
         return analysisObstacle;
     }
 
     private AnalysisResult createSuggestedAnalystResultForSafetyObject(AnalysisObstacle analysisObstacle) {
 
-        //FIXME
-        AnalysisResultReason reason = getCurrentSession().get(AnalysisResultReason.class, 7L);
 
         return AnalysisResult.builder()
                 .obstacle(analysisObstacle)
-                .reason(reason)
-                .mustKeep(true)
-                .isObstacle(false)
-                .reasonDetail("This reason was generated automatically.")
+                .hasAdverseEffect(false)
+                .allowed(true)
+                .extraDetail("This result was generated automatically.")
                 .build();
     }
-
+/*
     private AnalysisResult createSuggestedAnalystResultForFixedRiskyObject(AnalysisObstacle analysisObstacle){
 
-        //FIXME
-        AnalysisResultReason reason = getCurrentSession().get(AnalysisResultReason.class, 1L);
-
         return AnalysisResult.builder()
                 .obstacle(analysisObstacle)
-                .reason(reason)
-                .mustKeep(true)
-                .isObstacle(true)
-                .reasonDetail("This reason was generated automatically.")
+                .hasAdverseEffect(true)
+                .aspect()
+                .allowed(true)
+                .extraDetail("This result was generated automatically.")
                 .build();
     }
-
+*/
     public abstract Double determineHeightForAnalysisSurface(AnalysisSurface analysisSurface, Point point);
 
     protected Boolean isObstacle(AnalysisRestriction restriction, AnalysisObject analysisObject) {

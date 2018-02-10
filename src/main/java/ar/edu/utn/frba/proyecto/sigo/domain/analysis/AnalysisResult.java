@@ -1,18 +1,11 @@
 package ar.edu.utn.frba.proyecto.sigo.domain.analysis;
 
 import ar.edu.utn.frba.proyecto.sigo.domain.SigoDomain;
+import com.google.common.collect.Sets;
 import lombok.*;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.util.Set;
 
 @EqualsAndHashCode(callSuper = true)
 @Entity
@@ -33,20 +26,43 @@ public class AnalysisResult extends SigoDomain<Long> {
     @JoinColumn(name = "obstacle_id")
     private AnalysisObstacle obstacle;
 
-    @Column(name = "is_obstacle")
-    private Boolean isObstacle;
-
-    @Column(name = "must_keep")
-    private Boolean mustKeep;
+    @Column(name = "has_adverse_effect")
+    private Boolean hasAdverseEffect;
 
     @ManyToOne
-    @JoinColumn(name = "reason_id")
-    private AnalysisResultReason reason;
+    @JoinColumn(name = "aspect_id")
+    private AnalysisAdverseEffectAspect aspect;
+
+    @ManyToMany()
+    private Set<AnalysisAdverseEffectMitigation> mitigationMeasures = Sets.newHashSet();
+
+    @Column(name = "allowed")
+    private Boolean allowed;
 
     @Column
-    private String reasonDetail;
-
+    private String extraDetail;
+/*
     public String getSummary() {
-        return String.format("Obstacle: '%s'. Keep: '%s'. Reason: '%s'.", isObstacle, mustKeep, reason.getDescription());
+
+        if(hasAdverseEffect){
+
+            String aspectPart = "Adverse effect aspect: " + this.getAspect().getName();
+
+            String mitigationPart;
+
+            if(this.getMitigationsMeasures().isEmpty()){
+                mitigationPart = "Mitigation measures selected to apply: " + this.getMitigationsMeasures().stream().map(AnalysisAdverseEffectMitigation::getName).collect(Collectors.joining(", "));
+            } else {
+                mitigationPart = "No mitigation measures was selected to apply.";
+            }
+
+            String allowedPart =   (this.allowed)? "It is allowed.": "It is not allowed.";
+
+            return String.format("%s %s %s", aspectPart, mitigationPart, allowedPart);
+
+        }
+
+        return "No adverse effect. It is allowed.";
     }
+*/
 }

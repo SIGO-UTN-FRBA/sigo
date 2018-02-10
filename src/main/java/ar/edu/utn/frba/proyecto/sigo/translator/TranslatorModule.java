@@ -1,14 +1,7 @@
 package ar.edu.utn.frba.proyecto.sigo.translator;
 
-import ar.edu.utn.frba.proyecto.sigo.translator.airport.RunwayApproachSectionTranslator;
-import ar.edu.utn.frba.proyecto.sigo.translator.airport.RunwayClassificationTranslator;
-import ar.edu.utn.frba.proyecto.sigo.translator.airport.RunwayDirectionTranslator;
-import ar.edu.utn.frba.proyecto.sigo.translator.airport.RunwayTakeoffSectionTranslator;
-import ar.edu.utn.frba.proyecto.sigo.translator.airport.RunwayTranslator;
-import ar.edu.utn.frba.proyecto.sigo.translator.analysis.AnalysisCaseTranslator;
-import ar.edu.utn.frba.proyecto.sigo.translator.analysis.AnalysisExceptionTranslator;
-import ar.edu.utn.frba.proyecto.sigo.translator.analysis.AnalysisObjectTranslator;
-import ar.edu.utn.frba.proyecto.sigo.translator.analysis.AnalysisTranslator;
+import ar.edu.utn.frba.proyecto.sigo.translator.airport.*;
+import ar.edu.utn.frba.proyecto.sigo.translator.analysis.*;
 import ar.edu.utn.frba.proyecto.sigo.translator.location.PoliticalLocationTranslator;
 import com.google.inject.AbstractModule;
 
@@ -27,5 +20,7 @@ public class TranslatorModule extends AbstractModule {
         bind(RunwayApproachSectionTranslator.class);
         bind(RunwayDirectionTranslator.class);
         bind(RunwayClassificationTranslator.class);
+        bind(AnalysisAdverseEffectMitigationTranslator.class);
+        bind(AnalysisAdverseEffectAspectTranslator.class);
     }
 }
