@@ -278,40 +278,53 @@ public class ICAOAnnex14SurfaceGeometriesHelper {
 
     public Polygon createTakeoffClimbSurfaceGeometry(RunwayDirection direction, ICAOAnnex14SurfaceTakeoffClimb takeoffClimb) {
 
-        double azimuth;
-        double divergence;
-        double shiftLength, shiftWidth;
+        Double azimuth;
+        Double divergence;
+        Double shiftInitialLength;
+        Double lenghtBeforeBreak;
+        Double lenghtAfterBreak;
+        Double shiftInnerEdgeWidth;
+        Double fixedWidth;
         Coordinate runwayExtreme;
         Coordinate extreme1;
         Coordinate extreme4;
         Coordinate extreme2;
         Coordinate extreme3;
+        Coordinate break1;
+        Coordinate break2;
         Polygon takeoffGeometry;
 
-        shiftLength = Math.max(direction.getTakeoffSection().getClearwayLength(), takeoffClimb.getDistanceFromRunwayEnds());
+        shiftInitialLength = Math.max(direction.getTakeoffSection().getClearwayLength(), takeoffClimb.getDistanceFromRunwayEnds());
 
         azimuth = realAzimuth(direction);
-
-        shiftWidth = takeoffClimb.getLengthOfInnerEdge()/2;
 
         runwayExtreme = oppositeThreshold(direction);
 
         //1. inner edge
-        extreme1 = move(runwayExtreme,azimuth,shiftLength);
-        extreme1 = move(extreme1,azimuth+90, shiftWidth);
+        shiftInnerEdgeWidth = takeoffClimb.getLengthOfInnerEdge()/2;
 
-        extreme2 = move(runwayExtreme,azimuth,shiftLength);
-        extreme2 = move(extreme2,azimuth-90, shiftWidth);
+        extreme1 = move(runwayExtreme, azimuth, shiftInitialLength);
+        extreme1 = move(extreme1,azimuth+90, shiftInnerEdgeWidth);
 
+        extreme2 = move(runwayExtreme,azimuth, shiftInitialLength);
+        extreme2 = move(extreme2,azimuth-90, shiftInnerEdgeWidth);
 
-        //2. outer edge
+        //2. break points
+        Double opposite = takeoffClimb.getFinalWidth() / 2;
+        lenghtBeforeBreak = opposite / Math.tan(takeoffClimb.getDivergence() / 100);
+        lenghtAfterBreak = takeoffClimb.getLength() - lenghtBeforeBreak;
+
         divergence = slopePercentToDegrees(takeoffClimb.getDivergence());
-        extreme3 = move(extreme2,azimuth-divergence,takeoffClimb.getLength());
-        extreme4 = move(extreme1,azimuth+divergence,takeoffClimb.getLength());
 
-        //3. create polygon
-        takeoffGeometry = new GeometryFactory().createPolygon(new Coordinate[]{extreme1, extreme2, extreme3, extreme4, extreme1});
+        break1 = move(extreme2,azimuth-divergence, lenghtBeforeBreak);
+        break2 = move(extreme1,azimuth+divergence, lenghtBeforeBreak);
 
+        //3. outer edge
+        extreme3 = move(break1,azimuth, lenghtAfterBreak);
+        extreme4 = move(break2,azimuth, lenghtAfterBreak);
+
+        //4. create polygon
+        takeoffGeometry = new GeometryFactory().createPolygon(new Coordinate[]{extreme1, extreme2, break1, extreme3, extreme4, break2, extreme1});
 /*
         OutputStream out = new ByteArrayOutputStream();
         try {
