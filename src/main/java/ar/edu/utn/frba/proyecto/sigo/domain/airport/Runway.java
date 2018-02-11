@@ -75,10 +75,9 @@ public class Runway extends SigoDomain<Long> implements Spatial<LineString> {
                 .toString();
     }
 
-    public RunwayDirection getOppositeDirection(RunwayDirection direction) {
+    public Optional<RunwayDirection> getOppositeDirection(RunwayDirection direction) {
         return getDirections().stream()
                 .filter( d -> !d.getNumber().equals(direction.getNumber()))
-                .findFirst()
-                .get();
+                .findFirst();
     }
 }

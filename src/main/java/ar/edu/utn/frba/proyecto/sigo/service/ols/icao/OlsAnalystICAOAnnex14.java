@@ -314,7 +314,11 @@ public class OlsAnalystICAOAnnex14 extends OlsAnalyst {
             ICAOAnnex14SurfaceStrip stripSurface
     ) {
 
-        innerHorizontalSurface.setInitialHeight(Math.min(direction.getHeight(), direction.getRunway().getOppositeDirection(direction).getHeight())); //TODO tomar punto de evelevacion de referencia RP
+        Double minHeight = direction.getRunway().getOppositeDirection(direction)
+                .map( opposite -> Math.min(opposite.getHeight(), direction.getHeight()))
+                .orElse(direction.getHeight());
+
+        innerHorizontalSurface.setInitialHeight(minHeight); //TODO tomar punto de evelevacion de referencia RP
 
         innerHorizontalSurface.setGeometry(geometryHelper.createInnerHorizontalSurfaceGeometry(direction, innerHorizontalSurface, stripSurface));
 
@@ -430,7 +434,11 @@ public class OlsAnalystICAOAnnex14 extends OlsAnalyst {
             RunwayDirection direction,
             ICAOAnnex14SurfaceTakeoffClimb takeoffClimb)
     {
-        takeoffClimb.setInitialHeight(direction.getRunway().getOppositeDirection(direction).getHeight()); //TODO en realidad es el otro extremo
+        takeoffClimb.setInitialHeight(
+                direction.getRunway().getOppositeDirection(direction)
+                        .map(RunwayDirection::getHeight)
+                        .orElse(direction.getHeight())
+        );
 
         takeoffClimb.setGeometry(geometryHelper.createTakeoffClimbSurfaceGeometry(direction, takeoffClimb));
 
@@ -448,7 +456,11 @@ public class OlsAnalystICAOAnnex14 extends OlsAnalyst {
             ICAOAnnex14SurfaceInnerHorizontal innerHorizontal
     ) {
 
-        balkedLanding.setInitialHeight(direction.getRunway().getOppositeDirection(direction).getHeight());
+        balkedLanding.setInitialHeight(
+                direction.getRunway().getOppositeDirection(direction)
+                .map(RunwayDirection::getHeight)
+                .orElse(direction.getHeight())
+        );
 
         RunwayClassificationICAOAnnex14 classification = (RunwayClassificationICAOAnnex14) direction.getClassification();
 
