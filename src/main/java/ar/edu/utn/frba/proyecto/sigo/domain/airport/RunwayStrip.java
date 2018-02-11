@@ -28,7 +28,7 @@ public class RunwayStrip extends SigoDomain<Long> {
             name = "runwayStripGenerator",
             sequenceName = "RUNWAY_STRIP_SEQUENCE",
             allocationSize = 1,
-            initialValue = 1000
+            initialValue = 2000
     )
     @GeneratedValue(
             strategy = GenerationType.SEQUENCE,

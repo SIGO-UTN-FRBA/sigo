@@ -31,8 +31,16 @@ import javax.persistence.Table;
 public abstract class RunwayClassification extends SigoDomain<Long> {
 
     @Id
-    @SequenceGenerator(name = "runwayClassificationGenerator", sequenceName = "runwayClassificationGenerator_SEQUENCE", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "runwayClassificationGenerator")
+    @SequenceGenerator(
+            name = "runwayClassificationGenerator",
+            sequenceName = "runwayClassificationGenerator_SEQUENCE",
+            allocationSize = 1,
+            initialValue = 2000
+    )
+    @GeneratedValue(
+            strategy = GenerationType.SEQUENCE,
+            generator = "runwayClassificationGenerator"
+    )
     @Column(name = "classification_id")
     protected Long id;
 

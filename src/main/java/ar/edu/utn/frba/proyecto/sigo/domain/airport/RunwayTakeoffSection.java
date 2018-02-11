@@ -19,7 +19,7 @@ public class RunwayTakeoffSection extends SigoDomain<Long> {
             name = "runwayTakeoffSectionGenerator",
             sequenceName = "Runway_Takeoff_Section_SEQUENCE",
             allocationSize = 1,
-            initialValue = 1000
+            initialValue = 2000
     )
     @GeneratedValue(
             strategy = GenerationType.SEQUENCE,
