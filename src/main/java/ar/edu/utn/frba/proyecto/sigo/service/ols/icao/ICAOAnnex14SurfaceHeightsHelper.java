@@ -34,7 +34,7 @@ public class ICAOAnnex14SurfaceHeightsHelper {
             case INNER_TRANSITIONAL:
                 break;
             case BALKED_LANDING_SURFACE:
-                break;
+                return this.determineHeightAt((ICAOAnnex14SurfaceBalkedLanding) surface, point);
             case TAKEOFF_CLIMB:
                 return this.determineHeightAt((ICAOAnnex14SurfaceTakeoffClimb) surface, point);
             case OUTER_HORIZONTAL:
@@ -46,7 +46,7 @@ public class ICAOAnnex14SurfaceHeightsHelper {
 
     public Double determineHeightAt(ICAOAnnex14SurfaceConical surface, Point point){
 
-        return surface.getInitialHeight() + calculateHeightByPythagoras(
+        return surface.getInitialHeight() + calculateHeightByTrigonometry(
                 surface.getGeometry().getInteriorRingN(0),
                 surface.getSlope(),
                 point
@@ -54,11 +54,11 @@ public class ICAOAnnex14SurfaceHeightsHelper {
     }
 
     public Double determineHeightAt(ICAOAnnex14SurfaceStrip surface, Point point){
-        return 0D;
+        return surface.getInitialHeight() + 0D;
     }
 
     public Double determineHeightAt(ICAOAnnex14SurfaceInnerHorizontal surface, Point point){
-        return surface.getHeight();
+        return surface.getInitialHeight() + surface.getHeight();
     }
 
     public Double determineHeightAt(ICAOAnnex14SurfaceTransitional surface, Point point){
@@ -68,7 +68,7 @@ public class ICAOAnnex14SurfaceHeightsHelper {
                 .map( i -> surface.getGeometry().getGeometryN(i))
                 .filter( g -> g.intersects(point))
                 .findAny()
-                .map(g -> surface.getInitialHeight() + calculateHeightByPythagoras(g, surface.getSlope(), point))
+                .map(g -> surface.getInitialHeight() + calculateHeightByTrigonometry(g, surface.getSlope(), point))
                 .orElseThrow(()-> new SigoException("No geometry covers the object"));
     }
 
@@ -93,16 +93,21 @@ public class ICAOAnnex14SurfaceHeightsHelper {
         return surface.getHeight();
     }
 
+    public Double determineHeightAt(ICAOAnnex14SurfaceBalkedLanding surface, Point point){
+        return surface.getInitialHeight() + calculateHeightForSlopingPolygon(surface.getGeometry(), surface.getSlope(), point);
+    }
+
 
     public Double calculateHeightForSlopingPolygon(Polygon geometry, Double slope, Point point){
 
         LineString exteriorRing = geometry.getExteriorRing();
 
-        return calculateHeightByPythagoras(
+        return calculateHeightByTrigonometry(
                 new GeometryFactory().createLineString(
+                        //FIXME esta atado a como construyo la geom
                         new Coordinate[]{
                                 exteriorRing.getPointN(0).getCoordinate(),
-                                exteriorRing.getPointN(3).getCoordinate()
+                                exteriorRing.getPointN(1).getCoordinate()
                         }
                 ),
                 slope,
@@ -110,14 +115,10 @@ public class ICAOAnnex14SurfaceHeightsHelper {
         );
     }
 
-    public Double calculateHeightByPythagoras(Geometry geometry, Double slope, Point point){
+    public Double calculateHeightByTrigonometry(Geometry geometry, Double slope, Point point){
 
-        double adjacent = geometry.distance(point) * 100000; //TODO distancia geografica
+        Double adjacent = geometry.distance(point) * 100000; //TODO distancia geografica
 
-        double degrees = Math.toDegrees(Math.atan(slope / 100));
-
-        double hypotenuse = adjacent / Math.cos(degrees);
-
-        return Math.sqrt(Math.pow(hypotenuse,2) - Math.pow(adjacent,2));
+        return adjacent * Math.tan(slope / 100);
     }
 }

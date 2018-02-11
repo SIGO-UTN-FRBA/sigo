@@ -24,6 +24,9 @@ public class ICAOAnnex14SurfaceInnerHorizontal extends ICAOAnnex14Surface<Polygo
     @Column
     private Double radius;
 
+    @Column(name = "initial_height")
+    private Double initialHeight;
+
     @Column(name="geom")
     private Polygon geometry;
 

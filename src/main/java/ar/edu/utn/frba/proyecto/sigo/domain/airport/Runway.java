@@ -74,4 +74,11 @@ public class Runway extends SigoDomain<Long> implements Spatial<LineString> {
                 .add("airport", Optional.ofNullable(airport).map(Airport::getId).orElse(null))
                 .toString();
     }
+
+    public RunwayDirection getOppositeDirection(RunwayDirection direction) {
+        return getDirections().stream()
+                .filter( d -> !d.getNumber().equals(direction.getNumber()))
+                .findFirst()
+                .get();
+    }
 }

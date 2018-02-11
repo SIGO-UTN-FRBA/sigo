@@ -343,9 +343,9 @@ public class ICAOAnnex14SurfaceGeometriesHelper {
             ICAOAnnex14SurfaceInnerHorizontal innerHorizontal) {
 
         Double azimuth;
-        Double divergence;
+        Double divergenceDegrees;
         Double shiftLength, shiftWidth;
-        Coordinate runwayExtreme;
+        Coordinate threshold;
         Coordinate extreme1;
         Coordinate extreme4;
         Coordinate extreme2;
@@ -358,25 +358,22 @@ public class ICAOAnnex14SurfaceGeometriesHelper {
 
         shiftLength = balkedLanding.getDistanceFromThreshold();
 
-        runwayExtreme = oppositeThreshold(direction);
+        threshold = direction.getGeom().getCoordinate();
 
         //1. inner edge
-        extreme1 = move(runwayExtreme,azimuth,-1 * shiftLength);
+        extreme1 = move(threshold ,azimuth, shiftLength);
         extreme1 = move(extreme1,azimuth+90, shiftWidth);
 
-        extreme2 = move(runwayExtreme,azimuth,-1 * shiftLength);
+        extreme2 = move(threshold,azimuth, shiftLength);
         extreme2 = move(extreme2,azimuth-90, shiftWidth);
 
         //2. outer edge
-        divergence = slopePercentToDegrees(balkedLanding.getDivergence());
+        divergenceDegrees = slopePercentToDegrees(balkedLanding.getDivergence());
 
-        Double opposite = innerHorizontal.getHeight();
-        Double degrees = Math.atan(balkedLanding.getSlope() / 100);
-        Double hypotenuse = opposite / Math.sin(degrees);
-        Double adjacent = Math.sqrt(Math.pow(hypotenuse,2) + Math.pow(opposite,2));
+        Double shiftOuterEdgeWidth = innerHorizontal.getHeight() / Math.tan(balkedLanding.getSlope() / 100);
 
-        extreme3 = move(extreme2,azimuth-divergence,adjacent);
-        extreme4 = move(extreme1,azimuth+divergence,adjacent);
+        extreme3 = move(extreme2,azimuth-divergenceDegrees, shiftOuterEdgeWidth);
+        extreme4 = move(extreme1,azimuth+divergenceDegrees, shiftOuterEdgeWidth);
 
         //3. create polygon
         takeoffGeometry = new GeometryFactory().createPolygon(new Coordinate[]{extreme1, extreme2, extreme3, extreme4, extreme1});

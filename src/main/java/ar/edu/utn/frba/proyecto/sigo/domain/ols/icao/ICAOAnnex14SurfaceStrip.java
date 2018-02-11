@@ -27,6 +27,9 @@ public class ICAOAnnex14SurfaceStrip extends ICAOAnnex14Surface<Polygon>
     @Column(name="geom")
     private Polygon geometry;
 
+    @Column(name = "initial_height")
+    private Double initialHeight;
+
     @Override
     public ICAOAnnex14Surfaces getEnum() {
         return ICAOAnnex14Surfaces.STRIP;
