@@ -40,7 +40,8 @@ public class ServiceModule extends AbstractModule {
         bind(RunwayStripService.class);
         bind(AnalysisSurfaceService.class);
         bind(AnalysisObstacleService.class);
-        bind(AnalysisResultReasonService.class);
+        bind(AnalysisAdverseEffectAspectService.class);
+        bind(AnalysisAdverseEffectMitigationService.class);
         bind(AnalysisResultService.class);
         bind(TerrainLevelCurveService.class);
         bind(AnalysisExceptionRuleService.class);

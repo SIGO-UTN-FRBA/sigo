@@ -125,7 +125,8 @@ public class HibernateUtil {
                 .addAnnotatedClass(ICAOAnnex14SurfaceApproach.class)
                 .addAnnotatedClass(ICAOAnnex14SurfaceOuterHorizontal.class)
                 .addAnnotatedClass(AnalysisResult.class)
-                .addAnnotatedClass(AnalysisResultReason.class)
+                .addAnnotatedClass(AnalysisAdverseEffectAspect.class)
+                .addAnnotatedClass(AnalysisAdverseEffectMitigation.class)
                 .addAnnotatedClass(SigoUser.class);
 
         Metadata metadata = sources.getMetadataBuilder().build();
