@@ -17,7 +17,6 @@ import ar.edu.utn.frba.proyecto.sigo.translator.analysis.AnalysisExceptionRuleTr
 import ar.edu.utn.frba.proyecto.sigo.translator.analysis.AnalysisExceptionSurfaceTranslator;
 import ar.edu.utn.frba.proyecto.sigo.translator.analysis.AnalysisExceptionTranslator;
 import com.google.gson.Gson;
-import org.apache.commons.lang.NotImplementedException;
 import org.eclipse.jetty.http.HttpStatus;
 import org.hibernate.SessionFactory;
 import spark.Route;
@@ -148,9 +147,26 @@ public class AnalysisExceptionRouter extends SigoRouter {
     /**
      * Update an exception for an analysis case
      */
-    private final Route updateException = doInTransaction(true, (request, response) -> {
-        throw new NotImplementedException();
+    private final Route updateSurfaceException = doInTransaction(true, (request, response) -> {
+        AnalysisExceptionSurfaceDTO dto = surfaceTranslator.getAsDTO(request.body());
+
+        AnalysisExceptionSurface domain = surfaceTranslator.getAsDomain(dto);
+
+        surfaceService.update(domain);
+
+        return surfaceTranslator.getAsDTO(domain);
     });
+
+    private final Route updateRuleException = doInTransaction(true, (request, response) -> {
+        AnalysisExceptionRuleDTO dto = ruleTranslator.getAsDTO(request.body());
+
+        AnalysisExceptionRule domain = ruleTranslator.getAsDomain(dto);
+
+        ruleService.update(domain);
+
+        return ruleTranslator.getAsDTO(domain);
+    });
+
 
     /**
      * Delete an exception for an analysis case
@@ -186,8 +202,8 @@ public class AnalysisExceptionRouter extends SigoRouter {
 
             //get("/dynamicSurface/:" + EXCEPTION_ID_PARAM, fetchException, jsonTransformer);
 
-            put("/rule/:" + EXCEPTION_ID_PARAM, updateException, jsonTransformer);
-            put("/surface/:" + EXCEPTION_ID_PARAM, updateException, jsonTransformer);
+            put("/rule/:" + EXCEPTION_ID_PARAM, updateRuleException, jsonTransformer);
+            put("/surface/:" + EXCEPTION_ID_PARAM, updateSurfaceException, jsonTransformer);
             //put("/dynamicSurface/:" + EXCEPTION_ID_PARAM, updateException, jsonTransformer);
 
             delete("/:" + EXCEPTION_ID_PARAM, deleteException, jsonTransformer);
