@@ -218,6 +218,8 @@ public class OlsAnalystICAOAnnex14 extends OlsAnalyst {
 
     private Set<AnalysisSurface> createAnalysisSurfacesForNonInstrument(RunwayDirection direction, List<ICAOAnnex14Surface> surfacesDefinitions) {
 
+        RunwayClassificationICAOAnnex14 classification = (RunwayClassificationICAOAnnex14) direction.getClassification();
+
         Set<AnalysisSurface> analysisSurfaces = Sets.newHashSet();
 
         //1. Strip
@@ -288,6 +290,34 @@ public class OlsAnalystICAOAnnex14 extends OlsAnalyst {
                         takeoffClimb
                 )
         );
+
+        //4. ApproachSecondSection
+        ICAOAnnex14SurfaceApproachSecondSection approachSecondSection = (ICAOAnnex14SurfaceApproachSecondSection) surfacesDefinitions.stream().filter(d -> d.getEnum() == ICAOAnnex14Surfaces.APPROACH_SECOND_SECTION).findFirst().get();
+        applyRuleException(approachSecondSection);
+        analysisSurfaces.add(
+                createApproachSecondSectionAnalysisSurface(
+                        direction,
+                        approachSecondSection,
+                        approach,
+                        approachFirstSection
+                )
+        );
+
+        //4. ApproachHorizontalSection
+        if(classification.getRunwayTypeNumber().equals(ICAOAnnex14RunwayCodeNumbers.THREE) || classification.getRunwayTypeNumber().equals(ICAOAnnex14RunwayCodeNumbers.FOUR)){
+
+            ICAOAnnex14SurfaceApproachHorizontalSection approachHorizontalSection = (ICAOAnnex14SurfaceApproachHorizontalSection) surfacesDefinitions.stream().filter(d -> d.getEnum() == ICAOAnnex14Surfaces.APPROACH_HORIZONTAL_SECTION).findFirst().get();
+            applyRuleException(approachHorizontalSection);
+            analysisSurfaces.add(
+                    createApproachHorizontalSectionAnalysisSurface(
+                            direction,
+                            approachHorizontalSection,
+                            approachSecondSection,
+                            approachFirstSection,
+                            approach
+                    )
+            );
+        }
 
         return analysisSurfaces;
     }
