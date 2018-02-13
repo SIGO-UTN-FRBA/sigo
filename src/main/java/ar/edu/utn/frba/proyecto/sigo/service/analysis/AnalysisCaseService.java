@@ -2,7 +2,6 @@ package ar.edu.utn.frba.proyecto.sigo.service.analysis;
 
 import ar.edu.utn.frba.proyecto.sigo.domain.analysis.Analysis;
 import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisCase;
-import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisException;
 import ar.edu.utn.frba.proyecto.sigo.domain.analysis.AnalysisObject;
 import ar.edu.utn.frba.proyecto.sigo.domain.object.*;
 import ar.edu.utn.frba.proyecto.sigo.service.SigoService;
@@ -14,7 +13,6 @@ import org.hibernate.query.Query;
 
 import javax.inject.Inject;
 import javax.persistence.criteria.*;
-import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -71,9 +69,10 @@ public class AnalysisCaseService extends SigoService <AnalysisCase, Analysis> {
         analysisCase.getObjects().clear();
     }
 
-    public void updateAnalyzedObjects(AnalysisCase analysisCase, Double radius){
+    public void updateAnalyzedObjects(AnalysisCase analysisCase, Double radius, Boolean includeTerrain){
 
         analysisCase.setSearchRadius(radius);
+        analysisCase.setIncludeTerrain(includeTerrain);
 
         discardAnalyzedObjects(analysisCase);
 
@@ -95,10 +94,6 @@ public class AnalysisCaseService extends SigoService <AnalysisCase, Analysis> {
 
     }
 
-    private List<AnalysisException> inheritExceptions(AnalysisCase analysisCase) {
-        return null;
-    }
-
     private Stream<ElevatedObject> collectElevatedObjects(AnalysisCase analysisCase) {
 
         Geometry buffer = analysisCase.getAerodrome().getGeom().buffer(analysisCase.getSearchRadius());
@@ -110,8 +105,7 @@ public class AnalysisCaseService extends SigoService <AnalysisCase, Analysis> {
                 collectElevatedObjectsOnArea(PlacedObjectBuilding.class, buffer),
                 collectElevatedObjectsOnArea(PlacedObjectOverheadWire.class, buffer),
                 collectElevatedObjectsOnArea(TrackSection.class, buffer),
-                collectElevatedObjectsOnArea(TerrainLevelCurve.class, buffer)
-
+                (analysisCase.getIncludeTerrain()) ? collectElevatedObjectsOnArea(TerrainLevelCurve.class, buffer) : Stream.empty()
         );
 
     }

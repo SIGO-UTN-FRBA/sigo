@@ -44,6 +44,9 @@ public class AnalysisCase extends SigoDomain<Long> {
     @Column(name="search_radius")
     private Double searchRadius;
 
+    @Column(name = "include_terrain")
+    private Boolean includeTerrain;
+
     @OneToMany(mappedBy = "analysisCase", orphanRemoval = true, cascade = CascadeType.ALL)
     private Set<AnalysisSurface> surfaces = Sets.newHashSet();
 

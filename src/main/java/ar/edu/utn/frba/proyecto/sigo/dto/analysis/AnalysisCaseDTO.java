@@ -16,4 +16,5 @@ public class AnalysisCaseDTO {
     private Integer regulationId;
     private Long areaId;
     private Double searchRadius;
+    private Boolean includeTerrain;
 }

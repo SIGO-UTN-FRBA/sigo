@@ -28,7 +28,8 @@ public class AnalysisCaseTranslator extends SigoTranslator<AnalysisCase, Analysi
                 .id(domain.getId())
                 .airportId(domain.getAerodrome().getId())
                 .regulationId(domain.getRegulation().ordinal())
-                .searchRadius(domain.getSearchRadius());
+                .searchRadius(domain.getSearchRadius())
+                .includeTerrain(domain.getIncludeTerrain());
 
         return builder.build();
     }

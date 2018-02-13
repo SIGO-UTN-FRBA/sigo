@@ -10,12 +10,15 @@ import ar.edu.utn.frba.proyecto.sigo.spark.JsonTransformer;
 import ar.edu.utn.frba.proyecto.sigo.translator.analysis.AnalysisCaseTranslator;
 import ar.edu.utn.frba.proyecto.sigo.translator.analysis.AnalysisObjectTranslator;
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import org.hibernate.SessionFactory;
 import spark.Route;
 import spark.RouteGroup;
 
 import javax.inject.Inject;
+
+import java.util.Optional;
 
 import static spark.Spark.get;
 import static spark.Spark.patch;
@@ -66,14 +69,17 @@ public class AnalysisCaseRouter extends SigoRouter {
 
         JsonObject jsonObject = objectMapper.fromJson(request.body(), JsonObject.class);
 
-        if(!jsonObject.has("searchRadius"))
-            throw new MissingParameterException("searchRadius");
+        Double radius = Optional.ofNullable(jsonObject.get("searchRadius"))
+                .map(JsonElement::getAsDouble)
+                .orElseThrow(() -> new MissingParameterException("searchRadius"));
 
-        Double radius = jsonObject.get("searchRadius").getAsDouble();
+        Boolean includeTerrain = Optional.ofNullable(jsonObject.get("includeTerrain"))
+                .map(JsonElement::getAsBoolean)
+                .orElseThrow(() -> new MissingParameterException("includeTerrain"));
 
         AnalysisCase analysisCase = analysis.getAnalysisCase();
 
-        caseService.updateAnalyzedObjects(analysisCase, radius);
+        caseService.updateAnalyzedObjects(analysisCase, radius, includeTerrain);
 
         return caseTranslator.getAsDTO(analysisCase);
     });
