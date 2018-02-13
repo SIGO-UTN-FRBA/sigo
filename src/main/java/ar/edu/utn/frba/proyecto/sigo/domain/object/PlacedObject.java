@@ -15,24 +15,10 @@ import javax.persistence.*;
 @Data
 public abstract class PlacedObject<T extends Geometry> extends ElevatedObject<T> {
 
-
-    public PlacedObject(Long id, String name, Double heightAgl, Double heightAmls, ElevatedObjectTypes type, String subtype, Boolean verified, PoliticalLocation politicalLocation, PlacedObjectOwner owner, Boolean temporary, LightingTypes lighting, MarkIndicatorTypes markIndicator) {
-
-        super(id, name, heightAgl, heightAmls, type);
-
-        this.subtype = subtype;
-        this.verified = verified;
-        this.politicalLocation = politicalLocation;
-        this.owner = owner;
-        this.temporary = temporary;
-        this.lighting = lighting;
-        this.markIndicator = markIndicator;
-    }
-
     @Column(name = "subtype")
     protected String subtype;
 
-    @Column(name = "verified")
+    @Column
     protected Boolean verified;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -43,11 +29,11 @@ public abstract class PlacedObject<T extends Geometry> extends ElevatedObject<T>
     @JoinColumn(name = "owner_id")
     protected PlacedObjectOwner owner;
 
-    @Column(name = "temporary")
+    @Column
     protected Boolean temporary;
 
     @Enumerated(EnumType.ORDINAL)
-    @Column(name = "lighting")
+    @Column
     protected LightingTypes lighting;
 
     @Enumerated(EnumType.ORDINAL)
@@ -57,9 +43,20 @@ public abstract class PlacedObject<T extends Geometry> extends ElevatedObject<T>
     public String toString(){
         return MoreObjects.toStringHelper(this)
                 .add("id", id)
-                .add("type", type.name())
+                .add("type", this.getType().name())
                 .add("name:", name)
                 .toString();
+    }
+
+    public PlacedObject(Long id, String name, Double heightAgl, Double heightAmls, String subtype, Boolean verified, PoliticalLocation politicalLocation, PlacedObjectOwner owner, Boolean temporary, LightingTypes lighting, MarkIndicatorTypes markIndicator) {
+        super(id, name, heightAgl, heightAmls);
+        this.subtype = subtype;
+        this.verified = verified;
+        this.politicalLocation = politicalLocation;
+        this.owner = owner;
+        this.temporary = temporary;
+        this.lighting = lighting;
+        this.markIndicator = markIndicator;
     }
 
     public abstract <P> P accept(PlacedObjectVisitor<P> visitor);

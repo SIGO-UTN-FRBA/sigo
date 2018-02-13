@@ -46,6 +46,7 @@ public class ServiceModule extends AbstractModule {
         bind(TerrainLevelCurveService.class);
         bind(AnalysisExceptionRuleService.class);
         bind(AnalysisExceptionSurfaceService.class);
+        bind(TrackSectionService.class);
 
         install(new FactoryModuleBuilder()
                 .implement(OlsRuleService.class, OlsRuleICAOAnnex14Service.class)

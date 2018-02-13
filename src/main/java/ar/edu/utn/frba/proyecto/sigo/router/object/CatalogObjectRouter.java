@@ -64,6 +64,14 @@ public class CatalogObjectRouter extends SigoRouter {
                 .collect(Collectors.toList());
     };
 
+    private final Route fetchTrackTypes = (Request request, Response response) ->
+        Arrays.stream(catalogService.fetchTackSectionTypes())
+                .map(v -> EnumerationDTO.builder()
+                        .id(v.ordinal())
+                        .name(v.name())
+                        .build()
+                )
+                .collect(Collectors.toList());
 
     @Override
     public RouteGroup routes() {
@@ -71,6 +79,7 @@ public class CatalogObjectRouter extends SigoRouter {
             get("/objectTypes", fetchObjectTypes, jsonTransformer);
             get("/lightings", fetchLightings, jsonTransformer);
             get("/markIndicators", fetchMarkIndicators, jsonTransformer);
+            get("/trackTypes", fetchTrackTypes, jsonTransformer);
         };
     }
 

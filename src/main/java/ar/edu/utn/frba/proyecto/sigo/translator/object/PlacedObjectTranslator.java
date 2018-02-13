@@ -1,21 +1,15 @@
 package ar.edu.utn.frba.proyecto.sigo.translator.object;
 
 import ar.edu.utn.frba.proyecto.sigo.domain.location.PoliticalLocation;
-import ar.edu.utn.frba.proyecto.sigo.domain.object.LightingTypes;
-import ar.edu.utn.frba.proyecto.sigo.domain.object.MarkIndicatorTypes;
-import ar.edu.utn.frba.proyecto.sigo.domain.object.PlacedObject;
-import ar.edu.utn.frba.proyecto.sigo.domain.object.PlacedObjectBuilding;
-import ar.edu.utn.frba.proyecto.sigo.domain.object.PlacedObjectIndividual;
-import ar.edu.utn.frba.proyecto.sigo.domain.object.PlacedObjectOverheadWire;
-import ar.edu.utn.frba.proyecto.sigo.domain.object.PlacedObjectOwner;
-import ar.edu.utn.frba.proyecto.sigo.domain.object.ElevatedObjectTypes;
+import ar.edu.utn.frba.proyecto.sigo.domain.object.*;
 import ar.edu.utn.frba.proyecto.sigo.dto.object.PlacedObjectDTO;
 import ar.edu.utn.frba.proyecto.sigo.exception.InvalidParameterException;
-import ar.edu.utn.frba.proyecto.sigo.service.object.PlacedObjectOwnerService;
-import ar.edu.utn.frba.proyecto.sigo.translator.SigoTranslator;
 import ar.edu.utn.frba.proyecto.sigo.service.location.PoliticalLocationService;
 import ar.edu.utn.frba.proyecto.sigo.service.location.RegionService;
+import ar.edu.utn.frba.proyecto.sigo.service.object.PlacedObjectOwnerService;
+import ar.edu.utn.frba.proyecto.sigo.translator.SigoTranslator;
 import com.google.gson.Gson;
+import org.apache.commons.lang.NotImplementedException;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -61,21 +55,10 @@ public class PlacedObjectTranslator extends SigoTranslator<PlacedObject, PlacedO
 
     @Override
     public PlacedObject getAsDomain(PlacedObjectDTO dto) {
-
-        switch (ElevatedObjectTypes.values()[dto.getTypeId()]){
-
-            case BUILDING:
-                return getAsBuildingDomain(dto);
-            case INDIVIDUAL:
-                return getAsIndividualDomain(dto);
-            case OVERHEAD_WIRED:
-                return getAsWiredDomain(dto);
-        }
-
-        throw new InvalidParameterException("Invalid object type");
+        throw new NotImplementedException();
     }
 
-    private PlacedObjectOverheadWire getAsWiredDomain(PlacedObjectDTO dto) {
+    public PlacedObjectOverheadWire getAsWiredDomain(PlacedObjectDTO dto) {
 
         PlacedObjectOverheadWire.PlacedObjectOverheadWireBuilder builder = PlacedObjectOverheadWire.builder();
 
@@ -87,7 +70,6 @@ public class PlacedObjectTranslator extends SigoTranslator<PlacedObject, PlacedO
                 .lighting(LightingTypes.values()[dto.getLightingId()])
                 .markIndicator(MarkIndicatorTypes.values()[dto.getMarkIndicatorId()])
                 .name(dto.getName())
-                .type(ElevatedObjectTypes.values()[dto.getTypeId()])
                 .subtype(dto.getSubtype())
                 .verified(dto.getVerified())
                 .temporary(dto.getTemporary());
@@ -110,7 +92,7 @@ public class PlacedObjectTranslator extends SigoTranslator<PlacedObject, PlacedO
         return builder.build();
     }
 
-    private PlacedObject getAsIndividualDomain(PlacedObjectDTO dto) {
+    public PlacedObjectIndividual getAsIndividualDomain(PlacedObjectDTO dto) {
 
         PlacedObjectIndividual.PlacedObjectIndividualBuilder builder = PlacedObjectIndividual.builder();
 
@@ -122,7 +104,6 @@ public class PlacedObjectTranslator extends SigoTranslator<PlacedObject, PlacedO
                 .lighting(LightingTypes.values()[dto.getLightingId()])
                 .markIndicator(MarkIndicatorTypes.values()[dto.getMarkIndicatorId()])
                 .name(dto.getName())
-                .type(ElevatedObjectTypes.values()[dto.getTypeId()])
                 .subtype(dto.getSubtype())
                 .verified(dto.getVerified())
                 .temporary(dto.getTemporary());
@@ -145,7 +126,7 @@ public class PlacedObjectTranslator extends SigoTranslator<PlacedObject, PlacedO
         return builder.build();
     }
 
-    private PlacedObjectBuilding getAsBuildingDomain(PlacedObjectDTO dto) {
+    public PlacedObjectBuilding getAsBuildingDomain(PlacedObjectDTO dto) {
 
         PlacedObjectBuilding.PlacedObjectBuildingBuilder builder = PlacedObjectBuilding.builder();
 
@@ -157,7 +138,6 @@ public class PlacedObjectTranslator extends SigoTranslator<PlacedObject, PlacedO
                 .lighting(LightingTypes.values()[dto.getLightingId()])
                 .markIndicator(MarkIndicatorTypes.values()[dto.getMarkIndicatorId()])
                 .name(dto.getName())
-                .type(ElevatedObjectTypes.values()[dto.getTypeId()])
                 .subtype(dto.getSubtype())
                 .verified(dto.getVerified())
                 .temporary(dto.getTemporary());

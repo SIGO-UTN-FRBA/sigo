@@ -2,10 +2,11 @@ package ar.edu.utn.frba.proyecto.sigo.domain.object;
 
 public enum ElevatedObjectTypes {
 
-    BUILDING("building", "Building"),
-    INDIVIDUAL("individual", "Individual"),
-    OVERHEAD_WIRED("wired", "Overhead wired"),
-    LEVEL_CURVE("curve","Level curve");
+    BUILDING("building", "Building"),               //0
+    INDIVIDUAL("individual", "Individual"),         //1
+    OVERHEAD_WIRED("wired", "Overhead wired"),      //2
+    LEVEL_CURVE("curve","Level curve"),             //3
+    TRACK_SECTION("trackSection", "Tack section");  //4
 
     private String code;
     private String description;

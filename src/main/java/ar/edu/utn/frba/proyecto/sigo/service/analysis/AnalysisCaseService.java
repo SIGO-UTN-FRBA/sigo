@@ -109,7 +109,9 @@ public class AnalysisCaseService extends SigoService <AnalysisCase, Analysis> {
                 collectElevatedObjectsOnArea(PlacedObjectIndividual.class, buffer),
                 collectElevatedObjectsOnArea(PlacedObjectBuilding.class, buffer),
                 collectElevatedObjectsOnArea(PlacedObjectOverheadWire.class, buffer),
+                collectElevatedObjectsOnArea(TrackSection.class, buffer),
                 collectElevatedObjectsOnArea(TerrainLevelCurve.class, buffer)
+
         );
 
     }

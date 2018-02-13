@@ -33,9 +33,14 @@ public class TerrainLevelCurve extends NaturalObject<MultiLineString> {
     @Column(name = "geom")
     private MultiLineString geom;
 
+    @Override
+    public ElevatedObjectTypes getType() {
+        return ElevatedObjectTypes.LEVEL_CURVE;
+    }
+
     @Builder
-    public TerrainLevelCurve(Long id, String name, Double heightAgl, Double heightAmls, ElevatedObjectTypes type, MultiLineString geom, String representation, String source) {
-        super(id, name, heightAgl, heightAmls, type);
+    public TerrainLevelCurve(Long id, String name, Double heightAgl, Double heightAmls, String representation, String source, MultiLineString geom) {
+        super(id, name, heightAgl, heightAmls);
         this.representation = representation;
         this.source = source;
         this.geom = geom;

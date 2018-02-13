@@ -19,27 +19,18 @@ import javax.persistence.Table;
 public class PlacedObjectBuilding extends PlacedObject<MultiPolygon> {
 
     @Builder
-    public PlacedObjectBuilding(
-            Long id,
-            String name,
-            ElevatedObjectTypes type,
-            String subtype,
-            Boolean verified,
-            PoliticalLocation politicalLocation,
-            PlacedObjectOwner owner,
-            Double heightAgl,
-            Double heightAmls,
-            Boolean temporary,
-            LightingTypes lighting,
-            MarkIndicatorTypes markIndicator,
-            MultiPolygon geom
-    ) {
-        super(id, name, heightAgl, heightAmls, type, subtype, verified, politicalLocation, owner, temporary, lighting, markIndicator);
+    public PlacedObjectBuilding(Long id, String name, Double heightAgl, Double heightAmls, String subtype, Boolean verified, PoliticalLocation politicalLocation, PlacedObjectOwner owner, Boolean temporary, LightingTypes lighting, MarkIndicatorTypes markIndicator, MultiPolygon geom) {
+        super(id, name, heightAgl, heightAmls, subtype, verified, politicalLocation, owner, temporary, lighting, markIndicator);
         this.geom = geom;
     }
 
     @Column(name = "geom")
     private MultiPolygon geom;
+
+    @Override
+    public ElevatedObjectTypes getType() {
+        return ElevatedObjectTypes.BUILDING;
+    }
 
     @Override
     public <P> P accept(PlacedObjectVisitor<P> visitor) {

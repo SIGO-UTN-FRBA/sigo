@@ -1,11 +1,9 @@
 package ar.edu.utn.frba.proyecto.sigo.service.ols.icao;
 
 import ar.edu.utn.frba.proyecto.sigo.domain.ols.icao.*;
-import ar.edu.utn.frba.proyecto.sigo.exception.SigoException;
 import com.vividsolutions.jts.geom.*;
 
 import javax.inject.Singleton;
-import java.util.stream.IntStream;
 
 @Singleton
 public class ICAOAnnex14SurfaceHeightsHelper {
@@ -63,13 +61,7 @@ public class ICAOAnnex14SurfaceHeightsHelper {
 
     public Double determineHeightAt(ICAOAnnex14SurfaceTransitional surface, Point point){
 
-        return IntStream.rangeClosed(0, surface.getGeometry().getNumGeometries())
-                .boxed()
-                .map( i -> surface.getGeometry().getGeometryN(i))
-                .filter( g -> g.intersects(point))
-                .findAny()
-                .map(g -> surface.getInitialHeight() + calculateHeightByTrigonometry(g, surface.getSlope(), point))
-                .orElseThrow(()-> new SigoException("No geometry covers the object"));
+        return 45D; //TODO
     }
 
     public Double determineHeightAt(ICAOAnnex14SurfaceApproachFirstSection surface, Point point){

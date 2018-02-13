@@ -85,6 +85,7 @@ public class HibernateUtil {
                 .addAnnotatedClass(PlacedObjectBuilding.class)
                 .addAnnotatedClass(PlacedObjectIndividual.class)
                 .addAnnotatedClass(PlacedObjectOverheadWire.class)
+                .addAnnotatedClass(TrackSection.class)
                 .addAnnotatedClass(PlacedObjectOwner.class)
                 .addAnnotatedClass(PoliticalLocation.class)
                 .addAnnotatedClass(PoliticalLocationType.class)

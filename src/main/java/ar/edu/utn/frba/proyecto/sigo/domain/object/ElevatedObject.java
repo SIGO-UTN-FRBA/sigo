@@ -44,7 +44,5 @@ public abstract class ElevatedObject<T extends Geometry>
     @Column(name = "height_amls")
     protected Double heightAmls;
 
-    @Enumerated(EnumType.ORDINAL)
-    @Column(name = "type")
-    protected ElevatedObjectTypes type;
+    public abstract ElevatedObjectTypes getType();
 }
