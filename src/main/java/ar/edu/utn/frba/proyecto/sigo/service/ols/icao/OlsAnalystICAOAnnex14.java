@@ -71,6 +71,8 @@ public class OlsAnalystICAOAnnex14 extends OlsAnalyst {
 
         List<ICAOAnnex14Surface> surfacesDefinitions = this.definitionService.getSurfaces(classification.getRunwayClassification(), classification.getRunwayCategory(), classification.getRunwayTypeNumber(), false);
 
+        surfacesDefinitions.forEach(this::applyRuleException);
+
         switch (classification.getRunwayClassification()) {
             case NON_INSTRUMENT:
                 return createAnalysisSurfacesForNonInstrument(direction, surfacesDefinitions);
@@ -91,7 +93,6 @@ public class OlsAnalystICAOAnnex14 extends OlsAnalyst {
 
         //1. Strip
         ICAOAnnex14SurfaceStrip strip = (ICAOAnnex14SurfaceStrip) surfacesDefinitions.stream().filter(d -> d.getEnum() == ICAOAnnex14Surfaces.STRIP).findFirst().get();
-        applyRuleException(strip);
         analysisSurfaces.add(
                 createStripAnalysisSurface(
                         direction,
@@ -101,7 +102,6 @@ public class OlsAnalystICAOAnnex14 extends OlsAnalyst {
 
         //2. InnerHorizontal
         ICAOAnnex14SurfaceInnerHorizontal innerHorizontal = (ICAOAnnex14SurfaceInnerHorizontal) surfacesDefinitions.stream().filter(d -> d.getEnum() == ICAOAnnex14Surfaces.INNER_HORIZONTAL).findFirst().get();
-        applyRuleException(innerHorizontal);
         analysisSurfaces.add(
                 createInnerHorizontalAnalysisSurface(
                         direction,
@@ -111,7 +111,6 @@ public class OlsAnalystICAOAnnex14 extends OlsAnalyst {
 
         //3. Conical
         ICAOAnnex14SurfaceConical conical = (ICAOAnnex14SurfaceConical) surfacesDefinitions.stream().filter(d -> d.getEnum() == ICAOAnnex14Surfaces.CONICAL).findFirst().get();
-        applyRuleException(conical);
         analysisSurfaces.add(
                 createConicalAnalysisSurface(
                         direction,
@@ -122,10 +121,8 @@ public class OlsAnalystICAOAnnex14 extends OlsAnalyst {
 
         //4. ApproachFirstSection
         ICAOAnnex14SurfaceApproach approach = (ICAOAnnex14SurfaceApproach) surfacesDefinitions.stream().filter(d -> d.getEnum() == ICAOAnnex14Surfaces.APPROACH).findFirst().get();
-        applyRuleException(approach);
 
         ICAOAnnex14SurfaceApproachFirstSection approachFirstSection = (ICAOAnnex14SurfaceApproachFirstSection) surfacesDefinitions.stream().filter(d -> d.getEnum() == ICAOAnnex14Surfaces.APPROACH_FIRST_SECTION).findFirst().get();
-        applyRuleException(approachFirstSection);
         analysisSurfaces.add(
                 createApproachFirstSectionAnalysisSurface(
                         direction,
@@ -137,7 +134,6 @@ public class OlsAnalystICAOAnnex14 extends OlsAnalyst {
 
         //4. ApproachSecondSection
         ICAOAnnex14SurfaceApproachSecondSection approachSecondSection = (ICAOAnnex14SurfaceApproachSecondSection) surfacesDefinitions.stream().filter(d -> d.getEnum() == ICAOAnnex14Surfaces.APPROACH_SECOND_SECTION).findFirst().get();
-        applyRuleException(approachSecondSection);
         analysisSurfaces.add(
                 createApproachSecondSectionAnalysisSurface(
                         direction,
@@ -149,7 +145,6 @@ public class OlsAnalystICAOAnnex14 extends OlsAnalyst {
 
         //4. ApproachHorizontalSection
         ICAOAnnex14SurfaceApproachHorizontalSection approachHorizontalSection = (ICAOAnnex14SurfaceApproachHorizontalSection) surfacesDefinitions.stream().filter(d -> d.getEnum() == ICAOAnnex14Surfaces.APPROACH_HORIZONTAL_SECTION).findFirst().get();
-        applyRuleException(approachHorizontalSection);
         analysisSurfaces.add(
                 createApproachHorizontalSectionAnalysisSurface(
                         direction,
@@ -162,7 +157,6 @@ public class OlsAnalystICAOAnnex14 extends OlsAnalyst {
 
         //5. Transitional
         ICAOAnnex14SurfaceTransitional transitional = (ICAOAnnex14SurfaceTransitional) surfacesDefinitions.stream().filter(d -> d.getEnum() == ICAOAnnex14Surfaces.TRANSITIONAL).findFirst().get();
-        applyRuleException(transitional);
         analysisSurfaces.add(
                 createTransitionalAnalysisSurface(
                         direction,
@@ -175,7 +169,6 @@ public class OlsAnalystICAOAnnex14 extends OlsAnalyst {
 
         //6. TakeoffClimb
         ICAOAnnex14SurfaceTakeoffClimb takeoffClimb = (ICAOAnnex14SurfaceTakeoffClimb) surfacesDefinitions.stream().filter(d -> d.getEnum() == ICAOAnnex14Surfaces.TAKEOFF_CLIMB).findFirst().get();
-        applyRuleException(takeoffClimb);
         analysisSurfaces.add(
                 createTakeoffClimbAnalysisSurface(
                         direction,
@@ -185,7 +178,6 @@ public class OlsAnalystICAOAnnex14 extends OlsAnalyst {
 
         //7. BalkedLanding
         ICAOAnnex14SurfaceBalkedLanding balkedLanding = (ICAOAnnex14SurfaceBalkedLanding) surfacesDefinitions.stream().filter(d -> d.getEnum() == ICAOAnnex14Surfaces.BALKED_LANDING_SURFACE).findFirst().get();
-        applyRuleException(balkedLanding);
         analysisSurfaces.add(
                 createBalkedLandingAnalysisSurface(
                         direction,
@@ -198,7 +190,6 @@ public class OlsAnalystICAOAnnex14 extends OlsAnalyst {
         if(classification.getRunwayTypeNumber().equals(ICAOAnnex14RunwayCodeNumbers.THREE) || classification.getRunwayTypeNumber().equals(ICAOAnnex14RunwayCodeNumbers.FOUR)){
             //8. OuterHorizontal
             ICAOAnnex14SurfaceOuterHorizontal outerHorizontal = (ICAOAnnex14SurfaceOuterHorizontal) surfacesDefinitions.stream().filter(d -> d.getEnum() == ICAOAnnex14Surfaces.OUTER_HORIZONTAL).findFirst().get();
-            applyRuleException(outerHorizontal);
             analysisSurfaces.add(
                     createOuterHorizontalAnalysisSurface(
                             direction,
@@ -219,7 +210,6 @@ public class OlsAnalystICAOAnnex14 extends OlsAnalyst {
 
         //1. Strip
         ICAOAnnex14SurfaceStrip strip = (ICAOAnnex14SurfaceStrip) surfacesDefinitions.stream().filter(d -> d.getEnum() == ICAOAnnex14Surfaces.STRIP).findFirst().get();
-        applyRuleException(strip);
         analysisSurfaces.add(
                 createStripAnalysisSurface(
                         direction,
@@ -229,7 +219,6 @@ public class OlsAnalystICAOAnnex14 extends OlsAnalyst {
 
         //2. InnerHorizontal
         ICAOAnnex14SurfaceInnerHorizontal innerHorizontal = (ICAOAnnex14SurfaceInnerHorizontal) surfacesDefinitions.stream().filter(d -> d.getEnum() == ICAOAnnex14Surfaces.INNER_HORIZONTAL).findFirst().get();
-        applyRuleException(innerHorizontal);
         analysisSurfaces.add(
                 createInnerHorizontalAnalysisSurface(
                         direction,
@@ -239,7 +228,6 @@ public class OlsAnalystICAOAnnex14 extends OlsAnalyst {
 
         //3. Conical
         ICAOAnnex14SurfaceConical conical = (ICAOAnnex14SurfaceConical) surfacesDefinitions.stream().filter(d -> d.getEnum() == ICAOAnnex14Surfaces.CONICAL).findFirst().get();
-        applyRuleException(conical);
         analysisSurfaces.add(
                 createConicalAnalysisSurface(
                         direction,
@@ -250,10 +238,8 @@ public class OlsAnalystICAOAnnex14 extends OlsAnalyst {
 
         //4. ApproachFirstSection
         ICAOAnnex14SurfaceApproach approach = (ICAOAnnex14SurfaceApproach) surfacesDefinitions.stream().filter(d -> d.getEnum() == ICAOAnnex14Surfaces.APPROACH).findFirst().get();
-        applyRuleException(approach);
 
         ICAOAnnex14SurfaceApproachFirstSection approachFirstSection = (ICAOAnnex14SurfaceApproachFirstSection) surfacesDefinitions.stream().filter(d -> d.getEnum() == ICAOAnnex14Surfaces.APPROACH_FIRST_SECTION).findFirst().get();
-        applyRuleException(approachFirstSection);
         analysisSurfaces.add(
                 createApproachFirstSectionAnalysisSurface(
                         direction,
@@ -267,7 +253,6 @@ public class OlsAnalystICAOAnnex14 extends OlsAnalyst {
 
             //4. ApproachSecondSection
             ICAOAnnex14SurfaceApproachSecondSection approachSecondSection = (ICAOAnnex14SurfaceApproachSecondSection) surfacesDefinitions.stream().filter(d -> d.getEnum() == ICAOAnnex14Surfaces.APPROACH_SECOND_SECTION).findFirst().get();
-            applyRuleException(approachSecondSection);
             analysisSurfaces.add(
                     createApproachSecondSectionAnalysisSurface(
                             direction,
@@ -279,7 +264,6 @@ public class OlsAnalystICAOAnnex14 extends OlsAnalyst {
 
             //4. ApproachHorizontalSection
             ICAOAnnex14SurfaceApproachHorizontalSection approachHorizontalSection = (ICAOAnnex14SurfaceApproachHorizontalSection) surfacesDefinitions.stream().filter(d -> d.getEnum() == ICAOAnnex14Surfaces.APPROACH_HORIZONTAL_SECTION).findFirst().get();
-            applyRuleException(approachHorizontalSection);
             analysisSurfaces.add(
                     createApproachHorizontalSectionAnalysisSurface(
                             direction,
@@ -293,7 +277,6 @@ public class OlsAnalystICAOAnnex14 extends OlsAnalyst {
 
         //5. Transitional
         ICAOAnnex14SurfaceTransitional transitional = (ICAOAnnex14SurfaceTransitional) surfacesDefinitions.stream().filter(d -> d.getEnum() == ICAOAnnex14Surfaces.TRANSITIONAL).findFirst().get();
-        applyRuleException(transitional);
         analysisSurfaces.add(
                 createTransitionalAnalysisSurface(
                         direction,
@@ -306,18 +289,16 @@ public class OlsAnalystICAOAnnex14 extends OlsAnalyst {
 
         //6. TakeoffClimb
         ICAOAnnex14SurfaceTakeoffClimb takeoffClimb = (ICAOAnnex14SurfaceTakeoffClimb) surfacesDefinitions.stream().filter(d -> d.getEnum() == ICAOAnnex14Surfaces.TAKEOFF_CLIMB).findFirst().get();
-        applyRuleException(takeoffClimb);
         analysisSurfaces.add(
                 createTakeoffClimbAnalysisSurface(
                         direction,
                         takeoffClimb
                 )
         );
-        
+
         if(classification.getRunwayTypeNumber().equals(ICAOAnnex14RunwayCodeNumbers.THREE) || classification.getRunwayTypeNumber().equals(ICAOAnnex14RunwayCodeNumbers.FOUR)){
             //8. OuterHorizontal
             ICAOAnnex14SurfaceOuterHorizontal outerHorizontal = (ICAOAnnex14SurfaceOuterHorizontal) surfacesDefinitions.stream().filter(d -> d.getEnum() == ICAOAnnex14Surfaces.OUTER_HORIZONTAL).findFirst().get();
-            applyRuleException(outerHorizontal);
             analysisSurfaces.add(
                     createOuterHorizontalAnalysisSurface(
                             direction,
@@ -336,7 +317,6 @@ public class OlsAnalystICAOAnnex14 extends OlsAnalyst {
 
         //1. Strip
         ICAOAnnex14SurfaceStrip strip = (ICAOAnnex14SurfaceStrip) surfacesDefinitions.stream().filter(d -> d.getEnum() == ICAOAnnex14Surfaces.STRIP).findFirst().get();
-        applyRuleException(strip);
         analysisSurfaces.add(
                 createStripAnalysisSurface(
                         direction,
@@ -346,7 +326,6 @@ public class OlsAnalystICAOAnnex14 extends OlsAnalyst {
 
         //2. InnerHorizontal
         ICAOAnnex14SurfaceInnerHorizontal innerHorizontal = (ICAOAnnex14SurfaceInnerHorizontal) surfacesDefinitions.stream().filter(d -> d.getEnum() == ICAOAnnex14Surfaces.INNER_HORIZONTAL).findFirst().get();
-        applyRuleException(innerHorizontal);
         analysisSurfaces.add(
                 createInnerHorizontalAnalysisSurface(
                         direction,
@@ -356,7 +335,6 @@ public class OlsAnalystICAOAnnex14 extends OlsAnalyst {
 
         //3. Conical
         ICAOAnnex14SurfaceConical conical = (ICAOAnnex14SurfaceConical) surfacesDefinitions.stream().filter(d -> d.getEnum() == ICAOAnnex14Surfaces.CONICAL).findFirst().get();
-        applyRuleException(conical);
         analysisSurfaces.add(
                 createConicalAnalysisSurface(
                         direction,
@@ -367,10 +345,8 @@ public class OlsAnalystICAOAnnex14 extends OlsAnalyst {
 
         //4. ApproachFirstSection
         ICAOAnnex14SurfaceApproach approach = (ICAOAnnex14SurfaceApproach) surfacesDefinitions.stream().filter(d -> d.getEnum() == ICAOAnnex14Surfaces.APPROACH).findFirst().get();
-        applyRuleException(approach);
 
         ICAOAnnex14SurfaceApproachFirstSection approachFirstSection = (ICAOAnnex14SurfaceApproachFirstSection) surfacesDefinitions.stream().filter(d -> d.getEnum() == ICAOAnnex14Surfaces.APPROACH_FIRST_SECTION).findFirst().get();
-        applyRuleException(approachFirstSection);
         analysisSurfaces.add(
                 createApproachFirstSectionAnalysisSurface(
                         direction,
@@ -382,7 +358,6 @@ public class OlsAnalystICAOAnnex14 extends OlsAnalyst {
 
         //5. Transitional
         ICAOAnnex14SurfaceTransitional transitional = (ICAOAnnex14SurfaceTransitional) surfacesDefinitions.stream().filter(d -> d.getEnum() == ICAOAnnex14Surfaces.TRANSITIONAL).findFirst().get();
-        applyRuleException(transitional);
         analysisSurfaces.add(
                 createTransitionalAnalysisSurface(
                         direction,
@@ -395,7 +370,6 @@ public class OlsAnalystICAOAnnex14 extends OlsAnalyst {
 
         //6. TakeoffClimb
         ICAOAnnex14SurfaceTakeoffClimb takeoffClimb = (ICAOAnnex14SurfaceTakeoffClimb) surfacesDefinitions.stream().filter(d -> d.getEnum() == ICAOAnnex14Surfaces.TAKEOFF_CLIMB).findFirst().get();
-        applyRuleException(takeoffClimb);
         analysisSurfaces.add(
                 createTakeoffClimbAnalysisSurface(
                         direction,

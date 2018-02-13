@@ -104,10 +104,11 @@ public class OlsRuleICAOAnnex14Service
 
         switch (classification){
 
-            case NON_INSTRUMENT:
+            case NON_INSTRUMENT: {
                 return surfaces;
+            }
 
-            case NON_PRECISION_APPROACH:
+            case NON_PRECISION_APPROACH: {
 
                 if(ICAOAnnex14RunwayCodeNumbers.THREE == number || ICAOAnnex14RunwayCodeNumbers.FOUR == number){
                     surfaces.add(ICAOAnnex14Surfaces.APPROACH_SECOND_SECTION);
@@ -115,8 +116,9 @@ public class OlsRuleICAOAnnex14Service
                 }
 
                 return surfaces;
+            }
 
-            case PRECISION_APPROACH:
+            case PRECISION_APPROACH: {
 
                 surfaces.add(ICAOAnnex14Surfaces.APPROACH_SECOND_SECTION);
                 surfaces.add(ICAOAnnex14Surfaces.APPROACH_HORIZONTAL_SECTION);
@@ -128,10 +130,10 @@ public class OlsRuleICAOAnnex14Service
                         ICAOAnnex14Surfaces.OUTER_HORIZONTAL
                 );
 
-                switch (category){
+                switch (category) {
 
                     case CATEGORY_I:
-                        if(withRecommendations)
+                        if (withRecommendations)
                             surfaces.addAll(extras);
 
                         return surfaces;
@@ -147,7 +149,7 @@ public class OlsRuleICAOAnnex14Service
                     default:
                         throw new InvalidParameterException("ICAOAnnex14RunwayCategory");
                 }
-
+            }
             default:
                 throw new InvalidParameterException("ICAOAnnex14RunwayCategory");
         }
