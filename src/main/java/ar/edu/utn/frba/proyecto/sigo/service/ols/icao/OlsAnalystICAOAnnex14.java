@@ -403,7 +403,7 @@ public class OlsAnalystICAOAnnex14 extends OlsAnalyst {
             ICAOAnnex14SurfaceApproachFirstSection approachFirstSection
     ) {
 
-        Double shiftHeight = approachFirstSection.getLength() / Math.cos(approachFirstSection.getSlope() / 100);
+        Double shiftHeight = approachFirstSection.getLength() / (100 / approachFirstSection.getSlope());
         approachSecondSection.setInitialHeight(approachFirstSection.getInitialHeight() + shiftHeight);
 
         approachSecondSection.setGeometry(geometryHelper.createApproachSecondSectionSurfaceGeometry(direction, approachSecondSection, approach, approachFirstSection));
@@ -423,7 +423,7 @@ public class OlsAnalystICAOAnnex14 extends OlsAnalyst {
             ICAOAnnex14SurfaceApproach approach
     ) {
 
-        Double shiftHeight = approachSecondSection.getLength() * Math.tan(approachSecondSection.getSlope() / 100);
+        Double shiftHeight = approachSecondSection.getLength() / (100 / approachSecondSection.getSlope());
         approachHorizontalSection.setInitialHeight(approachSecondSection.getInitialHeight() + shiftHeight);
 
         approachHorizontalSection.setGeometry(geometryHelper.createApproachHorizontalSectionSurfaceGeometry(direction, approachHorizontalSection, approachSecondSection, approachFirstSection, approach));
