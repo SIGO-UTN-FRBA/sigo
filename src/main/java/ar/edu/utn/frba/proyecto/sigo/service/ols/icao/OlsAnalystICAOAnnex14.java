@@ -73,6 +73,7 @@ public class OlsAnalystICAOAnnex14 extends OlsAnalyst {
 
         surfacesDefinitions.forEach(this::applyRuleException);
 
+        //TODO recorrer superficies por orden de precedencia, evita este switch.
         switch (classification.getRunwayClassification()) {
             case NON_INSTRUMENT:
                 return createAnalysisSurfacesForNonInstrument(direction, surfacesDefinitions);
