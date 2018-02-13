@@ -26,6 +26,7 @@ public class AnalysisExceptionClone implements AnalysisExceptionVisitor<Analysis
         return AnalysisExceptionSurface.builder()
                 .name(exception.getName())
                 .heightAmls(exception.getHeightAmls())
+                .geom(exception.getGeom())
                 .build();
     }
 
@@ -34,6 +35,7 @@ public class AnalysisExceptionClone implements AnalysisExceptionVisitor<Analysis
         return AnalysisExceptionDynamicSurface.builder()
                 .name(exception.getName())
                 .function(exception.getFunction())
+                .geom(exception.getGeom())
                 .build();
     }
 }
