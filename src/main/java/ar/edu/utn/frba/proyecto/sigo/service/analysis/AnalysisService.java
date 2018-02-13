@@ -117,16 +117,23 @@ public class AnalysisService extends SigoService<Analysis, Analysis>{
     protected void postCreateActions(Analysis analysis, Analysis parent) {
         super.postCreateActions(analysis, parent);
 
-        createAnalysisCase(analysis, parent.getAnalysisCase().getAerodrome());
+        AnalysisCase parentAnalysisCase = parent.getAnalysisCase();
+
+        createAnalysisCase(
+                analysis,
+                parentAnalysisCase.getAerodrome(),
+                Optional.ofNullable(parentAnalysisCase.getSearchRadius()).orElse(0.15D),
+                Optional.ofNullable(parentAnalysisCase.getIncludeTerrain()).orElse(true)
+                );
     }
 
-    private void createAnalysisCase(Analysis analysis, Airport airport) {
+    private void createAnalysisCase(Analysis analysis, Airport airport, Double searchRadius, Boolean includeTerrain) {
         AnalysisCase analysisCase = AnalysisCase.builder()
                 .id(analysis.getId())
                 .aerodrome(airport)
                 .analysis(analysis)
-                .searchRadius(0.15D)
-                .includeTerrain(true)
+                .searchRadius(searchRadius)
+                .includeTerrain(includeTerrain)
                 .build();
 
         caseService.create(analysisCase, analysis);
