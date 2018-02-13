@@ -46,8 +46,11 @@ public class AnalysisObstacle extends SigoDomain<Long> {
     @OneToOne (mappedBy = "obstacle", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private AnalysisResult result;
 
-    @Column
-    private Boolean excepting;
+    @Column(name = "is_excepted")
+    private Boolean isExcepted;
+
+    @Column(name = "is_valid")
+    private Boolean isValid;
 
     public Double getPenetration(){
         return objectHeight - restrictionHeight;

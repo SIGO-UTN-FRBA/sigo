@@ -7,6 +7,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -33,7 +34,18 @@ public abstract class OlsAnalyst {
 
         applyExceptions();
 
+        determineValidityOfObstacles();
+
         getCurrentSession().save(analysisCase);
+    }
+
+    private void determineValidityOfObstacles() {
+
+        analysisCase.getObjects()
+                .stream()
+                .map(object -> analysisCase.getObstaclesByObject(object))
+                .map(obstacles -> obstacles.max(Comparator.comparingDouble(AnalysisObstacle::getPenetration)))
+                .forEach( maybe -> maybe.ifPresent( obstacle -> obstacle.setIsValid(true)));
     }
 
     protected void applyExceptions(){
@@ -49,7 +61,7 @@ public abstract class OlsAnalyst {
                 .map(s -> analysisCase.getObstaclesCausedByRestriction(s))
                 .flatMap(Collection::stream)
                 .filter(os -> obstaclesCausedByException.stream().anyMatch(oe -> oe.getObject().equals(os.getObject())))
-                .forEach(os -> os.setExcepting(true));
+                .forEach(os -> os.setIsExcepted(true));
     }
 
     protected abstract void initializeSurfaces();
@@ -66,7 +78,8 @@ public abstract class OlsAnalyst {
     private Set<AnalysisObstacle> defineObstacles(AnalysisRestriction restriction) {
         return this.getAnalysisCase().getObjects()
                 .stream()
-                .filter(object -> object.getIncluded() && isObstacle(restriction, object))
+                .filter(AnalysisObject::getIncluded)
+                .filter(restriction::isObstacle)
                 .map(object -> createAnalysisObstacle(restriction, object))
                 .collect(Collectors.toSet());
     }
@@ -88,7 +101,8 @@ public abstract class OlsAnalyst {
                 .analysisCase(this.getAnalysisCase())
                 .objectHeight(objectHeight)
                 .restrictionHeight(restrictionHeight)
-                .excepting(false)
+                .isExcepted(false)
+                .isValid(false)
                 .build();
 
         if(analysisObstacle.getPenetration() < 0D )
@@ -122,9 +136,4 @@ public abstract class OlsAnalyst {
     }
 */
     public abstract Double determineHeightForAnalysisSurface(AnalysisSurface analysisSurface, Point point);
-
-    protected Boolean isObstacle(AnalysisRestriction restriction, AnalysisObject analysisObject) {
-
-        return restriction.getGeometry().intersects(analysisObject.getGeometry());
-    }
 }

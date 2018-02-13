@@ -54,9 +54,11 @@ public class AnalysisObstacleRouter extends SigoRouter{
     private final Route fetchObstacles = doInTransaction(false , (request, response) -> {
 
         Optional<QueryParamsMap> exceptingParam = Optional.ofNullable(request.queryMap().get("excepting"));
+        Optional<QueryParamsMap> validityParam = Optional.ofNullable(request.queryMap().get("validity"));
 
         return this.obstacleService.find(getParamAnalysisId(request))
-                        .filter( o -> exceptingParam.map(param -> o.getExcepting() == param.booleanValue()).orElse(true))
+                        .filter( o -> exceptingParam.map(param -> o.getIsExcepted() == param.booleanValue()).orElse(true))
+                        .filter( o -> validityParam.map(param -> o.getIsValid() == param.booleanValue()).orElse(true))
                         .map(translator::getAsDTO)
                         .collect(Collectors.toList());
     });

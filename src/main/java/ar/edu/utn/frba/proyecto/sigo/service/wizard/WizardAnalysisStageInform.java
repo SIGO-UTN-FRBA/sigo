@@ -46,7 +46,7 @@ public class WizardAnalysisStageInform extends WizardAnalysisStage {
 
         boolean pending = analysis.getAnalysisCase().getObstacles()
                 .stream()
-                .anyMatch(o -> !o.getExcepting() && !Optional.ofNullable(o.getResult()).isPresent());
+                .anyMatch(o -> !o.getIsExcepted() && !Optional.ofNullable(o.getResult()).isPresent());
 
         if(pending)
             throw new BusinessConstrainException("There are some obstacles have not assigned their result yet.");

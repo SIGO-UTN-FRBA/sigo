@@ -12,4 +12,8 @@ public interface AnalysisRestriction {
     Geometry getGeometry();
 
     Double determineHeightAt(Point point, OlsAnalyst analyst);
+
+    default Boolean isObstacle(AnalysisObject analysisObject){
+        return this.getGeometry().intersects(analysisObject.getGeometry());
+    }
 }

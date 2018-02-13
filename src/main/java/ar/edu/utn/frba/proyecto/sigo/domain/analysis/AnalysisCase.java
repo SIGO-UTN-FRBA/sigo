@@ -102,4 +102,10 @@ public class AnalysisCase extends SigoDomain<Long> {
     public void addSurface(AnalysisSurface s) {
         this.getSurfaces().add(s);
     }
+
+    public Stream<AnalysisObstacle> getObstaclesByObject(AnalysisObject object) {
+        return this.getObstacles()
+                .stream()
+                .filter(obstacle -> obstacle.getObject().equals(object));
+    }
 }
