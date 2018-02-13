@@ -82,7 +82,7 @@ public class ICAOAnnex14SurfaceHeightsHelper {
     }
 
     public Double determineHeightAt(ICAOAnnex14SurfaceOuterHorizontal surface, Point point){
-        return surface.getHeight();
+        return surface.getInitialHeight() +surface.getHeight();
     }
 
     public Double determineHeightAt(ICAOAnnex14SurfaceBalkedLanding surface, Point point){

@@ -313,19 +313,7 @@ public class OlsAnalystICAOAnnex14 extends OlsAnalyst {
                         takeoffClimb
                 )
         );
-
-        //7. BalkedLanding
-        ICAOAnnex14SurfaceBalkedLanding balkedLanding = (ICAOAnnex14SurfaceBalkedLanding) surfacesDefinitions.stream().filter(d -> d.getEnum() == ICAOAnnex14Surfaces.BALKED_LANDING_SURFACE).findFirst().get();
-        applyRuleException(balkedLanding);
-        analysisSurfaces.add(
-                createBalkedLandingAnalysisSurface(
-                        direction,
-                        balkedLanding,
-                        strip,
-                        innerHorizontal
-                )
-        );
-
+        
         if(classification.getRunwayTypeNumber().equals(ICAOAnnex14RunwayCodeNumbers.THREE) || classification.getRunwayTypeNumber().equals(ICAOAnnex14RunwayCodeNumbers.FOUR)){
             //8. OuterHorizontal
             ICAOAnnex14SurfaceOuterHorizontal outerHorizontal = (ICAOAnnex14SurfaceOuterHorizontal) surfacesDefinitions.stream().filter(d -> d.getEnum() == ICAOAnnex14Surfaces.OUTER_HORIZONTAL).findFirst().get();
@@ -612,6 +600,7 @@ public class OlsAnalystICAOAnnex14 extends OlsAnalyst {
             ICAOAnnex14SurfaceConical conical
     ) {
 
+        outerHorizontal.setInitialHeight(direction.getRunway().getAirport().getHeight());
         outerHorizontal.setGeometry(geometryHelper.createOuterHorizontalSurfaceGeometry(direction, outerHorizontal, conical));
 
         return AnalysisSurface.builder()

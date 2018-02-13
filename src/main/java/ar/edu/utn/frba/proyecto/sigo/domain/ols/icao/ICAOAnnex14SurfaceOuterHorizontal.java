@@ -23,6 +23,9 @@ public class ICAOAnnex14SurfaceOuterHorizontal extends ICAOAnnex14Surface<Polygo
     @Column
     private Double height;
 
+    @Column(name = "initial_height")
+    private Double initialHeight;
+
     @Column(name="geom")
     private Polygon geometry;
 
