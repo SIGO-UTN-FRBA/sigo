@@ -113,6 +113,7 @@ public class OlsRuleICAOAnnex14Service
                 if(ICAOAnnex14RunwayCodeNumbers.THREE == number || ICAOAnnex14RunwayCodeNumbers.FOUR == number){
                     surfaces.add(ICAOAnnex14Surfaces.APPROACH_SECOND_SECTION);
                     surfaces.add(ICAOAnnex14Surfaces.APPROACH_HORIZONTAL_SECTION);
+                    surfaces.add(ICAOAnnex14Surfaces.OUTER_HORIZONTAL);
                 }
 
                 return surfaces;
