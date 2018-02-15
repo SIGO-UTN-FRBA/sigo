@@ -59,7 +59,11 @@ public class ICAOAnnex14SurfaceGeometriesHelper {
         return stripGeometry;
     }
 
-    public Polygon createInnerHorizontalSurfaceGeometry(RunwayDirection direction, ICAOAnnex14SurfaceInnerHorizontal innerHorizontalDefinition, ICAOAnnex14SurfaceStrip stripSurface) {
+    public Polygon createInnerHorizontalSurfaceGeometry(
+            RunwayDirection direction,
+            ICAOAnnex14SurfaceInnerHorizontal innerHorizontalDefinition,
+            ICAOAnnex14SurfaceStrip stripSurface
+    ) {
 
         double radius = innerHorizontalDefinition.getRadius() / 100000;
 

@@ -505,9 +505,7 @@ public class OlsAnalystICAOAnnex14 extends OlsAnalyst {
         transitional.setInitialHeight(direction.getHeight());
 
         double opposite = innerHorizontal.getHeight();
-        double angle = Math.atan(transitional.getSlope()/100);
-        double hypotenuse = opposite / Math.sin(angle);
-        double adjacent = Math.sqrt(Math.pow(hypotenuse,2)-Math.pow(opposite,2));
+        double adjacent = opposite / Math.tan(transitional.getSlope()/100);
         transitional.setWidth(adjacent);
 
         transitional.setGeometry(geometryHelper.createTransitionalSurfaceGeometry(direction, transitional, strip, approach, innerHorizontal));

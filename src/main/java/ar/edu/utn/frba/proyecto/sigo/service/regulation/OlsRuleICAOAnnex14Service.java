@@ -127,25 +127,26 @@ public class OlsRuleICAOAnnex14Service
                 ArrayList<ICAOAnnex14Surfaces> extras = Lists.newArrayList(
                         ICAOAnnex14Surfaces.INNER_APPROACH,
                         ICAOAnnex14Surfaces.INNER_TRANSITIONAL,
-                        ICAOAnnex14Surfaces.BALKED_LANDING_SURFACE,
-                        ICAOAnnex14Surfaces.OUTER_HORIZONTAL
+                        ICAOAnnex14Surfaces.BALKED_LANDING_SURFACE
                 );
 
                 switch (category) {
 
-                    case CATEGORY_I:
-                        if (withRecommendations)
+                    case CATEGORY_I: {
+//                        if (withRecommendations)
                             surfaces.addAll(extras);
 
-                        return surfaces;
+                        if(ICAOAnnex14RunwayCodeNumbers.THREE == number)
+                            surfaces.add(ICAOAnnex14Surfaces.OUTER_HORIZONTAL);
 
-                    case CATEGORY_II:
-                        surfaces.addAll(extras);
                         return surfaces;
+                    }
 
-                    case CATEGORY_III:
+                    case CATEGORY_II: case CATEGORY_III:{
                         surfaces.addAll(extras);
+                        surfaces.add(ICAOAnnex14Surfaces.OUTER_HORIZONTAL);
                         return surfaces;
+                    }
 
                     default:
                         throw new InvalidParameterException("ICAOAnnex14RunwayCategory");

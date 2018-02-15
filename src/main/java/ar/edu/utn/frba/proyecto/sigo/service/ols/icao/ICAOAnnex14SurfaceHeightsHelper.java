@@ -61,7 +61,7 @@ public class ICAOAnnex14SurfaceHeightsHelper {
 
     public Double determineHeightAt(ICAOAnnex14SurfaceTransitional surface, Point point){
 
-        return 45D; //TODO
+        return surface.getInitialHeight() + (100 /surface.getSlope()) * surface.getWidth(); //TODO
     }
 
     public Double determineHeightAt(ICAOAnnex14SurfaceApproachFirstSection surface, Point point){
